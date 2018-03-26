@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kwt.PatientsMgtApp.Core", "Kwt.PatientsMgtApp.Core\Kwt.PatientsMgtApp.Core.csproj", "{44FEE597-2421-4D5C-B24F-B7457A3EE5AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kwt.PatientsMgtApp.Services", "Kwt.PatientsMgtApp.Services\Kwt.PatientsMgtApp.Services.csproj", "{4202EA7F-2E44-4857-ACE6-BAC122F64AD9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kwt.PatientsMgtApp.DataAccess.SQL", "Kwt.PatientsMgtApp.DataAccess.SQL\Kwt.PatientsMgtApp.DataAccess.SQL.csproj", "{D65BC5E4-9D66-4986-928D-BDBF09290B56}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kwt.PatientsMgtApp.DataAccess.InMemory", "Kwt.PatientsMgtApp.DataAccess.InMemory\Kwt.PatientsMgtApp.DataAccess.InMemory.csproj", "{1DF3257A-2BA2-4155-9EB9-7D9A3674EB65}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kwt.PatientsMgtApp.WebUI", "Kwt.PatientsMgtApp.WebUI\Kwt.PatientsMgtApp.WebUI.csproj", "{F6680818-8728-44D5-894F-ACC14C588FA5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kwt.PatientsMgtApp.WebUI.Tests", "Kwt.PatientsMgtApp.WebUI.Tests\Kwt.PatientsMgtApp.WebUI.Tests.csproj", "{62DC1816-1050-478A-AF0D-42AE8ED0874D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{44FEE597-2421-4D5C-B24F-B7457A3EE5AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44FEE597-2421-4D5C-B24F-B7457A3EE5AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44FEE597-2421-4D5C-B24F-B7457A3EE5AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44FEE597-2421-4D5C-B24F-B7457A3EE5AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4202EA7F-2E44-4857-ACE6-BAC122F64AD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4202EA7F-2E44-4857-ACE6-BAC122F64AD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4202EA7F-2E44-4857-ACE6-BAC122F64AD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4202EA7F-2E44-4857-ACE6-BAC122F64AD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D65BC5E4-9D66-4986-928D-BDBF09290B56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D65BC5E4-9D66-4986-928D-BDBF09290B56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D65BC5E4-9D66-4986-928D-BDBF09290B56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D65BC5E4-9D66-4986-928D-BDBF09290B56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DF3257A-2BA2-4155-9EB9-7D9A3674EB65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DF3257A-2BA2-4155-9EB9-7D9A3674EB65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DF3257A-2BA2-4155-9EB9-7D9A3674EB65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DF3257A-2BA2-4155-9EB9-7D9A3674EB65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6680818-8728-44D5-894F-ACC14C588FA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6680818-8728-44D5-894F-ACC14C588FA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6680818-8728-44D5-894F-ACC14C588FA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6680818-8728-44D5-894F-ACC14C588FA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62DC1816-1050-478A-AF0D-42AE8ED0874D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62DC1816-1050-478A-AF0D-42AE8ED0874D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62DC1816-1050-478A-AF0D-42AE8ED0874D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62DC1816-1050-478A-AF0D-42AE8ED0874D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
