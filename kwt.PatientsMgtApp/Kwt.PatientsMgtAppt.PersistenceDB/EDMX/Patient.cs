@@ -46,12 +46,12 @@ namespace Kwt.PatientsMgtAppt.PersistenceDB.EDMX
     
         public virtual Agency Agency { get; set; }
         public virtual Bank Bank { get; set; }
+        public virtual Doctor Doctor { get; set; }
+        public virtual Hospital Hospital { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CompanionHistory> CompanionHistories { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Companion> Companions { get; set; }
-        public virtual Doctor Doctor { get; set; }
-        public virtual Hospital Hospital { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Payment> Payments { get; set; }
     }

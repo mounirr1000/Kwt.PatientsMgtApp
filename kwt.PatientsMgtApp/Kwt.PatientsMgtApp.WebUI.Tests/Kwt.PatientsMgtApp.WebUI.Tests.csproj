@@ -91,7 +91,10 @@
     <Reference Include="System.Net.Http.WebRequest" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BenefeciaryRepositoryTest.cs" />
+    <Compile Include="CompanionRepositoryTest.cs" />
     <Compile Include="PatientRepositoryTest.cs" />
+    <Compile Include="PaymentRepositoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
   </ItemGroup>

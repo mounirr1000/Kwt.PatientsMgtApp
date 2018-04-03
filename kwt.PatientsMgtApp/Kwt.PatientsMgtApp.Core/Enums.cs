@@ -8,10 +8,11 @@ namespace Kwt.PatientsMgtApp.Core
 {
     public class Enums
     {
-        public enum ReviewType
+        public enum CompanionType
         {
-            OnSite = 1,
-            OffSite = 2
+            Primary = 1,
+            Secondary = 2,
+            Other=3
         }
 
         public enum MeetingParticipationStatus

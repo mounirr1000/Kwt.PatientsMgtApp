@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kwt.PatientsMgtApp.WebUI.Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kwt.PatientsMgtAppt.PersistenceDB", "Kwt.PatientsMgtAppt.PersistenceDB\Kwt.PatientsMgtAppt.PersistenceDB.csproj", "{1B7ADA94-AB71-4CA4-A61E-035EDBE8F2C3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kwt.PatientsMgtApp.Utilities", "kwt.PatientsMgtApp.Utilities\kwt.PatientsMgtApp.Utilities.csproj", "{1BEAE1D8-516D-4279-8503-6E5736D853D2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{1B7ADA94-AB71-4CA4-A61E-035EDBE8F2C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B7ADA94-AB71-4CA4-A61E-035EDBE8F2C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B7ADA94-AB71-4CA4-A61E-035EDBE8F2C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BEAE1D8-516D-4279-8503-6E5736D853D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BEAE1D8-516D-4279-8503-6E5736D853D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BEAE1D8-516D-4279-8503-6E5736D853D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BEAE1D8-516D-4279-8503-6E5736D853D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

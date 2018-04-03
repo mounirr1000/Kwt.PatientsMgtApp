@@ -17,8 +17,8 @@ namespace Kwt.PatientsMgtAppt.PersistenceDB.EDMX
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Bank()
         {
-            this.Companions = new HashSet<Companion>();
             this.Patients = new HashSet<Patient>();
+            this.Companions = new HashSet<Companion>();
         }
     
         public int BankID { get; set; }
@@ -26,8 +26,8 @@ namespace Kwt.PatientsMgtAppt.PersistenceDB.EDMX
         public string BankCode { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Companion> Companions { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Patient> Patients { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Companion> Companions { get; set; }
     }
 }

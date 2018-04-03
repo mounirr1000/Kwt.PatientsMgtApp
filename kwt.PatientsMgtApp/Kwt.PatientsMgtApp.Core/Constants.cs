@@ -8,7 +8,7 @@ namespace Kwt.PatientsMgtApp.Core
 {
     public class Constants
     {
-        public const string FIN_AUDIT_DOC_LIB_NAME = "Financial Audit CheckList Documents";
+        public const int NUMBER_OF_DAYS_BEFORE_NEXT_PAYMENT=15;
         public const string FINDING_DOC_LIB_NAME = "Finding Documents";
         public const string MOU_DOC_LIB_NAME = "MOU Documents";
         public const string EA_DOC_LIB_NAME = "Early Alert Documents";

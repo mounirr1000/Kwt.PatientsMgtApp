@@ -27,5 +27,10 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public Nullable<bool> IsActive { get; set; }
         public string Notes { get; set; }
 
+        public string CreatedBy { get; set; }
+
+        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public Nullable<System.DateTime> ModifiedDate { get; set; }
+
     }
 }

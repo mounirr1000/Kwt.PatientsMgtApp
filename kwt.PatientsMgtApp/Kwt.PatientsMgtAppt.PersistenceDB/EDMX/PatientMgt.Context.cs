@@ -28,17 +28,17 @@ namespace Kwt.PatientsMgtAppt.PersistenceDB.EDMX
         public virtual DbSet<Agency> Agencies { get; set; }
         public virtual DbSet<Bank> Banks { get; set; }
         public virtual DbSet<Beneficiary> Beneficiaries { get; set; }
-        public virtual DbSet<CompanionHistory> CompanionHistories { get; set; }
-        public virtual DbSet<Companion> Companions { get; set; }
         public virtual DbSet<CompanionType> CompanionTypes { get; set; }
         public virtual DbSet<Doctor> Doctors { get; set; }
         public virtual DbSet<Hospital> Hospitals { get; set; }
         public virtual DbSet<Patient> Patients { get; set; }
-        public virtual DbSet<Payment> Payments { get; set; }
         public virtual DbSet<PayRate> PayRates { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<CompanionHistory> CompanionHistories { get; set; }
+        public virtual DbSet<Companion> Companions { get; set; }
+        public virtual DbSet<Payment> Payments { get; set; }
     }
 }
