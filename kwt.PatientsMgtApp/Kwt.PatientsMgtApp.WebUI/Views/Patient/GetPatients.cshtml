@@ -1,0 +1,89 @@
+﻿@model IEnumerable<Kwt.PatientsMgtApp.Core.Models.PatientModel>
+
+@{
+    ViewBag.Title = "Patient List";
+}
+
+<h2>Patients</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table text-center table-bordered table-striped" >
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.PatientCID)
+        </th>
+       
+        <th>
+            Patient Full Name
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.KWTPhone)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.USPhone)
+        </th>
+        
+        
+        <th>
+            @Html.DisplayNameFor(model => model.FirstApptDAte)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EndTreatDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsBeneficiary)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsActive)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Notes)
+        </th>
+        
+        @*<th></th>*@
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink(item.PatientCID.ToString(), "Details", new { patientCid = item.PatientCID })
+            @*@Html.DisplayFor(modelItem => item.PatientCID)*@
+        </td>
+      
+        <td>
+            @(item.PatientFName+" "+ item.PatientMName + " " + item.PatientLName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.KWTPhone)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.USPhone)
+        </td>
+       
+        <td>
+            @Html.DisplayFor(modelItem => item.FirstApptDAte)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EndTreatDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsBeneficiary)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsActive)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Notes)
+        </td>
+        
+        @*<td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>*@
+    </tr>
+}
+
+</table>

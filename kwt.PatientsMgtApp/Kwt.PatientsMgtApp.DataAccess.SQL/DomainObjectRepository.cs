@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Kwt.PatientsMgtApp.Core.Interfaces;
 using System.Transactions;
-using Kwt.PatientsMgtAppt.PersistenceDB.EDMX;
+using Kwt.PatientsMgtApp.PersistenceDB.EDMX;
 using System.Data.Entity;
 
 namespace Kwt.PatientsMgtApp.DataAccess.SQL

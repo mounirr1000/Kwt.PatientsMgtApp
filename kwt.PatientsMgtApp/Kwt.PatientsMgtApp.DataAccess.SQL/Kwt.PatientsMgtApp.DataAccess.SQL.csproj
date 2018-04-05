@@ -64,8 +64,10 @@
     <Compile Include="IDoctorRepository.cs" />
     <Compile Include="IDomainObjectRepository.cs" />
     <Compile Include="IHospitalRepository.cs" />
+    <Compile Include="IPatientManagmentRepository.cs" />
     <Compile Include="IPatientRepository.cs" />
     <Compile Include="IPaymentRepository.cs" />
+    <Compile Include="PatientManagmentRepository.cs" />
     <Compile Include="PatientRepository.cs" />
     <Compile Include="PaymentRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -79,9 +81,9 @@
       <Project>{1beae1d8-516d-4279-8503-6e5736d853d2}</Project>
       <Name>kwt.PatientsMgtApp.Utilities</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Kwt.PatientsMgtAppt.PersistenceDB\Kwt.PatientsMgtAppt.PersistenceDB.csproj">
+    <ProjectReference Include="..\Kwt.PatientsMgtAppt.PersistenceDB\Kwt.PatientsMgtApp.PersistenceDB.csproj">
       <Project>{1b7ada94-ab71-4ca4-a61e-035edbe8f2c3}</Project>
-      <Name>Kwt.PatientsMgtAppt.PersistenceDB</Name>
+      <Name>Kwt.PatientsMgtApp.PersistenceDB</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

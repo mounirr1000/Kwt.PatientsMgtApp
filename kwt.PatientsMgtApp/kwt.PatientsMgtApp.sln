@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kwt.PatientsMgtApp.WebUI", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kwt.PatientsMgtApp.WebUI.Tests", "Kwt.PatientsMgtApp.WebUI.Tests\Kwt.PatientsMgtApp.WebUI.Tests.csproj", "{62DC1816-1050-478A-AF0D-42AE8ED0874D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kwt.PatientsMgtAppt.PersistenceDB", "Kwt.PatientsMgtAppt.PersistenceDB\Kwt.PatientsMgtAppt.PersistenceDB.csproj", "{1B7ADA94-AB71-4CA4-A61E-035EDBE8F2C3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kwt.PatientsMgtApp.PersistenceDB", "Kwt.PatientsMgtAppt.PersistenceDB\Kwt.PatientsMgtApp.PersistenceDB.csproj", "{1B7ADA94-AB71-4CA4-A61E-035EDBE8F2C3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "kwt.PatientsMgtApp.Utilities", "kwt.PatientsMgtApp.Utilities\kwt.PatientsMgtApp.Utilities.csproj", "{1BEAE1D8-516D-4279-8503-6E5736D853D2}"
 EndProject

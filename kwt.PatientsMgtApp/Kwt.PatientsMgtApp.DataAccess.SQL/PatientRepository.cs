@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using kwt.PatientsMgtApp.Utilities.Errors;
 using Kwt.PatientsMgtApp.Core.Models;
-using Kwt.PatientsMgtAppt.PersistenceDB.EDMX;
+using Kwt.PatientsMgtApp.PersistenceDB.EDMX;
 
 namespace Kwt.PatientsMgtApp.DataAccess.SQL
 {
@@ -72,7 +72,9 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     PatientLName = p.PatientLName,
                     PatientMName = p.PatientMName,
                     PatientCID = p.PatientCID,
-                    USPhone = p.USphone
+                    USPhone = p.USphone,
+                    CreatedDate = p.CreatedDate,
+                    CreatedBy = p.CreatedBy
                 };
             }
 
@@ -107,6 +109,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
 
         public void AddPatient(PatientModel patient)
         {
+            
             var pa = _domainObjectRepository.Get<Patient>(tp => tp.PatientCID == patient.PatientCID);
 
             if (pa == null)
@@ -125,12 +128,12 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     DoctorID = _domainObjectRepository.Get<Doctor>(a => a.DoctorName == patient.Doctor).DoctorID,
                     Notes = patient.Notes,
                     CreatedBy = patient.CreatedBy,
-                    PatientCID = patient.PatientCID,
+                    PatientCID = patient.PatientCID.Trim(),
                     EndTreatDate = patient.EndTreatDate,
-                    PatientFName = patient.PatientFName,
-                    PatientLName = patient.PatientLName,
-                    PatientMName = patient.PatientMName,
-
+                    PatientFName = patient.PatientFName.Trim(),
+                    PatientLName = patient.PatientLName.Trim(),
+                    PatientMName = patient.PatientMName.Trim(),
+                    FirstApptDate = patient.FirstApptDAte,
                 };
 
                 _domainObjectRepository.Create<Patient>(p);
@@ -166,7 +169,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
 
 
             }
-            else throw new PatientsMgtException(1, "error", "Creating new Patient", String.Format("There is a Patient with the same Patient Civil ID '{0}' already in our records!", patient.PatientCID));
+            else 
+                throw new PatientsMgtException(1, "error", "Creating new Patient", String.Format("There is a Patient with the same Patient Civil ID '{0}' already in our records!", patient.PatientCID));
         }
 
         public PatientModel UpdatePatient(PatientModel patient)

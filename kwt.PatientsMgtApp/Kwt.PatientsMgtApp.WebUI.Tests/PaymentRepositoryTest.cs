@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Kwt.PatientsMgtApp.Core.Models;
 using Kwt.PatientsMgtApp.DataAccess.SQL;
-using Kwt.PatientsMgtAppt.PersistenceDB.EDMX;
+using Kwt.PatientsMgtApp.PersistenceDB.EDMX;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Kwt.PatientsMgtApp.WebUI.Tests

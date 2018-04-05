@@ -10,5 +10,6 @@ namespace Kwt.PatientsMgtApp.Core.Models
     {
         public int AgencyID { get; set; }
         public string AgencyName { get; set; }
+
     }
 }

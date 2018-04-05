@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Kwt.PatientsMgtApp.Core.Models;
-using Kwt.PatientsMgtAppt.PersistenceDB.EDMX;
+using Kwt.PatientsMgtApp.PersistenceDB.EDMX;
 
 namespace Kwt.PatientsMgtApp.DataAccess.SQL
 {
-    public class DoctorRepository
+    public class DoctorRepository: IDoctorRepository
     {
 
         readonly private IDomainObjectRepository _domainObjectRepository;

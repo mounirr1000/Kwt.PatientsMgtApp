@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Kwt.PatientsMgtAppt.PersistenceDB.EDMX
+namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
 {
     using System;
     using System.Collections.Generic;

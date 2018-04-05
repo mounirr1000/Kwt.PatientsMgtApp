@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using kwt.PatientsMgtApp.Utilities.Errors;
 using Kwt.PatientsMgtApp.Core;
 using Kwt.PatientsMgtApp.Core.Models;
-using Kwt.PatientsMgtAppt.PersistenceDB.EDMX;
+using Kwt.PatientsMgtApp.PersistenceDB.EDMX;
 
 namespace Kwt.PatientsMgtApp.DataAccess.SQL
 {

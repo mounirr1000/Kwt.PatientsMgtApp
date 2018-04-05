@@ -117,9 +117,9 @@
       <Project>{F6680818-8728-44D5-894F-ACC14C588FA5}</Project>
       <Name>Kwt.PatientsMgtApp.WebUI</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Kwt.PatientsMgtAppt.PersistenceDB\Kwt.PatientsMgtAppt.PersistenceDB.csproj">
+    <ProjectReference Include="..\Kwt.PatientsMgtAppt.PersistenceDB\Kwt.PatientsMgtApp.PersistenceDB.csproj">
       <Project>{1b7ada94-ab71-4ca4-a61e-035edbe8f2c3}</Project>
-      <Name>Kwt.PatientsMgtAppt.PersistenceDB</Name>
+      <Name>Kwt.PatientsMgtApp.PersistenceDB</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
