@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using kwt.PatientsMgtApp.Utilities.Errors;
+using Kwt.PatientsMgtApp.Core;
 using Kwt.PatientsMgtApp.Core.Models;
 using Kwt.PatientsMgtApp.PersistenceDB.EDMX;
 
@@ -29,10 +30,10 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 Agency = m.Agency?.AgencyName,
                 BankCode = m.Bank?.BankCode,
                 Iban = m.Iban,
-                IsActive = m.IsActive,
+                IsActive = m.IsActive == true ? true : false,
                 EndTreatDate = m.EndTreatDate,
                 FirstApptDAte = m.FirstApptDate,
-                IsBeneficiary = m.IsBeneficiary,
+                IsBeneficiary = m.IsBeneficiary == true ? true : false,
                 KWTPhone = m.KWTphone,
                 Notes = m.Notes,
                 PatientFName = m.PatientFName,
@@ -47,6 +48,43 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             }).ToList();
         }
 
+        public List<PatientModel> GetActivePatients()
+        {
+            IPatientRepository patientRepo= new PatientRepository();
+            var activePatients = patientRepo.GetPatients().Where(p => p.IsActive == true).ToList();
+
+            return activePatients;
+            throw new NotImplementedException();
+        }
+
+        public List<PatientModel> GetHistoryPatients()
+        {
+            var patientHistory = _domainObjectRepository.All<PatientHistory>();
+            return patientHistory.Select(m => new PatientModel()
+            {
+                //Doctor = _domainObjectRepository.Get<Doctor>(d=>d.DoctorID==m.DoctorID).DoctorName,
+                //BankName = _domainObjectRepository.Get<Bank>(d => d.BankID == m.BankID).BankName,
+                //Hospital = _domainObjectRepository.Get<Hospital>(d => d.HospitalID == m.HospitalID).HospitalName,
+                //Agency = _domainObjectRepository.Get<Agency>(d => d.AgencyID == m.DoctorID).AgencyName,
+                //BankCode = _domainObjectRepository.Get<Bank>(d => d.BankID == m.BankID).BankCode,
+                Iban = m.Iban,
+                IsActive = m.IsActive==true? true:false,
+                EndTreatDate = m.EndTreatDate,
+                FirstApptDAte = m.FirstApptDate,
+                IsBeneficiary = m.IsBeneficiary == true ? true : false,
+                KWTPhone = m.KWTphone,
+                Notes = m.Notes,
+                PatientFName = m.PatientFName,
+                PatientLName = m.PatientLName,
+                PatientMName = m.PatientMName,
+                PatientCID = m.PatientCID,
+                USPhone = m.USphone,
+                
+                CreatedDate = m.CreatedDate,
+
+            }).ToList();
+            //throw new NotImplementedException();
+        }
         public PatientModel GetPatient(string patientcid)
         {
 
@@ -62,10 +100,10 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     Agency = p.Agency.AgencyName,
                     BankCode = p.Bank?.BankCode,
                     Iban = p.Iban,
-                    IsActive = p.IsActive,
+                    IsActive = p.IsActive == true ? true : false,
                     EndTreatDate = p.EndTreatDate,
                     FirstApptDAte = p.FirstApptDate,
-                    IsBeneficiary = p.IsBeneficiary,
+                    IsBeneficiary = p.IsBeneficiary == true ? true : false,
                     KWTPhone = p.KWTphone,
                     Notes = p.Notes,
                     PatientFName = p.PatientFName,
@@ -74,12 +112,14 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     PatientCID = p.PatientCID,
                     USPhone = p.USphone,
                     CreatedDate = p.CreatedDate,
-                    CreatedBy = p.CreatedBy
+                    CreatedBy = p.CreatedBy,
+                    ModifiedDate = p.ModifiedDate,
+                    ModifiedBy = p.ModifiedBy
                 };
             }
 
             else
-                throw new PatientsMgtException(1, "error", "Getting Patient with CID", "There is no patients with this CID: " + patientcid);
+                throw new PatientsMgtException(1, "error", "Getting Patient with CID", "There is no patient with this Civil ID: " + patientcid);
         }
 
         public List<CompanionModel> GetPatientCompanions(string patientcid)
@@ -109,7 +149,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
 
         public void AddPatient(PatientModel patient)
         {
-            
+
             var pa = _domainObjectRepository.Get<Patient>(tp => tp.PatientCID == patient.PatientCID);
 
             if (pa == null)
@@ -119,8 +159,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     AgencyID = _domainObjectRepository.Get<Agency>(a => a.AgencyName == patient.Agency).AgencyID,
                     USphone = patient.USPhone,
                     HospitalID =
-                        _domainObjectRepository.Get<Hospital>(a => a.HospitalName == patient.Hospital).HospitalID,
-                    BankID = _domainObjectRepository.Get<Bank>(a => a.BankName == patient.BankName).BankID,
+                        _domainObjectRepository.Get<Hospital>(a => a.HospitalName == patient.Hospital)?.HospitalID,
+                    BankID = _domainObjectRepository.Get<Bank>(a => a.BankName == patient.BankName)?.BankID,
                     IsBeneficiary = patient.IsBeneficiary,
                     IsActive = patient.IsActive,
                     KWTphone = patient.KWTPhone,
@@ -128,11 +168,11 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     DoctorID = _domainObjectRepository.Get<Doctor>(a => a.DoctorName == patient.Doctor).DoctorID,
                     Notes = patient.Notes,
                     CreatedBy = patient.CreatedBy,
-                    PatientCID = patient.PatientCID.Trim(),
+                    PatientCID = patient.PatientCID?.Trim(),
                     EndTreatDate = patient.EndTreatDate,
-                    PatientFName = patient.PatientFName.Trim(),
-                    PatientLName = patient.PatientLName.Trim(),
-                    PatientMName = patient.PatientMName.Trim(),
+                    PatientFName = patient.PatientFName?.Trim(),
+                    PatientLName = patient.PatientLName?.Trim(),
+                    PatientMName = patient.PatientMName?.Trim(),
                     FirstApptDate = patient.FirstApptDAte,
                 };
 
@@ -142,11 +182,11 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 if (ben == null)
                 {
                     Beneficiary beneficiary;
-                    
+
                     if (p?.IsBeneficiary == true)
                     {
 
-                         beneficiary = new Beneficiary()
+                        beneficiary = new Beneficiary()
                         {
                             PatientCID = p.PatientCID,
                             BankID = p.BankID,
@@ -159,9 +199,9 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     }
                     else
                     {
-                         beneficiary = new Beneficiary()
+                        beneficiary = new Beneficiary()
                         {
-                            PatientCID = p.PatientCID,                           
+                            PatientCID = p.PatientCID,
                         };
                     }
                     _domainObjectRepository.Create<Beneficiary>(beneficiary);
@@ -169,32 +209,69 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
 
 
             }
-            else 
+            else
                 throw new PatientsMgtException(1, "error", "Creating new Patient", String.Format("There is a Patient with the same Patient Civil ID '{0}' already in our records!", patient.PatientCID));
         }
 
         public PatientModel UpdatePatient(PatientModel patient)
         {
+           
             var p = _domainObjectRepository.Get<Patient>(m => m.PatientCID == patient.PatientCID);
-            p.FirstApptDate = patient.FirstApptDAte;
-            p.IsActive = patient.IsActive;
-            p.Notes = patient.Notes;
-            p.IsBeneficiary = patient.IsBeneficiary;
-            p.KWTphone = patient.KWTPhone;
-            p.PatientFName = patient.PatientFName;
-            p.PatientLName = patient.PatientLName;
-            p.PatientMName = patient.PatientMName;
-            p.Iban = patient.Iban;
-            p.EndTreatDate = patient.EndTreatDate;
-            p.AgencyID = _domainObjectRepository.Get<Agency>(a => a.AgencyName == patient.Agency).AgencyID;
-            p.BankID = _domainObjectRepository.Get<Bank>(a => a.BankName == patient.BankName).BankID;
-            p.DoctorID = _domainObjectRepository.Get<Doctor>(a => a.DoctorName == patient.Doctor).DoctorID;
-            p.HospitalID = _domainObjectRepository.Get<Hospital>(a => a.HospitalName == patient.Hospital).HospitalID;
-            p.USphone = patient.USPhone;
-            _domainObjectRepository.Update<Patient>(p);
+            if (p != null)
+            {
+                p.FirstApptDate = patient.FirstApptDAte;
+                p.IsActive = patient.EndTreatDate != null ? false : true;
+                p.Notes = patient.Notes;
+                p.IsBeneficiary = patient.IsBeneficiary;
+                p.KWTphone = patient.KWTPhone;
+                p.PatientFName = patient.PatientFName;
+                p.PatientLName = patient.PatientLName;
+                p.PatientMName = patient.PatientMName;
+                p.Iban = patient.Iban;
+                p.EndTreatDate = patient.EndTreatDate;//String.Equals(a.BankName, patient.BankName, StringComparison.OrdinalIgnoreCase)
+                p.AgencyID = _domainObjectRepository.Get<Agency>(a => a.AgencyName.Trim() == patient.Agency.Trim()).AgencyID;
+                p.BankID = _domainObjectRepository.Get<Bank>(a => a.BankName == patient.BankName)?.BankID;
+                p.DoctorID = _domainObjectRepository.Get<Doctor>(a => a.DoctorName == patient.Doctor).DoctorID;
+                p.HospitalID = _domainObjectRepository.Get<Hospital>(a => a.HospitalName == patient.Hospital).HospitalID;
+                p.USphone = patient.USPhone;
+                _domainObjectRepository.Update<Patient>(p);
+                // check if the patient become inactive and the end treatment date is not null, then the patient should become part of the history.
+                if (patient.IsActive == false && patient.EndTreatDate != null)
+                {
+                    var patientHistory = new PatientHistory()
+                    {
+                        AgencyID = p.AgencyID,
+                        BankID = p.BankID,
+                        CreatedDate = DateTime.Now,
+                        DoctorID = p.DoctorID,
+                        OldCreatedDate = p.CreatedDate,
+                        EndTreatDate = p.EndTreatDate,
+                        FirstApptDate = p.FirstApptDate,
+                        HospitalID = p.HospitalID,
+                        Iban = p.Iban,
+                        IsActive = false,
+                        IsBeneficiary = p.IsBeneficiary,
+                        KWTphone = p.KWTphone,
+                        Notes = p.Notes,
+                        PatientCID = p.PatientCID,
+                        PatientFName = p.PatientFName,
+                        PatientLName = p.PatientLName,
+                        PatientMName = p.PatientMName,
+                        USphone = p.USphone,
+                        PrimaryCompanionCid =
+                            _domainObjectRepository.Get<Companion>(c => c.PatientCID == p.PatientCID &&
+                                                                        c.CompanionTypeID ==
+                                                                        (int) Enums.CompanionType.Primary)?.CompanionCID,
+                        
+                    };
+                    _domainObjectRepository.Create<PatientHistory>(patientHistory);
+                }
+            }
             return patient;
         }
 
+
+        // ToDo : this functionality may not be needed
         public int DeletePatient(PatientModel patient)
         {
             var p = _domainObjectRepository.Get<Patient>(pa => pa.PatientCID == patient.PatientCID);
@@ -202,6 +279,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             {
                 //Delete all related tables to the patient
                 //delete Beneficiary record
+                _domainObjectRepository.Delete<Payment>(b => b.PatientCID == patient.PatientCID);
                 _domainObjectRepository.Delete<Beneficiary>(b => b.PatientCID == patient.PatientCID);
                 _domainObjectRepository.Delete<CompanionHistory>(ch => ch.PatientCID == patient.PatientCID);
                 _domainObjectRepository.Delete<Companion>(co => co.PatientCID == patient.PatientCID);

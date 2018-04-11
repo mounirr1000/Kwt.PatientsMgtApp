@@ -44,6 +44,8 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="ExceptionLoggerObject.cs" />
+    <Compile Include="Infrastructure\RequiredIfAttribute.cs" />
     <Compile Include="Interfaces\IDomainObject.cs" />
     <Compile Include="Models\AgencyModel.cs" />
     <Compile Include="Models\BankModel.cs" />

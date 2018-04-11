@@ -86,12 +86,47 @@
           <Property Name="DoctorID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="DoctorName" Type="nvarchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="ExceptionLoggers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ExceptionMessage" Type="nvarchar(max)" />
+          <Property Name="ControllerName" Type="nvarchar" MaxLength="256" />
+          <Property Name="ExceptionStackTrace" Type="nvarchar(max)" />
+          <Property Name="LogTime" Type="date" Nullable="false" />
+        </EntityType>
         <EntityType Name="Hospitals">
           <Key>
             <PropertyRef Name="HospitalID" />
           </Key>
           <Property Name="HospitalID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="HospitalName" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="PatientHistories">
+          <Key>
+            <PropertyRef Name="PatientCID" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PatientCID" Type="nvarchar" MaxLength="12" Nullable="false" />
+          <Property Name="PatientFName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PatientMName" Type="nvarchar" MaxLength="50" />
+          <Property Name="PatientLName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="KWTphone" Type="nvarchar" MaxLength="15" />
+          <Property Name="USphone" Type="nvarchar" MaxLength="15" />
+          <Property Name="HospitalID" Type="int" />
+          <Property Name="DoctorID" Type="int" Nullable="false" />
+          <Property Name="AgencyID" Type="int" Nullable="false" />
+          <Property Name="BankID" Type="int" />
+          <Property Name="Iban" Type="nvarchar" MaxLength="50" />
+          <Property Name="FirstApptDate" Type="date" />
+          <Property Name="EndTreatDate" Type="date" />
+          <Property Name="IsBeneficiary" Type="bit" />
+          <Property Name="IsActive" Type="bit" />
+          <Property Name="Notes" Type="nvarchar" MaxLength="250" />
+          <Property Name="OldCreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="PrimaryCompanionCid" Type="nvarchar" MaxLength="12" />
         </EntityType>
         <EntityType Name="Patients">
           <Key>
@@ -358,7 +393,9 @@
           <EntitySet Name="Companions" EntityType="Self.Companions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CompanionTypes" EntityType="Self.CompanionTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Doctors" EntityType="Self.Doctors" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ExceptionLoggers" EntityType="Self.ExceptionLoggers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Hospitals" EntityType="Self.Hospitals" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PatientHistories" EntityType="Self.PatientHistories" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Patients" EntityType="Self.Patients" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Payments" EntityType="Self.Payments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PayRates" EntityType="Self.PayRates" Schema="dbo" store:Type="Tables" />
@@ -677,6 +714,8 @@
             <End Role="PayRate" EntitySet="PayRates" />
             <End Role="Payment" EntitySet="Payments" />
           </AssociationSet>
+          <EntitySet Name="ExceptionLoggers" EntityType="PatientsMgtModel.ExceptionLogger" />
+          <EntitySet Name="PatientHistories" EntityType="PatientsMgtModel.PatientHistory" />
         </EntityContainer>
         <EntityType Name="CompanionHistory">
           <Key>
@@ -863,6 +902,41 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="ExceptionLogger">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ExceptionMessage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ControllerName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="ExceptionStackTrace" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LogTime" Type="DateTime" Nullable="false" Precision="0" />
+        </EntityType>
+        <EntityType Name="PatientHistory">
+          <Key>
+            <PropertyRef Name="PatientCID" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PatientCID" Type="String" Nullable="false" MaxLength="12" FixedLength="false" Unicode="true" />
+          <Property Name="PatientFName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PatientMName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PatientLName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="KWTphone" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="USphone" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="HospitalID" Type="Int32" />
+          <Property Name="DoctorID" Type="Int32" Nullable="false" />
+          <Property Name="AgencyID" Type="Int32" Nullable="false" />
+          <Property Name="BankID" Type="Int32" />
+          <Property Name="Iban" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FirstApptDate" Type="DateTime" Precision="0" />
+          <Property Name="EndTreatDate" Type="DateTime" Precision="0" />
+          <Property Name="IsBeneficiary" Type="Boolean" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="Notes" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="OldCreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="PrimaryCompanionCid" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1064,6 +1138,43 @@
                 <ScalarProperty Name="PatientCID" ColumnName="PatientCID" />
                 <ScalarProperty Name="PaymentDate" ColumnName="PaymentDate" />
                 <ScalarProperty Name="PaymentID" ColumnName="PaymentID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExceptionLoggers">
+            <EntityTypeMapping TypeName="PatientsMgtModel.ExceptionLogger">
+              <MappingFragment StoreEntitySet="ExceptionLoggers">
+                <ScalarProperty Name="LogTime" ColumnName="LogTime" />
+                <ScalarProperty Name="ExceptionStackTrace" ColumnName="ExceptionStackTrace" />
+                <ScalarProperty Name="ControllerName" ColumnName="ControllerName" />
+                <ScalarProperty Name="ExceptionMessage" ColumnName="ExceptionMessage" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PatientHistories">
+            <EntityTypeMapping TypeName="PatientsMgtModel.PatientHistory">
+              <MappingFragment StoreEntitySet="PatientHistories">
+                <ScalarProperty Name="PrimaryCompanionCid" ColumnName="PrimaryCompanionCid" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="OldCreatedDate" ColumnName="OldCreatedDate" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="IsBeneficiary" ColumnName="IsBeneficiary" />
+                <ScalarProperty Name="EndTreatDate" ColumnName="EndTreatDate" />
+                <ScalarProperty Name="FirstApptDate" ColumnName="FirstApptDate" />
+                <ScalarProperty Name="Iban" ColumnName="Iban" />
+                <ScalarProperty Name="BankID" ColumnName="BankID" />
+                <ScalarProperty Name="AgencyID" ColumnName="AgencyID" />
+                <ScalarProperty Name="DoctorID" ColumnName="DoctorID" />
+                <ScalarProperty Name="HospitalID" ColumnName="HospitalID" />
+                <ScalarProperty Name="USphone" ColumnName="USphone" />
+                <ScalarProperty Name="KWTphone" ColumnName="KWTphone" />
+                <ScalarProperty Name="PatientLName" ColumnName="PatientLName" />
+                <ScalarProperty Name="PatientMName" ColumnName="PatientMName" />
+                <ScalarProperty Name="PatientFName" ColumnName="PatientFName" />
+                <ScalarProperty Name="PatientCID" ColumnName="PatientCID" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

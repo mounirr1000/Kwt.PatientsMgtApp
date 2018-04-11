@@ -56,6 +56,7 @@
     <Compile Include="CompanionRepository.cs" />
     <Compile Include="DoctorRepository.cs" />
     <Compile Include="DomainObjectRepository.cs" />
+    <Compile Include="ExceptionLoggerRepository.cs" />
     <Compile Include="HospitalRepository.cs" />
     <Compile Include="IAgencyRepository.cs" />
     <Compile Include="IBankRepository.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="ICompanionRepository.cs" />
     <Compile Include="IDoctorRepository.cs" />
     <Compile Include="IDomainObjectRepository.cs" />
+    <Compile Include="IExceptionLoggerRepository.cs" />
     <Compile Include="IHospitalRepository.cs" />
     <Compile Include="IPatientManagmentRepository.cs" />
     <Compile Include="IPatientRepository.cs" />

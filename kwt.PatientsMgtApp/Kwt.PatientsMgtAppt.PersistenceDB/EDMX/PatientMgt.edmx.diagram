@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="594981d2cc0140cab5846448f8493d28" Name="Diagram1" ZoomLevel="100">
+      <Diagram DiagramId="594981d2cc0140cab5846448f8493d28" Name="Diagram1" ZoomLevel="74">
         <EntityTypeShape EntityType="PatientsMgtModel.Agency" Width="1.5" PointX="3.75" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="PatientsMgtModel.Bank" Width="1.5" PointX="0.75" PointY="8.875" IsExpanded="true" />
         <EntityTypeShape EntityType="PatientsMgtModel.Beneficiary" Width="1.5" PointX="9" PointY="4.125" IsExpanded="true" />
@@ -34,6 +34,8 @@
         <AssociationConnector Association="PatientsMgtModel.FK_Payments_Companions" />
         <AssociationConnector Association="PatientsMgtModel.FK_Payments_Patients" />
         <AssociationConnector Association="PatientsMgtModel.FK_Payments_PayRates" />
+        <EntityTypeShape EntityType="PatientsMgtModel.ExceptionLogger" Width="1.5" PointX="8.375" PointY="8.75" />
+        <EntityTypeShape EntityType="PatientsMgtModel.PatientHistory" Width="1.5" PointX="0.75" PointY="11.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

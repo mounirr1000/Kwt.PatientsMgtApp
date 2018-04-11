@@ -73,10 +73,16 @@
     <Compile Include="EDMX\Doctor.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
+    <Compile Include="EDMX\ExceptionLogger.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
     <Compile Include="EDMX\Hospital.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
     <Compile Include="EDMX\Patient.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\PatientHistory.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
     <Compile Include="EDMX\PatientMgt.Context.cs">

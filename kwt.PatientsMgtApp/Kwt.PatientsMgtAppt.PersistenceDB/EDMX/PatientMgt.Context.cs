@@ -40,5 +40,7 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public virtual DbSet<CompanionHistory> CompanionHistories { get; set; }
         public virtual DbSet<Companion> Companions { get; set; }
         public virtual DbSet<Payment> Payments { get; set; }
+        public virtual DbSet<ExceptionLogger> ExceptionLoggers { get; set; }
+        public virtual DbSet<PatientHistory> PatientHistories { get; set; }
     }
 }

@@ -29,7 +29,10 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
             set { this.BankID = value; }
         }
     }
-
+    public partial class ExceptionLogger : IDomainObject
+    {
+        
+    }
     public partial class Beneficiary : IDomainObject
     {
         public int Id
@@ -127,6 +130,11 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
     public partial class UserRole : IDomainObject
     {
        
+    }
+
+    public partial class PatientHistory : IDomainObject
+    {
+
     }
 }
 

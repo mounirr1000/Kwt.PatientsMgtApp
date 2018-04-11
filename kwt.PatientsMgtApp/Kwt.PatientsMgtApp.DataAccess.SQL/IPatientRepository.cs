@@ -12,6 +12,10 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
     {
         List<PatientModel> GetPatients();
 
+        List<PatientModel> GetActivePatients();
+
+        List<PatientModel> GetHistoryPatients();
+
         PatientModel GetPatient(string patientcid);
 
         List<CompanionModel> GetPatientCompanions(string patientcid);

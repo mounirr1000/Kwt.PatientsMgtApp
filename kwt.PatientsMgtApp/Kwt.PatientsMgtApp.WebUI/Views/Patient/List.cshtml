@@ -1,0 +1,165 @@
+﻿@using PagedList.Mvc;
+@model PagedList.IPagedList<Kwt.PatientsMgtApp.Core.Models.PatientModel>
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+@{
+    ViewBag.Title = "Patient List";
+
+}
+
+<h2>Patients</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+<div id="people-data">
+    @if (Model.Any())
+    {
+        <div class="p-3">
+            @{ Html.RenderPartial("_PatientSearchForm"); }
+        </div>
+        <table class="table text-center table-bordered table-striped">
+            <tr>
+                <th>
+                    @*@Html.DisplayNameFor(model => model.PatientCID)*@
+                    @Html.ActionLink("Civil ID", "List", new { sortOrder = ViewBag.CidSortParm, currentFilter = ViewBag.CurrentFilter })
+                     
+                </th>
+
+                <th>
+                    
+                    @Html.ActionLink("Full Name", "List", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
+                </th>
+                <th>
+                    @*@Html.DisplayNameFor(model => model.KWTPhone)*@
+                    Kuwait Phone#
+                </th>
+                <th>
+                    @*@Html.DisplayNameFor(model => model.USPhone)*@
+                    US Phone#
+                </th>
+
+
+                <th>
+                    @*@Html.DisplayNameFor(model => model.FirstApptDAte)*@
+                    @Html.ActionLink("First Appointment Date", "List", new { sortOrder = ViewBag.AptSortParm, currentFilter = ViewBag.CurrentFilter })
+                    
+                </th>
+                <th>
+                    @*@Html.DisplayNameFor(model => model.EndTreatDate)*@
+                    End Treatment Date
+                </th>
+                <th>
+                    @*@Html.DisplayNameFor(model => model.IsBeneficiary)*@
+                    Is Beneficiary
+                </th>
+                <th>
+                    @*@Html.DisplayNameFor(model => model.IsActive)*@
+                    Active Status
+                </th>
+                <th>
+                    @*@Html.DisplayNameFor(model => model.Notes)*@
+                    Notes
+                </th>
+
+                @*<th></th>*@
+            </tr>
+
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.ActionLink(item.PatientCID.ToString(), "Details", new {patientCid = item.PatientCID})
+                        @*@Html.DisplayFor(modelItem => item.PatientCID)*@
+                    </td>
+
+                    <td>
+                        @(item.PatientFName + " " + item.PatientMName + " " + item.PatientLName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.KWTPhone)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.USPhone)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstApptDAte)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndTreatDate)
+                    </td>
+                    <td>
+                        @if (item.IsBeneficiary == true)
+                        {
+                            <label class="badge badge-success">Yes</label>
+                        }
+                        else
+                        {
+                            <label class="badge badge-info">No</label>
+                        }
+                    </td>
+                    <td>
+                        @if (item.IsActive == true)
+                        {
+                            <label class="badge badge-success">Yes</label>
+                        }
+                        else
+                        {
+                            <label class="badge badge-info">No</label>
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Notes)
+                    </td>
+
+                    <td>
+                        @*@Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+                        @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })*@
+
+                        <a href="javascript:confirmDelete(@item.PatientCID,'patientCid')" class="btn btn-info">Delete</a>
+                    </td>
+                </tr>
+
+            }
+
+        </table>
+        <span>Page</span>
+        @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) 
+               <span>of</span>  
+                    @Model.PageCount
+    @Html.PagedListPager(Model, page => Url.Action("List", new { page }));
+    
+    }
+    else
+    {
+    <div class="text-info">
+        There is no patient in our records
+        @if (Request.QueryString["searchPatientText"] != null)
+        {
+            <span> that contains :&nbsp;<b> @Request.QueryString["searchPatientText"]</b></span>
+                <br />@Html.ActionLink("Go back to list", "List", "Patient");
+        }
+    </div>
+    }
+</div>
+
+@section DeleteConfirm{
+
+    @{ Html.RenderPartial("_DeleteConfirmationModel"); }
+
+}
+
+@section Scripts {
+
+    @{ Html.RenderPartial("_DeleteConfirmationjs"); }
+    <script type="text/javascript">
+        $("#clear").click(function (e) {
+            console.log("Clear serch");
+            $("#searchPatient").val("");
+            //e.preventDefault();
+        });
+    </script>
+}
