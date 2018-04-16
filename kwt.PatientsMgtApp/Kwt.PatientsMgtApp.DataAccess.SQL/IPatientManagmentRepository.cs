@@ -13,5 +13,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         List<BankModel> GetBanks();
         List<HospitalModel> GetHospitals();
         List<DoctorModel> GetDoctors();
+        List<SpecialtyModel> GetSpecialities();
+
     }
 }

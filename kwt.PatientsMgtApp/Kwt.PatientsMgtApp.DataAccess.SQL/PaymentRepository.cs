@@ -15,10 +15,19 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
     public class PaymentRepository : IPaymentRepository
     {
         private readonly IDomainObjectRepository _domainObjectRepository;
+        private readonly IBeneficiaryRepository _beneficiaryRepository;
+        private readonly IPatientRepository _patientRepository;
+        private readonly ICompanionRepository _companionRepository;
+        private readonly IPayRateRepository _payRateRepository;
+
 
         public PaymentRepository()
         {
             _domainObjectRepository = new DomainObjectRepository();
+            _beneficiaryRepository= new BeneficiaryRepository();
+            _patientRepository = new PatientRepository();
+            _companionRepository = new CompanionRepository();
+            _payRateRepository = new PayRateRepository();
         }
         public List<PaymentModel> GetPayments()
         {
@@ -62,6 +71,38 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
 
         }
 
+        public PaymentModel GetPaymentObject(string patientCid)
+        {
+            PaymentModel payment = new PaymentModel();
+            var ben = _beneficiaryRepository.GetBeneficiary(patientCid);
+            var patient = _patientRepository.GetPatient(patientCid);
+            var companion = _companionRepository.GetCompanion(ben?.CompanionCID);
+            if (patient!=null && ben!=null) 
+            {
+                payment.PatientCID = patientCid;
+                payment.PatientFName = patient.PatientFName;
+                payment.PatientLName = patient.PatientLName;
+                payment.PatientMName = patient.PatientMName;
+                payment.Agency = patient.Agency;
+                payment.Hospital = patient.Hospital;
+                payment.CompanionCID = ben.CompanionCID;
+                payment.CompanionFName = companion?.CompanionFName;
+                payment.CompanionLName = companion?.CompanionLName;
+                payment.CompanionMName = companion?.CompanionMName;
+                payment.BeneficiaryMName = ben.BeneficiaryFName;
+                payment.BeneficiaryBank = ben.BankName;
+                payment.BeneficiaryIBan = ben.IBan;
+                payment.BeneficiaryCID = ben.BeneficiaryCID;
+                payment.BeneficiaryFName = ben.BeneficiaryFName;
+                payment.BeneficiaryLName = ben.BeneficiaryLName;
+
+                //Todo: This should be done a better way
+                payment.PayRates = _payRateRepository.GetPayRatesList();
+                payment.PatientPayRate = _domainObjectRepository.Get<PayRate>(c => c.PayRateID == 1).PatientRate;
+                payment.CompanionPayRate = !String.IsNullOrEmpty(ben.CompanionCID)? _domainObjectRepository.Get<PayRate>(c => c.PayRateID == 1).CompanionRate:0;
+            }
+            return payment;
+        }
         public PaymentModel GetPaymentById(int paymentid)
         {
             var payment = _domainObjectRepository.Get<Payment>(p => p.PaymentID == paymentid,
@@ -187,20 +228,20 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             Payment newPayment = new Payment()
             {
                 PatientCID = payment.PatientCID,
-                AgencyID = _domainObjectRepository.Get<Agency>(a => a.AgencyName == payment.Agency).AgencyID,
+                AgencyID = _domainObjectRepository.Get<Agency>(a => a.AgencyName == payment.Agency)?.AgencyID,
                 CAmount = payment.CompanionAmount,
-                BeneficiaryID = _domainObjectRepository.Get<Beneficiary>(b => b.PatientCID == payment.PatientCID).BeneficiaryID,
+                BeneficiaryID = _domainObjectRepository.Get<Beneficiary>(b => b.PatientCID == payment.PatientCID)?.BeneficiaryID,
                 CompanionCID = payment.CompanionCID,
                 CreatedBy = payment.CreatedBy,
 
                 Notes = payment.Notes,
                 EndDate = payment.PaymentEndDate,
-                HospitalID = _domainObjectRepository.Get<Hospital>(h => h.HospitalName == payment.Hospital).HospitalID,
+                HospitalID = _domainObjectRepository.Get<Hospital>(h => h.HospitalName == payment.Hospital)?.HospitalID,
                 ModifiedBy = payment.ModifiedBy,
 
                 PAmount = payment.PatientAmount,
                 PayRateID = _domainObjectRepository.Get<PayRate>(pr => pr.CompanionRate == payment.CompanionPayRate
-                                                && pr.PatientRate == payment.PatientPayRate).PayRateID,
+                                                && pr.PatientRate == payment.PatientPayRate)?.PayRateID,
                 PaymentDate = payment.PaymentDate,
                 Period = payment.PaymentLengthPeriod,
                 StartDate = payment.PaymentStartDate,

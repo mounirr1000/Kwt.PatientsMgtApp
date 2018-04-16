@@ -8,20 +8,20 @@ using Kwt.PatientsMgtApp.PersistenceDB.EDMX;
 
 namespace Kwt.PatientsMgtApp.DataAccess.SQL
 {
-    public class BeneficiaryRepository: IBeneficiaryRepository
+    public class BeneficiaryRepository : IBeneficiaryRepository
     {
         private readonly IDomainObjectRepository _domainObjectRepository;
         public BeneficiaryRepository()
         {
-            _domainObjectRepository= new DomainObjectRepository();
+            _domainObjectRepository = new DomainObjectRepository();
         }
         public List<BeneficiaryModel> GetBeneficiaries()
         {
-            var beneficiaries=  _domainObjectRepository.All<Beneficiary>(new[] {"Payments"}).ToList();
+            var beneficiaries = _domainObjectRepository.All<Beneficiary>(new[] { "Payments" }).ToList();
 
             return beneficiaries.Select(b => new BeneficiaryModel()
             {
-                BankName = _domainObjectRepository.Get<Bank>(ba=>ba.BankID== b.BankID).BankName,
+                BankName = _domainObjectRepository.Get<Bank>(ba => ba.BankID == b.BankID).BankName,
                 BankCode = _domainObjectRepository.Get<Bank>(ba => ba.BankID == b.BankID).BankCode,
                 PatientCID = b.PatientCID,
                 CompanionCID = b.CompanionCID,
@@ -36,23 +36,28 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
 
         public BeneficiaryModel GetBeneficiary(string patientCid)
         {
-           var beneficiary= _domainObjectRepository.Get<Beneficiary>(b => b.PatientCID == patientCid, new [] {"Payments"});
-
-            
-            return new BeneficiaryModel()
+            var beneficiary = _domainObjectRepository.Get<Beneficiary>(b => b.PatientCID == patientCid, new[] { "Payments" });
+            if (beneficiary != null)
             {
-                BankName = _domainObjectRepository.Get<Bank>(ba => ba.BankID == beneficiary.BankID).BankName,
-                BankCode = _domainObjectRepository.Get<Bank>(ba => ba.BankID == beneficiary.BankID).BankCode,
-                PatientCID = beneficiary.PatientCID,
-                CompanionCID = beneficiary.CompanionCID,
-                BeneficiaryCID = beneficiary.BeneficiaryCID,
-                BeneficiaryFName = beneficiary.BeneficiaryFName,
-                BeneficiaryLName = beneficiary.BeneficiaryLName,
-                BeneficiaryMName = beneficiary.BeneficiaryMName,
-                IBan = beneficiary.IBan,
-                Id = beneficiary.BeneficiaryID
-                
-            };
+                BeneficiaryModel ben = new BeneficiaryModel
+                {
+                    BankName = _domainObjectRepository.Get<Bank>(ba => ba.BankID == beneficiary.BankID)?.BankName,
+                    BankCode = _domainObjectRepository.Get<Bank>(ba => ba.BankID == beneficiary.BankID)?.BankCode,
+                    PatientCID = beneficiary.PatientCID,
+                    CompanionCID = beneficiary.CompanionCID,
+                    BeneficiaryCID = beneficiary.BeneficiaryCID,
+                    BeneficiaryFName = beneficiary.BeneficiaryFName,
+                    BeneficiaryLName = beneficiary.BeneficiaryLName,
+                    BeneficiaryMName = beneficiary.BeneficiaryMName,
+                    IBan = beneficiary.IBan,
+                    Id = beneficiary.BeneficiaryID
+                };
+                return ben;
+            }
+            return null;
+
+
+
         }
     }
 }

@@ -93,6 +93,7 @@
   <ItemGroup>
     <Compile Include="BenefeciaryRepositoryTest.cs" />
     <Compile Include="CompanionRepositoryTest.cs" />
+    <Compile Include="PatientManagmentRepositoryTest.cs" />
     <Compile Include="PatientRepositoryTest.cs" />
     <Compile Include="PaymentRepositoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

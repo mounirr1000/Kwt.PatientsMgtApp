@@ -22,6 +22,9 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
 
         CompanionModel UpdateCompanion(CompanionModel companion);
 
+       Companion GetCompanionByPatientCid(string patientcid);
         int DeleteCompanion(string companionCid, string patientCid);
+
+        void DataMigrationToInsertIntoBeneficiaryTable();
     }
 }

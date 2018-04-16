@@ -26,7 +26,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 BankID = b.BankID,
                 BankName = b.BankName,
                
-            }).ToList();
+            }).OrderBy(bk=>bk.BankName).ToList();
         }
 
        public BankModel GetBank(int bankId)

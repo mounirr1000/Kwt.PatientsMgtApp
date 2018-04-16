@@ -68,7 +68,15 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
             set { this.CompanionTypeID = value; }
         }
     }
+    public partial class Specialty : IDomainObject
+    {
+        public int Id
+        {
+            get { return this.SpecialtyId; }
 
+            set { this.SpecialtyId = value; }
+        }
+    }
     public partial class Doctor : IDomainObject
     {
         public int Id

@@ -53,11 +53,13 @@
     <Compile Include="Models\BeneficiaryModel.cs" />
     <Compile Include="Models\CompanionHistoryModel.cs" />
     <Compile Include="Models\CompanionModel.cs" />
+    <Compile Include="Models\CompanionTypeModel.cs" />
     <Compile Include="Models\DoctorModel.cs" />
     <Compile Include="Models\HospitalModel.cs" />
     <Compile Include="Models\PatientModel.cs" />
     <Compile Include="Models\PaymentModel.cs" />
     <Compile Include="Models\PayRateModel.cs" />
+    <Compile Include="Models\SpecialtyModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

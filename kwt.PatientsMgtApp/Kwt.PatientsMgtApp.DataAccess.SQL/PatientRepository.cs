@@ -20,7 +20,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         }
         public List<PatientModel> GetPatients()
         {
-            var result = _domainObjectRepository.All<Patient>(new[] { "Doctor", "Bank", "Agency", "Hospital" }).ToList();
+            var result = _domainObjectRepository.All<Patient>(new[] { "Doctor", "Bank", "Agency", "Hospital", "Specialty" }).ToList();
             //Map to returnable object
             return result.Select(m => new PatientModel()
             {
@@ -43,7 +43,9 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 USPhone = m.USphone,
                 CreatedBy = m.CreatedBy,
                 CreatedDate = m.CreatedDate,
-                ModifiedDate = m.ModifiedDate
+                ModifiedDate = m.ModifiedDate,
+                Diagnosis = m.Diagnosis,
+                Specialty = m.Specialty?.Specialty1
 
             }).ToList();
         }
@@ -78,8 +80,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 PatientLName = m.PatientLName,
                 PatientMName = m.PatientMName,
                 PatientCID = m.PatientCID,
-                USPhone = m.USphone,
-                
+                USPhone = m.USphone,           
                 CreatedDate = m.CreatedDate,
 
             }).ToList();
@@ -89,7 +90,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         {
 
             var p = _domainObjectRepository.Get<Patient>(e => e.PatientCID == patientcid,
-                                            new[] { "Bank", "Agency", "Doctor", "Hospital" });
+                                            new[] { "Bank", "Agency", "Doctor", "Hospital", "Specialty" });
             if (p != null)
             {
                 return new PatientModel()
@@ -114,12 +115,16 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     CreatedDate = p.CreatedDate,
                     CreatedBy = p.CreatedBy,
                     ModifiedDate = p.ModifiedDate,
-                    ModifiedBy = p.ModifiedBy
+                    ModifiedBy = p.ModifiedBy,
+                    Specialty = p.Specialty?.Specialty1,
+                    Diagnosis = p.Diagnosis
+
                 };
             }
 
             else
-                throw new PatientsMgtException(1, "error", "Getting Patient with CID", "There is no patient with this Civil ID: " + patientcid);
+                return null;
+                    // throw new PatientsMgtException(1, "error", "Getting Patient with CID", "There is no patient with this Civil ID: " + patientcid);
         }
 
         public List<CompanionModel> GetPatientCompanions(string patientcid)
@@ -132,21 +137,32 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 var companions = _domainObjectRepository.Filter<Companion>(e => e.PatientCID == patientcid, new[] { "CompanionHistories" });
                 companionList = companions.Select(m => new CompanionModel()
                 {
+                    
                     CompanionCID = m.CompanionCID,
+                    //BankName = _domainObjectRepository.Get<Bank>(b => b.BankID == m.BankID)?.BankName,
                     CompanionFName = m.CompanionFName,
-                    CompanionLName = m.CompanionLName,
                     CompanionMName = m.CompanionMName,
-                    IsActive = m.IsActive,//==true?"Yes":"No",
-                    IsBeneficiary = m.IsBeneficiary,// == true ? "Yes" : "No",
+                    CompanionLName = m.CompanionLName,
+                    //CompanionType = _domainObjectRepository.Get<CompanionType>(ct =>  ct.CompanionTypeID == m.CompanionTypeID ).CompanionType1,
+                    DateIn = m.DateIn,
+                    DateOut = m.DateOut,
+                    IsActive = m.IsActive == true ? true : false,
+                    IBan = m.IBan,
+                    //BankCode = _domainObjectRepository.Get<Bank>(b => b.BankID == m.BankID)?.BankCode,
+                    IsBeneficiary = m.IsBeneficiary == true ? true : false,
+                    Notes = m.Notes,
+                    PatientCID = m.PatientCID,
                     CreatedBy = m.CreatedBy,
                     CreatedDate = m.CreatedDate,
-                    DateIn = m.DateIn,
-                    DateOut = m.DateOut
+                    ModifiedDate = m.ModifiedDate,
+                    Id = m.Id,
+                    ModifiedBy = m.ModifiedBy
                 }).ToList();
             }
             return companionList;
         }
 
+       
         public void AddPatient(PatientModel patient)
         {
 
@@ -174,6 +190,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     PatientLName = patient.PatientLName?.Trim(),
                     PatientMName = patient.PatientMName?.Trim(),
                     FirstApptDate = patient.FirstApptDAte,
+                    SpecialtyId = _domainObjectRepository.Get<Specialty>(a => a.Specialty1 == patient.Specialty).SpecialtyId,
+                    Diagnosis = patient.Diagnosis
                 };
 
                 _domainObjectRepository.Create<Patient>(p);
@@ -232,8 +250,10 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 p.AgencyID = _domainObjectRepository.Get<Agency>(a => a.AgencyName.Trim() == patient.Agency.Trim()).AgencyID;
                 p.BankID = _domainObjectRepository.Get<Bank>(a => a.BankName == patient.BankName)?.BankID;
                 p.DoctorID = _domainObjectRepository.Get<Doctor>(a => a.DoctorName == patient.Doctor).DoctorID;
-                p.HospitalID = _domainObjectRepository.Get<Hospital>(a => a.HospitalName == patient.Hospital).HospitalID;
+                p.HospitalID = _domainObjectRepository.Get<Hospital>(a => a.HospitalName == patient.Hospital)?.HospitalID;
                 p.USphone = patient.USPhone;
+                p.SpecialtyId =_domainObjectRepository.Get<Specialty>(a => a.Specialty1 == patient.Specialty)?.SpecialtyId;
+                p.Diagnosis = patient.Diagnosis;
                 _domainObjectRepository.Update<Patient>(p);
                 // check if the patient become inactive and the end treatment date is not null, then the patient should become part of the history.
                 if (patient.IsActive == false && patient.EndTreatDate != null)

@@ -20,5 +20,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         PaymentModel UpdatePayment(PaymentModel payment);
 
         int DeletePayment(PaymentModel payment);
+
+        PaymentModel GetPaymentObject(string patientCid);
     }
 }

@@ -1,0 +1,287 @@
+﻿@model Kwt.PatientsMgtApp.Core.Models.PaymentModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Payment</h4>
+    <hr />
+
+
+    <fieldset>
+        <legend>Payment Info</legend>
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.PaymentDate)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PaymentDate)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.CompanionPayRate)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CompanionPayRate)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.PatientPayRate)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PatientPayRate)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.PaymentStartDate)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PaymentStartDate)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.PaymentEndDate)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PaymentEndDate)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.PaymentLengthPeriod)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PaymentLengthPeriod)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.PatientAmount)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PatientAmount)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.CompanionAmount)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CompanionAmount)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.TotalDue)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.TotalDue)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Notes)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Notes)
+            </dd>
+        </dl>
+    </fieldset>
+    <fieldset>
+        <legend>Bank Info</legend>
+        <dl class="dl-horizontal">
+
+            <dt>
+                @Html.DisplayNameFor(model => model.BeneficiaryBank)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.BeneficiaryBank)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.BeneficiaryIBan)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.BeneficiaryIBan)
+            </dd>
+        </dl>
+    </fieldset>
+    <fieldset>
+        <legend>Beneficiary Info</legend>
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.BeneficiaryCID)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.BeneficiaryCID)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.BeneficiaryFName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.BeneficiaryFName)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.BeneficiaryMName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.BeneficiaryMName)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.BeneficiaryLName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.BeneficiaryLName)
+            </dd>
+        </dl>
+    </fieldset>
+    <fieldset>
+        <legend>Pateint Info</legend>
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.PatientCID)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PatientCID)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.PatientFName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PatientFName)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.PatientMName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PatientMName)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.PatientLName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PatientLName)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Hospital)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Hospital)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Agency)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Agency)
+            </dd>
+        </dl>
+
+    </fieldset>
+    <fieldset>
+        <legend>Companion Info</legend>
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.CompanionCID)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CompanionCID)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.CompanionFName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CompanionFName)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.CompanionMName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CompanionMName)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.CompanionLName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CompanionLName)
+            </dd>
+        </dl>
+    </fieldset>
+
+
+
+
+    <fieldset>
+        <legend>Payment Audit Info</legend>
+        <dl>
+            <dt>
+                @Html.DisplayNameFor(model => model.CreatedBy)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CreatedBy)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CreatedDate)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ModifiedBy)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ModifiedBy)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ModifiedDate)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ModifiedDate)
+            </dd>
+
+        </dl>
+    </fieldset>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { paymentId = Model.Id }) |
+    @Html.ActionLink("Back to List", "List")
+</p>

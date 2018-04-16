@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/fontawesome")
     @*@Styles.Render("~/Content/themes/base/css")*@
     @Scripts.Render("~/bundles/modernizr")
    
@@ -16,17 +17,20 @@
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
+                    <span class="icon-bar"><i class="fa fa-bars"></i></span>
                 </button>
-                @Html.ActionLink("Patients List", "Index", "Patient", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Patients Managemet", "Index", "Patient", new { area = "" }, new { @class = "navbar-brand" })
+
+                @Html.ActionLink("Companions Managemet", "List", "Companion", new { area = "" }, new { @class = "navbar-brand" })
+                
+                @Html.ActionLink("Payment Managemet", "List", "Payment", new { area = "" }, new { @class = "navbar-brand" })
+
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Companion Managment", "About", "Home")</li>
-                    <li>@Html.ActionLink("Patient Managment", "Contact", "Home")</li>
+                    <li>@Html.ActionLink("Companion Managment", "List", "Companion")</li>
+                    <li>@Html.ActionLink("Patient Managment", "List", "Patient")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

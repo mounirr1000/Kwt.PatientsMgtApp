@@ -12,7 +12,9 @@ namespace Kwt.PatientsMgtApp.Core.Models
     public class PatientModel : BaseEntity, IValidatableObject
     {
         [DisplayName("Civil ID")]
-        [Required, MaxLength(12)]
+        [Required]
+        [MaxLength(12, ErrorMessage = "patient Civil Id should not be more than 12 characters")]
+        [MinLength(12, ErrorMessage = "patient Civil Id should not be Less than 12 characters")]
         public string PatientCID { get; set; }
 
         [DisplayName("First Name")]
@@ -50,6 +52,8 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public string BankCode { get; set; }
 
         [DisplayName("Bank Account#")]
+        [MaxLength(30, ErrorMessage = "Bank Account should not be more than 30 characters")]
+        [MinLength(30, ErrorMessage = "Bank Account should not be Less than 30 characters")]
         //[RequiredIf("IsBeneficiary", true, ErrorMessage = "Bank Account is required since the patient is Beneficiary")]
         public string Iban { get; set; }
 
@@ -75,6 +79,12 @@ namespace Kwt.PatientsMgtApp.Core.Models
         [MaxLength(250)]
         public string Notes { get; set; }
 
+        [DisplayName("Specialty")]
+        public string Specialty { get; set; }
+
+        [DisplayName("Diagnosis")]
+        public string Diagnosis { get; set; }
+
         [DisplayName("Created By")]
         public string CreatedBy { get; set; }
 
@@ -93,6 +103,7 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public List<BankModel> Banks { get; set; }
         public List<DoctorModel> Doctors { get; set; }
         public List<HospitalModel> Hospitals { get; set; }
+        public List<SpecialtyModel> Sepcialities { get; set; }
 
         //==============================
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

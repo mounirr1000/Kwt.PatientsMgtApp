@@ -78,5 +78,11 @@ namespace Kwt.PatientsMgtApp.WebUI.Tests
         {
             _companionRepository.DeleteCompanion("345345901122", "333432901010");
         }
+
+        [TestMethod]
+        public void DataMigration()
+        {
+            _companionRepository.DataMigrationToInsertIntoBeneficiaryTable();
+        }
     }
 }

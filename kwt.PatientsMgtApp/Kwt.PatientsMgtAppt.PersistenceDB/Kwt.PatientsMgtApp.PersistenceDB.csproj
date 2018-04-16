@@ -109,6 +109,9 @@
     <Compile Include="EDMX\Role.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
+    <Compile Include="EDMX\Specialty.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
     <Compile Include="EDMX\sysdiagram.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>

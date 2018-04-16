@@ -106,7 +106,31 @@
 
                 </div>
             </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Specialty, htmlAttributes: new { @class = "control-label" })
 
+                    @*@Html.EditorFor(model => model.Patient.Doctor, new { htmlAttributes = new { @class = "form-control" } })*@
+                    @Html.DropDownListFor(model => model.Specialty, new List<SelectListItem>(Model.Sepcialities.Select(a => new SelectListItem()
+               {
+                   Text = a.Speciality,
+                   Value = a.Speciality
+
+               }).ToList()), "")
+                    @Html.ValidationMessageFor(model => model.Specialty, "", new { @class = "text-danger" })
+
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Diagnosis, htmlAttributes: new { @class = "control-label" })
+
+                    @*@Html.EditorFor(model => model.Patient.Doctor, new { htmlAttributes = new { @class = "form-control" } })*@
+                    @Html.EditorFor(model => model.Diagnosis, new { htmlAttributes = new { @class = "form-control", type = "tel" } })
+                    @Html.ValidationMessageFor(model => model.Diagnosis, "", new { @class = "text-danger" })
+
+                </div>
+            </div>
             <div class="col-md-4">
                 <div class="form-group">
                     @Html.LabelFor(model => model.Agency, htmlAttributes: new { @class = "control-label" })

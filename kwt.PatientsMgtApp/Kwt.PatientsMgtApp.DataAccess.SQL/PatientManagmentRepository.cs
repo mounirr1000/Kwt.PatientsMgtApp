@@ -13,6 +13,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         private readonly IDoctorRepository _doctorRepository;
         private readonly IHospitalRepository _hospitalRepository;
         private readonly IBankRepository _bankRepository;
+        private readonly ISpecialityRepository _specialityRepository;
+
 
 
         public PatientManagmentRepository()
@@ -21,6 +23,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             _doctorRepository = new DoctorRepository();
             _hospitalRepository= new HospitalRepository();
             _bankRepository = new BankRepository();
+            _specialityRepository = new SpecialityRepository();
 
         }
         public List<AgencyModel> GetAgencies()
@@ -28,6 +31,10 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             return _agencyRepository.GetAgencies();
         }
 
+        public List<SpecialtyModel> GetSpecialities()
+        {
+            return _specialityRepository.GetSpecialities();
+        }
         public List<BankModel> GetBanks()
         {
             return _bankRepository.GetBanks();

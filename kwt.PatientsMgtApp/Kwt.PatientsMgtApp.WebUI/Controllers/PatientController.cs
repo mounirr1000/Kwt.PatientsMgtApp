@@ -20,7 +20,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
     [HandleError(ExceptionType = typeof(PatientsMgtException), View = "PatientMgtException")]
     public class PatientController : BaseController
     {
-        private const int PageSize = 1;
+        private const int PageSize = 5;
         // GET: Patient
         private readonly IPatientRepository _patientRepository;
         private readonly IPatientManagmentRepository _patientManagmentRepository;
@@ -40,22 +40,24 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             return RedirectToAction("List");
         }
 
-
-        public ActionResult List(string searchPatientText, string currentFilter, int? isBeneficiary, string sortOrder, int? page)
+        [ExceptionHandler]
+        public ActionResult List(string searchPatientText, string currentFilter, bool? isBeneficiary, string sortOrder, int? page, bool? clearSearch)
         {
-            var patients = _patientRepository.GetPatients();
+            int pageNumber = (page ?? 1);
+            ViewBag.isBeneficiary = isBeneficiary ?? false;
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.AptSortParm = String.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
             ViewBag.CidSortParm = String.IsNullOrEmpty(sortOrder) ? "Cid" : "";
-            int pageNumber = (page ?? 1);
+            ViewBag.BeneficiarySortParm = String.IsNullOrEmpty(sortOrder) ? "Beneficiary" : "";
+
+            var patients = _patientRepository.GetPatients();
             if (patients != null)
             {
-
                 switch (sortOrder)
                 {
                     case "name_desc":
-                        patients = patients.OrderBy(p => p.PatientFName).ToList();
+                        patients = patients.OrderBy(p => p.PatientFName).ThenBy(p=>p.PatientLName).ToList();
                         break;
                     case "cid":
                         patients = patients.OrderBy(p => p.PatientCID).ToList();
@@ -63,63 +65,80 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                     case "date_desc":
                         patients = patients.OrderBy(p => p.FirstApptDAte).ToList();
                         break;
+                    case "Beneficiary":
+                        patients = patients.OrderBy(p => p.IsBeneficiary).ToList();
+                        break;
                     default: // created date ascending 
                         patients = patients.OrderBy(p => p.CreatedDate).ToList();
                         break;
                 }
-                if (searchPatientText != null)
+                if (clearSearch != true)
                 {
-                    page = 1;
-                }
-                else
-                {
-                     searchPatientText = currentFilter;
-                }
-
-                ViewBag.CurrentFilter = searchPatientText;
-                var result = new List<PatientModel>();
-                if (!String.IsNullOrEmpty(searchPatientText))
-                {
-
-                    var term = searchPatientText.ToLower();
-                    result = patients?
-                        .Where(p =>
-                            p.PatientCID.ToLower().Contains(term)
-                            || p.PatientFName.ToLower().Contains(term)
-                            //|| p.Agency.ToLower().Contains(term)
-                            //|| p.BankCode.ToLower().Contains(term)
-                            //  || p.Doctor.ToLower().Contains(term)
-                            //|| p.PatientMName.ToLower().Contains(term)
-                            || p.PatientLName.ToLower().Contains(term)
-                        //|| p.BankName.ToLower().Contains(term)
-
-                        ).ToList();
-
-                    // filter isBeneficiary
-                    if (isBeneficiary != null && isBeneficiary == 1)
+                    if (searchPatientText != null)
                     {
-                        result = result?.Where(p => p.IsBeneficiary == true).ToList();
+                        page = 1;
                     }
-                }
-                // filter isBeneficiary
-                if (isBeneficiary != null && isBeneficiary == 1)
-                {
-                    result = patients?.Where(p => p.IsBeneficiary == true).ToList();
-                }
-                if (result?.Count > 0)
-                {
-                    Success(string.Format("We have <b>{0}</b> returned results from the searched criteria", result.Count),
-                        true);
-                    return View(result.ToPagedList(pageNumber, PageSize));
-                    //return View(result);
-                }
-                if (isBeneficiary != null || !String.IsNullOrEmpty(searchPatientText))
-                {
-                    if (result?.Count == 0)
-                        Information(
-                            string.Format(
-                                "There is no patient in our records with the selected search criteria <b>{0}</b>",
-                                searchPatientText), true);
+                    else
+                    {
+                        searchPatientText = currentFilter;
+                    }
+
+                    ViewBag.CurrentFilter = searchPatientText;
+                    var result = new List<PatientModel>();
+                    if (!String.IsNullOrEmpty(searchPatientText))
+                    {
+                        var term = searchPatientText.ToLower();
+                        result = patients?
+                            .Where(p =>(
+                                p.PatientCID.Contains(term)
+                                || p.PatientFName.ToLower().Trim().Contains(term)
+                               || p.PatientLName.ToLower().Trim().Contains(term))
+                            ).ToList();
+
+                        // filter isBeneficiary
+                        if (isBeneficiary == true)
+                        {
+                            result = result?.Where(p => p.IsBeneficiary).ToList();
+                        }
+                        else if (isBeneficiary == false)
+                        {
+                            result = result?.Where(p => !p.IsBeneficiary).ToList();
+                        }
+                    }
+                    else
+                    {
+                        // filter isBeneficiary
+                        if (isBeneficiary == true)
+                        {
+                            result = patients?.Where(p => p.IsBeneficiary).ToList();
+                        }
+                        else if (isBeneficiary == false)
+                        {
+                            result = patients?.Where(p => !p.IsBeneficiary).ToList();
+                        }
+                    }
+                    if (result?.Count > 0)
+                    {
+                        Success(string.Format("We have <b>{0}</b> returned results from the searched criteria", result.Count),
+                            true);
+                        return View(result.ToPagedList(pageNumber, PageSize));
+                        //return View(result);
+                    }
+                    if (isBeneficiary != null || !String.IsNullOrEmpty(searchPatientText))
+                    {
+                        if (result?.Count == 0)
+                        {
+                            var benMessage = "";
+                            if (isBeneficiary != null)
+                            {
+                                benMessage = isBeneficiary == true ? "& is Beneficiary" : "& is Not Beneficiary";
+                            }
+                            Information(
+                                string.Format(
+                                    "There is no patient in our records with the selected search criteria <b>{0}</b>&nbsp<b>{1}</b>",
+                                    searchPatientText, benMessage), true);
+                        }
+                    }
                 }
             }
 
@@ -153,6 +172,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             patient.Banks = _patientManagmentRepository.GetBanks();
             patient.Hospitals = _patientManagmentRepository.GetHospitals();
             patient.Doctors = _patientManagmentRepository.GetDoctors();
+            patient.Sepcialities = _patientManagmentRepository.GetSpecialities();
             return View(patient);
         }
         [ExceptionHandler]
@@ -197,6 +217,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                 patient.Banks = _patientManagmentRepository.GetBanks();
                 patient.Hospitals = _patientManagmentRepository.GetHospitals();
                 patient.Doctors = _patientManagmentRepository.GetDoctors();
+                patient.Sepcialities = _patientManagmentRepository.GetSpecialities();
                 return View(patient);
             }
 
@@ -210,6 +231,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             patient.Banks = _patientManagmentRepository.GetBanks();
             patient.Hospitals = _patientManagmentRepository.GetHospitals();
             patient.Doctors = _patientManagmentRepository.GetDoctors();
+            patient.Sepcialities = _patientManagmentRepository.GetSpecialities();
             return View(patient);
         }
         [HttpPost]
@@ -241,6 +263,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                 patient.Banks = _patientManagmentRepository.GetBanks();
                 patient.Hospitals = _patientManagmentRepository.GetHospitals();
                 patient.Doctors = _patientManagmentRepository.GetDoctors();
+                patient.Sepcialities = _patientManagmentRepository.GetSpecialities();
                 return View(patient);
             }
         }

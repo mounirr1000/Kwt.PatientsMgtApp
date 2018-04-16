@@ -141,6 +141,8 @@
           <Property Name="USphone" Type="nvarchar" MaxLength="15" />
           <Property Name="HospitalID" Type="int" />
           <Property Name="DoctorID" Type="int" Nullable="false" />
+          <Property Name="SpecialtyId" Type="int" />
+          <Property Name="Diagnosis" Type="nchar" MaxLength="250" />
           <Property Name="AgencyID" Type="int" Nullable="false" />
           <Property Name="BankID" Type="int" />
           <Property Name="Iban" Type="nvarchar" MaxLength="50" />
@@ -192,6 +194,13 @@
           </Key>
           <Property Name="RoleID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="RoleName" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Specialties">
+          <Key>
+            <PropertyRef Name="SpecialtyId" />
+          </Key>
+          <Property Name="SpecialtyId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Specialty" Type="nvarchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -335,6 +344,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Patients_Specialties">
+          <End Role="Specialties" Type="Self.Specialties" Multiplicity="0..1" />
+          <End Role="Patients" Type="Self.Patients" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Specialties">
+              <PropertyRef Name="SpecialtyId" />
+            </Principal>
+            <Dependent Role="Patients">
+              <PropertyRef Name="SpecialtyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Payments_Beneficiaries">
           <End Role="Beneficiaries" Type="Self.Beneficiaries" Multiplicity="0..1" />
           <End Role="Payments" Type="Self.Payments" Multiplicity="*" />
@@ -400,6 +421,7 @@
           <EntitySet Name="Payments" EntityType="Self.Payments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PayRates" EntityType="Self.PayRates" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Specialties" EntityType="Self.Specialties" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRoles" EntityType="Self.UserRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
@@ -437,6 +459,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_Patients_Hospitals" Association="Self.FK_Patients_Hospitals">
             <End Role="Hospitals" EntitySet="Hospitals" />
+            <End Role="Patients" EntitySet="Patients" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Patients_Specialties" Association="Self.FK_Patients_Specialties">
+            <End Role="Specialties" EntitySet="Specialties" />
             <End Role="Patients" EntitySet="Patients" />
           </AssociationSet>
           <AssociationSet Name="FK_Payments_Beneficiaries" Association="Self.FK_Payments_Beneficiaries">
@@ -549,6 +575,9 @@
           <NavigationProperty Name="CompanionHistories" Relationship="PatientsMgtModel.FK_CompanionHistories_Patients" FromRole="Patient" ToRole="CompanionHistory" />
           <NavigationProperty Name="Companions" Relationship="PatientsMgtModel.FK_Companions_Patients" FromRole="Patient" ToRole="Companion" />
           <NavigationProperty Name="Payments" Relationship="PatientsMgtModel.FK_Payments_Patients" FromRole="Patient" ToRole="Payment" />
+          <Property Name="SpecialtyId" Type="Int32" />
+          <Property Name="Diagnosis" Type="String" MaxLength="250" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Specialty" Relationship="PatientsMgtModel.FK_Patients_Specialties" FromRole="Patient" ToRole="Specialty" />
         </EntityType>
         <EntityType Name="PayRate">
           <Key>
@@ -716,6 +745,11 @@
           </AssociationSet>
           <EntitySet Name="ExceptionLoggers" EntityType="PatientsMgtModel.ExceptionLogger" />
           <EntitySet Name="PatientHistories" EntityType="PatientsMgtModel.PatientHistory" />
+          <EntitySet Name="Specialties" EntityType="PatientsMgtModel.Specialty" />
+          <AssociationSet Name="FK_Patients_Specialties" Association="PatientsMgtModel.FK_Patients_Specialties">
+            <End Role="Specialty" EntitySet="Specialties" />
+            <End Role="Patient" EntitySet="Patients" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="CompanionHistory">
           <Key>
@@ -937,6 +971,26 @@
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="PrimaryCompanionCid" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="Specialty">
+          <Key>
+            <PropertyRef Name="SpecialtyId" />
+          </Key>
+          <Property Name="SpecialtyId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Specialty1" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Patients" Relationship="PatientsMgtModel.FK_Patients_Specialties" FromRole="Specialty" ToRole="Patient" />
+        </EntityType>
+        <Association Name="FK_Patients_Specialties">
+          <End Type="PatientsMgtModel.Specialty" Role="Specialty" Multiplicity="0..1" />
+          <End Type="PatientsMgtModel.Patient" Role="Patient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Specialty">
+              <PropertyRef Name="SpecialtyId" />
+            </Principal>
+            <Dependent Role="Patient">
+              <PropertyRef Name="SpecialtyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1002,6 +1056,8 @@
           <EntitySetMapping Name="Patients">
             <EntityTypeMapping TypeName="PatientsMgtModel.Patient">
               <MappingFragment StoreEntitySet="Patients">
+                <ScalarProperty Name="Diagnosis" ColumnName="Diagnosis" />
+                <ScalarProperty Name="SpecialtyId" ColumnName="SpecialtyId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="PatientCID" ColumnName="PatientCID" />
                 <ScalarProperty Name="PatientFName" ColumnName="PatientFName" />
@@ -1175,6 +1231,14 @@
                 <ScalarProperty Name="PatientFName" ColumnName="PatientFName" />
                 <ScalarProperty Name="PatientCID" ColumnName="PatientCID" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Specialties">
+            <EntityTypeMapping TypeName="PatientsMgtModel.Specialty">
+              <MappingFragment StoreEntitySet="Specialties">
+                <ScalarProperty Name="Specialty1" ColumnName="Specialty" />
+                <ScalarProperty Name="SpecialtyId" ColumnName="SpecialtyId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
