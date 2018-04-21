@@ -57,7 +57,9 @@
     <Compile Include="Models\DoctorModel.cs" />
     <Compile Include="Models\HospitalModel.cs" />
     <Compile Include="Models\PatientModel.cs" />
+    <Compile Include="Models\PatientReportModel.cs" />
     <Compile Include="Models\PaymentModel.cs" />
+    <Compile Include="Models\PaymentReportModel.cs" />
     <Compile Include="Models\PayRateModel.cs" />
     <Compile Include="Models\SpecialtyModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

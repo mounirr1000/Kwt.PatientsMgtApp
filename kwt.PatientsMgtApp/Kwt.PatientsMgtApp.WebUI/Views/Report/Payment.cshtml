@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewBag.Title = "Payment Report";
+}
+
+<h2>Payment Report</h2>
+<div class="p-3">
+    @Html.ActionLink("Back To Report List", "List")
+</div>
+<div>
+    <iframe runat="server" id="Reports" src="~/Reports/Payment.aspx"
+            scrolling="no"
+            style="border: none"
+            onload="this.style.height = this.contentDocument.body.scrollHeight + 'px';
+        this.style.width = this.contentDocument.body.scrollWidth + 'px';"></iframe>
+</div>

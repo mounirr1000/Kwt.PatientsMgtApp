@@ -28,6 +28,8 @@ namespace Kwt.PatientsMgtApp.Core.Models
         [Required]
         public string PatientLName { get; set; }
 
+        public string Name { get { return this.PatientFName + " " + this.PatientMName + " " + this.PatientLName; } }
+
         [DisplayName("Kuwait Phone#")]
         [Phone]
         public string KWTPhone { get; set; }

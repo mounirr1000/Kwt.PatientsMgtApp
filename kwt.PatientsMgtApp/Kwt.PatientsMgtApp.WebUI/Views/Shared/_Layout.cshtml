@@ -14,29 +14,34 @@
 <body>
 @RenderSection("DeleteConfirm", required: false)
 <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"><i class="fa fa-bars"></i></span>
-                </button>
-                @Html.ActionLink("Patients Managemet", "Index", "Patient", new { area = "" }, new { @class = "navbar-brand" })
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"><i class="fa fa-bars"></i></span>
+            </button>
+            @Html.ActionLink("Patients Managemet", "Index", "Patient", new {area = ""}, new {@class = "navbar-brand"})
 
-                @Html.ActionLink("Companions Managemet", "List", "Companion", new { area = "" }, new { @class = "navbar-brand" })
-                
-                @Html.ActionLink("Payment Managemet", "List", "Payment", new { area = "" }, new { @class = "navbar-brand" })
+            @Html.ActionLink("Companions Managemet", "List", "Companion", new {area = ""}, new {@class = "navbar-brand"})
 
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Companion Managment", "List", "Companion")</li>
-                    <li>@Html.ActionLink("Patient Managment", "List", "Patient")</li>
-                </ul>
-                @Html.Partial("_LoginPartial")
-            </div>
+            @Html.ActionLink("Payment Managemet", "List", "Payment", new {area = ""}, new {@class = "navbar-brand"})
+
+            @Html.ActionLink("Reports", "List", "Report", new {area = ""}, new {@class = "navbar-brand"})
+
+
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                <li>@Html.ActionLink("Companion Managment", "List", "Companion")</li>
+                <li>@Html.ActionLink("Patient Managment", "List", "Patient")</li>
+            </ul>
+            @Html.Partial("_LoginPartial")
         </div>
     </div>
+</div>
+
 <div class="container body-content">
+
     @{ Html.RenderPartial("_Alerts"); }
     @RenderBody()
     <hr/>

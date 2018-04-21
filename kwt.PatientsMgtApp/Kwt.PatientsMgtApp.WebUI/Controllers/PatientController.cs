@@ -18,6 +18,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
 {
 
     [HandleError(ExceptionType = typeof(PatientsMgtException), View = "PatientMgtException")]
+    [Authorize]
     public class PatientController : BaseController
     {
         private const int PageSize = 5;

@@ -20,6 +20,15 @@ namespace Kwt.PatientsMgtApp.WebUI.Tests
            var patientsList= patientRepository.GetPatients();
             Assert.IsNotNull(patientsList);
         }
+
+        [TestMethod]
+        public void GetPatientReportTest()
+        {
+            var patientsList = patientRepository.GetPatientsReport(null, "BARROW NEUROSURGICAL ASSOCIATES", null, null, "NEUROLOGY");
+           //var patientsList = patientRepository.GetPatientsReport(null, null, null, null, null);
+
+            Assert.IsNotNull(patientsList);
+        }
         [TestMethod]
         public void GetPatientTest()
         {

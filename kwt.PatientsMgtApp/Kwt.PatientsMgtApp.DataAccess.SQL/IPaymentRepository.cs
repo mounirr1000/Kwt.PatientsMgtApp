@@ -22,5 +22,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         int DeletePayment(PaymentModel payment);
 
         PaymentModel GetPaymentObject(string patientCid);
+        
+        List<PaymentReportModel> GetPaymentsReport(string patientCid = null, DateTime? startDate = null, DateTime? endDate = null);
     }
 }

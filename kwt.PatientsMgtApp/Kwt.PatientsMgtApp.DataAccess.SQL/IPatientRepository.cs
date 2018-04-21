@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Kwt.PatientsMgtApp.Core.Models;
 
+
 namespace Kwt.PatientsMgtApp.DataAccess.SQL
 {
     public interface IPatientRepository
@@ -25,6 +26,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         PatientModel UpdatePatient(PatientModel patient);
 
         int DeletePatient(PatientModel patient);
+
+        List<PatientReportModel> GetPatientsReport(string patientCid = null, string hospital = null, string doctor = null, Nullable<bool> status = null, string speciality = null);
 
 
     }

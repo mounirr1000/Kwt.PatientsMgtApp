@@ -18,6 +18,20 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         {
             _domainObjectRepository = new DomainObjectRepository();
         }
+
+        public List<PatientReportModel> GetPatientsReport(string patientCid =null, string hospital = null, string doctor = null, Nullable<bool> status = null, string speciality = null)
+        {
+            Dictionary<string,object> parms = new Dictionary<string, object>();
+            parms.Add("pCid", patientCid);
+            parms.Add("hospital", hospital);
+            parms.Add("doctor", doctor);
+            parms.Add("status", status);
+            parms.Add("specialty", speciality);
+           
+            //pCidParameter, hospitalParameter, doctorParameter, statusParameter, specialityParameter
+            return _domainObjectRepository.ExecuteProcedure<PatientReportModel>("GetPatientListReport_SP", parms, false);
+            
+        }
         public List<PatientModel> GetPatients()
         {
             var result = _domainObjectRepository.All<Patient>(new[] { "Doctor", "Bank", "Agency", "Hospital", "Specialty" }).ToList();

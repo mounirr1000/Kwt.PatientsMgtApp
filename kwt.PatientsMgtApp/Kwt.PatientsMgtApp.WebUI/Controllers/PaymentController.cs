@@ -7,6 +7,7 @@ using kwt.PatientsMgtApp.Utilities.Errors;
 using Kwt.PatientsMgtApp.Core;
 using Kwt.PatientsMgtApp.Core.Models;
 using Kwt.PatientsMgtApp.DataAccess.SQL;
+using Kwt.PatientsMgtApp.PersistenceDB.EDMX;
 using Kwt.PatientsMgtApp.WebUI.CustomFilter;
 
 using Kwt.PatientsMgtApp.WebUI.Utilities;
@@ -14,7 +15,7 @@ using PagedList;
 
 namespace Kwt.PatientsMgtApp.WebUI.Controllers
 {
-
+    [Authorize(Roles = "Auditor, Admin, Owner")]
     [HandleError(ExceptionType = typeof(PatientsMgtException), View = "PatientMgtException")]
     public class PaymentController : BaseController
     {

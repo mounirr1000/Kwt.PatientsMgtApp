@@ -12,10 +12,11 @@
     @Html.ActionLink(" New Patient", "Create",null,new {@class= "btn btn-lg btn-info fa fa-plus fa-1x" })
     <a href="@Url.Action("Create", "Companion")" class="btn btn-lg btn-info"><i class="fa fa-plus"></i>Add New Companion</a>
 </p>
-
+@*@Ajax.ActionLink("","","",new AjaxOptions() {});*@
 <div id="patient-data">
     @if (Model.Any())
     {
+        
         <div class="p-3">
             @{ Html.RenderPartial("_PatientSearchForm"); }
         </div>

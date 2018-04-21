@@ -406,6 +406,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="GetPatientListReport_SP" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="pCid" Type="nvarchar" Mode="In" />
+          <Parameter Name="hospital" Type="nvarchar" Mode="In" />
+          <Parameter Name="doctor" Type="nvarchar" Mode="In" />
+          <Parameter Name="status" Type="bit" Mode="In" />
+          <Parameter Name="speciality" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="GetPaymentListReport_SP" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="pCid" Type="nvarchar" Mode="In" />
+          <Parameter Name="startDate" Type="date" Mode="In" />
+          <Parameter Name="endDate" Type="date" Mode="In" />
+        </Function>
         <EntityContainer Name="PatientsMgtModelStoreContainer">
           <EntitySet Name="Agencies" EntityType="Self.Agencies" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Banks" EntityType="Self.Banks" Schema="dbo" store:Type="Tables" />
@@ -750,6 +762,18 @@
             <End Role="Specialty" EntitySet="Specialties" />
             <End Role="Patient" EntitySet="Patients" />
           </AssociationSet>
+          <FunctionImport Name="GetPatientListReport_SP" ReturnType="Collection(PatientsMgtModel.GetPatientListReport_SP_Result)">
+            <Parameter Name="pCid" Mode="In" Type="String" />
+            <Parameter Name="hospital" Mode="In" Type="String" />
+            <Parameter Name="doctor" Mode="In" Type="String" />
+            <Parameter Name="status" Mode="In" Type="Boolean" />
+            <Parameter Name="speciality" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetPaymentListReport_SP" ReturnType="Collection(PatientsMgtModel.GetPaymentListReport_SP_Result)">
+            <Parameter Name="pCid" Mode="In" Type="String" />
+            <Parameter Name="startDate" Mode="In" Type="DateTime" />
+            <Parameter Name="endDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="CompanionHistory">
           <Key>
@@ -991,6 +1015,45 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="GetPatientListReport_SP_Result">
+          <Property Type="String" Name="PatientCID" Nullable="false" MaxLength="12" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="152" />
+          <Property Type="String" Name="KWTphone" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="USphone" Nullable="true" MaxLength="15" />
+          <Property Type="DateTime" Name="FirstApptDate" Nullable="true" />
+          <Property Type="DateTime" Name="EndTreatDate" Nullable="true" />
+          <Property Type="String" Name="IsActive" Nullable="true" MaxLength="3" />
+          <Property Type="String" Name="IsBeneficiary" Nullable="true" MaxLength="3" />
+          <Property Type="String" Name="BankCode" Nullable="true" MaxLength="3" />
+          <Property Type="String" Name="BankName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Iban" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Agency" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Doctor" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Specialty" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Diagnosis" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Hospital" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Notes" Nullable="true" MaxLength="250" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
+          <Property Type="String" Name="CreatedBy" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="ModifiedDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="ModifiedBy" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="GetPaymentListReport_SP_Result">
+          <Property Type="Int32" Name="PaymentID" Nullable="false" />
+          <Property Type="String" Name="PatientCID" Nullable="true" MaxLength="12" />
+          <Property Type="DateTime" Name="StartDate" Nullable="true" />
+          <Property Type="DateTime" Name="EndDate" Nullable="true" />
+          <Property Type="Decimal" Name="Amount" Nullable="true" Precision="18" Scale="0" />
+          <Property Type="String" Name="PatientName" Nullable="true" MaxLength="152" />
+          <Property Type="String" Name="BeneficiaryCID" Nullable="true" MaxLength="12" />
+          <Property Type="String" Name="BeneficiaryName" Nullable="true" MaxLength="152" />
+          <Property Type="String" Name="CompanionName" Nullable="true" MaxLength="152" />
+          <Property Type="String" Name="AgencyName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="IBan" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Bank" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Code" Nullable="true" MaxLength="3" />
+        </ComplexType>
+        
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1242,6 +1305,33 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetPatientListReport_SP" FunctionName="PatientsMgtModel.Store.GetPatientListReport_SP">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="PatientsMgtModel.GetPatientListReport_SP_Result">
+                <ScalarProperty Name="PatientCID" ColumnName="PatientCID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="KWTphone" ColumnName="KWTphone" />
+                <ScalarProperty Name="USphone" ColumnName="USphone" />
+                <ScalarProperty Name="FirstApptDate" ColumnName="FirstApptDate" />
+                <ScalarProperty Name="EndTreatDate" ColumnName="EndTreatDate" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="IsBeneficiary" ColumnName="IsBeneficiary" />
+                <ScalarProperty Name="BankCode" ColumnName="BankCode" />
+                <ScalarProperty Name="BankName" ColumnName="BankName" />
+                <ScalarProperty Name="Iban" ColumnName="Iban" />
+                <ScalarProperty Name="Agency" ColumnName="Agency" />
+                <ScalarProperty Name="Doctor" ColumnName="Doctor" />
+                <ScalarProperty Name="Specialty" ColumnName="Specialty" />
+                <ScalarProperty Name="Diagnosis" ColumnName="Diagnosis" />
+                <ScalarProperty Name="Hospital" ColumnName="Hospital" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

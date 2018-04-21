@@ -29,6 +29,19 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             _companionRepository = new CompanionRepository();
             _payRateRepository = new PayRateRepository();
         }
+
+        public List<PaymentReportModel> GetPaymentsReport(string patientCid = null, DateTime? startDate = null,
+            DateTime? endDate = null)
+        {
+
+            Dictionary<string, object> parms = new Dictionary<string, object>();
+            parms.Add("pCid", patientCid);
+            parms.Add("startDate", startDate);
+            parms.Add("endDate", endDate);
+            
+            //pCidParameter, hospitalParameter, doctorParameter, statusParameter, specialityParameter
+            return _domainObjectRepository.ExecuteProcedure<PaymentReportModel>("GetPaymentListReport_SP", parms, false);
+        }
         public List<PaymentModel> GetPayments()
         {
             var payments = _domainObjectRepository.All<Payment>(new[] { "Beneficiary", "Patient", "PayRate", "Companion" });
