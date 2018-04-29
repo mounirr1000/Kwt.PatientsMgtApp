@@ -9,10 +9,12 @@ using Kwt.PatientsMgtApp.Core;
 using Kwt.PatientsMgtApp.DataAccess.SQL;
 using Kwt.PatientsMgtApp.WebUI.Utilities;
 using Kwt.PatientsMgtApp.WebUI.CustomFilter;
+using Microsoft.AspNet.Identity.Owin;
 using PagedList;
 namespace Kwt.PatientsMgtApp.WebUI.Controllers
 {
     [HandleError(ExceptionType = typeof(PatientsMgtException), View = "PatientMgtException")]
+    [Authorize(Roles = "Admin, Manager")]
     public class CompanionController : BaseController
     {
         private const int PageSize = 5;
@@ -21,7 +23,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         private readonly ICompanionManagmentRepository _companionManagmentRepository;
         private readonly IPatientManagmentRepository _patientManagmentRepository;
         private readonly IPatientRepository _patientRepository;
-
+       
         public CompanionController()
         {
             _companionRepository = new CompanionRepository();
@@ -29,9 +31,28 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             _patientManagmentRepository = new PatientManagmentRepository();
             _patientRepository = new PatientRepository();
         }
+
+        //
+        //public ActionResult Index()
+        //{
+        //    return System.Web.UI.WebControls.View(UserManager.Users);
+        //}
+
+        private ApplicationUserManager UserManager
+        {
+            get
+            {
+                return  HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+        }
+
+        //
         // GET: Companion
         public ActionResult List(string searchCompanionText, string currentFilter, bool? isBeneficiary, string sortOrder, int? page, bool? clearSearch)
         {
+            //
+          var users=  UserManager.Users;
+            //
             int pageNumber = (page ?? 1);
             ViewBag.isBeneficiary = isBeneficiary ?? false;
             ViewBag.CurrentSort = sortOrder;

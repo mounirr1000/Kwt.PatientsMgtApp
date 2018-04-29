@@ -7,6 +7,7 @@ using Kwt.PatientsMgtApp.WebUI.Utilities;
 
 namespace Kwt.PatientsMgtApp.WebUI.Controllers
 {
+    [Authorize(Roles = "Admin, Manager")]
     public class ReportController : BaseController
     {
         // GET: Report

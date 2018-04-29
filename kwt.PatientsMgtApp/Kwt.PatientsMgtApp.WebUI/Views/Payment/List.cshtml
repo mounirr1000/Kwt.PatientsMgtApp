@@ -1,5 +1,6 @@
-﻿@model IEnumerable<Kwt.PatientsMgtApp.Core.Models.PaymentModel>
-
+﻿@using PagedList.Mvc;
+@model PagedList.IPagedList<Kwt.PatientsMgtApp.Core.Models.PaymentModel>
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 @{
     ViewBag.Title = "List";
 }
@@ -7,96 +8,137 @@
 <h2>Payments</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("New Payment", "Create", null, new { @class = "btn btn-lg btn-info fa fa-plus fa-1x" })
 </p>
-@if (Model.Any()) { 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.PaymentDate)
-        </th>
-        <th>
-            Payment Id
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PatientCID)
-        </th>
-        
-        <th>
-            @Html.DisplayNameFor(model => model.CompanionCID)
-        </th>
-        
-        <th>
-            @Html.DisplayNameFor(model => model.BeneficiaryCID)
-        </th>
-        
-        <th>
-            @Html.DisplayNameFor(model => model.PaymentStartDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PaymentEndDate)
-        </th>
-        
-        <th>
-            @Html.DisplayNameFor(model => model.TotalDue)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Notes)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreatedDate)
-        </th>
-        <th></th>
-    </tr>
+@if (Model.Any())
+{
+    <div class="p-3">
+        @{ Html.RenderPartial("_PaymentSearchForm"); }
+    </div>
+    <table class="table text-center table-bordered table-striped">
+        <tr>
+            <th>
+                Payment Id
+            </th>
+            <th>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.ActionLink(item.Id.ToString(), "Details", new { paymentId = item.Id })
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PaymentDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PatientCID)
-        </td>
+                Payment Date
+            </th>
 
-        <td>
-            @Html.DisplayFor(modelItem => item.CompanionCID)
-        </td>
+            <th>
 
-        <td>
-            @Html.DisplayFor(modelItem => item.BeneficiaryCID)
-        </td>
+                Patient CID
+            </th>
 
-        <td>
-            @Html.DisplayFor(modelItem => item.PaymentStartDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PaymentEndDate)
-        </td>
+            <th>
 
-        <td>
-            @Html.DisplayFor(modelItem => item.TotalDue)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Notes)
-        </td>
+                Companion CID
+            </th>
 
-        <td>
-            @Html.DisplayFor(modelItem => item.CreatedDate)
-        </td>
+            <th>
 
-        <td>
-            @Html.ActionLink("Delete", "Delete", new {id = item.Id})
-        </td>
-    </tr>
+                Beneficiary CID
+            </th>
+
+            <th>
+
+                Payment Start Date
+            </th>
+            <th>
+
+                Payment End Date
+            </th>
+
+            <th>
+
+                Total Due
+            </th>
+            <th>
+
+                Notes
+            </th>
+            <th>
+
+                Created Date
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.Id.ToString(), "Details", new {paymentId = item.Id})
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaymentDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PatientCID)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompanionCID)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.BeneficiaryCID)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaymentStartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaymentEndDate)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalDue)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Notes)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedDate)
+                </td>
+
+                <td>
+                    @*@Html.ActionLink("Delete", "Delete", new { paymentId = item.Id})*@
+                    <a href="javascript:confirmDelete('@item.Id','paymentId')" class="btn btn-danger" id="@item.PatientCID">Delete</a>
+                </td>
+            </tr>
+        }
+
+    </table>
+    <span>Page</span>
+    @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+    <span>of</span>
+            @Model.PageCount
+            @Html.PagedListPager(Model, page => Url.Action("List", new { page }));
 }
-
-</table>
-}
-else {
+else
+{
     <div class="alert-info">
         No Payments to show in our records!
     </div>
+}
+
+@section DeleteConfirm{
+
+    @{ Html.RenderPartial("_DeleteConfirmationModel"); }
+
+}
+
+@section Scripts {
+
+    @{ Html.RenderPartial("_DeleteConfirmationjs"); }
+    <script type="text/javascript">
+        $("#clear").click(function (e) {
+            console.log("Clear serch");
+            $("#searchPatient").val("");
+            $("#clearSearch").val(true);
+            //e.preventDefault();
+        });
+    </script>
 }

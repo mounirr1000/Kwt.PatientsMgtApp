@@ -120,7 +120,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         {
             var payment = _domainObjectRepository.Get<Payment>(p => p.PaymentID == paymentid,
                 new[] { "Beneficiary", "Patient", "PayRate", "Companion" });
-            PaymentModel pay;
+            PaymentModel pay = new PaymentModel();
             if (payment != null)
             {
                 var pa = payment.Patient;
@@ -128,41 +128,47 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 var pr = payment.PayRate;
                 var be = payment.Beneficiary;
 
-                pay = new PaymentModel()
-                {
-                    PatientCID = payment.PatientCID,
-                    Agency = payment.Patient?.AgencyID != null ? _domainObjectRepository.Get<Agency>(a => a.AgencyID == payment.Patient.AgencyID).AgencyName : null,
-                    CompanionAmount = payment.CAmount,
-                    PatientFName = payment?.Patient?.PatientFName,
-                    PatientLName = payment?.Patient?.PatientLName,
-                    PatientMName = payment?.Patient?.PatientMName,
-                    BeneficiaryFName = payment.Beneficiary?.BeneficiaryFName,
-                    BeneficiaryLName = payment.Beneficiary?.BeneficiaryLName,
-                    BeneficiaryMName = payment.Beneficiary?.BeneficiaryMName,
-                    BeneficiaryBank = payment.Beneficiary != null ?
-                        _domainObjectRepository.Get<Bank>(b => b.BankID == payment.Beneficiary.BankID).BankName : "",
-                    BeneficiaryIBan = payment.Beneficiary?.IBan,
-                    CompanionCID = payment.CompanionCID,
-                    CreatedBy = payment.CreatedBy,
-                    CreatedDate = payment.CreatedDate,
-                    Notes = payment.Notes,
-                    PaymentEndDate = payment.EndDate,
-                    Hospital = payment.Patient?.HospitalID != null ? _domainObjectRepository.Get<Hospital>(a => a.HospitalID == payment.Patient.HospitalID).HospitalName : null,
-                    ModifiedBy = payment.ModifiedBy,
-                    ModifiedDate = payment.ModifiedDate,
-                    PatientAmount = payment.PAmount,
-                    CompanionPayRate = payment.PayRate?.CompanionRate,
-                    PatientPayRate = payment.PayRate?.PatientRate,
-                    PaymentDate = payment.PaymentDate,
-                    PaymentLengthPeriod = payment.Period,
-                    PaymentStartDate = payment.StartDate,
-                    TotalDue = payment.TotalDue,
-                    Id = payment.PaymentID,
-                    BeneficiaryCID = payment.Beneficiary?.BeneficiaryCID,
-                    CompanionFName = payment.Companion?.CompanionFName,
-                    CompanionLName = payment.Companion?.CompanionLName,
-                    CompanionMName = payment.Companion?.CompanionMName,
-                };
+               // PaymentModel pay = new PaymentModel();
+               //{
+                pay.PatientCID = payment.PatientCID;
+                pay.Agency = payment.Patient?.AgencyID != null
+                    ? _domainObjectRepository.Get<Agency>(a => a.AgencyID == payment.Patient.AgencyID).AgencyName
+                    : null;
+                pay.CompanionAmount = payment.CAmount;
+                pay.PatientFName = payment?.Patient?.PatientFName;
+                pay.PatientLName = payment?.Patient?.PatientLName;
+                pay.PatientMName = payment?.Patient?.PatientMName;
+                pay.BeneficiaryFName = payment.Beneficiary?.BeneficiaryFName;
+                pay.BeneficiaryLName = payment.Beneficiary?.BeneficiaryLName;
+                pay.BeneficiaryMName = payment.Beneficiary?.BeneficiaryMName;
+                pay.BeneficiaryBank = payment.Beneficiary != null
+                    ? _domainObjectRepository.Get<Bank>(b => b.BankID == payment.Beneficiary.BankID).BankName
+                    : "";
+                pay.BeneficiaryIBan = payment.Beneficiary?.IBan;
+                pay.CompanionCID = payment.CompanionCID;
+                pay.CreatedBy = payment.CreatedBy;
+                pay.CreatedDate = payment.CreatedDate;
+                pay.Notes = payment.Notes;
+                pay.PaymentEndDate = payment.EndDate;
+                pay.Hospital = payment.Patient?.HospitalID != null
+                    ? _domainObjectRepository.Get<Hospital>(a => a.HospitalID == payment.Patient.HospitalID)
+                        .HospitalName
+                    : null;
+                pay.ModifiedBy = payment.ModifiedBy;
+                pay.ModifiedDate = payment.ModifiedDate;
+                pay.PatientAmount = payment.PAmount;
+                pay.CompanionPayRate = payment.PayRate?.CompanionRate;
+                pay.PatientPayRate = payment.PayRate?.PatientRate;
+                pay.PaymentDate = payment.PaymentDate;
+                pay.PaymentLengthPeriod = payment.Period;
+                pay.PaymentStartDate = payment.StartDate;
+                pay.TotalDue = payment.TotalDue;
+                pay.Id = payment.PaymentID;
+                pay.BeneficiaryCID = payment.Beneficiary?.BeneficiaryCID;
+                pay.CompanionFName = payment.Companion?.CompanionFName;
+                pay.CompanionLName = payment.Companion?.CompanionLName;
+                pay.CompanionMName = payment.Companion?.CompanionMName;
+                //};
                 return pay;
             }
 
@@ -207,6 +213,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 {
                     throw new PatientsMgtException(1, "error", "Add new Payment", "The payment end date " + currentEndDate + " Should be greater than payment start date " + currentStartDate);
                 }
+
+                //Todo This should be removed if the payment can be before 15 days period
                 if ((currentEndDate - currentStartDate).Days < Constants.NUMBER_OF_DAYS_BEFORE_NEXT_PAYMENT)
                 {
                     throw new PatientsMgtException(1, "error", "Add new Payment", 
@@ -255,7 +263,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 PAmount = payment.PatientAmount,
                 PayRateID = _domainObjectRepository.Get<PayRate>(pr => pr.CompanionRate == payment.CompanionPayRate
                                                 && pr.PatientRate == payment.PatientPayRate)?.PayRateID,
-                PaymentDate = payment.PaymentDate,
+                PaymentDate = payment.PaymentDate ?? DateTime.Now,
                 Period = payment.PaymentLengthPeriod,
                 StartDate = payment.PaymentStartDate,
                 TotalDue = payment.TotalDue,

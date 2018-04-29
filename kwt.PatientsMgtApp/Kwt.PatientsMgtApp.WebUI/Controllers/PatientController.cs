@@ -58,7 +58,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                 switch (sortOrder)
                 {
                     case "name_desc":
-                        patients = patients.OrderBy(p => p.PatientFName).ThenBy(p=>p.PatientLName).ToList();
+                        patients = patients.OrderBy(p => p.PatientFName).ThenBy(p => p.PatientLName).ToList();
                         break;
                     case "cid":
                         patients = patients.OrderBy(p => p.PatientCID).ToList();
@@ -70,7 +70,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                         patients = patients.OrderBy(p => p.IsBeneficiary).ToList();
                         break;
                     default: // created date ascending 
-                        patients = patients.OrderBy(p => p.CreatedDate).ToList();
+                        patients = patients.OrderByDescending(p => p.CreatedDate).ToList();
                         break;
                 }
                 if (clearSearch != true)
@@ -90,7 +90,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                     {
                         var term = searchPatientText.ToLower();
                         result = patients?
-                            .Where(p =>(
+                            .Where(p => (
                                 p.PatientCID.Contains(term)
                                 || p.PatientFName.ToLower().Trim().Contains(term)
                                || p.PatientLName.ToLower().Trim().Contains(term))
@@ -99,11 +99,11 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                         // filter isBeneficiary
                         if (isBeneficiary == true)
                         {
-                            result = result?.Where(p => p.IsBeneficiary).ToList();
+                            result = result?.Where(p => p.IsActive).ToList();
                         }
                         else if (isBeneficiary == false)
                         {
-                            result = result?.Where(p => !p.IsBeneficiary).ToList();
+                            result = result?.Where(p => !p.IsActive).ToList();
                         }
                     }
                     else
@@ -111,11 +111,11 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                         // filter isBeneficiary
                         if (isBeneficiary == true)
                         {
-                            result = patients?.Where(p => p.IsBeneficiary).ToList();
+                            result = patients?.Where(p => p.IsActive).ToList();
                         }
                         else if (isBeneficiary == false)
                         {
-                            result = patients?.Where(p => !p.IsBeneficiary).ToList();
+                            result = patients?.Where(p => !p.IsActive).ToList();
                         }
                     }
                     if (result?.Count > 0)
@@ -225,6 +225,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         }
 
         [ExceptionHandler]
+        [Authorize(Roles = "Admin, Manager")]
         public ActionResult Edit(string patientCid)
         {
             var patient = _patientRepository.GetPatient(patientCid);
@@ -271,17 +272,28 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
 
         // Todo: Should fix Delete to be only with Httppost method
         [ExceptionHandler]
+        [Authorize(Roles = "Admin, Manager")]
         public ActionResult Delete(string patientCid)
         {
             var patient = _patientRepository.GetPatient(patientCid);
 
-
-            var deleted = _patientRepository.DeletePatient(patient);
-            if (deleted > 0)
-            { // display delete message success and redirect to patient list
-                Success(string.Format("Patient with Civil Id <b>{0}</b> was Successfully Deleted.", patient.PatientCID), true);
+            if (patient != null)
+            {
+                var deleted = _patientRepository.DeletePatient(patient);
+                if (deleted > 0)
+                {
+                    // display delete message success and redirect to patient list
+                    Success(
+                        string.Format("Patient with Civil Id <b>{0}</b> was Successfully Deleted.", patient.PatientCID),
+                        true);
+                }
             }
-            return View("List");
+            else
+            {
+                if(!string.IsNullOrEmpty(patientCid))
+                Information(string.Format("Patient with Civil Id <b>{0}</b> was not deleted.", patientCid), true);
+            }
+             return RedirectToAction("List");
         }
 
         //Search Patient

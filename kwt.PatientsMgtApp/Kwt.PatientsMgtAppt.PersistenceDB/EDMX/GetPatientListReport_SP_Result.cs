@@ -13,6 +13,7 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
     
     public partial class GetPatientListReport_SP_Result
     {
+        public int id { get; set; }
         public string PatientCID { get; set; }
         public string Name { get; set; }
         public string KWTphone { get; set; }

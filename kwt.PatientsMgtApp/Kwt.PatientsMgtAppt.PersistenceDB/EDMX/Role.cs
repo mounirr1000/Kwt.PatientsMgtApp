@@ -14,7 +14,7 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
     
     public partial class Role
     {
-        public int RoleID { get; set; }
+        public string RoleID { get; set; }
         public string RoleName { get; set; }
     }
 }

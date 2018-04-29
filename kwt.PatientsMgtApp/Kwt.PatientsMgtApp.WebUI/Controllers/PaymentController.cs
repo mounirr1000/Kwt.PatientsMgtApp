@@ -15,11 +15,11 @@ using PagedList;
 
 namespace Kwt.PatientsMgtApp.WebUI.Controllers
 {
-    [Authorize(Roles = "Auditor, Admin, Owner")]
+    [Authorize(Roles = "Admin, Manager")]
     [HandleError(ExceptionType = typeof(PatientsMgtException), View = "PatientMgtException")]
     public class PaymentController : BaseController
     {
-        private const int PageSize = 5;
+        private const int PageSize = 2;
         // GET: Patient
         private readonly IPaymentRepository _paymentRepository;
         private readonly IBeneficiaryRepository _beneficiaryRepository;
@@ -77,18 +77,23 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
 
                     ViewBag.CurrentFilter = searchpaymentText;
                     var result = new List<PaymentModel>();
+                    DateTime date = new DateTime();
                     if (!String.IsNullOrEmpty(searchpaymentText))
                     {
                         var term = searchpaymentText.ToLower();
                         result = payments?
                             .Where(p =>
-                                p.PatientCID.ToLower().Contains(term)
-                                || p.CompanionFName.ToLower().Contains(term)
-                                || p.CompanionLName.ToLower().Contains(term)
-                                || p.PatientFName.ToLower().Contains(term)
-                                || p.PatientLName.ToLower().Contains(term)
+                                p.PatientCID.ToLower().Contains(term)                                
                             ).ToList();
+                        if (DateTime.TryParse(searchpaymentText, out date))
+                        {
+                            result = payments?
+                            .Where(p =>
+                                p.CreatedDate.Date == date.Date
+                            ).ToList();
+                        }
                     }
+
                     if (result?.Count > 0)
                     {
                         Success(string.Format("We have <b>{0}</b> returned results from the searched criteria", result.Count),
@@ -102,7 +107,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                         {
                             Information(
                                  string.Format(
-                                     "There is no patient in our records with the selected search criteria <b>{0}</b>&nbsp<b>{1}</b>",
+                                     "There is no Payment in our records with the selected search criteria <b>{0}</b>",
                                      searchpaymentText), true);
                         }
                     }
@@ -150,13 +155,13 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             if (!String.IsNullOrEmpty(patientCid) &&
                 (payment.PatientCID == null || payment.BeneficiaryCID == null))
             {
-                
+
                 Information(
                     String.Format(
                         "There is No patient in our records with this CID <b>{0}</b> ! Please Enter a Valid CID",
                         patientCid), true);
             }
-           
+
             return View(payment);
         }
         [ExceptionHandler]
@@ -209,6 +214,34 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             }
         }
 
+        [ExceptionHandler]
+        [Authorize(Roles = "Admin, Manager")]
+        public ActionResult Delete(int? paymentId)
+        {
+            PaymentModel payment = null;
+            if (paymentId != null)
+            {
+                var id = paymentId ?? 0;
+                payment = _paymentRepository.GetPaymentById(id);
+            }
+            if (payment != null)
+            {
+                var deleted = _paymentRepository.DeletePayment(payment);
+                if (deleted > 0)
+                {
+                    // display delete message success and redirect to patient list
+                    Success(
+                        string.Format("Payment with Id <b>{0}</b> was Successfully Deleted.", payment.Id),
+                        true);
+                }
+            }
+            else
+            {
+                if (paymentId!=null)
+                    Information(string.Format("No Payment with Id <b>{0}</b> In our record.", paymentId), true);
+            }
+            return RedirectToAction("List");
+        }
         private void ValidateCompanion(PaymentModel payment)
         {
             if (ModelState.IsValidField("PaymentStartDate") &&
@@ -249,7 +282,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             }
             var endDateConflictPayment = historyPaments
                                .Any(p => (payment.PaymentEndDate <= p.PaymentEndDate
-                                       && payment.PaymentStartDate >= p.PaymentStartDate)||
+                                       && payment.PaymentStartDate >= p.PaymentStartDate) ||
                                        (payment.PaymentEndDate <= p.PaymentEndDate
                                        && payment.PaymentStartDate < p.PaymentStartDate));
             if (endDateConflictPayment)

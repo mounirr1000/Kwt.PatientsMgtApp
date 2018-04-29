@@ -126,19 +126,19 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
     {
         public int Id
         {
-            get { return this.RoleID; }
+            get { return Int16.Parse(this.RoleID); }
 
-            set { this.RoleID = value; }
+            set { this.RoleID = value.ToString(); }
         }
     }
     public partial class User : IDomainObject
     {
        
     }
-    public partial class UserRole : IDomainObject
-    {
+    //public partial class UserRole : IDomainObject
+    //{
        
-    }
+    //}
 
     public partial class PatientHistory : IDomainObject
     {

@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="PatientsMgtModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="PatientsMgtModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Agencies">
           <Key>
             <PropertyRef Name="AgencyID" />
@@ -192,8 +192,8 @@
           <Key>
             <PropertyRef Name="RoleID" />
           </Key>
-          <Property Name="RoleID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="RoleName" Type="nvarchar" MaxLength="255" />
+          <Property Name="RoleID" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="RoleName" Type="nvarchar" MaxLength="256" Nullable="false" />
         </EntityType>
         <EntityType Name="Specialties">
           <Key>
@@ -202,24 +202,13 @@
           <Property Name="SpecialtyId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Specialty" Type="nvarchar" MaxLength="100" Nullable="false" />
         </EntityType>
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="principal_id" Type="int" Nullable="false" />
-          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="version" Type="int" />
-          <Property Name="definition" Type="varbinary(max)" />
-        </EntityType>
         <EntityType Name="UserRoles">
           <Key>
             <PropertyRef Name="UserId" />
             <PropertyRef Name="RoleId" />
           </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="RoleId" Type="int" Nullable="false" />
+          <Property Name="RoleId" Type="nvarchar" MaxLength="128" Nullable="false" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -233,6 +222,11 @@
           <Property Name="PhoneNumber" Type="nvarchar(max)" />
           <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
           <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="SecurityStamp" Type="nvarchar" MaxLength="256" />
+          <Property Name="LockoutEndDateUtc" Type="date" />
+          <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
         </EntityType>
         <Association Name="FK_CompanionHistories_Companions_withCompositKey">
           <End Role="Companions" Type="Self.Companions" Multiplicity="0..1" />
@@ -434,7 +428,6 @@
           <EntitySet Name="PayRates" EntityType="Self.PayRates" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Specialties" EntityType="Self.Specialties" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRoles" EntityType="Self.UserRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_CompanionHistories_Companions_withCompositKey" Association="Self.FK_CompanionHistories_Companions_withCompositKey">
@@ -494,7 +487,8 @@
             <End Role="Payments" EntitySet="Payments" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="PatientsMgtModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -513,8 +507,8 @@
           <Property Name="BankID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="BankName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="BankCode" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="Companions" Relationship="Self.FK_Companions_Banks" FromRole="Banks" ToRole="Companions" />
           <NavigationProperty Name="Patients" Relationship="Self.FK_Patients_Banks" FromRole="Banks" ToRole="Patients" />
-          <NavigationProperty Name="Companions" Relationship="PatientsMgtModel.FK_Companions_Banks" FromRole="Bank" ToRole="Companion" />
         </EntityType>
         <EntityType Name="Beneficiary">
           <Key>
@@ -529,7 +523,52 @@
           <Property Name="BeneficiaryLName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="BankID" Type="Int32" />
           <Property Name="IBan" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Payments" Relationship="PatientsMgtModel.FK_Payments_Beneficiaries" FromRole="Beneficiary" ToRole="Payment" />
+          <NavigationProperty Name="Payments" Relationship="Self.FK_Payments_Beneficiaries" FromRole="Beneficiaries" ToRole="Payments" />
+        </EntityType>
+        <EntityType Name="CompanionHistory">
+          <Key>
+            <PropertyRef Name="HistoryID" />
+          </Key>
+          <Property Name="HistoryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CompanionCID" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
+          <Property Name="PatientCID" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
+          <Property Name="DateIn" Type="DateTime" Precision="0" />
+          <Property Name="DateOut" Type="DateTime" Precision="0" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="0" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Companion" Relationship="Self.FK_CompanionHistories_Companions_withCompositKey" FromRole="CompanionHistories" ToRole="Companions" />
+          <NavigationProperty Name="Patient" Relationship="Self.FK_CompanionHistories_Patients" FromRole="CompanionHistories" ToRole="Patients" />
+        </EntityType>
+        <EntityType Name="Companion">
+          <Key>
+            <PropertyRef Name="CompanionCID" />
+            <PropertyRef Name="PatientCID" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CompanionCID" Type="String" MaxLength="12" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CompanionFName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CompanionMName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CompanionLName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PatientCID" Type="String" MaxLength="12" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BankID" Type="Int32" />
+          <Property Name="IBan" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DateIn" Type="DateTime" Precision="0" />
+          <Property Name="DateOut" Type="DateTime" Precision="0" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="Notes" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsBeneficiary" Type="Boolean" />
+          <Property Name="CompanionTypeID" Type="Int32" />
+          <NavigationProperty Name="Bank" Relationship="Self.FK_Companions_Banks" FromRole="Companions" ToRole="Banks" />
+          <NavigationProperty Name="CompanionHistories" Relationship="Self.FK_CompanionHistories_Companions_withCompositKey" FromRole="Companions" ToRole="CompanionHistories" />
+          <NavigationProperty Name="CompanionType" Relationship="Self.FK_Companions_CompanionTypes" FromRole="Companions" ToRole="CompanionTypes" />
+          <NavigationProperty Name="Patient" Relationship="Self.FK_Companions_Patients" FromRole="Companions" ToRole="Patients" />
+          <NavigationProperty Name="Payments" Relationship="Self.FK_Payments_Companions" FromRole="Companions" ToRole="Payments" />
         </EntityType>
         <EntityType Name="CompanionType">
           <Key>
@@ -537,7 +576,7 @@
           </Key>
           <Property Name="CompanionTypeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CompanionType1" Type="String" MaxLength="12" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Companions" Relationship="PatientsMgtModel.FK_Companions_CompanionTypes" FromRole="CompanionType" ToRole="Companion" />
+          <NavigationProperty Name="Companions" Relationship="Self.FK_Companions_CompanionTypes" FromRole="CompanionTypes" ToRole="Companions" />
         </EntityType>
         <EntityType Name="Doctor">
           <Key>
@@ -547,6 +586,16 @@
           <Property Name="DoctorName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Patients" Relationship="Self.FK_Patients_Doctors" FromRole="Doctors" ToRole="Patients" />
         </EntityType>
+        <EntityType Name="ExceptionLogger">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ExceptionMessage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ControllerName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="ExceptionStackTrace" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LogTime" Type="DateTime" Nullable="false" Precision="0" />
+        </EntityType>
         <EntityType Name="Hospital">
           <Key>
             <PropertyRef Name="HospitalID" />
@@ -555,7 +604,7 @@
           <Property Name="HospitalName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Patients" Relationship="Self.FK_Patients_Hospitals" FromRole="Hospitals" ToRole="Patients" />
         </EntityType>
-        <EntityType Name="Patient">
+        <EntityType Name="PatientHistory">
           <Key>
             <PropertyRef Name="PatientCID" />
           </Key>
@@ -576,20 +625,73 @@
           <Property Name="IsBeneficiary" Type="Boolean" />
           <Property Name="IsActive" Type="Boolean" />
           <Property Name="Notes" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="OldCreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="PrimaryCompanionCid" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Patient">
+          <Key>
+            <PropertyRef Name="PatientCID" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PatientCID" Type="String" MaxLength="12" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PatientFName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PatientMName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PatientLName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="KWTphone" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="USphone" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="HospitalID" Type="Int32" />
+          <Property Name="DoctorID" Type="Int32" Nullable="false" />
+          <Property Name="SpecialtyId" Type="Int32" />
+          <Property Name="Diagnosis" Type="String" MaxLength="250" FixedLength="true" Unicode="true" />
+          <Property Name="AgencyID" Type="Int32" Nullable="false" />
+          <Property Name="BankID" Type="Int32" />
+          <Property Name="Iban" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FirstApptDate" Type="DateTime" Precision="0" />
+          <Property Name="EndTreatDate" Type="DateTime" Precision="0" />
+          <Property Name="IsBeneficiary" Type="Boolean" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="Notes" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="ModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Agency" Relationship="Self.FK_Patients_Agencies" FromRole="Patients" ToRole="Agencies" />
           <NavigationProperty Name="Bank" Relationship="Self.FK_Patients_Banks" FromRole="Patients" ToRole="Banks" />
+          <NavigationProperty Name="CompanionHistories" Relationship="Self.FK_CompanionHistories_Patients" FromRole="Patients" ToRole="CompanionHistories" />
+          <NavigationProperty Name="Companions" Relationship="Self.FK_Companions_Patients" FromRole="Patients" ToRole="Companions" />
           <NavigationProperty Name="Doctor" Relationship="Self.FK_Patients_Doctors" FromRole="Patients" ToRole="Doctors" />
           <NavigationProperty Name="Hospital" Relationship="Self.FK_Patients_Hospitals" FromRole="Patients" ToRole="Hospitals" />
-          <NavigationProperty Name="CompanionHistories" Relationship="PatientsMgtModel.FK_CompanionHistories_Patients" FromRole="Patient" ToRole="CompanionHistory" />
-          <NavigationProperty Name="Companions" Relationship="PatientsMgtModel.FK_Companions_Patients" FromRole="Patient" ToRole="Companion" />
-          <NavigationProperty Name="Payments" Relationship="PatientsMgtModel.FK_Payments_Patients" FromRole="Patient" ToRole="Payment" />
-          <Property Name="SpecialtyId" Type="Int32" />
-          <Property Name="Diagnosis" Type="String" MaxLength="250" FixedLength="true" Unicode="true" />
-          <NavigationProperty Name="Specialty" Relationship="PatientsMgtModel.FK_Patients_Specialties" FromRole="Patient" ToRole="Specialty" />
+          <NavigationProperty Name="Specialty" Relationship="Self.FK_Patients_Specialties" FromRole="Patients" ToRole="Specialties" />
+          <NavigationProperty Name="Payments" Relationship="Self.FK_Payments_Patients" FromRole="Patients" ToRole="Payments" />
+        </EntityType>
+        <EntityType Name="Payment">
+          <Key>
+            <PropertyRef Name="PaymentID" />
+          </Key>
+          <Property Name="PaymentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PaymentDate" Type="DateTime" Precision="0" />
+          <Property Name="PatientCID" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
+          <Property Name="CompanionCID" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
+          <Property Name="BeneficiaryID" Type="Int32" />
+          <Property Name="HospitalID" Type="Int32" />
+          <Property Name="AgencyID" Type="Int32" />
+          <Property Name="PayRateID" Type="Int32" />
+          <Property Name="StartDate" Type="DateTime" Precision="0" />
+          <Property Name="EndDate" Type="DateTime" Precision="0" />
+          <Property Name="Period" Type="Int32" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="PAmount" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="CAmount" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="TotalDue" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Notes" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Beneficiary" Relationship="Self.FK_Payments_Beneficiaries" FromRole="Payments" ToRole="Beneficiaries" />
+          <NavigationProperty Name="Companion" Relationship="Self.FK_Payments_Companions" FromRole="Payments" ToRole="Companions" />
+          <NavigationProperty Name="Patient" Relationship="Self.FK_Payments_Patients" FromRole="Payments" ToRole="Patients" />
+          <NavigationProperty Name="PayRate" Relationship="Self.FK_Payments_PayRates" FromRole="Payments" ToRole="PayRates" />
         </EntityType>
         <EntityType Name="PayRate">
           <Key>
@@ -598,33 +700,30 @@
           <Property Name="PayRateID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CompanionRate" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="PatientRate" Type="Decimal" Precision="18" Scale="0" />
-          <NavigationProperty Name="Payments" Relationship="PatientsMgtModel.FK_Payments_PayRates" FromRole="PayRate" ToRole="Payment" />
+          <NavigationProperty Name="Payments" Relationship="Self.FK_Payments_PayRates" FromRole="PayRates" ToRole="Payments" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
             <PropertyRef Name="RoleID" />
           </Key>
-          <Property Name="RoleID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="RoleName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="RoleID" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RoleName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
-        <EntityType Name="sysdiagram">
+        <EntityType Name="Specialty">
           <Key>
-            <PropertyRef Name="diagram_id" />
+            <PropertyRef Name="SpecialtyId" />
           </Key>
-          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="principal_id" Type="Int32" Nullable="false" />
-          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="version" Type="Int32" />
-          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="SpecialtyId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Specialty1" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Patients" Relationship="Self.FK_Patients_Specialties" FromRole="Specialties" ToRole="Patients" />
         </EntityType>
         <EntityType Name="UserRole">
           <Key>
             <PropertyRef Name="UserId" />
             <PropertyRef Name="RoleId" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="RoleId" Type="Int32" Nullable="false" />
+          <Property Name="RoleId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -638,6 +737,11 @@
           <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
           <Property Name="UserName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SecurityStamp" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="0" />
+          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_Patients_Agencies">
           <End Role="Agencies" Type="Self.Agency" Multiplicity="1" />
@@ -651,6 +755,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Companions_Banks">
+          <End Role="Banks" Type="Self.Bank" Multiplicity="0..1" />
+          <End Role="Companions" Type="Self.Companion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Banks">
+              <PropertyRef Name="BankID" />
+            </Principal>
+            <Dependent Role="Companions">
+              <PropertyRef Name="BankID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Patients_Banks">
           <End Role="Banks" Type="Self.Bank" Multiplicity="0..1" />
           <End Role="Patients" Type="Self.Patient" Multiplicity="*" />
@@ -660,6 +776,82 @@
             </Principal>
             <Dependent Role="Patients">
               <PropertyRef Name="BankID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Payments_Beneficiaries">
+          <End Role="Beneficiaries" Type="Self.Beneficiary" Multiplicity="0..1" />
+          <End Role="Payments" Type="Self.Payment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Beneficiaries">
+              <PropertyRef Name="BeneficiaryID" />
+            </Principal>
+            <Dependent Role="Payments">
+              <PropertyRef Name="BeneficiaryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CompanionHistories_Companions_withCompositKey">
+          <End Role="Companions" Type="Self.Companion" Multiplicity="0..1" />
+          <End Role="CompanionHistories" Type="Self.CompanionHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Companions">
+              <PropertyRef Name="CompanionCID" />
+              <PropertyRef Name="PatientCID" />
+            </Principal>
+            <Dependent Role="CompanionHistories">
+              <PropertyRef Name="CompanionCID" />
+              <PropertyRef Name="PatientCID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CompanionHistories_Patients">
+          <End Role="Patients" Type="Self.Patient" Multiplicity="0..1" />
+          <End Role="CompanionHistories" Type="Self.CompanionHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patients">
+              <PropertyRef Name="PatientCID" />
+            </Principal>
+            <Dependent Role="CompanionHistories">
+              <PropertyRef Name="PatientCID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Companions_CompanionTypes">
+          <End Role="CompanionTypes" Type="Self.CompanionType" Multiplicity="0..1" />
+          <End Role="Companions" Type="Self.Companion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CompanionTypes">
+              <PropertyRef Name="CompanionTypeID" />
+            </Principal>
+            <Dependent Role="Companions">
+              <PropertyRef Name="CompanionTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Companions_Patients">
+          <End Role="Patients" Type="Self.Patient" Multiplicity="1" />
+          <End Role="Companions" Type="Self.Companion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patients">
+              <PropertyRef Name="PatientCID" />
+            </Principal>
+            <Dependent Role="Companions">
+              <PropertyRef Name="PatientCID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Payments_Companions">
+          <End Role="Companions" Type="Self.Companion" Multiplicity="0..1" />
+          <End Role="Payments" Type="Self.Payment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Companions">
+              <PropertyRef Name="CompanionCID" />
+              <PropertyRef Name="PatientCID" />
+            </Principal>
+            <Dependent Role="Payments">
+              <PropertyRef Name="CompanionCID" />
+              <PropertyRef Name="PatientCID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -687,26 +879,95 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Patients_Specialties">
+          <End Role="Specialties" Type="Self.Specialty" Multiplicity="0..1" />
+          <End Role="Patients" Type="Self.Patient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Specialties">
+              <PropertyRef Name="SpecialtyId" />
+            </Principal>
+            <Dependent Role="Patients">
+              <PropertyRef Name="SpecialtyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Payments_Patients">
+          <End Role="Patients" Type="Self.Patient" Multiplicity="0..1" />
+          <End Role="Payments" Type="Self.Payment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patients">
+              <PropertyRef Name="PatientCID" />
+            </Principal>
+            <Dependent Role="Payments">
+              <PropertyRef Name="PatientCID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Payments_PayRates">
+          <End Role="PayRates" Type="Self.PayRate" Multiplicity="0..1" />
+          <End Role="Payments" Type="Self.Payment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PayRates">
+              <PropertyRef Name="PayRateID" />
+            </Principal>
+            <Dependent Role="Payments">
+              <PropertyRef Name="PayRateID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="PatientsMgtEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Agencies" EntityType="Self.Agency" />
           <EntitySet Name="Banks" EntityType="Self.Bank" />
           <EntitySet Name="Beneficiaries" EntityType="Self.Beneficiary" />
+          <EntitySet Name="CompanionHistories" EntityType="Self.CompanionHistory" />
+          <EntitySet Name="Companions" EntityType="Self.Companion" />
           <EntitySet Name="CompanionTypes" EntityType="Self.CompanionType" />
           <EntitySet Name="Doctors" EntityType="Self.Doctor" />
+          <EntitySet Name="ExceptionLoggers" EntityType="Self.ExceptionLogger" />
           <EntitySet Name="Hospitals" EntityType="Self.Hospital" />
+          <EntitySet Name="PatientHistories" EntityType="Self.PatientHistory" />
           <EntitySet Name="Patients" EntityType="Self.Patient" />
+          <EntitySet Name="Payments" EntityType="Self.Payment" />
           <EntitySet Name="PayRates" EntityType="Self.PayRate" />
           <EntitySet Name="Roles" EntityType="Self.Role" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <EntitySet Name="Specialties" EntityType="Self.Specialty" />
           <EntitySet Name="UserRoles" EntityType="Self.UserRole" />
           <EntitySet Name="Users" EntityType="Self.User" />
           <AssociationSet Name="FK_Patients_Agencies" Association="Self.FK_Patients_Agencies">
             <End Role="Agencies" EntitySet="Agencies" />
             <End Role="Patients" EntitySet="Patients" />
           </AssociationSet>
+          <AssociationSet Name="FK_Companions_Banks" Association="Self.FK_Companions_Banks">
+            <End Role="Banks" EntitySet="Banks" />
+            <End Role="Companions" EntitySet="Companions" />
+          </AssociationSet>
           <AssociationSet Name="FK_Patients_Banks" Association="Self.FK_Patients_Banks">
             <End Role="Banks" EntitySet="Banks" />
             <End Role="Patients" EntitySet="Patients" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Payments_Beneficiaries" Association="Self.FK_Payments_Beneficiaries">
+            <End Role="Beneficiaries" EntitySet="Beneficiaries" />
+            <End Role="Payments" EntitySet="Payments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CompanionHistories_Companions_withCompositKey" Association="Self.FK_CompanionHistories_Companions_withCompositKey">
+            <End Role="Companions" EntitySet="Companions" />
+            <End Role="CompanionHistories" EntitySet="CompanionHistories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CompanionHistories_Patients" Association="Self.FK_CompanionHistories_Patients">
+            <End Role="Patients" EntitySet="Patients" />
+            <End Role="CompanionHistories" EntitySet="CompanionHistories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Companions_CompanionTypes" Association="Self.FK_Companions_CompanionTypes">
+            <End Role="CompanionTypes" EntitySet="CompanionTypes" />
+            <End Role="Companions" EntitySet="Companions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Companions_Patients" Association="Self.FK_Companions_Patients">
+            <End Role="Patients" EntitySet="Patients" />
+            <End Role="Companions" EntitySet="Companions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Payments_Companions" Association="Self.FK_Payments_Companions">
+            <End Role="Companions" EntitySet="Companions" />
+            <End Role="Payments" EntitySet="Payments" />
           </AssociationSet>
           <AssociationSet Name="FK_Patients_Doctors" Association="Self.FK_Patients_Doctors">
             <End Role="Doctors" EntitySet="Doctors" />
@@ -716,51 +977,17 @@
             <End Role="Hospitals" EntitySet="Hospitals" />
             <End Role="Patients" EntitySet="Patients" />
           </AssociationSet>
-          <EntitySet Name="CompanionHistories" EntityType="PatientsMgtModel.CompanionHistory" />
-          <EntitySet Name="Companions" EntityType="PatientsMgtModel.Companion" />
-          <AssociationSet Name="FK_Companions_Banks" Association="PatientsMgtModel.FK_Companions_Banks">
-            <End Role="Bank" EntitySet="Banks" />
-            <End Role="Companion" EntitySet="Companions" />
+          <AssociationSet Name="FK_Patients_Specialties" Association="Self.FK_Patients_Specialties">
+            <End Role="Specialties" EntitySet="Specialties" />
+            <End Role="Patients" EntitySet="Patients" />
           </AssociationSet>
-          <AssociationSet Name="FK_CompanionHistories_Companions_withCompositKey" Association="PatientsMgtModel.FK_CompanionHistories_Companions_withCompositKey">
-            <End Role="Companion" EntitySet="Companions" />
-            <End Role="CompanionHistory" EntitySet="CompanionHistories" />
+          <AssociationSet Name="FK_Payments_Patients" Association="Self.FK_Payments_Patients">
+            <End Role="Patients" EntitySet="Patients" />
+            <End Role="Payments" EntitySet="Payments" />
           </AssociationSet>
-          <AssociationSet Name="FK_CompanionHistories_Patients" Association="PatientsMgtModel.FK_CompanionHistories_Patients">
-            <End Role="Patient" EntitySet="Patients" />
-            <End Role="CompanionHistory" EntitySet="CompanionHistories" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Companions_CompanionTypes" Association="PatientsMgtModel.FK_Companions_CompanionTypes">
-            <End Role="CompanionType" EntitySet="CompanionTypes" />
-            <End Role="Companion" EntitySet="Companions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Companions_Patients" Association="PatientsMgtModel.FK_Companions_Patients">
-            <End Role="Patient" EntitySet="Patients" />
-            <End Role="Companion" EntitySet="Companions" />
-          </AssociationSet>
-          <EntitySet Name="Payments" EntityType="PatientsMgtModel.Payment" />
-          <AssociationSet Name="FK_Payments_Beneficiaries" Association="PatientsMgtModel.FK_Payments_Beneficiaries">
-            <End Role="Beneficiary" EntitySet="Beneficiaries" />
-            <End Role="Payment" EntitySet="Payments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Payments_Companions" Association="PatientsMgtModel.FK_Payments_Companions">
-            <End Role="Companion" EntitySet="Companions" />
-            <End Role="Payment" EntitySet="Payments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Payments_Patients" Association="PatientsMgtModel.FK_Payments_Patients">
-            <End Role="Patient" EntitySet="Patients" />
-            <End Role="Payment" EntitySet="Payments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Payments_PayRates" Association="PatientsMgtModel.FK_Payments_PayRates">
-            <End Role="PayRate" EntitySet="PayRates" />
-            <End Role="Payment" EntitySet="Payments" />
-          </AssociationSet>
-          <EntitySet Name="ExceptionLoggers" EntityType="PatientsMgtModel.ExceptionLogger" />
-          <EntitySet Name="PatientHistories" EntityType="PatientsMgtModel.PatientHistory" />
-          <EntitySet Name="Specialties" EntityType="PatientsMgtModel.Specialty" />
-          <AssociationSet Name="FK_Patients_Specialties" Association="PatientsMgtModel.FK_Patients_Specialties">
-            <End Role="Specialty" EntitySet="Specialties" />
-            <End Role="Patient" EntitySet="Patients" />
+          <AssociationSet Name="FK_Payments_PayRates" Association="Self.FK_Payments_PayRates">
+            <End Role="PayRates" EntitySet="PayRates" />
+            <End Role="Payments" EntitySet="Payments" />
           </AssociationSet>
           <FunctionImport Name="GetPatientListReport_SP" ReturnType="Collection(PatientsMgtModel.GetPatientListReport_SP_Result)">
             <Parameter Name="pCid" Mode="In" Type="String" />
@@ -775,247 +1002,8 @@
             <Parameter Name="endDate" Mode="In" Type="DateTime" />
           </FunctionImport>
         </EntityContainer>
-        <EntityType Name="CompanionHistory">
-          <Key>
-            <PropertyRef Name="HistoryID" />
-          </Key>
-          <Property Name="HistoryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CompanionCID" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
-          <Property Name="PatientCID" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
-          <Property Name="DateIn" Type="DateTime" Precision="0" />
-          <Property Name="DateOut" Type="DateTime" Precision="0" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ModifiedDate" Type="DateTime" Precision="0" />
-          <Property Name="ModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Companion" Relationship="PatientsMgtModel.FK_CompanionHistories_Companions_withCompositKey" FromRole="CompanionHistory" ToRole="Companion" />
-          <NavigationProperty Name="Patient" Relationship="PatientsMgtModel.FK_CompanionHistories_Patients" FromRole="CompanionHistory" ToRole="Patient" />
-        </EntityType>
-        <EntityType Name="Companion">
-          <Key>
-            <PropertyRef Name="CompanionCID" />
-            <PropertyRef Name="PatientCID" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CompanionCID" Type="String" Nullable="false" MaxLength="12" FixedLength="false" Unicode="true" />
-          <Property Name="CompanionFName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="CompanionMName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="CompanionLName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="PatientCID" Type="String" Nullable="false" MaxLength="12" FixedLength="false" Unicode="true" />
-          <Property Name="BankID" Type="Int32" />
-          <Property Name="IBan" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="DateIn" Type="DateTime" Precision="0" />
-          <Property Name="DateOut" Type="DateTime" Precision="0" />
-          <Property Name="IsActive" Type="Boolean" />
-          <Property Name="Notes" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
-          <Property Name="IsBeneficiary" Type="Boolean" />
-          <Property Name="CompanionTypeID" Type="Int32" />
-          <NavigationProperty Name="Bank" Relationship="PatientsMgtModel.FK_Companions_Banks" FromRole="Companion" ToRole="Bank" />
-          <NavigationProperty Name="CompanionHistories" Relationship="PatientsMgtModel.FK_CompanionHistories_Companions_withCompositKey" FromRole="Companion" ToRole="CompanionHistory" />
-          <NavigationProperty Name="CompanionType" Relationship="PatientsMgtModel.FK_Companions_CompanionTypes" FromRole="Companion" ToRole="CompanionType" />
-          <NavigationProperty Name="Patient" Relationship="PatientsMgtModel.FK_Companions_Patients" FromRole="Companion" ToRole="Patient" />
-          <NavigationProperty Name="Payments" Relationship="PatientsMgtModel.FK_Payments_Companions" FromRole="Companion" ToRole="Payment" />
-        </EntityType>
-        <Association Name="FK_Companions_Banks">
-          <End Type="PatientsMgtModel.Bank" Role="Bank" Multiplicity="0..1" />
-          <End Type="PatientsMgtModel.Companion" Role="Companion" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Bank">
-              <PropertyRef Name="BankID" />
-            </Principal>
-            <Dependent Role="Companion">
-              <PropertyRef Name="BankID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CompanionHistories_Companions_withCompositKey">
-          <End Type="PatientsMgtModel.Companion" Role="Companion" Multiplicity="0..1" />
-          <End Type="PatientsMgtModel.CompanionHistory" Role="CompanionHistory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Companion">
-              <PropertyRef Name="CompanionCID" />
-              <PropertyRef Name="PatientCID" />
-            </Principal>
-            <Dependent Role="CompanionHistory">
-              <PropertyRef Name="CompanionCID" />
-              <PropertyRef Name="PatientCID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_CompanionHistories_Patients">
-          <End Type="PatientsMgtModel.Patient" Role="Patient" Multiplicity="0..1" />
-          <End Type="PatientsMgtModel.CompanionHistory" Role="CompanionHistory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Patient">
-              <PropertyRef Name="PatientCID" />
-            </Principal>
-            <Dependent Role="CompanionHistory">
-              <PropertyRef Name="PatientCID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Companions_CompanionTypes">
-          <End Type="PatientsMgtModel.CompanionType" Role="CompanionType" Multiplicity="0..1" />
-          <End Type="PatientsMgtModel.Companion" Role="Companion" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="CompanionType">
-              <PropertyRef Name="CompanionTypeID" />
-            </Principal>
-            <Dependent Role="Companion">
-              <PropertyRef Name="CompanionTypeID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Companions_Patients">
-          <End Type="PatientsMgtModel.Patient" Role="Patient" Multiplicity="1" />
-          <End Type="PatientsMgtModel.Companion" Role="Companion" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Patient">
-              <PropertyRef Name="PatientCID" />
-            </Principal>
-            <Dependent Role="Companion">
-              <PropertyRef Name="PatientCID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="Payment">
-          <Key>
-            <PropertyRef Name="PaymentID" />
-          </Key>
-          <Property Name="PaymentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="PaymentDate" Type="DateTime" Precision="0" />
-          <Property Name="PatientCID" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
-          <Property Name="CompanionCID" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
-          <Property Name="BeneficiaryID" Type="Int32" />
-          <Property Name="HospitalID" Type="Int32" />
-          <Property Name="AgencyID" Type="Int32" />
-          <Property Name="PayRateID" Type="Int32" />
-          <Property Name="StartDate" Type="DateTime" Precision="0" />
-          <Property Name="EndDate" Type="DateTime" Precision="0" />
-          <Property Name="Period" Type="Int32" annotation:StoreGeneratedPattern="Computed" />
-          <Property Name="PAmount" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="CAmount" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="TotalDue" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="Notes" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Beneficiary" Relationship="PatientsMgtModel.FK_Payments_Beneficiaries" FromRole="Payment" ToRole="Beneficiary" />
-          <NavigationProperty Name="Companion" Relationship="PatientsMgtModel.FK_Payments_Companions" FromRole="Payment" ToRole="Companion" />
-          <NavigationProperty Name="Patient" Relationship="PatientsMgtModel.FK_Payments_Patients" FromRole="Payment" ToRole="Patient" />
-          <NavigationProperty Name="PayRate" Relationship="PatientsMgtModel.FK_Payments_PayRates" FromRole="Payment" ToRole="PayRate" />
-        </EntityType>
-        <Association Name="FK_Payments_Beneficiaries">
-          <End Type="PatientsMgtModel.Beneficiary" Role="Beneficiary" Multiplicity="0..1" />
-          <End Type="PatientsMgtModel.Payment" Role="Payment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Beneficiary">
-              <PropertyRef Name="BeneficiaryID" />
-            </Principal>
-            <Dependent Role="Payment">
-              <PropertyRef Name="BeneficiaryID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Payments_Companions">
-          <End Type="PatientsMgtModel.Companion" Role="Companion" Multiplicity="0..1" />
-          <End Type="PatientsMgtModel.Payment" Role="Payment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Companion">
-              <PropertyRef Name="CompanionCID" />
-              <PropertyRef Name="PatientCID" />
-            </Principal>
-            <Dependent Role="Payment">
-              <PropertyRef Name="CompanionCID" />
-              <PropertyRef Name="PatientCID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Payments_Patients">
-          <End Type="PatientsMgtModel.Patient" Role="Patient" Multiplicity="0..1" />
-          <End Type="PatientsMgtModel.Payment" Role="Payment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Patient">
-              <PropertyRef Name="PatientCID" />
-            </Principal>
-            <Dependent Role="Payment">
-              <PropertyRef Name="PatientCID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Payments_PayRates">
-          <End Type="PatientsMgtModel.PayRate" Role="PayRate" Multiplicity="0..1" />
-          <End Type="PatientsMgtModel.Payment" Role="Payment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PayRate">
-              <PropertyRef Name="PayRateID" />
-            </Principal>
-            <Dependent Role="Payment">
-              <PropertyRef Name="PayRateID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="ExceptionLogger">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ExceptionMessage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ControllerName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="ExceptionStackTrace" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="LogTime" Type="DateTime" Nullable="false" Precision="0" />
-        </EntityType>
-        <EntityType Name="PatientHistory">
-          <Key>
-            <PropertyRef Name="PatientCID" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="PatientCID" Type="String" Nullable="false" MaxLength="12" FixedLength="false" Unicode="true" />
-          <Property Name="PatientFName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="PatientMName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="PatientLName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="KWTphone" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
-          <Property Name="USphone" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
-          <Property Name="HospitalID" Type="Int32" />
-          <Property Name="DoctorID" Type="Int32" Nullable="false" />
-          <Property Name="AgencyID" Type="Int32" Nullable="false" />
-          <Property Name="BankID" Type="Int32" />
-          <Property Name="Iban" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="FirstApptDate" Type="DateTime" Precision="0" />
-          <Property Name="EndTreatDate" Type="DateTime" Precision="0" />
-          <Property Name="IsBeneficiary" Type="Boolean" />
-          <Property Name="IsActive" Type="Boolean" />
-          <Property Name="Notes" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Name="OldCreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="PrimaryCompanionCid" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="Specialty">
-          <Key>
-            <PropertyRef Name="SpecialtyId" />
-          </Key>
-          <Property Name="SpecialtyId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Specialty1" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Patients" Relationship="PatientsMgtModel.FK_Patients_Specialties" FromRole="Specialty" ToRole="Patient" />
-        </EntityType>
-        <Association Name="FK_Patients_Specialties">
-          <End Type="PatientsMgtModel.Specialty" Role="Specialty" Multiplicity="0..1" />
-          <End Type="PatientsMgtModel.Patient" Role="Patient" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Specialty">
-              <PropertyRef Name="SpecialtyId" />
-            </Principal>
-            <Dependent Role="Patient">
-              <PropertyRef Name="SpecialtyId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <ComplexType Name="GetPatientListReport_SP_Result">
+          <Property Type="Int32" Name="id" Nullable="false" />
           <Property Type="String" Name="PatientCID" Nullable="false" MaxLength="12" />
           <Property Type="String" Name="Name" Nullable="true" MaxLength="152" />
           <Property Type="String" Name="KWTphone" Nullable="true" MaxLength="15" />
@@ -1044,6 +1032,7 @@
           <Property Type="DateTime" Name="StartDate" Nullable="true" />
           <Property Type="DateTime" Name="EndDate" Nullable="true" />
           <Property Type="Decimal" Name="Amount" Nullable="true" Precision="18" Scale="0" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
           <Property Type="String" Name="PatientName" Nullable="true" MaxLength="152" />
           <Property Type="String" Name="BeneficiaryCID" Nullable="true" MaxLength="12" />
           <Property Type="String" Name="BeneficiaryName" Nullable="true" MaxLength="152" />
@@ -1053,7 +1042,6 @@
           <Property Type="String" Name="Bank" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="Code" Nullable="true" MaxLength="3" />
         </ComplexType>
-        
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1092,6 +1080,45 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="CompanionHistories">
+            <EntityTypeMapping TypeName="PatientsMgtModel.CompanionHistory">
+              <MappingFragment StoreEntitySet="CompanionHistories">
+                <ScalarProperty Name="HistoryID" ColumnName="HistoryID" />
+                <ScalarProperty Name="CompanionCID" ColumnName="CompanionCID" />
+                <ScalarProperty Name="PatientCID" ColumnName="PatientCID" />
+                <ScalarProperty Name="DateIn" ColumnName="DateIn" />
+                <ScalarProperty Name="DateOut" ColumnName="DateOut" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Companions">
+            <EntityTypeMapping TypeName="PatientsMgtModel.Companion">
+              <MappingFragment StoreEntitySet="Companions">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CompanionCID" ColumnName="CompanionCID" />
+                <ScalarProperty Name="CompanionFName" ColumnName="CompanionFName" />
+                <ScalarProperty Name="CompanionMName" ColumnName="CompanionMName" />
+                <ScalarProperty Name="CompanionLName" ColumnName="CompanionLName" />
+                <ScalarProperty Name="PatientCID" ColumnName="PatientCID" />
+                <ScalarProperty Name="BankID" ColumnName="BankID" />
+                <ScalarProperty Name="IBan" ColumnName="IBan" />
+                <ScalarProperty Name="DateIn" ColumnName="DateIn" />
+                <ScalarProperty Name="DateOut" ColumnName="DateOut" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="IsBeneficiary" ColumnName="IsBeneficiary" />
+                <ScalarProperty Name="CompanionTypeID" ColumnName="CompanionTypeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="CompanionTypes">
             <EntityTypeMapping TypeName="PatientsMgtModel.CompanionType">
               <MappingFragment StoreEntitySet="CompanionTypes">
@@ -1108,6 +1135,17 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="ExceptionLoggers">
+            <EntityTypeMapping TypeName="PatientsMgtModel.ExceptionLogger">
+              <MappingFragment StoreEntitySet="ExceptionLoggers">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ExceptionMessage" ColumnName="ExceptionMessage" />
+                <ScalarProperty Name="ControllerName" ColumnName="ControllerName" />
+                <ScalarProperty Name="ExceptionStackTrace" ColumnName="ExceptionStackTrace" />
+                <ScalarProperty Name="LogTime" ColumnName="LogTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Hospitals">
             <EntityTypeMapping TypeName="PatientsMgtModel.Hospital">
               <MappingFragment StoreEntitySet="Hospitals">
@@ -1116,11 +1154,9 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Patients">
-            <EntityTypeMapping TypeName="PatientsMgtModel.Patient">
-              <MappingFragment StoreEntitySet="Patients">
-                <ScalarProperty Name="Diagnosis" ColumnName="Diagnosis" />
-                <ScalarProperty Name="SpecialtyId" ColumnName="SpecialtyId" />
+          <EntitySetMapping Name="PatientHistories">
+            <EntityTypeMapping TypeName="PatientsMgtModel.PatientHistory">
+              <MappingFragment StoreEntitySet="PatientHistories">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="PatientCID" ColumnName="PatientCID" />
                 <ScalarProperty Name="PatientFName" ColumnName="PatientFName" />
@@ -1137,6 +1173,59 @@
                 <ScalarProperty Name="EndTreatDate" ColumnName="EndTreatDate" />
                 <ScalarProperty Name="IsBeneficiary" ColumnName="IsBeneficiary" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="OldCreatedDate" ColumnName="OldCreatedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="PrimaryCompanionCid" ColumnName="PrimaryCompanionCid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Patients">
+            <EntityTypeMapping TypeName="PatientsMgtModel.Patient">
+              <MappingFragment StoreEntitySet="Patients">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="PatientCID" ColumnName="PatientCID" />
+                <ScalarProperty Name="PatientFName" ColumnName="PatientFName" />
+                <ScalarProperty Name="PatientMName" ColumnName="PatientMName" />
+                <ScalarProperty Name="PatientLName" ColumnName="PatientLName" />
+                <ScalarProperty Name="KWTphone" ColumnName="KWTphone" />
+                <ScalarProperty Name="USphone" ColumnName="USphone" />
+                <ScalarProperty Name="HospitalID" ColumnName="HospitalID" />
+                <ScalarProperty Name="DoctorID" ColumnName="DoctorID" />
+                <ScalarProperty Name="SpecialtyId" ColumnName="SpecialtyId" />
+                <ScalarProperty Name="Diagnosis" ColumnName="Diagnosis" />
+                <ScalarProperty Name="AgencyID" ColumnName="AgencyID" />
+                <ScalarProperty Name="BankID" ColumnName="BankID" />
+                <ScalarProperty Name="Iban" ColumnName="Iban" />
+                <ScalarProperty Name="FirstApptDate" ColumnName="FirstApptDate" />
+                <ScalarProperty Name="EndTreatDate" ColumnName="EndTreatDate" />
+                <ScalarProperty Name="IsBeneficiary" ColumnName="IsBeneficiary" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Payments">
+            <EntityTypeMapping TypeName="PatientsMgtModel.Payment">
+              <MappingFragment StoreEntitySet="Payments">
+                <ScalarProperty Name="PaymentID" ColumnName="PaymentID" />
+                <ScalarProperty Name="PaymentDate" ColumnName="PaymentDate" />
+                <ScalarProperty Name="PatientCID" ColumnName="PatientCID" />
+                <ScalarProperty Name="CompanionCID" ColumnName="CompanionCID" />
+                <ScalarProperty Name="BeneficiaryID" ColumnName="BeneficiaryID" />
+                <ScalarProperty Name="HospitalID" ColumnName="HospitalID" />
+                <ScalarProperty Name="AgencyID" ColumnName="AgencyID" />
+                <ScalarProperty Name="PayRateID" ColumnName="PayRateID" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="Period" ColumnName="Period" />
+                <ScalarProperty Name="PAmount" ColumnName="PAmount" />
+                <ScalarProperty Name="CAmount" ColumnName="CAmount" />
+                <ScalarProperty Name="TotalDue" ColumnName="TotalDue" />
                 <ScalarProperty Name="Notes" ColumnName="Notes" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
@@ -1162,21 +1251,17 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="sysdiagrams">
-            <EntityTypeMapping TypeName="PatientsMgtModel.sysdiagram">
-              <MappingFragment StoreEntitySet="sysdiagrams">
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
-                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-                <ScalarProperty Name="version" ColumnName="version" />
-                <ScalarProperty Name="definition" ColumnName="definition" />
+          <EntitySetMapping Name="Specialties">
+            <EntityTypeMapping TypeName="PatientsMgtModel.Specialty">
+              <MappingFragment StoreEntitySet="Specialties">
+                <ScalarProperty Name="SpecialtyId" ColumnName="SpecialtyId" />
+                <ScalarProperty Name="Specialty1" ColumnName="Specialty" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="UserRoles">
             <EntityTypeMapping TypeName="PatientsMgtModel.UserRole">
               <MappingFragment StoreEntitySet="UserRoles">
-                <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="RoleId" ColumnName="RoleId" />
               </MappingFragment>
@@ -1193,121 +1278,18 @@
                 <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
                 <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="CompanionHistories">
-            <EntityTypeMapping TypeName="PatientsMgtModel.CompanionHistory">
-              <MappingFragment StoreEntitySet="CompanionHistories">
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="DateOut" ColumnName="DateOut" />
-                <ScalarProperty Name="DateIn" ColumnName="DateIn" />
-                <ScalarProperty Name="PatientCID" ColumnName="PatientCID" />
-                <ScalarProperty Name="CompanionCID" ColumnName="CompanionCID" />
-                <ScalarProperty Name="HistoryID" ColumnName="HistoryID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Companions">
-            <EntityTypeMapping TypeName="PatientsMgtModel.Companion">
-              <MappingFragment StoreEntitySet="Companions">
-                <ScalarProperty Name="CompanionTypeID" ColumnName="CompanionTypeID" />
-                <ScalarProperty Name="IsBeneficiary" ColumnName="IsBeneficiary" />
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="Notes" ColumnName="Notes" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="DateOut" ColumnName="DateOut" />
-                <ScalarProperty Name="DateIn" ColumnName="DateIn" />
-                <ScalarProperty Name="IBan" ColumnName="IBan" />
-                <ScalarProperty Name="BankID" ColumnName="BankID" />
-                <ScalarProperty Name="PatientCID" ColumnName="PatientCID" />
-                <ScalarProperty Name="CompanionLName" ColumnName="CompanionLName" />
-                <ScalarProperty Name="CompanionMName" ColumnName="CompanionMName" />
-                <ScalarProperty Name="CompanionFName" ColumnName="CompanionFName" />
-                <ScalarProperty Name="CompanionCID" ColumnName="CompanionCID" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Payments">
-            <EntityTypeMapping TypeName="PatientsMgtModel.Payment">
-              <MappingFragment StoreEntitySet="Payments">
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="Notes" ColumnName="Notes" />
-                <ScalarProperty Name="TotalDue" ColumnName="TotalDue" />
-                <ScalarProperty Name="CAmount" ColumnName="CAmount" />
-                <ScalarProperty Name="PAmount" ColumnName="PAmount" />
-                <ScalarProperty Name="Period" ColumnName="Period" />
-                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
-                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
-                <ScalarProperty Name="PayRateID" ColumnName="PayRateID" />
-                <ScalarProperty Name="AgencyID" ColumnName="AgencyID" />
-                <ScalarProperty Name="HospitalID" ColumnName="HospitalID" />
-                <ScalarProperty Name="BeneficiaryID" ColumnName="BeneficiaryID" />
-                <ScalarProperty Name="CompanionCID" ColumnName="CompanionCID" />
-                <ScalarProperty Name="PatientCID" ColumnName="PatientCID" />
-                <ScalarProperty Name="PaymentDate" ColumnName="PaymentDate" />
-                <ScalarProperty Name="PaymentID" ColumnName="PaymentID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ExceptionLoggers">
-            <EntityTypeMapping TypeName="PatientsMgtModel.ExceptionLogger">
-              <MappingFragment StoreEntitySet="ExceptionLoggers">
-                <ScalarProperty Name="LogTime" ColumnName="LogTime" />
-                <ScalarProperty Name="ExceptionStackTrace" ColumnName="ExceptionStackTrace" />
-                <ScalarProperty Name="ControllerName" ColumnName="ControllerName" />
-                <ScalarProperty Name="ExceptionMessage" ColumnName="ExceptionMessage" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PatientHistories">
-            <EntityTypeMapping TypeName="PatientsMgtModel.PatientHistory">
-              <MappingFragment StoreEntitySet="PatientHistories">
-                <ScalarProperty Name="PrimaryCompanionCid" ColumnName="PrimaryCompanionCid" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="OldCreatedDate" ColumnName="OldCreatedDate" />
-                <ScalarProperty Name="Notes" ColumnName="Notes" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="IsBeneficiary" ColumnName="IsBeneficiary" />
-                <ScalarProperty Name="EndTreatDate" ColumnName="EndTreatDate" />
-                <ScalarProperty Name="FirstApptDate" ColumnName="FirstApptDate" />
-                <ScalarProperty Name="Iban" ColumnName="Iban" />
-                <ScalarProperty Name="BankID" ColumnName="BankID" />
-                <ScalarProperty Name="AgencyID" ColumnName="AgencyID" />
-                <ScalarProperty Name="DoctorID" ColumnName="DoctorID" />
-                <ScalarProperty Name="HospitalID" ColumnName="HospitalID" />
-                <ScalarProperty Name="USphone" ColumnName="USphone" />
-                <ScalarProperty Name="KWTphone" ColumnName="KWTphone" />
-                <ScalarProperty Name="PatientLName" ColumnName="PatientLName" />
-                <ScalarProperty Name="PatientMName" ColumnName="PatientMName" />
-                <ScalarProperty Name="PatientFName" ColumnName="PatientFName" />
-                <ScalarProperty Name="PatientCID" ColumnName="PatientCID" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Specialties">
-            <EntityTypeMapping TypeName="PatientsMgtModel.Specialty">
-              <MappingFragment StoreEntitySet="Specialties">
-                <ScalarProperty Name="Specialty1" ColumnName="Specialty" />
-                <ScalarProperty Name="SpecialtyId" ColumnName="SpecialtyId" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="GetPatientListReport_SP" FunctionName="PatientsMgtModel.Store.GetPatientListReport_SP">
             <ResultMapping>
               <ComplexTypeMapping TypeName="PatientsMgtModel.GetPatientListReport_SP_Result">
+                <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="PatientCID" ColumnName="PatientCID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="KWTphone" ColumnName="KWTphone" />
@@ -1329,6 +1311,26 @@
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
                 <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetPaymentListReport_SP" FunctionName="PatientsMgtModel.Store.GetPaymentListReport_SP">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="PatientsMgtModel.GetPaymentListReport_SP_Result">
+                <ScalarProperty Name="PaymentID" ColumnName="PaymentID" />
+                <ScalarProperty Name="PatientCID" ColumnName="PatientCID" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="PatientName" ColumnName="PatientName" />
+                <ScalarProperty Name="BeneficiaryCID" ColumnName="BeneficiaryCID" />
+                <ScalarProperty Name="BeneficiaryName" ColumnName="BeneficiaryName" />
+                <ScalarProperty Name="CompanionName" ColumnName="CompanionName" />
+                <ScalarProperty Name="AgencyName" ColumnName="AgencyName" />
+                <ScalarProperty Name="IBan" ColumnName="IBan" />
+                <ScalarProperty Name="Bank" ColumnName="Bank" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

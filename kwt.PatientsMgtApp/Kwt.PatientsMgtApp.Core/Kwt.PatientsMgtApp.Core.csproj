@@ -61,7 +61,10 @@
     <Compile Include="Models\PaymentModel.cs" />
     <Compile Include="Models\PaymentReportModel.cs" />
     <Compile Include="Models\PayRateModel.cs" />
+    <Compile Include="Models\RoleModel.cs" />
     <Compile Include="Models\SpecialtyModel.cs" />
+    <Compile Include="Models\UserModel.cs" />
+    <Compile Include="Models\UserRolesModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

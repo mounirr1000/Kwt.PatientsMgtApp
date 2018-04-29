@@ -31,6 +31,8 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public string USphone { get; set; }
         public Nullable<int> HospitalID { get; set; }
         public int DoctorID { get; set; }
+        public Nullable<int> SpecialtyId { get; set; }
+        public string Diagnosis { get; set; }
         public int AgencyID { get; set; }
         public Nullable<int> BankID { get; set; }
         public string Iban { get; set; }
@@ -43,19 +45,17 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public System.DateTime CreatedDate { get; set; }
         public string ModifiedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
-        public Nullable<int> SpecialtyId { get; set; }
-        public string Diagnosis { get; set; }
     
         public virtual Agency Agency { get; set; }
         public virtual Bank Bank { get; set; }
-        public virtual Doctor Doctor { get; set; }
-        public virtual Hospital Hospital { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CompanionHistory> CompanionHistories { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Companion> Companions { get; set; }
+        public virtual Doctor Doctor { get; set; }
+        public virtual Hospital Hospital { get; set; }
+        public virtual Specialty Specialty { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Payment> Payments { get; set; }
-        public virtual Specialty Specialty { get; set; }
     }
 }

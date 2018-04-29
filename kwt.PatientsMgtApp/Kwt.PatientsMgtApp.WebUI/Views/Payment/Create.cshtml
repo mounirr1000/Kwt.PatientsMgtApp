@@ -1,27 +1,26 @@
 ﻿@model Kwt.PatientsMgtApp.Core.Models.PaymentModel
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "New Payment";
 }
+<hr/>
 
-<h2>Create</h2>
 @using (Html.BeginForm("Create", "Payment", FormMethod.Get))
 {
-    @Html.Display("Please enter Patient Cid", new { @class = "control-label col-md-2" })
-    @Html.TextBox("patientCid")
+    
+    @Html.TextBox("patientCid",null, new {placeholder="Enter Patient CID",id= "patientCid", @class = "form-control col-md-2" })
 }
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>Payment</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
             @Html.LabelFor(model => model.PaymentDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.PaymentDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.TextBoxFor(model => model.PaymentDate,  new { @class = "form-control datepicker" } )
                 @Html.ValidationMessageFor(model => model.PaymentDate, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -29,7 +28,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.PatientCID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.PatientCID, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.TextBoxFor(model => model.PatientCID, new { @class = "form-control" } )
                 @Html.ValidationMessageFor(model => model.PatientCID, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -37,7 +36,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.PatientFName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DisplayFor(model => model.PatientFName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DisplayFor(model => model.PatientFName, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.PatientFName, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -45,7 +44,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.PatientMName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DisplayFor(model => model.PatientMName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DisplayFor(model => model.PatientMName,  new { @class = "form-control"  })
                 @Html.ValidationMessageFor(model => model.PatientMName, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -53,7 +52,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.PatientLName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DisplayFor(model => model.PatientLName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DisplayFor(model => model.PatientLName,  new { @class = "form-control"  })
                 @Html.ValidationMessageFor(model => model.PatientLName, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -61,7 +60,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.CompanionCID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DisplayFor(model => model.CompanionCID, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DisplayFor(model => model.CompanionCID,  new { @class = "form-control"  })
                 @Html.ValidationMessageFor(model => model.CompanionCID, "", new { @class = "text-danger" })
                 @Html.HiddenFor(model => model.CompanionCID)
             </div>
@@ -70,7 +69,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.CompanionFName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DisplayFor(model => model.CompanionFName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DisplayFor(model => model.CompanionFName,  new { @class = "form-control"  })
                 @Html.ValidationMessageFor(model => model.CompanionFName, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -78,7 +77,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.CompanionMName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DisplayFor(model => model.CompanionMName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DisplayFor(model => model.CompanionMName,  new { @class = "form-control"  })
                 @Html.ValidationMessageFor(model => model.CompanionMName, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -86,7 +85,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.CompanionLName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DisplayFor(model => model.CompanionLName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DisplayFor(model => model.CompanionLName,  new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.CompanionLName, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -94,7 +93,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.BeneficiaryCID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DisplayFor(model => model.BeneficiaryCID, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DisplayFor(model => model.BeneficiaryCID,  new { @class = "form-control"  })
                 @Html.ValidationMessageFor(model => model.BeneficiaryCID, "", new { @class = "text-danger" })
                 @Html.HiddenFor(model => model.BeneficiaryCID)
             </div>
@@ -103,7 +102,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.BeneficiaryFName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DisplayFor(model => model.BeneficiaryFName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DisplayFor(model => model.BeneficiaryFName,  new { @class = "form-control"  })
                 @Html.ValidationMessageFor(model => model.BeneficiaryFName, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -111,7 +110,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.BeneficiaryMName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DisplayFor(model => model.BeneficiaryMName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DisplayFor(model => model.BeneficiaryMName,  new { @class = "form-control"  })
                 @Html.ValidationMessageFor(model => model.BeneficiaryMName, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -119,7 +118,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.BeneficiaryLName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DisplayFor(model => model.BeneficiaryLName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DisplayFor(model => model.BeneficiaryLName,  new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.BeneficiaryLName, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -127,7 +126,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.BeneficiaryBank, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DisplayFor(model => model.BeneficiaryBank, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DisplayFor(model => model.BeneficiaryBank, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.BeneficiaryBank, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -135,7 +134,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.BeneficiaryIBan, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DisplayFor(model => model.BeneficiaryIBan, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DisplayFor(model => model.BeneficiaryIBan,  new { @class = "form-control"  })
                 @Html.ValidationMessageFor(model => model.BeneficiaryIBan, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -143,7 +142,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Hospital, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DisplayFor(model => model.Hospital, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DisplayFor(model => model.Hospital,  new { @class = "form-control"  })
                 @Html.ValidationMessageFor(model => model.Hospital, "", new { @class = "text-danger" })
                 @Html.HiddenFor(model => model.Hospital)
             </div>
@@ -152,14 +151,14 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Agency, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DisplayFor(model => model.Agency, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DisplayFor(model => model.Agency,  new { @class = "form-control"  })
                 @Html.ValidationMessageFor(model => model.Agency, "", new { @class = "text-danger" })
                 @Html.HiddenFor(model => model.Agency)
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.CompanionPayRate, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.CompanionPayRate,  new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @if (Model.PayRates != null && !String.IsNullOrEmpty(Model.CompanionCID))
                 {
@@ -178,7 +177,7 @@
                 }
                 else
                 {
-                    @Html.EditorFor(model => model.CompanionPayRate, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.TextBoxFor(model => model.CompanionPayRate, new { htmlAttributes = new { @class = "form-control" } })
 
                 }
                 @Html.ValidationMessageFor(model => model.CompanionPayRate, "", new { @class = "text-danger" })
@@ -186,65 +185,66 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.PatientPayRate, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.PatientPayRate,  new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.PatientPayRate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.TextBoxFor(model => model.PatientPayRate,new { @class = "form-control"  })
                 @Html.ValidationMessageFor(model => model.PatientPayRate, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.PaymentStartDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.PaymentStartDate, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.PaymentStartDate, new { htmlAttributes = new { @class = "form-control" } })
+
+                 @Html.TextBoxFor(model => model.PaymentStartDate, new { @class = "form-control datepicker" })
                 @Html.ValidationMessageFor(model => model.PaymentStartDate, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.PaymentEndDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.PaymentEndDate, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.PaymentEndDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.TextBoxFor(model => model.PaymentEndDate, new { @class = "form-control datepicker"  })
                 @Html.ValidationMessageFor(model => model.PaymentEndDate, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.PaymentLengthPeriod, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.PaymentLengthPeriod,  new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.PaymentLengthPeriod, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.TextBoxFor(model => model.PaymentLengthPeriod,  new { @class = "form-control", @readonly = "readonly"  })
                 @Html.ValidationMessageFor(model => model.PaymentLengthPeriod, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.PatientAmount, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.PatientAmount, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.PatientAmount, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.TextBoxFor(model => model.PatientAmount, new { @class = "form-control", @readonly = "readonly"  })
                 @Html.ValidationMessageFor(model => model.PatientAmount, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.CompanionAmount, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.CompanionAmount,  new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.CompanionAmount, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.TextBoxFor(model => model.CompanionAmount,  new { @class = "form-control", @readonly = "readonly"  })
                 @Html.ValidationMessageFor(model => model.CompanionAmount, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.TotalDue, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.TotalDue,  new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.TotalDue, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.TextBoxFor(model => model.TotalDue,  new { @class = "form-control", @readonly = "readonly"  })
                 @Html.ValidationMessageFor(model => model.TotalDue, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Notes,  new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.TextAreaFor(model => model.Notes,  new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -298,9 +298,9 @@
 
 @section scripts
 {
-
+    @Scripts.Render("~/bundles/jqueryval")
     <script type="text/javascript">
-
+        
         $('#CompanionPayRate, #PatientPayRate, #PaymentStartDate, #PaymentEndDate').change(function () {
             
             $("#PatientPayRate").val();

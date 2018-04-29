@@ -57,6 +57,10 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                return View("Error", new string[] { "YOU DON'T HAVE ACCESS TO THIS RESOURCE!" });
+            }
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }

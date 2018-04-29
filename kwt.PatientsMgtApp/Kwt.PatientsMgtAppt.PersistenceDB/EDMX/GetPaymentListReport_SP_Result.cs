@@ -18,6 +18,7 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public Nullable<System.DateTime> StartDate { get; set; }
         public Nullable<System.DateTime> EndDate { get; set; }
         public Nullable<decimal> Amount { get; set; }
+        public System.DateTime CreatedDate { get; set; }
         public string PatientName { get; set; }
         public string BeneficiaryCID { get; set; }
         public string BeneficiaryName { get; set; }
