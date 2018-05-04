@@ -236,10 +236,13 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\AppRoleManager.cs" />
+    <Compile Include="Infrastructure\ExtensionMethods.cs" />
     <Compile Include="Infrastructure\HtmlHelpers.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\HomeViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\MenuItems.cs" />
     <Compile Include="Models\PatientViewModels.cs" />
     <Compile Include="Models\ReportInfo.cs" />
     <Compile Include="Models\UserViewModel.cs" />
@@ -286,7 +289,14 @@
     <Content Include="Content\fontawesome\font-awesome.min.css" />
     <Content Include="Content\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\Images\bg-sidebar-btn.png" />
+    <Content Include="Content\Images\businessman.png" />
     <Content Include="Content\Images\Kuwait_embassyLogo.png" />
+    <Content Include="Content\Images\money-bag.png" />
+    <Content Include="Content\Images\patient.png" />
+    <Content Include="Content\Images\planning.png" />
+    <Content Include="Content\kendo.common.min.css" />
+    <Content Include="Content\kendo.default.min.css" />
+    <Content Include="Content\kendo.metro.min.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\PatientMgtErrorPage.html" />
     <Content Include="Content\themes\base\accordion.css" />
@@ -396,6 +406,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\kendo.ui.core.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\popper-utils.js" />
     <Content Include="Scripts\popper-utils.min.js" />
@@ -481,6 +492,8 @@
     <Content Include="Views\Admin\Create.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Payment\_PaymentSearchForm.cshtml" />
+    <Content Include="Views\Shared\_MenuPartial.cshtml" />
+    <Content Include="Views\Shared\_PatientDetailsSearched.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -190,6 +190,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             ValidateCompanion(companion);
             if (ModelState.IsValid)
             {
+                companion.CreatedBy = User.Identity.Name;
                 _companionRepository.AddCompanion(companion);
                 Success(string.Format("Patient with Civil Id <b>{0}</b> was successfully added.", companion.CompanionCID), true);
                 return RedirectToAction("List");
@@ -220,6 +221,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             ValidateCompanion(companion);
             if (ModelState.IsValid)
             {
+                companion.ModifiedBy = User.Identity.Name;
                 _companionRepository.UpdateCompanion(companion);
                 Success(string.Format("companion with Civil Id <b>{0}</b> was successfully updated.", companion.CompanionCID), true);
                 return RedirectToAction("Details", "Companion", new { companionCid = companion.CompanionCID });

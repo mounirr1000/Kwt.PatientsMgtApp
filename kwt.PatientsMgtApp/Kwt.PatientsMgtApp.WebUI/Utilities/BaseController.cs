@@ -3,11 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Kwt.PatientsMgtApp.WebUI.Models;
 
 namespace Kwt.PatientsMgtApp.WebUI.Utilities
 {
     public class BaseController : Controller
     {
+
+
+        public BaseController()
+        {
+            IntialiseMenu();
+        }
         public void Success(string message, bool dismissable = false)
         {
             AddAlert(AlertStyles.Success, message, dismissable);
@@ -42,6 +49,33 @@ namespace Kwt.PatientsMgtApp.WebUI.Utilities
             });
 
             TempData[Alert.TempDataKey] = alerts;
+        }
+
+        private void IntialiseMenu()
+        {
+            string[] items = new[] { "Home", "Patient", "Companion", "Payment", "Report", "Admin" };
+            Menu menu = new Menu();
+            menu.MenuItem = new List<MenuItems>(items.Length);
+            for (int i = 0; i < items.Length; i++)
+            {
+                var menuItem = new MenuItems();
+                menuItem.MenuId = (i + 1);
+
+                if (items[i] == "Home")
+                {
+                    menuItem.MenuName = items[i];
+                    menuItem.ActionName = "Index";
+                }
+                else
+                {
+                    menuItem.MenuName = items[i] + "s";
+                    menuItem.ActionName = "List";
+                }
+                menuItem.ControllerName = items[i];
+                menu.MenuItem.Add(menuItem);
+            }
+
+            ViewBag.MenuItems = menu;
         }
 
     }

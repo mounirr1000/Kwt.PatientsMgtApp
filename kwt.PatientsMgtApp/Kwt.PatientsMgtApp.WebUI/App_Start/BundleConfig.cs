@@ -26,9 +26,17 @@ namespace Kwt.PatientsMgtApp.WebUI
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/kendoui").Include(
+                      "~/Scripts/kendo.ui.core.min.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/site.css",               
+                      "~/Content/site.css",
+                      
+                      "~/Content/kendo.common.min.css",
+                      "~/Content/kendo.metro.min.css",
+                      //"~/Content/style.css",
+
                       "~/Content/themes/base/jquery.ui.css",
                       "~/Content/fontawesome"));
 

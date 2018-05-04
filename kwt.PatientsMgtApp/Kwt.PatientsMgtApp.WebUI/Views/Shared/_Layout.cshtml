@@ -18,36 +18,35 @@
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"><img src="~/Content/Images/Kuwait_embassyLogo.png" /></span>
-                </button>
-                @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+
+                @*<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"><img src="~/Content/Images/Kuwait_embassyLogo.png" /></span>
+                    </button>*@
                 @if (User.Identity.IsAuthenticated)
                 {
-                    @Html.ActionLink("Patients Managemet", "Index", "Patient", new { area = "" }, new { @class = "navbar-brand" })
-                    if (User.IsInRole("Admin"))
-                    {
-                        @Html.ActionLink("Companions Managemet", "List", "Companion", new { area = "" }, new { @class = "navbar-brand" })
 
-                        @Html.ActionLink("Payment Managemet", "List", "Payment", new { area = "" }, new { @class = "navbar-brand" })
+                    @*<a href="@Url.Action("Index", "Home")" style="text-decoration: none;">
+                            <img src="~/Content/Images/Kuwait_embassyLogo.png"/>
+                        </a>*@
+                Html.RenderPartial("_MenuPartial");
+                @*@Html.ActionLink("Patients Managemet", "Index", "Patient", new {area = ""}, new {@class = "navbar-brand"})*@
+                    @*if (User.IsInRole("Admin"))
+                        {
+                            @Html.ActionLink("Companions Managemet", "List", "Companion", new {area = ""}, new {@class = "navbar-brand"})
 
-                        @Html.ActionLink("Reports", "List", "Report", new { area = "" }, new { @class = "navbar-brand" })
-                    }
-                    @Html.Partial("_LoginPartial")
+                            @Html.ActionLink("Payment Managemet", "List", "Payment", new {area = ""}, new {@class = "navbar-brand"})
+
+                            @Html.ActionLink("Reports", "List", "Report", new {area = ""}, new {@class = "navbar-brand"})
+                        }*@
+                    @*@Html.Partial("_LoginPartial")*@
                 }
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Companion Managment", "List", "Companion")</li>
-                    <li>@Html.ActionLink("Patient Managment", "List", "Patient")</li>
-                </ul>
-                @*@Html.Partial("_LoginPartial")*@
-            </div>
+
         </div>
+
     </div>
 
-    <div class="container body-content">
+    <div class="container body-content " style="height:100%;">
 
         @{ Html.RenderPartial("_Alerts"); }
         @RenderBody()
@@ -60,11 +59,20 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryui")
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/kendoui")
     @RenderSection("scripts", required: false)
     <script type="text/javascript">
         $(function () {
             $(".datepicker").datepicker();
         });
+    </script>
+    <script type="text/javascript">
+        //$("#patientCids").kendoAutoComplete({
+        //                dataSource: data,
+        //                filter: "startswith",
+        //                placeholder: "Select country...",
+        //                separator: ", "
+        //            });
     </script>
 </body>
 </html>

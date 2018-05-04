@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Remoting;
@@ -24,7 +25,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         public PaymentRepository()
         {
             _domainObjectRepository = new DomainObjectRepository();
-            _beneficiaryRepository= new BeneficiaryRepository();
+            _beneficiaryRepository = new BeneficiaryRepository();
             _patientRepository = new PatientRepository();
             _companionRepository = new CompanionRepository();
             _payRateRepository = new PayRateRepository();
@@ -38,7 +39,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             parms.Add("pCid", patientCid);
             parms.Add("startDate", startDate);
             parms.Add("endDate", endDate);
-            
+
             //pCidParameter, hospitalParameter, doctorParameter, statusParameter, specialityParameter
             return _domainObjectRepository.ExecuteProcedure<PaymentReportModel>("GetPaymentListReport_SP", parms, false);
         }
@@ -90,7 +91,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             var ben = _beneficiaryRepository.GetBeneficiary(patientCid);
             var patient = _patientRepository.GetPatient(patientCid);
             var companion = _companionRepository.GetCompanion(ben?.CompanionCID);
-            if (patient!=null && ben!=null) 
+            if (patient != null && ben != null)
             {
                 payment.PatientCID = patientCid;
                 payment.PatientFName = patient.PatientFName;
@@ -112,7 +113,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 //Todo: This should be done a better way
                 payment.PayRates = _payRateRepository.GetPayRatesList();
                 payment.PatientPayRate = _domainObjectRepository.Get<PayRate>(c => c.PayRateID == 1).PatientRate;
-                payment.CompanionPayRate = !String.IsNullOrEmpty(ben.CompanionCID)? _domainObjectRepository.Get<PayRate>(c => c.PayRateID == 1).CompanionRate:0;
+                payment.CompanionPayRate = !String.IsNullOrEmpty(ben.CompanionCID) ? _domainObjectRepository.Get<PayRate>(c => c.PayRateID == 1).CompanionRate : 0;
             }
             return payment;
         }
@@ -128,8 +129,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 var pr = payment.PayRate;
                 var be = payment.Beneficiary;
 
-               // PaymentModel pay = new PaymentModel();
-               //{
+                // PaymentModel pay = new PaymentModel();
+                //{
                 pay.PatientCID = payment.PatientCID;
                 pay.Agency = payment.Patient?.AgencyID != null
                     ? _domainObjectRepository.Get<Agency>(a => a.AgencyID == payment.Patient.AgencyID).AgencyName
@@ -199,7 +200,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         public void AddPayment(PaymentModel payment)
         {
             //start date and end date payment difference should be positive
-            if (payment?.PaymentEndDate != null && payment?.PaymentStartDate!=null)
+            if (payment?.PaymentEndDate != null && payment?.PaymentStartDate != null)
             {
 
                 var currentEndDate = (DateTime)payment?.PaymentEndDate?.Date;
@@ -215,12 +216,12 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 }
 
                 //Todo This should be removed if the payment can be before 15 days period
-                if ((currentEndDate - currentStartDate).Days < Constants.NUMBER_OF_DAYS_BEFORE_NEXT_PAYMENT)
-                {
-                    throw new PatientsMgtException(1, "error", "Add new Payment", 
-                                        "The payment end date should be on " 
-                                        + currentStartDate.AddDays(Constants.NUMBER_OF_DAYS_BEFORE_NEXT_PAYMENT));
-                }
+                //if ((currentEndDate - currentStartDate).Days < Constants.NUMBER_OF_DAYS_BEFORE_NEXT_PAYMENT)
+                //{
+                //    throw new PatientsMgtException(1, "error", "Add new Payment", 
+                //                        "The payment end date should be on " 
+                //                        + currentStartDate.AddDays(Constants.NUMBER_OF_DAYS_BEFORE_NEXT_PAYMENT));
+                //}
             }
             //check last payment for the same patient if there is one
             IPaymentRepository paymentRepository = new PaymentRepository();
@@ -241,7 +242,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     {
                         throw new PatientsMgtException(1, "error", "Add new Payment", "Last Payment end date was on " + lastEndDate + " So payment start date should be after " + lastEndDate);
                     }
-                    
+
                 }
             }
 
@@ -286,7 +287,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     BeneficiaryID = _domainObjectRepository.Get<Beneficiary>(b => b.PatientCID == payment.PatientCID).BeneficiaryID,
                     CompanionCID = payment.CompanionCID,
                     CreatedBy = payment.CreatedBy,
-
+                    CreatedDate = payment.CreatedDate,
                     Notes = payment.Notes,
                     EndDate = payment.PaymentEndDate,
                     HospitalID = _domainObjectRepository.Get<Hospital>(h => h.HospitalName == payment.Hospital).HospitalID,
@@ -299,10 +300,19 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     Period = payment.PaymentLengthPeriod,
                     StartDate = payment.PaymentStartDate,
                     TotalDue = payment.TotalDue,
-                    PaymentID = payment.Id
+                    Id = payment.Id,
+                    PaymentID = payment.Id,
+                    ModifiedDate = DateTime.Now
                 };
                 paymentToUpdate = updatedPayment;
-                _domainObjectRepository.Update<Payment>(paymentToUpdate);
+                //Todo This is a temp fix for updating the Payment
+                PatientsMgtEntities dbContext = new PatientsMgtEntities();
+                var entry = dbContext.Entry(paymentToUpdate);
+                dbContext.Set<Payment>().Attach(paymentToUpdate);
+                entry.State = EntityState.Modified;
+                dbContext.SaveChanges();
+                //
+                //_domainObjectRepository.Update<Payment>(paymentToUpdate);
 
             }
             return payment;

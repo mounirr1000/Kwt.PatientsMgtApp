@@ -1,0 +1,121 @@
+﻿@using Kwt.PatientsMgtApp.Core.Models
+@using Kwt.PatientsMgtApp.WebUI.Infrastructure
+@{
+    var patient = (PatientModel)TempData["searchedPatient"] ?? new PatientModel();
+}
+<div class="ctxPanel" ng-class="{hs: displayContent}">
+
+
+    <div class="org-container">
+
+        <div class="panel-group org-bar">
+            <div id="panelbar" class="panel panel-default org-bar">
+                <div class="panel-heading org-bar">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#collapse1"><i class="fa fa-angle-down"></i> @patient.PatientCID <span class="p-2">@patient.Name</span></a>
+                    </h4>
+
+                </div>
+                <div id="collapse1" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="org-col-md-3">
+                                <table>
+                                    <tr>
+                                        <td class="title">Agency:</td>
+                                        <td>@patient.Agency</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="title">Doctor:</td>
+                                        <td>@patient.Doctor</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="title">First Appointment Date:</td>
+                                        <td>@patient.FirstApptDAte</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="title">Hospital:</td>
+                                        <td>@patient.Hospital</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="org-col-md-4">
+                                <table>
+                                    <tr>
+                                        <td class="title">Active Status</td>
+                                        <td>
+                                            @if (patient.IsActive)
+                                            {
+                                                <span style="color: Green"> Yes </span>
+                                            }
+                                            else
+                                            {
+                                                <span style="color: red"> No </span>
+                                            }
+                                            
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="title">Beneficiary Status:</td>
+                                        <td>
+                                            @if (patient.IsBeneficiary)
+                                            {
+                                                <span style="color: Green"> Yes </span>
+                                            }
+                                            else
+                                            {
+                                                <span style="color: red"> No </span>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="title">Kuwait Phone</td>
+                                        <td>@patient.KWTPhone</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="title">Specialty</td>
+                                        <td>@patient.Specialty</td>
+                                    </tr>
+                                </table>
+
+                            </div>
+                            <div class="org-col-md-3">
+                                <table>
+                                    <tr>
+                                        <td class="title">Us Phone/Hospital Phone:</td>
+                                        <td>@patient.USPhone</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="title">End Treatment Date</td>
+                                        <td>@patient.EndTreatDate</td>
+                                    </tr>
+                                </table>
+
+                            </div>
+                            @if (User.IsInAnyRoles("Admin", "Super Admin", "Accountant", "Auditor")) {
+                            <div class="org-col-md-3">
+                                <table>
+                                    <tr>
+                                        <td class="title">Bank:</td>
+                                        <td>@patient.BankName</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="title">Bank Code:</td>
+                                        <td>@patient.BankCode</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="title">IBan</td>
+                                        <td>@patient.Iban</td>
+                                    </tr>
+                                </table>
+
+                            </div>
+                            }
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

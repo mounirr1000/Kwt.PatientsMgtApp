@@ -10,6 +10,9 @@ namespace Kwt.PatientsMgtApp.Core.Models
 {
     public class PaymentModel :BaseEntity
     {
+
+        public int PaymentID { get; set; }
+
         [DataType(DataType.Date)]
         [DisplayName("Payment Date")]
         public Nullable<System.DateTime> PaymentDate { get; set; }

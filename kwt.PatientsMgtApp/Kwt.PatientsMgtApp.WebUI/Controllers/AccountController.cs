@@ -9,11 +9,12 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Kwt.PatientsMgtApp.WebUI.Models;
+using Kwt.PatientsMgtApp.WebUI.Utilities;
 
 namespace Kwt.PatientsMgtApp.WebUI.Controllers
 {
     [Authorize]
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;

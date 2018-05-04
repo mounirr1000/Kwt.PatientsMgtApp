@@ -207,6 +207,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
 
             if (ModelState.IsValid)
             {
+                patient.CreatedBy = User.Identity.Name;
                 _patientRepository.AddPatient(patient);
                 Success(string.Format("Patient with Civil Id <b>{0}</b> was successfully added.", patient.PatientCID), true);
                 return RedirectToAction("Index");
@@ -254,6 +255,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             }
             if (ModelState.IsValid)
             {
+                 patient.ModifiedBy = User.Identity.Name;
                 _patientRepository.UpdatePatient(patient);
                 Success(string.Format("Patient with Civil Id <b>{0}</b> was successfully updated.", patient.PatientCID), true);
                 return RedirectToAction("Details", "Patient", new { patientCid = patient.PatientCID });
@@ -297,23 +299,31 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         }
 
         //Search Patient
-        //public ActionResult SearchPatient(string searchText)
-        //{
-        //    var term = searchText.ToLower();
-        //    var result = _patientList
-        //        .Where(p =>
-        //            p.PatientCID.ToLower().Contains(term) ||
-        //            p.PatientFName.ToLower().Contains(term)
-        //            || p.Agency.ToLower().Contains(term)
-        //            || p.BankCode.ToLower().Contains(term)
-        //            || p.Doctor.ToLower().Contains(term)
-        //            || p.PatientMName.ToLower().Contains(term)
-        //            || p.PatientLName.ToLower().Contains(term)
-        //            || p.BankName.ToLower().Contains(term)
-
-        //        );
-
-        //    return PartialView("_SearchPeople", result);
-        //}
+        public ActionResult Search(string patientCid)
+        {
+            var url = System.Web.HttpContext.Current.Request.UrlReferrer;
+            
+            var patient = _patientRepository.GetPatient(patientCid);
+            string controllerName = (string)TempData["controller"] ?? "Home";
+            string actionName = (string)TempData["action"] ?? "Index";
+            
+            if (patient != null)
+            {
+                TempData["searchedPatient"] = patient;
+                
+                if(url!=null)
+                return Redirect(url.PathAndQuery);
+                return  RedirectToAction("List", controllerName);
+            }
+            else
+            {
+                //TempData["searchedPatient"] = null;
+                Information(string.Format("Patient with Civil Id <b>{0}</b> Does Not exist in our records.", patientCid), true);
+                if (url != null)
+                    return Redirect(url.PathAndQuery);
+                return RedirectToAction(actionName, controllerName);
+            }
+ 
+        }
     }
 }

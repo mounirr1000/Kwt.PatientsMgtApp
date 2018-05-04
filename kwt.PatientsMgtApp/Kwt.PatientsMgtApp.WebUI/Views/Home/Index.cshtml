@@ -1,32 +1,81 @@
-﻿@{
+﻿@using Kwt.PatientsMgtApp.WebUI.Models
+@model HomeViewModels
+
+@{
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
+@*<div class="jumbotron text-center">
 
-    <h1>
+        <h1> Kuwait Embassy</h1>
+        <img src="~/Content/Images/Kuwait_embassyLogo.png" />
+    </div>*@
 
-        <img src="~/Content/Images/Kuwait_embassyLogo.png"/>
-        Kuwait Embassy
-    </h1>
-</div>
+<div class="homePage site">
+    <div class="row text-center">
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Patients</h2>
-        <p>
-            
-        </p>
-        <p></p>
+        <div class="col-md-6">
+            <label class="p-3 font-weight-bold text-info">Total Active Patients:</label> @Model.TotalActivePatients
+        </div>
+        <div class="col-md-6">
+            <label class="p-3 font-weight-bold text-info">Total Payments:</label> @Model.TotalPayments
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Payments</h2>
-        <p></p>
+
+    <div class="row text-center">
+        @if (!User.IsInRole("Admin"))
+        {
+            <div style="margin: 0 auto;">
+
+                <a href="@Url.Action("List", "Patient")" style="text-decoration: none;">
+                    <h2>Patients</h2>
+                    <img src="~/Content/Images/patient.png"/>
+                </a>
+
+            </div>
+        }
         
-    </div>
-    <div class="col-md-4">
-        <h2>Reports</h2>
-        <p></p>
-        
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="col-md-3">
+
+                <a href="@Url.Action("List", "Patient")" style="text-decoration: none;">
+                    <h2>Patients</h2>
+                    <img src="~/Content/Images/patient.png" />
+                </a>
+
+            </div>
+            <div class="col-md-3">
+
+                <a href="@Url.Action("List", "Payment")" style="text-decoration: none;">
+                    <h2>Payments</h2>
+                    <img src="~/Content/Images/money-bag.png" />
+                </a>
+
+            </div>
+            <div class="col-md-3">
+
+                <a href="@Url.Action("List", "Report")" style="text-decoration: none;">
+                    <h2>Reports</h2>
+                    <img src="~/Content/Images/planning.png" />
+                </a>
+
+            </div>
+            <div class="col-md-3">
+
+                <a href="@Url.Action("List", "Report")" style="text-decoration: none;">
+                    <h2>Admin Portal</h2>
+                    <img src="~/Content/Images/businessman.png" />
+
+                </a>
+
+            </div>
+        }
     </div>
 </div>
+@section scripts
+{
+    <script type="text/javascript">
+
+    </script>
+}

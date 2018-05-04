@@ -12,7 +12,7 @@ using System.Data.Entity;
 
 namespace Kwt.PatientsMgtApp.DataAccess.SQL
 {
-    public class DomainObjectRepository: IDomainObjectRepository
+    public class DomainObjectRepository : IDomainObjectRepository
     {
         private PatientsMgtEntities dbContext;
 
@@ -172,12 +172,13 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             {
                 (TObject as IAuditObject).ModifiedDate = DateTime.Now;
             }
-
             var entry = dbContext.Entry(TObject);
-            dbContext.Set<T>().Attach(TObject);
-
-            entry.State = EntityState.Modified;
-
+            //if (entry.State == EntityState.Detached || entry.State == EntityState.Modified)
+            //{
+                
+                dbContext.Set<T>().Attach(TObject);
+                entry.State = EntityState.Modified;
+            //}
             return dbContext.SaveChanges();
         }
 

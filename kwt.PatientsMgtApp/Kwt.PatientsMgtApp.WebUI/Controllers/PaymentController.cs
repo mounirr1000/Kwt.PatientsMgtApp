@@ -171,6 +171,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             ValidateCompanion(payment);
             if (ModelState.IsValid)
             {
+                payment.CreatedBy = User.Identity.Name;
                 _paymentRepository.AddPayment(payment);
                 Success(string.Format("Payment for patient with civil id <b>{0}</b> was successfully added.", payment.PatientCID), true);
                 return RedirectToAction("List");
@@ -198,9 +199,10 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         [ExceptionHandler]
         public ActionResult Edit(PaymentModel payment)
         {
-            ValidateCompanion(payment);
+            ValidateCompanion(payment, true);
             if (ModelState.IsValid)
             {
+                payment.ModifiedBy = User.Identity.Name;
                 _paymentRepository.UpdatePayment(payment);
                 Success(string.Format("Payment for patient with  CId <b>{0}</b> was successfully updated.", payment.PatientCID), true);
                 return RedirectToAction("Details", "Payment", new { paymentId = payment.Id });
@@ -242,7 +244,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             }
             return RedirectToAction("List");
         }
-        private void ValidateCompanion(PaymentModel payment)
+        private void ValidateCompanion(PaymentModel payment, bool isEdit = false)
         {
             if (ModelState.IsValidField("PaymentStartDate") &&
                 ModelState.IsValidField("PaymentEndDate"))
@@ -264,7 +266,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                                     p.PatientPayRate == payment.PatientPayRate &&
                                     p.CompanionPayRate == payment.CompanionPayRate);
 
-            if (duplicatPayment)
+            if (!isEdit&&duplicatPayment)
             {
                 if (ModelState.IsValidField("PaymentStartDate"))
                     ModelState.AddModelError("PaymentStartDate", "Patient already has a payment made with this start date");
@@ -276,7 +278,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                                        && payment.PaymentStartDate <= p.PaymentEndDate)
                                        || (payment.PaymentEndDate <= p.PaymentEndDate
                                        && payment.PaymentStartDate >= p.PaymentStartDate));
-            if (stratDateConflictPayment)
+            if (!isEdit && stratDateConflictPayment)
             {
                 ModelState.AddModelError("PaymentStartDate", "Our records indicates that there is payment conflict with this payment start date");
             }
@@ -285,7 +287,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                                        && payment.PaymentStartDate >= p.PaymentStartDate) ||
                                        (payment.PaymentEndDate <= p.PaymentEndDate
                                        && payment.PaymentStartDate < p.PaymentStartDate));
-            if (endDateConflictPayment)
+            if (!isEdit && endDateConflictPayment)
             {
                 ModelState.AddModelError("PaymentEndDate", "Our records indicates that there is payment conflict with this payment end date");
             }

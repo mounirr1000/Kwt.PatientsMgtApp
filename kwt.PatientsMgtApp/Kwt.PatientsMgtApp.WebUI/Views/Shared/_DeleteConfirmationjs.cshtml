@@ -2,12 +2,12 @@
 <script type="text/javascript">
     var toBeDeletedId;
 
-    debugger;
+    //debugger;
     // var controller;//='@ViewContext.RouteData.Values["controller"].ToString()';
     var query;
 
     function Delete(id, queryString) {
-        debugger;
+       // debugger;
         if (queryString) {
             window.location.href = '@Url.Action("Delete")' + "/?" + queryString + "=" + id;
             //console.log(window.location.href);
