@@ -17,6 +17,10 @@ namespace Kwt.PatientsMgtApp.Core.Models
         [MinLength(12, ErrorMessage = "patient Civil Id should not be Less than 12 characters")]
         public string PatientCID { get; set; }
 
+        [DisplayName("Has Companion")]
+        [Required]
+        public bool HasCompanion { get; set; } 
+
         [DisplayName("First Name")]
         [Required]
         public string PatientFName { get; set; }
@@ -40,8 +44,10 @@ namespace Kwt.PatientsMgtApp.Core.Models
 
         [Required(ErrorMessage = "If the Hospital is not known yet, Select TBD")]
         public string Hospital { get; set; }
+
         [Required(ErrorMessage = "If the Doctor is not known yet, Select TBD")]
         public string Doctor { get; set; }
+
         [Required]
         public string Agency { get; set; }
 
@@ -50,12 +56,11 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public string BankName { get; set; }
 
         [DisplayName("Bank Code")]
-
         public string BankCode { get; set; }
 
-        [DisplayName("Bank Account#")]
-        [MaxLength(30, ErrorMessage = "Bank Account should not be more than 30 characters")]
-        [MinLength(30, ErrorMessage = "Bank Account should not be Less than 30 characters")]
+        [DisplayName("IBan")]
+        [MaxLength(30, ErrorMessage = "IBan should not be more than 30 characters")]
+        [MinLength(30, ErrorMessage = "IBan should not be Less than 30 characters")]
         //[RequiredIf("IsBeneficiary", true, ErrorMessage = "Bank Account is required since the patient is Beneficiary")]
         public string Iban { get; set; }
 
@@ -106,7 +111,13 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public List<DoctorModel> Doctors { get; set; }
         public List<HospitalModel> Hospitals { get; set; }
         public List<SpecialtyModel> Sepcialities { get; set; }
+        public List<PaymentModel> Payments { get; set; }
+        public List<CompanionModel> Companions { get; set; }
+        public BeneficiaryModel Beneficiary { get; set; }
 
+        public  List<CompanionHistoryModel> CompanionHistories { get; set; }
+
+        public List<PatientHistoryModel> PatientHistories { get; set; }
         //==============================
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

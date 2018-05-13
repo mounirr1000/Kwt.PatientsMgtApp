@@ -27,6 +27,8 @@ namespace Kwt.PatientsMgtApp.Core.Models
          DisplayName("Last Name")]
         public string CompanionLName { get; set; }
 
+        public string Name { get { return this.CompanionFName + " " + this.CompanionMName + " " + this.CompanionLName; } }
+
         [Required(ErrorMessage = "Patient Civil Id is required"),
          DisplayName("Patient Civil Id")]
         [MaxLength(12, ErrorMessage = "Patient Civil Id should not be more than 12 characters")]

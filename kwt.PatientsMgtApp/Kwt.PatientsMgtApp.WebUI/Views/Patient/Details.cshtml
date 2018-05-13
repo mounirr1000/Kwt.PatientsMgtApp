@@ -1,222 +1,687 @@
-﻿@model Kwt.PatientsMgtApp.Core.Models.PatientModel
+﻿@using Kwt.PatientsMgtApp.WebUI.Infrastructure
+@model Kwt.PatientsMgtApp.Core.Models.PatientModel
 
 @{
     ViewBag.Title = "Patient Details";
 }
 
-<h2>Patient Details</h2>
+<div class="mt-3">
+    <p>
+        <a href="@Url.Action("Index")" class="k-button"><i class="fa fa-arrow-left" style="color: lightblue"></i> Back to List</a>
+        <a href="@Url.Action("Edit", new {patientCid = Model.PatientCID})" class="k-button"><i class="fa fa-pencil" style="color: blueviolet"></i> Edit</a>
+        
+    </p>
+</div>
+<div class="loader"></div>
+<div id="contentPatientDetail" style="visibility:hidden;">
+    <ul id="panelbarPatient">
+        <li class="k-link k-state-active">
+            <h3>Patient Info</h3>
+            <ul>
+                <li>
+                    <table id="patientinfo">
 
-@foreach (var property in ViewData.ModelMetadata.Properties)
-{
-    if (property.PropertyName != "Id"
-        && property.PropertyName != "Agencies"
-        && property.PropertyName != "Banks"
-        && property.PropertyName != "Doctors"
-        && property.PropertyName != "Hospitals")
-    {
-        if (property.Model != null)
-        {
-            <div class="form-group">
-                <label class="font-weight-bold">@(property.DisplayName ?? property.PropertyName):</label>
-                @if (property.PropertyName == "Notes")
-                {
-                    @Html.DisplayText(property.PropertyName)
-                }
-                else if (property.PropertyName == "IsActive" || property.PropertyName == "IsBeneficiary")
-                {
-                    if (property.Model.Equals(true))
-                    {<span class="badge badge-success">Yes</span>}
-                    @*else if (property.Model.Equals(null))
-                    {<span class="badge badge-warning">Not Set</span>}*@
-                    else
-                    {<span class="badge badge-info">No</span>}
+                        <thead>
+                            <tr>
+                                <th>
+                                    Patient CID
+                                </th>
+                                <th>
+                                    Name
+                                </th>
 
+                                <th>
+                                    KU Phone
+                                </th>
+                                <th>
+                                    US Phone
+                                </th>
+                                <th>
+                                    Start Date
+                                </th>
+                                <th>
+                                    End Date
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    @Model.PatientCID
+                                </td>
+                                <td>
+                                    @Model.Name
+                                </td>
+                                <td>
+                                    @Model.KWTPhone
+                                </td>
+                                <td>
+                                    @Model.USPhone
+                                </td>
+                                <td>
+                                    @Model.FirstApptDAte
+                                </td>
+                                <td>
+                                    @Model.EndTreatDate
+                                </td>
+                                <td>
+                                    @if (Model.IsActive)
+                                    {
+                                        <span style="color: yellowgreen"> Active</span>
+                                    }
+                                    else
+                                    {<span style="color: lightcoral"> Not Active</span>}
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </li>
+            </ul>
+
+        </li>
+        <li class="k-link k-state-active">
+            <h3>Dignosis Info</h3>
+            <ul>
+                <li>
+                    <table id="patientDiseaseInfo">
+
+                        <thead>
+                            <tr>
+
+                                <th>
+                                    Hospital
+                                </th>
+                                <th>
+                                    Doctor
+                                </th>
+                                <th>
+                                    Specilty
+                                </th>
+                                <th>
+                                    Dignosis
+                                </th>
+                                <th>
+                                    Agency
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+
+                                <td>
+                                    @Model.Hospital
+                                </td>
+                                <td>
+                                    @Model.Doctor
+                                </td>
+                                <td>
+                                    @Model.Specialty
+                                </td>
+                                <td>
+                                    @Model.Diagnosis
+                                </td>
+                                <td>
+                                    @Model.Agency
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </li>
+            </ul>
+
+        </li>
+    </ul>
+    <ul id="panelbarCompanion">
+        <li>
+            <h3>Priamary Companions Info</h3>
+            <ul>
+
+                @if (Model.Companions.Any(c => c.CompanionType == "Primary"))
+                {
+                    <li>
+                        <table id="patientCompanionInfo">
+
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Companion CID
+                                    </th>
+                                    <th>
+                                        Name
+                                    </th>
+                                    <th>
+                                        Status
+                                    </th>
+                                    <th>
+                                        Is Beneficiary
+                                    </th>
+                                    <th>
+                                        Date In
+                                    </th>
+                                    <th>
+                                        Date Out
+                                    </th>
+                                    <th>
+                                        Notes
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var companion in Model.Companions.Where(c => c.CompanionType == "Primary"))
+                                {
+                                    <tr>
+                                        <td>
+                                            @companion.CompanionCID
+                                        </td>
+                                        <td>
+                                            @companion.Name
+                                        </td>
+                                        <td>
+
+                                            @if (companion.IsActive)
+                                            {
+                                                <span style="color: yellowgreen"> Active</span>
+                                            }
+                                            else
+                                            {
+                                                <span style="color: lightcoral"> Not Active</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (companion.IsBeneficiary)
+                                            {
+                                                <span style="color: yellowgreen"> Beneficiary</span>
+                                            }
+                                            else
+                                            {
+                                                <span style="color: lightcoral"> Not Beneficiary</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @companion.DateIn
+                                        </td>
+                                        <td>
+                                            @companion.DateOut
+                                        </td>
+                                        <td>
+                                            @companion.Notes
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+                    </li>
                 }
                 else
                 {
-                    @Html.Display(property.PropertyName, null,
-                    new { @class = "form-control" })
+                    <li>
+                        No primary companion found in our records for this patient
+                    </li>
+
                 }
 
-            </div>
-        }
+            </ul>
+
+        </li>
+        <li>
+            <h3>Secondary Companions Info</h3>
+            <ul>
+
+                @if (Model.Companions.Any(c => c.CompanionType != "Primary"))
+                {
+                    <li>
+                        <table id="patientSecondaryCompanionInfo">
+
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Companion CID
+                                    </th>
+                                    <th>
+                                        Name
+                                    </th>
+                                    <th>
+                                        Status
+                                    </th>
+                                    <th>
+                                        Is Beneficiary
+                                    </th>
+                                    <th>
+                                        Date In
+                                    </th>
+                                    <th>
+                                        Date Out
+                                    </th>
+                                    <th>
+                                        Notes
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var companion in Model.Companions.Where(c => c.CompanionType != "Primary"))
+                                {
+                                    <tr>
+                                        <td>
+                                            @companion.CompanionCID
+                                        </td>
+                                        <td>
+                                            @companion.Name
+                                        </td>
+                                        <td>
+
+                                            @if (companion.IsActive)
+                                            {
+                                                <span style="color: yellowgreen"> Active</span>
+                                            }
+                                            else
+                                            {
+                                                <span style="color: lightcoral"> Not Active</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (companion.IsBeneficiary)
+                                            {
+                                                <span style="color: yellowgreen"> Beneficiary</span>
+                                            }
+                                            else
+                                            {
+                                                <span style="color: lightcoral"> Not Beneficiary</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @companion.DateIn
+                                        </td>
+                                        <td>
+                                            @companion.DateOut
+                                        </td>
+                                        <td>
+                                            @companion.Notes
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+                    </li>
+                }
+                else
+                {
+                    <li>
+                        No Secondary companion found in our records for this patient
+                    </li>
+
+                }
+
+            </ul>
+
+        </li>
+    </ul>
+    @if (User.IsInAnyRoles("Admin", "Manager", "Auditor"))
+    {
+        <ul id="panelbarPayment">
+            <li>
+                <h3>Payments made for this patient</h3>
+                <ul>
 
 
+                    @if (Model.Payments.Any())
+                    {
+                        <li>
+                            <table id="patientPaymentInfo">
+                                <colgroup>
+                                    <col style="width: 100px" />@*patientcid*@
+                                    <col />@*Name*@
+                                    <col />@*Hospital*@
+                                    <col />@*doctor*@
+                                    <col />@*specialty*@
+                                    <col style="width: 130px" />@*startdate*@
+                                    <col style="width: 130px" />@*endDate*@
+                                    <col style="width: 130px" />@*status*@
+                                    <col style="width: 90px" />@*delete*@
+
+
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            PId
+                                        </th>
+                                        <th>
+                                            Patient CID
+                                        </th>
+                                        <th>
+                                            Ben CID
+                                        </th>
+                                        <th>
+                                            Ben Name
+                                        </th>
+                                        <th>
+                                            Payment Date
+                                        </th>
+                                        <th>
+                                            Start Date
+                                        </th>
+                                        <th>
+                                            End Date
+                                        </th>
+                                        <th>
+                                            Amount
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var payment in Model.Payments)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @payment.PaymentID
+                                            </td>
+                                            <td>
+                                                @payment.PatientCID
+                                            </td>
+                                            <td>
+                                                @payment.BeneficiaryCID
+                                            </td>
+                                            <td>
+                                                @payment.BeneficiaryFullName
+                                            </td>
+                                            <td>
+                                                @payment.PaymentDate
+                                            </td>
+                                            <td>
+                                                @payment.PaymentStartDate
+                                            </td>
+                                            <td>
+                                                @payment.PaymentEndDate
+                                            </td>
+                                            <td>
+                                                @payment.TotalDue
+                                            </td>
+
+                                        </tr>
+                                    }
+                                </tbody>
+
+                            </table>
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <span>No payment found in our records for this patient</span>
+                        </li>
+
+                    }
+
+                </ul>
+
+            </li>
+        </ul>
     }
+    <ul id="panelbarPatientHistory">
+        <li>
+            <h3>Patient History</h3>
+            @if (Model.PatientHistories.Any())
+            {
+                <ul>
+                    <li>
+                        <table id="patientHistoryInfo">
+
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Patient CID
+                                    </th>
+                                    <th>
+                                        Name
+                                    </th>
+                                    <th>
+                                        Hospital
+                                    </th>
+                                    <th>
+                                        Doctor
+                                    </th>
+
+                                    <th>
+                                        Date In
+                                    </th>
+                                    <th>
+                                        Date Out
+                                    </th>
+                                    <th>
+                                        Notes
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var patient in Model.PatientHistories)
+                                {
+                                    <tr>
+                                        <td>
+                                            @patient.PatientCID
+                                        </td>
+                                        <td>
+                                            @patient.PatientFName
+                                        </td>
+                                        <td>
+                                            @patient.Hospital
+                                        </td>
+                                        <td>
+                                            @patient.Doctor
+                                        </td>
+                                        <td>
+                                            @patient.EndTreatDate
+                                        </td>
+                                        <td>
+                                            @patient.EndTreatDate
+                                        </td>
+
+                                        <td>
+                                            @patient.Notes
+                                        </td>
+
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+                    </li>
+                </ul>
+
+            }
+            else
+            {
+                <ul>
+                    <li>
+                        <span>No patient history found in our records for this patient</span>        
+                    </li>
+                </ul>
+                
+            }
+        </li>
+        <li>
+            <h3>Companions History</h3>
+            @if (Model.CompanionHistories.Any())
+            {
+                <ul>
+                    <li>
+                        <table id="patientCompanionHistoryInfo">
+
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Companion CID
+                                    </th>
+                                    <th>
+                                        Name
+                                    </th>
+                                    <th>
+                                        Status
+                                    </th>
+                                    <th>
+                                        Was Beneficiary?
+                                    </th>
+                                    <th>
+                                        Date In
+                                    </th>
+                                    <th>
+                                        Date Out
+                                    </th>
+                                    <th>
+                                        Comapnion Type
+                                    </th>
+                                    <th>
+                                        Notes
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var companion in Model.CompanionHistories)
+                                {
+                                    <tr>
+                                        <td>
+                                            @companion.CompanionCID
+                                        </td>
+                                        <td>
+                                            @companion.Name
+                                        </td>
+                                        <td>
+                                            @if (companion.IsActive == true)
+                                            {
+                                                <span style="color: yellowgreen"> Active</span>
+                                            }
+                                            else
+                                            {
+                                                <span style="color: lightcoral"> Not Active</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (companion.IsBeneficiary == true)
+                                            {
+                                                <span style="color: yellowgreen"> Beneficiary</span>
+                                            }
+                                            else
+                                            {
+                                                <span style="color: lightcoral"> Not Beneficiary</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @companion.DateIn
+                                        </td>
+                                        <td>
+                                            @companion.DateOut
+                                        </td>
+                                        <td>
+                                            @companion.CompanionType
+                                        </td>
+                                        <td>
+                                            @companion.Notes
+                                        </td>
+
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+                    </li>
+                </ul>
+
+            }
+            else
+            {
+                <ul>
+                    <li>
+                        <span>No companion history found in our records for this patient</span>        
+                    </li>
+                </ul>
+                
+            }
+        </li>
+    </ul>
+
+</div>
+@section Scripts{
+    <script type="text/javascript">
+
+        $('document').ready(function () {
+            $("#contentPatientDetail").css("visibility", "visible");
+            $("#panelbarPatient").kendoPanelBar();
+            $("#panelbarCompanion").kendoPanelBar();
+            $("#panelbarPayment").kendoPanelBar();
+            $("#panelbarPatientHistory").kendoPanelBar();
+
+
+            $("#patientinfo").kendoGrid({
+                height: 150,
+                //groupable: true,
+                //sortable: true
+            });
+            $("#patientDiseaseInfo").kendoGrid({
+                height: 150,
+                //groupable: true, 
+                //sortable: true
+            });
+            $("#patientCompanionInfo, #patientSecondaryCompanionInfo").kendoGrid({
+                height: 150,
+                //groupable: true,
+                //sortable: true
+            });
+            $("#patientPaymentInfo").kendoGrid({
+                height: 350,
+                scrollable: {
+                    virtual: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: true,
+                    buttonCount: 5,
+
+                },
+                serverPaging: true,
+                pageSize: 1
+                //groupable: true,
+                //sortable: true
+            });
+            $("#patientHistoryInfo").kendoGrid({
+                height: 350,
+                scrollable: {
+                    virtual: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: true,
+                    buttonCount: 5,
+
+                },
+                serverPaging: true,
+                pageSize: 1
+                //groupable: true,
+                //sortable: true
+            });
+            $("#patientCompanionHistoryInfo").kendoGrid({
+                height: 350,
+                scrollable: {
+                    virtual: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: true,
+                    buttonCount: 5,
+
+                },
+                serverPaging: true,
+                pageSize: 1
+                //groupable: true,
+                //sortable: true
+            });
+            $("#panelbarPatient").kendoPanelBar();
+            $(".loader").css("display", "none");
+        });
+    </script>
 }
-
-@*
-
-
-
-*@
-@*<div>
-        <h4>PatientModel</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.CreatedDate)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.CreatedDate)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.ModifiedDate)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.ModifiedDate)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.PatientCID)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.PatientCID)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.PatientFName)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.PatientFName)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.PatientMName)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.PatientMName)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.PatientLName)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.PatientLName)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.KWTPhone)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.KWTPhone)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.USPhone)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.USPhone)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Hospital)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Hospital)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Doctor)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Doctor)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Agency)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Agency)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.BankName)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.BankName)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.BankCode)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.BankCode)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Iban)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Iban)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.FirstApptDAte)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.FirstApptDAte)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.EndTreatDate)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.EndTreatDate)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.IsBeneficiary)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.IsBeneficiary)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.IsActive)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.IsActive)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Notes)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Notes)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.CreatedBy)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.CreatedBy)
-            </dd>
-
-        </dl>
-    </div>*@
-<p>
-    @Html.ActionLink("Edit", "Edit", new { patientCid = Model.PatientCID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>

@@ -17,19 +17,21 @@ namespace Kwt.PatientsMgtApp.WebUI.Infrastructure
             return new MvcHtmlString(mgr.FindByIdAsync(id).Result.UserName);
         }
 
-        public static MvcHtmlString ListItemAction(this HtmlHelper helper, string name, string actionName, string controllerName)
+        public static MvcHtmlString ListItemAction(this HtmlHelper helper, string name, string actionName, string controllerName, string iconName, string color)
         {
             var currentControllerName = (string)helper.ViewContext.RouteData.Values["controller"];
             var currentActionName = (string)helper.ViewContext.RouteData.Values["action"];
             var sb = new StringBuilder();
             sb.AppendFormat("<li {0} ", (" class=\"h-item k-item k-state-default k-first\">"));
             var url = new UrlHelper(HttpContext.Current.Request.RequestContext);
-            sb.AppendFormat("<a {0} href=\"{1}\">{2}</a>", (currentControllerName.Equals(controllerName, StringComparison.CurrentCultureIgnoreCase) 
+
+            //sb.AppendFormat("<a {0} href=\"{1}\"><i class=\"fa fa-{3}\" style=\"color:{4}\"></i> {2}</a>", (currentControllerName.Equals(controllerName, StringComparison.CurrentCultureIgnoreCase)
+            sb.AppendFormat("<a {0} href=\"{1}\"><div class=\"{3}\" style=\"float:left\"></div>&nbsp {2}</a>", (currentControllerName.Equals(controllerName, StringComparison.CurrentCultureIgnoreCase)
                                                     //&&
                                                     //currentActionName.Equals(actionName, StringComparison.CurrentCultureIgnoreCase)
                                                     ? " class=\"k-link k-state-active\"" :
                                                       " class=\"k-link\""),
-                                                      url.Action(actionName, controllerName), name);
+                                                      url.Action(actionName, controllerName), name, iconName);
             sb.Append("</li>");
             return new MvcHtmlString(sb.ToString());
         }

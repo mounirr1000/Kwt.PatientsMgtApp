@@ -54,13 +54,17 @@ namespace Kwt.PatientsMgtApp.WebUI.Utilities
         private void IntialiseMenu()
         {
             string[] items = new[] { "Home", "Patient", "Companion", "Payment", "Report", "Admin" };
+            //string[] icons = new[] { "home", "address-book", "user-friends", "dollar", "file-text", "cogs" };
+            string[] icons = new[] { "houseMenu", "patientMenu", "support", "cashMenu", "planningMenu", "adminMenu" };
+            string[] colors = new[] { "coral", "", "", "yellowgreen", "deeppink", "grey" };
             Menu menu = new Menu();
             menu.MenuItem = new List<MenuItems>(items.Length);
             for (int i = 0; i < items.Length; i++)
             {
                 var menuItem = new MenuItems();
                 menuItem.MenuId = (i + 1);
-
+                menuItem.IconName= icons[i];
+                menuItem.Color = colors[i];
                 if (items[i] == "Home")
                 {
                     menuItem.MenuName = items[i];

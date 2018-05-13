@@ -104,7 +104,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         {
 
             var p = _domainObjectRepository.Get<Patient>(e => e.PatientCID == patientcid,
-                                            new[] { "Bank", "Agency", "Doctor", "Hospital", "Specialty" });
+                                            new[] { "Bank", "Agency", "Doctor", "Hospital", "Specialty","Payments", "Companions", "CompanionHistories", "PatientHistories" });
             if (p != null)
             {
                 return new PatientModel()
@@ -131,8 +131,76 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     ModifiedDate = p.ModifiedDate,
                     ModifiedBy = p.ModifiedBy,
                     Specialty = p.Specialty?.Specialty1,
-                    Diagnosis = p.Diagnosis
-
+                    Diagnosis = p.Diagnosis,
+                    
+                    Payments = p.Payments.Select(pa=> new PaymentModel()
+                    {
+                        Id = pa.Id,
+                        PaymentID = pa.PaymentID,
+                        BeneficiaryCID = _domainObjectRepository.Get<Beneficiary>(b=>b.BeneficiaryID==pa.BeneficiaryID)?.BeneficiaryCID,
+                        BeneficiaryFName = _domainObjectRepository.Get<Beneficiary>(b => b.BeneficiaryID == pa.BeneficiaryID)?.BeneficiaryFName,
+                        BeneficiaryMName = _domainObjectRepository.Get<Beneficiary>(b => b.BeneficiaryID == pa.BeneficiaryID)?.BeneficiaryMName,
+                        BeneficiaryLName = _domainObjectRepository.Get<Beneficiary>(b => b.BeneficiaryID == pa.BeneficiaryID)?.BeneficiaryLName,
+                        PatientCID = pa.PatientCID,
+                        CreatedDate = pa.CreatedDate,
+                        PaymentStartDate = pa.StartDate,
+                        PaymentEndDate = pa.EndDate,
+                        TotalDue = pa.TotalDue,
+                        PaymentDate = pa.PaymentDate
+                    }).ToList(),
+                    Companions = p.Companions.Select(co=>new CompanionModel()
+                    {
+                        CompanionCID = co.CompanionCID,
+                        CompanionFName = co.CompanionFName,
+                        CompanionMName = co.CompanionMName,
+                        CompanionLName = co.CompanionLName,
+                        IsBeneficiary = co.IsBeneficiary ?? false,
+                        IsActive = co.IsActive ?? false,
+                        DateIn = co.DateIn,
+                        DateOut = co.DateOut,
+                        Notes = co.Notes,
+                        CreatedDate = co.CreatedDate,
+                        CompanionType = _domainObjectRepository.Get<CompanionType>(h => h.CompanionTypeID == co.CompanionTypeID).CompanionType1,
+                    }).ToList(),
+                    CompanionHistories = p.CompanionHistories.Select(ch=> new CompanionHistoryModel()
+                    {
+                        CompanionCID = ch.CompanionCID,
+                        CompanionType = ch.CompanionType,
+                        CreatedBy = ch.CreatedBy,
+                        CreatedDate = ch.CreatedDate,
+                        DateIn = ch.DateIn,
+                        DateOut = ch.DateOut,
+                        IsActive = ch.IsActive,
+                        HistoryID = ch.HistoryID,
+                        IsBeneficiary = ch.IsBeneficiary,
+                        PatientCID = ch.PatientCID,
+                        Notes = ch.Notes,
+                        ModifiedBy = ch.ModifiedBy,
+                        ModifiedDate = ch.ModifiedDate,
+                        Name = ch.Name
+                    }).ToList(),
+                    PatientHistories =  p.PatientHistories.Select(ph=> new PatientHistoryModel()
+                    {
+                        Agency = _domainObjectRepository.Get<Agency>(a=>a.AgencyID== ph.AgencyID).AgencyName,
+                        CreatedDate = ph.CreatedDate,
+                        BankID = ph.BankID,
+                        Doctor = _domainObjectRepository.Get<Doctor>(d => d.DoctorID == ph.DoctorID).DoctorName,
+                        EndTreatDate = ph.EndTreatDate,
+                        FirstApptDate = ph.FirstApptDate,
+                        Hospital = _domainObjectRepository.Get<Hospital>(h => h.HospitalID == ph.HospitalID).HospitalName,
+                        IsActive = ph.IsActive,
+                        IsBeneficiary = ph.IsBeneficiary,
+                        KWTphone = ph.KWTphone,
+                        USphone = ph.USphone,
+                        Notes = ph.Notes,
+                        OldCreatedDate = ph.OldCreatedDate,
+                        PatientCID = ph.PatientCID,
+                        Iban = ph.Iban,
+                        PatientFName = ph.PatientFName,
+                        PatientMName = ph.PatientMName,
+                        PatientLName = ph.PatientLName,
+                        PrimaryCompanionCid = ph.PrimaryCompanionCid
+                    }).ToList()
                 };
             }
 
@@ -251,6 +319,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             var p = _domainObjectRepository.Get<Patient>(m => m.PatientCID == patient.PatientCID);
             if (p != null)
             {
+                var dataChanged = CheckIfIsActiveAndDateOutHasChanged(p, patient);
                 p.FirstApptDate = patient.FirstApptDAte;
                 p.IsActive = patient.EndTreatDate != null ? false : true;
                 p.Notes = patient.Notes;
@@ -270,7 +339,10 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 p.Diagnosis = patient.Diagnosis;
                 _domainObjectRepository.Update<Patient>(p);
                 // check if the patient become inactive and the end treatment date is not null, then the patient should become part of the history.
-                if (patient.IsActive == false && patient.EndTreatDate != null)
+                //check if IsActive has changed to False and EndTreatDate  has changed to a date time
+                
+                if (dataChanged
+                    &&(patient.IsActive == false && patient.EndTreatDate != null))
                 {
                     var patientHistory = new PatientHistory()
                     {
@@ -295,15 +367,61 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                         PrimaryCompanionCid =
                             _domainObjectRepository.Get<Companion>(c => c.PatientCID == p.PatientCID &&
                                                                         c.CompanionTypeID ==
-                                                                        (int) Enums.CompanionType.Primary)?.CompanionCID,
-                        
+                                                                        (int) Enums.CompanionType.Primary)?.CompanionCID,  
                     };
                     _domainObjectRepository.Create<PatientHistory>(patientHistory);
+                    //Todo all associated companion should be inactive and part of the history
+                    UpdateCompanionAndCreateCompanionHistories(patient);
                 }
             }
             return patient;
         }
 
+        private bool CheckIfIsActiveAndDateOutHasChanged(Patient oldpPatientData, PatientModel newPatientData)
+        {
+            // we only do an insert into history patient when the patient become inactive where he/she was active
+            bool doInsert = true;
+            if (oldpPatientData.IsActive == true
+                && newPatientData.IsActive == false)
+            {
+                doInsert = true;
+            }
+            else
+            {
+                doInsert = false;
+            }
+            return doInsert;
+
+        }
+        private void UpdateCompanionAndCreateCompanionHistories(PatientModel patient)
+        {
+            var companionList = _domainObjectRepository.All<Companion>().
+                                       Where(c => c.PatientCID == patient.PatientCID).ToList();
+            //Do an updated only to the new companions
+            foreach (var companion in companionList.Where(c=>c.IsActive==true&& c.DateOut==null).ToList())
+            {
+                companion.DateOut = patient.EndTreatDate;
+                companion.IsActive = false;
+                _domainObjectRepository.Update<Companion>(companion);
+                var companionHistory = new CompanionHistory()
+                {
+                    CompanionCID = companion.CompanionCID,
+                    CreatedBy = companion.CreatedBy,
+                    CreatedDate = companion.CreatedDate,
+                    DateIn = companion.DateIn,
+                    DateOut = companion.DateOut,
+                    ModifiedBy = companion.ModifiedBy,
+                    ModifiedDate = companion.ModifiedDate,
+                    PatientCID = companion.PatientCID,
+                    IsActive = companion.IsActive,
+                    IsBeneficiary = companion.IsBeneficiary,
+                    Name = companion.CompanionFName + " " + companion.CompanionMName + " " + companion.CompanionLName,
+                    Notes = companion.Notes,
+                    CompanionType = companion.CompanionTypeID == (int)Enums.CompanionType.Primary ? "Primary" : "Secondary"
+                };
+                _domainObjectRepository.Create<CompanionHistory>(companionHistory);
+            }
+        }
 
         // ToDo : this functionality may not be needed
         public int DeletePatient(PatientModel patient)

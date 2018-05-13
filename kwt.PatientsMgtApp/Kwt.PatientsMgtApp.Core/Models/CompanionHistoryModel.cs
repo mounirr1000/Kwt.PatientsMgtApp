@@ -10,6 +10,7 @@ namespace Kwt.PatientsMgtApp.Core.Models
     {
         public int HistoryID { get; set; }
         public string CompanionCID { get; set; }
+        public string Name { get; set; }
         public string PatientCID { get; set; }
         public Nullable<System.DateTime> DateIn { get; set; }
         public Nullable<System.DateTime> DateOut { get; set; }
@@ -17,6 +18,9 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public string CreatedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
         public string ModifiedBy { get; set; }
-
+        public string CompanionType { get; set; }
+        public Nullable<bool> IsBeneficiary { get; set; }
+        public Nullable<bool> IsActive { get; set; }
+        public string Notes { get; set; }
     }
 }

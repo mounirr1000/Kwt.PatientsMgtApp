@@ -14,6 +14,8 @@ namespace Kwt.PatientsMgtApp.Services
     {
         [OperationContract]
         [WebGet(ResponseFormat = WebMessageFormat.Json)]
+
+        [WebInvoke(Method = "GET", UriTemplate = "/patients/", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
         List<PatientModel> GetPatients();
         [OperationContract]
         [WebInvoke(Method = "GET", UriTemplate = "/patient/{patientcid}/", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]

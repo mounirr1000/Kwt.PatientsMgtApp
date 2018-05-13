@@ -146,6 +146,7 @@
       <Name>Kwt.PatientsMgtApp.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="EDMX\PatientMgt.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

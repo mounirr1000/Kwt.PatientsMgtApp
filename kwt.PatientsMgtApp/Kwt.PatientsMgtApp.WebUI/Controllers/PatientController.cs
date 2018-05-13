@@ -35,6 +35,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             _patientManagmentRepository = new PatientManagmentRepository();
             // _patientList = _patientRepository.GetPatients();
         }
+
         public ActionResult Index()
         {
 
@@ -42,10 +43,10 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         }
 
         [ExceptionHandler]
-        public ActionResult List(string searchPatientText, string currentFilter, bool? isBeneficiary, string sortOrder, int? page, bool? clearSearch)
+        public ActionResult List(string searchPatientText, string currentFilter, string sortOrder, int? page, bool? clearSearch)
         {
             int pageNumber = (page ?? 1);
-            ViewBag.isBeneficiary = isBeneficiary ?? false;
+            // ViewBag.isBeneficiary = isBeneficiary ?? false;
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.AptSortParm = String.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
@@ -70,7 +71,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                         patients = patients.OrderBy(p => p.IsBeneficiary).ToList();
                         break;
                     default: // created date ascending 
-                        patients = patients.OrderByDescending(p => p.CreatedDate).ToList();
+                        patients = patients.OrderByDescending(p => p.CreatedDate).ThenByDescending(c => c.IsActive).ToList();
                         break;
                 }
                 if (clearSearch != true)
@@ -91,33 +92,13 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                         var term = searchPatientText.ToLower();
                         result = patients?
                             .Where(p => (
-                                p.PatientCID.Contains(term)
-                                || p.PatientFName.ToLower().Trim().Contains(term)
-                               || p.PatientLName.ToLower().Trim().Contains(term))
+                                  p.PatientCID.ToLower().Contains(term.Trim())
+                               || p.PatientFName.ToLower().Trim().Contains(term.Trim())
+                               || p.PatientLName.ToLower().Trim().Contains(term.Trim()))
+                               || p.Name.ToLower().Trim().Contains(term.Trim())
                             ).ToList();
-
-                        // filter isBeneficiary
-                        if (isBeneficiary == true)
-                        {
-                            result = result?.Where(p => p.IsActive).ToList();
-                        }
-                        else if (isBeneficiary == false)
-                        {
-                            result = result?.Where(p => !p.IsActive).ToList();
-                        }
                     }
-                    else
-                    {
-                        // filter isBeneficiary
-                        if (isBeneficiary == true)
-                        {
-                            result = patients?.Where(p => p.IsActive).ToList();
-                        }
-                        else if (isBeneficiary == false)
-                        {
-                            result = patients?.Where(p => !p.IsActive).ToList();
-                        }
-                    }
+                    
                     if (result?.Count > 0)
                     {
                         Success(string.Format("We have <b>{0}</b> returned results from the searched criteria", result.Count),
@@ -125,26 +106,20 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                         return View(result.ToPagedList(pageNumber, PageSize));
                         //return View(result);
                     }
-                    if (isBeneficiary != null || !String.IsNullOrEmpty(searchPatientText))
+
+                    if (result?.Count == 0 && !String.IsNullOrEmpty(searchPatientText))
                     {
-                        if (result?.Count == 0)
-                        {
-                            var benMessage = "";
-                            if (isBeneficiary != null)
-                            {
-                                benMessage = isBeneficiary == true ? "& is Beneficiary" : "& is Not Beneficiary";
-                            }
-                            Information(
+                        Information(
                                 string.Format(
-                                    "There is no patient in our records with the selected search criteria <b>{0}</b>&nbsp<b>{1}</b>",
-                                    searchPatientText, benMessage), true);
-                        }
+                                    "There is no patient in our records with the selected search criteria <b>{0}</b>",
+                                    searchPatientText), true);
                     }
+                    
                 }
             }
 
-            return View(patients.ToPagedList(pageNumber, PageSize));
-            //return View(patients);
+            //return View(patients.ToPagedList(pageNumber, PageSize));
+            return View(patients);
 
         }
 
@@ -178,11 +153,40 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         }
         [ExceptionHandler]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Create(PatientModel patient)
         {
+            ValidatePatientModel(patient);
+            if (ModelState.IsValid)
+            {
+                patient.CreatedBy = User.Identity.Name;
+                _patientRepository.AddPatient(patient);
+                Success(string.Format("Patient with Civil Id <b>{0}</b> was successfully added.", patient.PatientCID), true);
+                if (patient.HasCompanion)
+                {
+                    return RedirectToAction("Create","Companion",new {patientcid=patient.PatientCID});
+                }
+                else
+                    return RedirectToAction("Index");
+            }
+            else
+            {
+                Danger(string.Format("Please correct the error list before proceeding"), true);
+                patient.Agencies = _patientManagmentRepository.GetAgencies();
+                patient.Banks = _patientManagmentRepository.GetBanks();
+                patient.Hospitals = _patientManagmentRepository.GetHospitals();
+                patient.Doctors = _patientManagmentRepository.GetDoctors();
+                patient.Sepcialities = _patientManagmentRepository.GetSpecialities();
+                return View(patient);
+            }
+
+        }
+
+        private void ValidatePatientModel(PatientModel patient)
+        {
             if (ModelState.IsValidField("IsBeneficiary")
-                && patient.IsBeneficiary == true
-                && patient.Iban == null)
+               && patient.IsBeneficiary == true
+               && patient.Iban == null)
             {
                 ModelState.AddModelError("Iban", "The patient is Beneficiary, so you need to enter the Iban field");
             }
@@ -205,26 +209,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                 ModelState.AddModelError("EndTreatDate", "The patient is not active, so you need to enter the end treatment date");
             }
 
-            if (ModelState.IsValid)
-            {
-                patient.CreatedBy = User.Identity.Name;
-                _patientRepository.AddPatient(patient);
-                Success(string.Format("Patient with Civil Id <b>{0}</b> was successfully added.", patient.PatientCID), true);
-                return RedirectToAction("Index");
-            }
-            else
-            {
-                Danger(string.Format("Please correct the error list before proceeding"), true);
-                patient.Agencies = _patientManagmentRepository.GetAgencies();
-                patient.Banks = _patientManagmentRepository.GetBanks();
-                patient.Hospitals = _patientManagmentRepository.GetHospitals();
-                patient.Doctors = _patientManagmentRepository.GetDoctors();
-                patient.Sepcialities = _patientManagmentRepository.GetSpecialities();
-                return View(patient);
-            }
-
         }
-
         [ExceptionHandler]
         [Authorize(Roles = "Admin, Manager")]
         public ActionResult Edit(string patientCid)
@@ -239,6 +224,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         }
         [HttpPost]
         [ExceptionHandler]
+        [Authorize(Roles = "Admin, Manager")]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(PatientModel patient)
         {
             if (ModelState.IsValidField("IsBeneficiary")
@@ -255,7 +242,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             }
             if (ModelState.IsValid)
             {
-                 patient.ModifiedBy = User.Identity.Name;
+                patient.ModifiedBy = User.Identity.Name;
                 _patientRepository.UpdatePatient(patient);
                 Success(string.Format("Patient with Civil Id <b>{0}</b> was successfully updated.", patient.PatientCID), true);
                 return RedirectToAction("Details", "Patient", new { patientCid = patient.PatientCID });
@@ -292,38 +279,47 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             }
             else
             {
-                if(!string.IsNullOrEmpty(patientCid))
-                Information(string.Format("Patient with Civil Id <b>{0}</b> was not deleted.", patientCid), true);
+                if (!string.IsNullOrEmpty(patientCid))
+                    Information(string.Format("Patient with Civil Id <b>{0}</b> was not deleted.", patientCid), true);
             }
-             return RedirectToAction("List");
+            return RedirectToAction("List");
         }
 
         //Search Patient
         public ActionResult Search(string patientCid)
         {
             var url = System.Web.HttpContext.Current.Request.UrlReferrer;
-            
+
             var patient = _patientRepository.GetPatient(patientCid);
             string controllerName = (string)TempData["controller"] ?? "Home";
             string actionName = (string)TempData["action"] ?? "Index";
-            
+
             if (patient != null)
             {
                 TempData["searchedPatient"] = patient;
-                
-                if(url!=null)
-                return Redirect(url.PathAndQuery);
-                return  RedirectToAction("List", controllerName);
+
+                if (url != null)
+                    return Redirect(url.PathAndQuery);
+                return RedirectToAction("List", controllerName);
             }
             else
             {
                 //TempData["searchedPatient"] = null;
-                Information(string.Format("Patient with Civil Id <b>{0}</b> Does Not exist in our records.", patientCid), true);
+                if (!string.IsNullOrEmpty(patientCid))
+                    Information(string.Format("Patient with Civil Id <b>{0}</b> Does Not exist in our records.", patientCid), true);
                 if (url != null)
                     return Redirect(url.PathAndQuery);
                 return RedirectToAction(actionName, controllerName);
             }
- 
+
         }
+
+        //public ActionResult PdfDoc()
+        //{
+        //    var patients = _patientRepository.GetPatients();
+
+        //    //return new RazorPDF.PdfResult(patients, "PdfDoc");
+        //    return null;
+        //}
     }
 }

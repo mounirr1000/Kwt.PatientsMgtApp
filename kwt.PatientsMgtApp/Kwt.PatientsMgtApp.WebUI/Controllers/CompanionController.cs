@@ -175,9 +175,13 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
 
         [ExceptionHandler]
         [HttpGet]
-        public ActionResult Create()
+        public ActionResult Create(string patientcid)
         {
             CompanionModel companion = new CompanionModel();
+            if (!string.IsNullOrEmpty(patientcid))
+            {
+                companion.PatientCID = patientcid;
+            }
             companion.CompanionTypes = _companionManagmentRepository.GetCompanionTypes();
             companion.Banks = _patientManagmentRepository.GetBanks();
             return View(companion);

@@ -56,6 +56,7 @@
     <Compile Include="Models\CompanionTypeModel.cs" />
     <Compile Include="Models\DoctorModel.cs" />
     <Compile Include="Models\HospitalModel.cs" />
+    <Compile Include="Models\PatientHistoryModel.cs" />
     <Compile Include="Models\PatientModel.cs" />
     <Compile Include="Models\PatientReportModel.cs" />
     <Compile Include="Models\PaymentModel.cs" />

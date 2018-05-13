@@ -167,18 +167,20 @@ a.content-button {
 General styling
 --------------------------------------------------------------*/
 
-.site {
-    margin: 1em;
-}
+
 
 .masthead,
 .page-title,
 .main-content,
 .sidebar,
 .footer-content {
-    margin-bottom: 1em;
-    padding: 1em;
-    color: white;
+    margin-bottom: 0;
+    padding: 0;
+    /*color: white;*/
+    padding-left: 15px;
+    padding-right: 15px;
+    position: relative;
+    /*bottom: -250px;*/
 }
 
 .masthead {
@@ -198,25 +200,58 @@ General styling
 }
 
 .footer-content {
-    background-color: #0265c0;
+    /*background-color: #0265c0;*/
+}
+/*=======================Media query=============================*/
+@media only screen and (min-width: 320px) and (max-width: 768px) {
+    .nav {
+        width: 100%;
+    }
+
+    .nav-item {
+        width: 100%;
+        float: none;
+    }
+
+    .k-menu .k-item, .k-widget.k-menu-horizontal > .k-item {
+        width: 100%;
+        float: none;
+    }
+}
+
+div .left {
+    visibility: hidden;
+}
+
+@media only screen and (min-width: 768px) {
+    div .left {
+        visibility: visible;
+    }
+    /*.k-menu .k-item, .k-widget.k-menu-horizontal > .k-item {
+        width: 100%;
+        float: left;
+    }*/
 }
 /*====================================================*/
-
-
-/*====================================================*/
 html {
-    background: rgb(100, 98, 102);
-    /*margin: 0;
-    padding: 0;*/
+    /*background: rgb(100, 98, 102);*/
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+}
+
+.container {
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
 }
 
 body {
-    /*padding-top: 50px;
-    padding-bottom: 20px;*/
+    padding-bottom: 20px;
     /*===*/
     margin: 0 auto;
     background: rgb(255, 255, 255);
-    /*width: 90%;*/
+    height: 100%;
     /*===*/
 }
 
@@ -237,7 +272,7 @@ body {
 input,
 select,
 textarea {
-    max-width: 280px;
+    max-width: 380px;
 }
 
     /*KwtPatientStyle*/
@@ -336,15 +371,68 @@ menu, dir {
     padding: 20px;
 }
 
-.homePage a:hover {
+/*.homePage a:hover {
     text-decoration: none;
     padding: 14px 25px;
     text-align: center;
     display: inline-block;
     background-color: #F9E482;
-}
+}*/
 
 /*====================Menu==================*/
+/*sprit menu*/
+.adminMenu,
+.planningMenu,
+.cashMenu,
+.support,
+.patientMenu,
+.houseMenu {
+    background: url(Images/sprites.png) no-repeat;
+}
+
+
+.adminMenu {
+    background-position: -675px -74px;
+    width: 24px;
+    height: 24px;
+}
+
+
+.planningMenu {
+    background-position: -575px -74px;
+    width: 24px;
+    height: 24px;
+}
+
+
+.cashMenu {
+    background-position: -475px -74px;
+    width: 24px;
+    height: 24px;
+}
+
+
+.support {
+    background-position: -373px -74px;
+    width: 24px;
+    height: 24px;
+}
+
+
+.patientMenu {
+    background-position: -273px -74px;
+    width: 24px;
+    height: 24px;
+}
+
+
+.houseMenu {
+    background-position: -173px -74px;
+    width: 24px;
+    height: 24px;
+}
+
+
 h1, h2, h3, h4 {
     color: #0A6FA0 !important;
 }
@@ -359,18 +447,16 @@ h1, h2, h3, h4 {
     color: #46413B !important;
 }
 
-.h-menu .k-state-active{
+.h-menu .k-state-active {
     color: #46413B !important;
 }
 
-#context-menu {
-    width: 10%;
-}
 #topMenu {
     background-color: #46413B;
-    padding-left: 5%;
+    /*padding-left: 5%;*/
     border-style: none;
 }
+
 .navbar-header {
     width: inherit;
 }
@@ -382,7 +468,8 @@ h1, h2, h3, h4 {
 
     .loginLogout ul li a {
         padding: .4em .5em !important;
-        font-size: medium;
+        /*font-size: medium;*/
+        font-size: 0.6em;
         color: #ffffff;
     }
 
@@ -395,115 +482,234 @@ h1, h2, h3, h4 {
     right: 90px;
     top: 30%;
 }
+
 .navbar .navbar-inverse .navbar-fixed-top {
     margin: 0;
 }
+
 header {
     margin: 0;
     font-size: 20px;
     color: #fff;
     background-color: #A4A747;
 }
-.left{
-    float:left;
+
+.left {
+    float: left;
 }
 
-.h-menu .k-item>.k-link{
-    padding:.4em 1.3em !important;
+.h-menu .k-item > .k-link {
+    padding: .4em 1.3em !important;
     font-size: medium;
     color: #ffffff;
 }
 
-.h-menu a:hover{
-    background-color:#ffffff;
-    color:#46413B !important;
+.h-menu a:hover {
+    background-color: #ffffff;
+    color: #46413B !important;
 }
 
-.h-menu .k-state-active{
-    color:#46413B !important;
+.h-menu .k-state-active {
+    color: #46413B !important;
 }
 
-.h-item{
-    border-style:none !important;
+.h-item {
+    border-style: none !important;
 }
 
-#header-menu{
-    width:100%;
-    background-color: #46413B;  
+#header-menu {
+    width: 100%;
+    background-color: #46413B;
 }
-.k-header{
+
+.k-header {
     background-color: #0A6FA0;
-    border-style:none;
+    border-style: none;
     color: #fff;
 }
-.k-state-hover:hover{
-    background-color:#0A6FA0;
-    background-image:none;
-}
-.k-state-focused{
-    box-shadow:none;
+
+.k-state-hover:hover {
+    background-color: #0A6FA0;
+    background-image: none;
 }
 
-.title{
-    font-weight:bold;
-}
-table{
-    width:100%;
-}
-.k-dropdown{
-	width:100%;
-	padding-bottom:.5em;
-}
-td{
-	padding:1em 1em 0 0;
-	font-size:large;
-}
-.btn-info{
-    background-color:#0A6FA0 !important;
-    border-color:#0A6FA0 !important;
-}
-.btn{
-    border-radius:0 !important;
+.k-state-focused {
+    box-shadow: none;
 }
 
-.form-control{
-    border-radius:0 !important;
-}
-#workflow-menu {
-    background-color: #E1E1E1;
+.title {
+    font-weight: bold;
 }
 
-.c-row {
-    display: table-row;
+table {
+    width: 100%;
 }
 
-#workMenu {
-    border-style: none;
-    margin-left: 9.8em;
-    background-color: #e1e1e1;
+.k-dropdown {
+    width: 100%;
+    padding-bottom: .5em;
 }
 
-    #workMenu .k-state-selected {
-        background-color: #fff;
+/*td {
+    padding: 1em 1em 0 0;
+    font-size: large;
+}*/
+
+.btn-info {
+    background-color: #0A6FA0 !important;
+    border-color: #0A6FA0 !important;
+}
+
+.btn {
+    border-radius: 0 !important;
+}
+
+.form-control {
+    border-radius: 0 !important;
+}
+
+.panel-group.org-bar {
+    margin: 0;
+}
+
+.org-bar .row {
+    font-size: medium;
+    padding: 1em 0;
+}
+
+.org-bar table {
+    width: 100%;
+}
+
+.org-bar tr {
+    line-height: 1.4;
+}
+
+.panel-group.org-bar {
+    margin: 0;
+}
+
+.panel-default.org-bar {
+    border: none;
+}
+
+    .panel-default.org-bar h4 {
+        text-align: right;
     }
 
-        #workMenu .k-state-selected a {
-            color: #000;
-        }
+.panel-default > .panel-heading.org-bar {
+    background-color: #0A6FA0;
+    padding: 1em;
+}
 
-    #workMenu .k-state-hover {
-        background-color: #fff;
-        background-image: none;
+    .panel-default > .panel-heading.org-bar a {
+        color: #fff;
+        text-decoration: none;
+        font-size: x-large;
     }
 
-        #workMenu .k-state-hover a {
-            color: #000;
-        }
+.org-bar .panel-body {
+    padding: 0;
+}
 
-.w-item {
-    background-color: #e1e1e1;
-    width: 25%;
-    border-style: none !important;
+/*===================Patient Tab================*/
+
+#patientList {
+    font-family: sans-serif;
+    font-size: 15px;
+    line-height: 1;
+}
+
+    #patientList td {
+        padding: 1em .5em;
+        font-size: medium;
+    }
+/*html .k-grid tr:hover {
+  background: darkgray;
+}*/
+
+/*This style to remove the hover over effect fo the grid row*/
+.k-grid tr:not(.k-state-selected):hover {
+    background: none;
+    color: inherit;
+}
+
+.k-grid tr.k-alt:not(.k-state-selected):hover {
+    background: #f1f1f1;
+}
+
+.k-grid tbody td {
+    vertical-align: top;
+    /*text-align: center;*/
+}
+
+.k-grid-header {
     text-align: center;
-    padding: .08em 0;
+}
+/*spining gif for loading contents*/
+.loader {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #A4A747; /* Blue */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    position: fixed;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.k-panelbar .k-header {
+    background-color: transparent;
+}
+
+.fieldlist {
+    margin: 0 0 -2em;
+    padding: 0;
+}
+
+    .fieldlist li {
+        list-style: none;
+        padding-bottom: 2em;
+        float: left;
+        width: 50%;
+    }
+
+    .fieldlist label {
+        display: block;
+        padding-bottom: 1em;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 12px;
+        color: #444;
+    }
+
+fieldset {
+    border-width: 1px !important;
+    border-color: #A4A747 !important;
+}
+
+    fieldset legend {
+        border-bottom: 1px solid #A4A747 !important;
+        color: #A4A747;
+    }
+
+.k-button {
+    width: 150px;
+}
+
+select {
+    border-color: #dbdbdb;
 }

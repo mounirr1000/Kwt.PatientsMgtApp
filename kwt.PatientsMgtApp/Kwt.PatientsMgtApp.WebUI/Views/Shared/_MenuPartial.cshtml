@@ -9,18 +9,34 @@
     <div class="row logoSearch">
 
         <div class="left">
+
+            
             <a href="@Url.Action("Index", "Home")" style="text-decoration: none;" class="m-3">
-                <img src="~/Content/Images/Kuwait_embassyLogo.png" class="k-thumb" />
+                <img src="~/Content/Images/Kuwait_embassyLogo.png" class="k-thumb"/>
             </a>
             <span class="text-uppercase">Kuwait Embassy Health Office</span>
         </div>
         <div class="right">
             @using (Html.BeginForm("Search", "Patient", FormMethod.Get))
-                    {
-                        TempData["controller"] = Html.Controller();
-                        TempData["action"] = Html.Action();
-                        <div class="demo-section k-content">
-                    <input id="patientCids" type="text" name="patientCid" placeholder="Search a Patient" style="width: 100%;"/>
+            {
+                TempData["controller"] = Html.Controller();
+                TempData["action"] = Html.Action();
+
+                @*<div class="k-content">
+                    <span class="k-textbox k-space-right" style="width: 100%;">
+                        <input id="patientCids" type="text" name="patientCid" class="k-textbox" placeholder="Search a Patient..." style="width: 100%;" />
+                        <button type="submit" class="k-icon k-i-search">&nbsp;</button>
+                    </span>
+                </div>*@
+                <div class="k-content">
+                    <button type="submit" style="position: absolute;
+                             width: 12%; height: 100%;
+                             right: 0px; top: 0px;
+                             z-index: 1; background: #ffc107; cursor: pointer;
+                             border: none;padding: 0;">
+                        <i class="fa fa-search"></i>
+                    </button>
+                    <input id="patientCids" type="text" name="patientCid" class="k-textbox" placeholder="Search a Patient..." style="width: 100%;" />
                 </div>
 
             }
@@ -37,13 +53,13 @@
                 {
                     if (item.MenuId < 3)
                     {
-                        @Html.ListItemAction(item.MenuName, item.ActionName, item.ControllerName)
+                        @Html.ListItemAction(item.MenuName, item.ActionName, item.ControllerName, item.IconName, item.Color)
                     }
                     else
                     {
                         if (User.IsInRole("Admin"))
                         {
-                            @Html.ListItemAction(item.MenuName, item.ActionName, item.ControllerName)
+                            @Html.ListItemAction(item.MenuName, item.ActionName, item.ControllerName, item.IconName, item.Color)
                         }
                     }
                 }
@@ -52,7 +68,7 @@
     </div>
 </header>
 
-@if (TempData["searchedPatient"]!=null)
+@if (TempData["searchedPatient"] != null)
 {
-    Html.RenderPartial("_PatientDetailsSearched",(object)Model);
+    Html.RenderPartial("_PatientDetailsSearched", (object)Model);
 }
