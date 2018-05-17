@@ -67,10 +67,12 @@ namespace Kwt.PatientsMgtApp.Core.Models
         [Required]
         [DisplayName("First Appointment Date")]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public Nullable<System.DateTime> FirstApptDAte { get; set; }
 
         [DisplayName("End Treatment Date")]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         //[RequiredIf("IsActive", true,ErrorMessage = "End Treatment Date is required since the patient is not active")]
         public Nullable<System.DateTime> EndTreatDate { get; set; }
         //public Nullable<decimal> PatientRate { get; set; }
@@ -97,12 +99,14 @@ namespace Kwt.PatientsMgtApp.Core.Models
 
         [DisplayName("Created Date")]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public Nullable<System.DateTime> CreatedDate { get; set; }
 
         [DisplayName("Modified By")]
         public string ModifiedBy { get; set; }
 
         [DisplayName("Modified Date")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         [DataType(DataType.Date)]
         public Nullable<System.DateTime> ModifiedDate { get; set; }
         //========================

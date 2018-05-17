@@ -707,9 +707,15 @@ fieldset {
     }
 
 .k-button {
-    width: 150px;
+    width: 170px;
 }
 
 select {
     border-color: #dbdbdb;
+}
+/*==============Companion Tab===============*/
+
+.edit {
+    border: none !important;
+    background: #dbdbdb !important;
 }

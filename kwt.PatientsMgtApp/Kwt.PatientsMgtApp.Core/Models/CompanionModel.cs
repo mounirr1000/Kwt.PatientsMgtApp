@@ -11,7 +11,7 @@ namespace Kwt.PatientsMgtApp.Core.Models
     public class CompanionModel : BaseEntity, IValidatableObject
     {
         [Required(ErrorMessage = "Companion Civil Id is required"),
-         DisplayName("Civil Id")]
+         DisplayName("Companion Civil Id")]
         [MinLength(12, ErrorMessage = "Companion Civil Id should not be Less than 12 characters")]
         [MaxLength(12,ErrorMessage = "Companion Civil Id should not be more than 12 characters")]
         public string CompanionCID { get; set; }
@@ -40,7 +40,7 @@ namespace Kwt.PatientsMgtApp.Core.Models
         [DisplayName("Bank Code")]
         public string BankCode { get; set; }
 
-        [DisplayName("Bank Account")]
+        [DisplayName("IBan")]
         [MaxLength(30, ErrorMessage = "Bank Account should not be more than 30 characters")]
         [MinLength(30, ErrorMessage = "Bank Account should not be Less than 30 characters")]
         public string IBan { get; set; }
@@ -48,11 +48,15 @@ namespace Kwt.PatientsMgtApp.Core.Models
         [Required(ErrorMessage = "Companion Date entered is required"),
          DisplayName("Date In")]
         [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
         public Nullable<System.DateTime> DateIn { get; set; }
+        public String DateInFormatted { get { return String.Format("{0:d}", DateIn); } }
 
         [DisplayName("Date Out")]
         [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
         public Nullable<System.DateTime> DateOut { get; set; }
+        public String DateOutFormatted { get { return String.Format("{0:d}", DateOut); } }
 
         [Required(ErrorMessage = "Companion Is eithe active or inactive"),
          DisplayName("Active status")]
@@ -60,10 +64,24 @@ namespace Kwt.PatientsMgtApp.Core.Models
 
         [MaxLength(250, ErrorMessage = "Maximum characters allowed is 250 ")]
         public string Notes { get; set; }
+
+        [DisplayName("Created By")]
         public string CreatedBy { get; set; }
+
+        [DisplayName("Created Date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
         public System.DateTime CreatedDate { get; set; }
+        public String CreatedDateFormatted { get { return String.Format("{0:d}", CreatedDate); } }
+
+        [DisplayName("Modified By")]
         public string ModifiedBy { get; set; }
+
+        [DisplayName("Modified Date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
         public Nullable<System.DateTime> ModifiedDate { get; set; }
+        public String ModifiedDateFormatted { get { return String.Format("{0:d}", ModifiedDate); } }
 
         [Required(ErrorMessage = "Beneficiary field is required"),
          DisplayName("Is Beneficiary")]

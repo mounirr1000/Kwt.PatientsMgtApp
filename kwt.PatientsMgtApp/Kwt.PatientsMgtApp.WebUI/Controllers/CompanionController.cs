@@ -23,7 +23,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         private readonly ICompanionManagmentRepository _companionManagmentRepository;
         private readonly IPatientManagmentRepository _patientManagmentRepository;
         private readonly IPatientRepository _patientRepository;
-       
+
         public CompanionController()
         {
             _companionRepository = new CompanionRepository();
@@ -42,19 +42,19 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         {
             get
             {
-                return  HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                return HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
             }
         }
 
         //
         // GET: Companion
-        public ActionResult List(string searchCompanionText, string currentFilter, bool? isBeneficiary, string sortOrder, int? page, bool? clearSearch)
+        public ActionResult List(string searchCompanionText, string currentFilter, string sortOrder, int? page, bool? clearSearch)
         {
             //
-          var users=  UserManager.Users;
+            var users = UserManager.Users;
             //
             int pageNumber = (page ?? 1);
-            ViewBag.isBeneficiary = isBeneficiary ?? false;
+            //ViewBag.isBeneficiary = isBeneficiary ?? false;
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.DateInSortParm = String.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
@@ -64,24 +64,25 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             var companions = _companionRepository.GetCompanions();
             if (companions != null)
             {
-                switch (sortOrder)
-                {
-                    case "name_desc":
-                        companions = companions.OrderBy(c => c.CompanionFName).ThenBy(c => c.CompanionLName).ToList();
-                        break;
-                    case "cid":
-                        companions = companions.OrderBy(c => c.CompanionCID).ToList();
-                        break;
-                    case "date_desc":
-                        companions = companions.OrderBy(c => c.DateIn).ToList();
-                        break;
-                    case "Beneficiary":
-                        companions = companions.OrderBy(c => c.IsBeneficiary).ToList();
-                        break;
-                    default: // created date ascending 
-                        companions = companions.OrderByDescending(c => c.CreatedDate).ToList();
-                        break;
-                }
+                companions = companions.OrderByDescending(c => c.CreatedDate).ThenBy(co => co.IsActive).ToList();
+                //switch (sortOrder)
+                //{
+                //    case "name_desc":
+                //        companions = companions.OrderBy(c => c.CompanionFName).ThenBy(c => c.CompanionLName).ToList();
+                //        break;
+                //    case "cid":
+                //        companions = companions.OrderBy(c => c.CompanionCID).ToList();
+                //        break;
+                //    case "date_desc":
+                //        companions = companions.OrderBy(c => c.DateIn).ToList();
+                //        break;
+                //    case "Beneficiary":
+                //        companions = companions.OrderBy(c => c.IsBeneficiary).ToList();
+                //        break;
+                //    default: // created date ascending 
+                //        companions = companions.OrderByDescending(c => c.CreatedDate).ToList();
+                //        break;
+                //}
                 if (clearSearch != true)
                 {
                     if (searchCompanionText != null)
@@ -95,65 +96,68 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
 
                     ViewBag.CurrentFilter = searchCompanionText;
                     var result = new List<CompanionModel>();
-                    if (!String.IsNullOrEmpty(searchCompanionText))
+                    if (!String.IsNullOrEmpty(searchCompanionText?.Trim()))
                     {
-                        var term = searchCompanionText.ToLower();
-                        result = companions?
+                        var term = searchCompanionText.Trim().ToLower();
+                        result = companions
                             .Where(p =>
-                                p.PatientCID.ToLower().Contains(term)
-                                || p.CompanionFName.ToLower().Contains(term)
-                                || p.CompanionLName.ToLower().Contains(term)
+                                   p.CompanionCID.ToLower().Contains(term)
+                                || p.CompanionFName.Trim().ToLower().Contains(term)
+                                || p.CompanionLName.Trim().ToLower().Contains(term)
+                                || (p.CompanionMName != null
+                                    && p.CompanionMName.Trim().ToLower().Contains(term))
+                                || p.Name.Trim().ToLower().Contains(term)
                             ).ToList();
 
                         // filter isBeneficiary
-                        if (isBeneficiary == true)
-                        {
-                            result = result?.Where(p => p.IsBeneficiary).ToList();
-                        }
-                        else if (isBeneficiary == false)
-                        {
-                            result = result?.Where(p => !p.IsBeneficiary).ToList();
-                        }
+                        //if (isBeneficiary == true)
+                        //{
+                        //    result = result?.Where(p => p.IsBeneficiary).ToList();
+                        //}
+                        //else if (isBeneficiary == false)
+                        //{
+                        //    result = result?.Where(p => !p.IsBeneficiary).ToList();
+                        //}
                     }
-                    else
-                    {
-                        // filter isBeneficiary
-                        if (isBeneficiary == true)
-                        {
-                            result = companions?.Where(p => p.IsBeneficiary).ToList();
-                        }
-                        else if (isBeneficiary == false)
-                        {
-                            result = companions?.Where(p => !p.IsBeneficiary).ToList();
-                        }
-                    }
+                    //else
+                    //{
+                    //    // filter isBeneficiary
+                    //    if (isBeneficiary == true)
+                    //    {
+                    //        result = companions?.Where(p => p.IsBeneficiary).ToList();
+                    //    }
+                    //    else if (isBeneficiary == false)
+                    //    {
+                    //        result = companions?.Where(p => !p.IsBeneficiary).ToList();
+                    //    }
+                    //}
                     if (result?.Count > 0)
                     {
                         Success(string.Format("We have <b>{0}</b> returned results from the searched criteria", result.Count),
                             true);
-                        return View(result.ToPagedList(pageNumber, PageSize));
-                        //return View(result);
+                        //return View(result.ToPagedList(pageNumber, PageSize));
+                        return View(result);
                     }
-                    if (isBeneficiary != null || !String.IsNullOrEmpty(searchCompanionText))
+                    if (!String.IsNullOrEmpty(searchCompanionText))
                     {
                         if (result?.Count == 0)
                         {
-                            var benMessage = "";
-                            if (isBeneficiary != null)
-                            {
-                                benMessage = isBeneficiary == true ? "& is Beneficiary" : "& is Not Beneficiary";
-                            }
+
+                            //if (isBeneficiary != null)
+                            //{
+                            //    benMessage = isBeneficiary == true ? "& is Beneficiary" : "& is Not Beneficiary";
+                            //}
                             Information(
                                 string.Format(
-                                    "There is no patient in our records with the selected search criteria <b>{0}</b>&nbsp<b>{1}</b>",
-                                    searchCompanionText, benMessage), true);
+                                    "There is no patient in our records with the selected search criteria <b>{0}</b>",
+                                    searchCompanionText), true);
                         }
                     }
                 }
             }
 
-            return View(companions.ToPagedList(pageNumber, PageSize));
-            //return View(patients);
+            // return View(companions.ToPagedList(pageNumber, PageSize));
+            return View(companions);
         }
 
         [ExceptionHandler]
@@ -196,7 +200,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             {
                 companion.CreatedBy = User.Identity.Name;
                 _companionRepository.AddCompanion(companion);
-                Success(string.Format("Patient with Civil Id <b>{0}</b> was successfully added.", companion.CompanionCID), true);
+                Success(string.Format("Patient with Civil ID <b>{0}</b> was successfully added.", companion.CompanionCID), true);
                 return RedirectToAction("List");
             }
 
@@ -254,20 +258,24 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                 }
                 if (patient != null && ModelState.IsValidField("PatientCID"))
                 {
-                    if (patient.IsBeneficiary && companion.IsBeneficiary)
-                        ModelState.AddModelError("IsBeneficiary", "The patient with " + companion.PatientCID + " CID associated with this companion is already Beneficiary, You can't have the companion as beneficiary");
-                    if (!patient.IsBeneficiary && !companion.IsBeneficiary)
-                        if (ModelState.IsValidField("CompanionType") && companion.CompanionType == companionType)
-                            ModelState.AddModelError("IsBeneficiary", "The patient with " + companion.PatientCID +
-                                        " CID associated with this companion is Not Beneficiary, So you need to set this companion as Beneficiary");
+                    if (patient.IsActive)
+                    {
+                        if (patient.IsBeneficiary && companion.IsBeneficiary)
+                            ModelState.AddModelError("IsBeneficiary", "The patient with " + companion.PatientCID + " CID associated with this companion is already Beneficiary, You can't have the companion as beneficiary");
+                        if (!patient.IsBeneficiary && !companion.IsBeneficiary)
+                            if (ModelState.IsValidField("CompanionType") && companion.CompanionType == companionType)
+                                ModelState.AddModelError("IsBeneficiary", "The patient with " + companion.PatientCID +
+                                            " CID associated with this companion is Not Beneficiary, So you need to set this companion as Beneficiary");
+                    }
+
                 }
                 if (patient != null)
                 {
                     if (ModelState.IsValidField("CompanionType") && companion.CompanionType == companionType)
                     {
-                        var existingCompanions = _companionRepository.GetCompanions().Where(c=> c.PatientCID== companion.PatientCID && c.IsActive);
-                        
-                        foreach (var comp in existingCompanions)
+                        var existingCompanions = _companionRepository.GetCompanions().Where(c => c.PatientCID == companion.PatientCID && c.IsActive);
+
+                        foreach (var comp in existingCompanions.Where(c => c.IsActive == true))
                         {
                             if (comp.CompanionCID != companion.CompanionCID)
                             {
@@ -277,7 +285,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                                     break;
                                 }
                             }
-                        } 
+                        }
                     }
                     // see if there is a c primary companion with this patient, we can't have two companion as primary
                 }

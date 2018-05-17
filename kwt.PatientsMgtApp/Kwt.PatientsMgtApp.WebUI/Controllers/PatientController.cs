@@ -103,8 +103,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                     {
                         Success(string.Format("We have <b>{0}</b> returned results from the searched criteria", result.Count),
                             true);
-                        return View(result.ToPagedList(pageNumber, PageSize));
-                        //return View(result);
+                        //return View(result.ToPagedList(pageNumber, PageSize));
+                        return View(result);
                     }
 
                     if (result?.Count == 0 && !String.IsNullOrEmpty(searchPatientText))
@@ -135,7 +135,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             }
             else
             {
-                Information(string.Format("Patient with Civil Id <b>{0}</b> Does Not exist in our records.", patientCid), true);
+                Information(string.Format("Patient with Civil ID <b>{0}</b> Does Not exist in our records.", patientCid), true);
                 return View("List");
             }
         }
@@ -161,7 +161,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             {
                 patient.CreatedBy = User.Identity.Name;
                 _patientRepository.AddPatient(patient);
-                Success(string.Format("Patient with Civil Id <b>{0}</b> was successfully added.", patient.PatientCID), true);
+                Success(string.Format("Patient with Civil ID <b>{0}</b> was successfully added.", patient.PatientCID), true);
                 if (patient.HasCompanion)
                 {
                     return RedirectToAction("Create","Companion",new {patientcid=patient.PatientCID});
@@ -244,12 +244,12 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             {
                 patient.ModifiedBy = User.Identity.Name;
                 _patientRepository.UpdatePatient(patient);
-                Success(string.Format("Patient with Civil Id <b>{0}</b> was successfully updated.", patient.PatientCID), true);
+                Success(string.Format("Patient with Civil ID <b>{0}</b> was successfully updated.", patient.PatientCID), true);
                 return RedirectToAction("Details", "Patient", new { patientCid = patient.PatientCID });
             }
             else
             {
-                Information(string.Format("Patient with Civil Id <b>{0}</b> Was Not updated.", patient.PatientCID), true);
+                Information(string.Format("Patient with Civil ID <b>{0}</b> Was Not updated.", patient.PatientCID), true);
                 patient.Agencies = _patientManagmentRepository.GetAgencies();
                 patient.Banks = _patientManagmentRepository.GetBanks();
                 patient.Hospitals = _patientManagmentRepository.GetHospitals();
@@ -273,14 +273,14 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                 {
                     // display delete message success and redirect to patient list
                     Success(
-                        string.Format("Patient with Civil Id <b>{0}</b> was Successfully Deleted.", patient.PatientCID),
+                        string.Format("Patient with Civil ID <b>{0}</b> was Successfully Deleted.", patient.PatientCID),
                         true);
                 }
             }
             else
             {
                 if (!string.IsNullOrEmpty(patientCid))
-                    Information(string.Format("Patient with Civil Id <b>{0}</b> was not deleted.", patientCid), true);
+                    Information(string.Format("Patient with Civil ID <b>{0}</b> was not deleted.", patientCid), true);
             }
             return RedirectToAction("List");
         }
@@ -306,7 +306,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             {
                 //TempData["searchedPatient"] = null;
                 if (!string.IsNullOrEmpty(patientCid))
-                    Information(string.Format("Patient with Civil Id <b>{0}</b> Does Not exist in our records.", patientCid), true);
+                    Information(string.Format("Patient with Civil ID <b>{0}</b> Does Not exist in our records.", patientCid), true);
                 if (url != null)
                     return Redirect(url.PathAndQuery);
                 return RedirectToAction(actionName, controllerName);

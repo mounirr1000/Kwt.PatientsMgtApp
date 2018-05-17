@@ -173,7 +173,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             {
                 payment.CreatedBy = User.Identity.Name;
                 _paymentRepository.AddPayment(payment);
-                Success(string.Format("Payment for patient with civil id <b>{0}</b> was successfully added.", payment.PatientCID), true);
+                Success(string.Format("Payment for Patient with Civil ID <b>{0}</b> was successfully added.", payment.PatientCID), true);
                 return RedirectToAction("List");
             }
 
