@@ -69,6 +69,7 @@ namespace Kwt.PatientsMgtApp.Core.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public Nullable<System.DateTime> FirstApptDAte { get; set; }
+        public String FirstApptDAteFormatted { get { return String.Format("{0:d}", FirstApptDAte); } }
 
         [DisplayName("End Treatment Date")]
         [DataType(DataType.Date)]
@@ -76,6 +77,7 @@ namespace Kwt.PatientsMgtApp.Core.Models
         //[RequiredIf("IsActive", true,ErrorMessage = "End Treatment Date is required since the patient is not active")]
         public Nullable<System.DateTime> EndTreatDate { get; set; }
         //public Nullable<decimal> PatientRate { get; set; }
+        public String EndTreatDateFormatted { get { return String.Format("{0:d}", EndTreatDate); } }
 
         [Required(ErrorMessage = "If the patient is not Beneficiary, select No")]
         [DisplayName("Is Beneficiary?")]
@@ -101,6 +103,7 @@ namespace Kwt.PatientsMgtApp.Core.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public Nullable<System.DateTime> CreatedDate { get; set; }
+        public String CreatedDateFormatted { get { return String.Format("{0:d}", CreatedDate); } }
 
         [DisplayName("Modified By")]
         public string ModifiedBy { get; set; }
@@ -109,6 +112,7 @@ namespace Kwt.PatientsMgtApp.Core.Models
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         [DataType(DataType.Date)]
         public Nullable<System.DateTime> ModifiedDate { get; set; }
+        public String ModifiedDateFormatted { get { return String.Format("{0:d}", ModifiedDate); } }
         //========================
         public List<AgencyModel> Agencies { get; set; }
         public List<BankModel> Banks { get; set; }

@@ -13,7 +13,10 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public string Name { get; set; }
         public string PatientCID { get; set; }
         public Nullable<System.DateTime> DateIn { get; set; }
+        public String DateInFormatted { get { return String.Format("{0:d}", DateIn); } }
+
         public Nullable<System.DateTime> DateOut { get; set; }
+        public String DateOutFormatted { get { return String.Format("{0:d}", DateOut); } }
         public System.DateTime CreatedDate { get; set; }
         public string CreatedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }

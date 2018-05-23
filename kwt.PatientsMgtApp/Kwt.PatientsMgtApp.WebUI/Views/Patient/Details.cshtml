@@ -16,7 +16,7 @@
 <div id="contentPatientDetail" style="visibility:hidden;">
     <ul id="panelbarPatient">
         <li class="k-link k-state-active">
-            <h3>Patient Info</h3>
+            <h3>Patient Information</h3>
             <ul>
                 <li>
                     <table id="patientinfo">
@@ -62,10 +62,10 @@
                                     @Model.USPhone
                                 </td>
                                 <td>
-                                    @Model.FirstApptDAte
+                                    @Model.FirstApptDAteFormatted
                                 </td>
                                 <td>
-                                    @Model.EndTreatDate
+                                    @Model.EndTreatDateFormatted
                                 </td>
                                 <td>
                                     @if (Model.IsActive)
@@ -84,7 +84,7 @@
 
         </li>
         <li class="k-link k-state-active">
-            <h3>Dignosis Info</h3>
+            <h3>Medical Information</h3>
             <ul>
                 <li>
                     <table id="patientDiseaseInfo">
@@ -138,7 +138,7 @@
     </ul>
     <ul id="panelbarCompanion">
         <li>
-            <h3>Priamary Companions Info</h3>
+            <h3>Priamary Companions Information</h3>
             <ul>
 
                 @if (Model.Companions.Any(c => c.CompanionType == "Primary"))
@@ -203,10 +203,10 @@
                                             }
                                         </td>
                                         <td>
-                                            @companion.DateIn
+                                            @companion.DateInFormatted
                                         </td>
                                         <td>
-                                            @companion.DateOut
+                                            @companion.DateOutFormatted
                                         </td>
                                         <td>
                                             @companion.Notes
@@ -230,7 +230,7 @@
 
         </li>
         <li>
-            <h3>Secondary Companions Info</h3>
+            <h3>Secondary Companions Information</h3>
             <ul>
 
                 @if (Model.Companions.Any(c => c.CompanionType != "Primary"))
@@ -295,10 +295,10 @@
                                             }
                                         </td>
                                         <td>
-                                            @companion.DateIn
+                                            @companion.DateInFormatted
                                         </td>
                                         <td>
-                                            @companion.DateOut
+                                            @companion.DateOutFormatted
                                         </td>
                                         <td>
                                             @companion.Notes
@@ -326,7 +326,7 @@
     {
         <ul id="panelbarPayment">
             <li>
-                <h3>Payments made for this patient</h3>
+                <h3>Payments Information</h3>
                 <ul>
 
 
@@ -476,10 +476,10 @@
                                             @patient.Doctor
                                         </td>
                                         <td>
-                                            @patient.EndTreatDate
+                                            @patient.FirstApptDateFormatted
                                         </td>
                                         <td>
-                                            @patient.EndTreatDate
+                                            @patient.EndTreatDateFormatted
                                         </td>
 
                                         <td>
@@ -525,7 +525,7 @@
                                         Status
                                     </th>
                                     <th>
-                                        Was Beneficiary?
+                                        Beneficiary?
                                     </th>
                                     <th>
                                         Date In
@@ -572,10 +572,10 @@
                                             }
                                         </td>
                                         <td>
-                                            @companion.DateIn
+                                            @companion.DateInFormatted
                                         </td>
                                         <td>
-                                            @companion.DateOut
+                                            @companion.DateOutFormatted
                                         </td>
                                         <td>
                                             @companion.CompanionType
@@ -628,7 +628,18 @@
                 //sortable: true
             });
             $("#patientCompanionInfo, #patientSecondaryCompanionInfo").kendoGrid({
-                height: 150,
+                height: 350,
+                scrollable: {
+                    virtual: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: true,
+                    buttonCount: 5,
+
+                },
+                serverPaging: true,
+                pageSize: 1
                 //groupable: true,
                 //sortable: true
             });

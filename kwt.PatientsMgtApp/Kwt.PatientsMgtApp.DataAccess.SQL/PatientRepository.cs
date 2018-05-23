@@ -177,7 +177,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                         Notes = ch.Notes,
                         ModifiedBy = ch.ModifiedBy,
                         ModifiedDate = ch.ModifiedDate,
-                        Name = ch.Name
+                        Name = ch.Name,
+                       
                     }).ToList(),
                     PatientHistories =  p.PatientHistories.Select(ph=> new PatientHistoryModel()
                     {

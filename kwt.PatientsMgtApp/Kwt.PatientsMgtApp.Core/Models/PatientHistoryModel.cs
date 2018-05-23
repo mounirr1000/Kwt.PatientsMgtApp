@@ -21,7 +21,9 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public Nullable<int> BankID { get; set; }
         public string Iban { get; set; }
         public Nullable<System.DateTime> FirstApptDate { get; set; }
+        public String FirstApptDateFormatted { get { return String.Format("{0:d}", FirstApptDate); } }
         public Nullable<System.DateTime> EndTreatDate { get; set; }
+        public String EndTreatDateFormatted { get { return String.Format("{0:d}", EndTreatDate); } }
         public Nullable<bool> IsBeneficiary { get; set; }
         public Nullable<bool> IsActive { get; set; }
         public string Notes { get; set; }
