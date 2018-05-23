@@ -1,287 +1,217 @@
-﻿@model Kwt.PatientsMgtApp.Core.Models.PaymentModel
+﻿@using Kwt.PatientsMgtApp.WebUI.Infrastructure
+@model Kwt.PatientsMgtApp.Core.Models.PaymentModel
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Payment Details";
 }
 
-<h2>Details</h2>
 
-<div>
-    <h4>Payment</h4>
-    <hr />
-
-
-    <fieldset>
-        <legend>Payment Info</legend>
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.PaymentDate)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.PaymentDate)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.CompanionPayRate)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.CompanionPayRate)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.PatientPayRate)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.PatientPayRate)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.PaymentStartDate)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.PaymentStartDate)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.PaymentEndDate)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.PaymentEndDate)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.PaymentLengthPeriod)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.PaymentLengthPeriod)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.PatientAmount)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.PatientAmount)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.CompanionAmount)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.CompanionAmount)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.TotalDue)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.TotalDue)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Notes)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Notes)
-            </dd>
-        </dl>
-    </fieldset>
-    <fieldset>
-        <legend>Bank Info</legend>
-        <dl class="dl-horizontal">
-
-            <dt>
-                @Html.DisplayNameFor(model => model.BeneficiaryBank)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.BeneficiaryBank)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.BeneficiaryIBan)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.BeneficiaryIBan)
-            </dd>
-        </dl>
-    </fieldset>
-    <fieldset>
-        <legend>Beneficiary Info</legend>
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.BeneficiaryCID)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.BeneficiaryCID)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.BeneficiaryFName)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.BeneficiaryFName)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.BeneficiaryMName)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.BeneficiaryMName)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.BeneficiaryLName)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.BeneficiaryLName)
-            </dd>
-        </dl>
-    </fieldset>
-    <fieldset>
-        <legend>Pateint Info</legend>
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.PatientCID)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.PatientCID)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.PatientFName)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.PatientFName)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.PatientMName)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.PatientMName)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.PatientLName)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.PatientLName)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.Hospital)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Hospital)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Agency)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Agency)
-            </dd>
-        </dl>
-
-    </fieldset>
-    <fieldset>
-        <legend>Companion Info</legend>
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.CompanionCID)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.CompanionCID)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.CompanionFName)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.CompanionFName)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.CompanionMName)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.CompanionMName)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.CompanionLName)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.CompanionLName)
-            </dd>
-        </dl>
-    </fieldset>
-
-
-
-
-    <fieldset>
-        <legend>Payment Audit Info</legend>
-        <dl>
-            <dt>
-                @Html.DisplayNameFor(model => model.CreatedBy)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.CreatedBy)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.CreatedDate)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.CreatedDate)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.ModifiedBy)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.ModifiedBy)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.ModifiedDate)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.ModifiedDate)
-            </dd>
-
-        </dl>
-    </fieldset>
+<div class="mt-3">
+    <p>
+        <a href="@Url.Action("List")" class="k-button"><i class="fa fa-arrow-left" style="color: lightblue"></i> Back to List</a>
+        <a href="@Url.Action("Edit", new {paymentId = Model.Id})" class="k-button"><i class="fa fa-pencil" style="color: blueviolet"></i> Edit</a>
+        <a href="javascript:window.print()" class="k-button"><i class="fa fa-print" style="color: blueviolet"></i> Print This Page</a>
+    </p>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { paymentId = Model.Id }) |
-    @Html.ActionLink("Back to List", "List")
-</p>
+<div class="loader"></div>
+<div id="contentPaymentDetail" style="visibility:hidden;">
+
+    <fieldset>
+        <legend>Payment Details</legend>
+        <ul class="fieldlist">
+            <li>
+                @Html.LabelFor(model => model.PaymentDate, new { @class = "" })
+                @Html.TextBoxFor(model => model.PaymentDateFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li>
+                @Html.LabelFor(model => model.CompanionPayRate, new { @class = "" })
+                @Html.TextBoxFor(model => model.CompanionPayRate, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li>
+                @Html.LabelFor(model => model.PatientPayRate, new { @class = "" })
+                @Html.TextBoxFor(model => model.PatientPayRate, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li>
+                @Html.LabelFor(model => model.PaymentStartDate, new { @class = "" })
+                @Html.TextBoxFor(model => model.PaymentStartDateFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li>
+                @Html.LabelFor(model => model.PaymentEndDate, new { @class = "" })
+                @Html.TextBoxFor(model => model.PaymentEndDateFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li>
+                @Html.LabelFor(model => model.PatientCID, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.PatientCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li>
+                @Html.LabelFor(model => model.PaymentLengthPeriod, new { @class = "" })
+                @Html.TextBoxFor(model => (model.PaymentLengthPeriod), new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li>
+                @Html.LabelFor(model => model.PatientAmount, new { @class = "" })
+                @Html.TextBoxFor(model => model.PatientAmount, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li>
+                @Html.LabelFor(model => model.CompanionAmount, new { @class = "" })
+                @Html.TextBoxFor(model => model.CompanionAmount, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li>
+                @Html.LabelFor(model => model.TotalDue, new { @class = "" })
+                @Html.TextBoxFor(model => model.TotalDue, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li>
+                @Html.LabelFor(model => model.Notes, new { @class = "" })
+                @Html.TextAreaFor(model => model.Notes, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+        </ul>
+    </fieldset>
+    <fieldset>
+        <legend>Beneficiary Information</legend>
+        <ul class="fieldlist">
+            <li>
+                @Html.LabelFor(model => model.BeneficiaryCID, new { @class = "" })
+                @Html.TextBoxFor(model => model.BeneficiaryCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li>
+                @Html.LabelFor(model => model.BeneficiaryFName, new { @class = "" })
+                @Html.TextBoxFor(model => model.BeneficiaryFName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li>
+                @Html.LabelFor(model => model.BeneficiaryMName, new { @class = "" })
+                @Html.TextBoxFor(model => model.BeneficiaryMName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li>
+                @Html.LabelFor(model => model.BeneficiaryLName, new { @class = "" })
+                @Html.TextBoxFor(model => model.BeneficiaryLName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+        </ul>
+    </fieldset>
+
+
+    <fieldset>
+        <legend>Beneficiary Bank Information</legend>
+        <ul class="fieldlist">
+            <li>
+                @Html.LabelFor(model => model.BeneficiaryBank, new {@class = ""})
+                @Html.TextBoxFor(model => model.BeneficiaryBank, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+            </li>
+            <li>
+                @Html.LabelFor(model => model.BeneficiaryIBan, new {@class = ""})
+                @Html.TextBoxFor(model => model.BeneficiaryIBan, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+            </li>
+        </ul>
+    </fieldset>
+
+    <fieldset>
+        <legend>Patient Information</legend>
+        <ul class="fieldlist">
+            <li>
+                @Html.LabelFor(model => model.PatientCID, new {@class = ""})
+                @Html.TextBoxFor(model => model.PatientCID, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+            </li>
+            <li>
+                @Html.LabelFor(model => model.PatientFName, new {@class = ""})
+                @Html.TextBoxFor(model => model.PatientFName, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+            </li>
+            <li>
+                @Html.LabelFor(model => model.PatientMName, new {@class = ""})
+                @Html.TextBoxFor(model => model.PatientMName, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+            </li>
+            <li>
+                @Html.LabelFor(model => model.PatientLName, new {@class = ""})
+                @Html.TextBoxFor(model => model.PatientLName, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+            </li>
+            <li>
+                @Html.LabelFor(model => model.Hospital, new {@class = ""})
+                @Html.TextBoxFor(model => model.Hospital, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+            </li>
+            <li>
+                @Html.LabelFor(model => model.Agency, new {@class = ""})
+                @Html.TextBoxFor(model => model.Agency, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+            </li>
+        </ul>
+    </fieldset>
+
+    <fieldset>
+        <legend>Companion Information</legend>
+        @if (Model.CompanionCID != null)
+        {
+            <ul class="fieldlist">
+                <li>
+                    @Html.LabelFor(model => model.CompanionCID, new { @class = "" })
+                    @Html.TextBoxFor(model => model.CompanionCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                </li>
+                <li>
+                    @Html.LabelFor(model => model.CompanionFName, new { @class = "" })
+                    @Html.TextBoxFor(model => model.CompanionFName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                </li>
+                <li>
+                    @Html.LabelFor(model => model.CompanionMName, new { @class = "" })
+                    @Html.TextBoxFor(model => model.CompanionMName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                </li>
+                <li>
+                    @Html.LabelFor(model => model.CompanionLName, new { @class = "" })
+                    @Html.TextBoxFor(model => model.CompanionLName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                </li>
+
+            </ul>
+        }
+        else
+        {
+
+            <span>No active companion found in our records for this patient</span>
+
+
+        }
+
+    </fieldset>
+    <fieldset>
+        <legend>Audit Info</legend>
+        <ul class="fieldlist">
+            <li>
+                @Html.LabelFor(model => model.CreatedBy, new { @class = "" })
+                @Html.TextBoxFor(model => model.CreatedBy, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li>
+                @Html.LabelFor(model => model.CreatedDate, new { @class = "" })
+                @Html.TextBoxFor(model => model.CreatedDateFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li>
+                @Html.LabelFor(model => model.ModifiedBy, new { @class = "" })
+                @Html.TextBoxFor(model => model.ModifiedBy, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li>
+                @Html.LabelFor(model => model.ModifiedDate, new { @class = "" })
+                @Html.TextBoxFor(model => model.ModifiedDateFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+        </ul>
+    </fieldset>
+
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+
+        $('document').ready(function () {
+            $("#contentPaymentDetail").css("visibility", "visible");
+            $(".loader").css("display", "none");
+            //kendo.drawing.drawDOM("#contentPaymentDetail", {
+            //    paperSize: "A4",
+            //    margin: { top: "2cm", left: "0cm", right: "0cm", bottom: "1cm" },
+            //    landscape: true,
+            //}).then(function (group) {
+            //    kendo.drawing.pdf.saveAs(group, "paymentDetail.pdf");
+            //});
+            //$("#TotalDue").kendoNumericTextBox({
+            //    format: "c",
+            //    //decimals: 3
+            //});
+            //$("#CompanionPayRate, #PatientPayRate").kendoNumericTextBox({
+            //    format: "p0",
+            //        min: 0,
+            //        max: 100,
+            //    step: 1
+            //});
+        });
+    </script>
+}

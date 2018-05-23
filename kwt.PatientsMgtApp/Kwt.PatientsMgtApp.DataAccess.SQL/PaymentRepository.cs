@@ -74,12 +74,13 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 PatientAmount = p.PAmount,
                 CompanionPayRate = p.PayRate.CompanionRate,
                 PatientPayRate = p.PayRate.PatientRate,
-                PaymentDate = p.PaymentDate,
+                PaymentDate = p.PaymentDate ?? p.CreatedDate,
                 PaymentLengthPeriod = p.Period,
                 PaymentStartDate = p.StartDate,
                 TotalDue = p.TotalDue,
                 Id = p.PaymentID,
-                BeneficiaryCID = p.Beneficiary.BeneficiaryCID
+                BeneficiaryCID = p.Beneficiary.BeneficiaryCID,
+                PayRateID =p.PayRateID
 
             } : null).OrderBy(p => p.CreatedDate).ToList();// returns null when the beneficiary is not set and the second null is returned when the companion is not set
 
@@ -93,6 +94,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             var companion = _companionRepository.GetCompanion(ben?.CompanionCID);
             if (patient != null && ben != null)
             {
+                payment.IsActive = patient.IsActive;
                 payment.PatientCID = patientCid;
                 payment.PatientFName = patient.PatientFName;
                 payment.PatientLName = patient.PatientLName;
@@ -110,7 +112,9 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 payment.BeneficiaryFName = ben.BeneficiaryFName;
                 payment.BeneficiaryLName = ben.BeneficiaryLName;
 
+               
                 //Todo: This should be done a better way
+                payment.Payments = GetPaymentsByPatientCid(patientCid)?.OrderByDescending(p=>p.CreatedDate).ToList();
                 payment.PayRates = _payRateRepository.GetPayRatesList();
                 payment.PatientPayRate = _domainObjectRepository.Get<PayRate>(c => c.PayRateID == 1).PatientRate;
                 payment.CompanionPayRate = !String.IsNullOrEmpty(ben.CompanionCID) ? _domainObjectRepository.Get<PayRate>(c => c.PayRateID == 1).CompanionRate : 0;
@@ -238,7 +242,10 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     var currentStartDate = (DateTime)payment?.PaymentStartDate?.Date;
                     TimeSpan dateDiff = currentStartDate - lastEndDate;
                     //the current start date should not be less than the last payment end date
-                    if (dateDiff.Days <= 0)
+                    if (dateDiff.Days <= 0
+                        //Check if the last payemt total that was made on same date is different
+                        && lastPayment.TotalDue == payment.TotalDue
+                        )
                     {
                         throw new PatientsMgtException(1, "error", "Add new Payment", "Last Payment end date was on " + lastEndDate + " So payment start date should be after " + lastEndDate);
                     }
@@ -320,7 +327,16 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
 
         public int DeletePayment(PaymentModel payment)
         {
-            throw new NotImplementedException();
+
+            var pay = _domainObjectRepository.Get<Payment>(p => p.PaymentID == payment.PaymentID);
+            var index = 0;
+            if (pay != null)
+            {
+   
+                index = _domainObjectRepository.Delete<Payment>(pay);
+            }
+            return index;
+            //throw new NotImplementedException();
         }
     }
 }

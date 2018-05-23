@@ -127,19 +127,19 @@
             <ul class="fieldlist">
                 <li>
                     @Html.LabelFor(model => model.CreatedBy, new {@class = ""})
-                    @Html.TextBoxFor(model => model.CreatedBy, new {@class = "k-textbox edit", style = "width: 100%;", disabled = "disabled"})
+                    @Html.TextBoxFor(model => model.CreatedBy, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
                 </li>
                 <li>
                     @Html.LabelFor(model => model.CreatedDate, new {@class = ""})
-                    @Html.TextBoxFor(model => model.CreatedDateFormatted, new {@class = "k-textbox edit", style = "width: 100%;", disabled = "disabled"})
+                    @Html.TextBoxFor(model => model.CreatedDateFormatted, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
                 </li>
                 <li>
                     @Html.LabelFor(model => model.ModifiedBy, new {@class = ""})
-                    @Html.TextBoxFor(model => model.ModifiedBy, new {@class = "k-textbox edit", style = "width: 100%;", disabled = "disabled"})
+                    @Html.TextBoxFor(model => model.ModifiedBy, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
                 </li>
                 <li>
                     @Html.LabelFor(model => model.ModifiedDate, new {@class = ""})
-                    @Html.TextBoxFor(model => model.ModifiedDateFormatted, new {@class = "k-textbox edit", style = "width: 100%;", disabled = "disabled"})
+                    @Html.TextBoxFor(model => model.ModifiedDateFormatted, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
                 </li>
             </ul>
         </fieldset>

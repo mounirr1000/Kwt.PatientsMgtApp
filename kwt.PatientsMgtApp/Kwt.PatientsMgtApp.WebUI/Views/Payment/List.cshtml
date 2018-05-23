@@ -1,128 +1,146 @@
-﻿@using PagedList.Mvc;
-@model PagedList.IPagedList<Kwt.PatientsMgtApp.Core.Models.PaymentModel>
-<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+﻿@*@using PagedList.Mvc;
+    @model PagedList.IPagedList<Kwt.PatientsMgtApp.Core.Models.PaymentModel>*@
+
+@model List<Kwt.PatientsMgtApp.Core.Models.PaymentModel>
+
 @{
-    ViewBag.Title = "List";
+    ViewBag.Title = "Payment List";
 }
+<div class="pt-3 pb-3">
+    <a href="@Url.Action("Create", "Payment")" class="k-button"><i class="fa fa-plus" style="color: yellowgreen"></i> New Payment</a>
+    <a href="javascript:window.print()" class="k-button"><i class="fa fa-print" style="color: blueviolet"></i> Print This Page</a>
+</div>
 
-<h2>Payments</h2>
+<div class="pb-5 pt-5">
+    @if (Model.Any())
+    {
+        <div class="pb-3">
+            @{Html.RenderPartial("_PaymentSearchForm");}
+        </div>
+        <div class="loader"></div>
+        <div id="content" style="visibility:hidden;">
+            <table id="paymentList">
+                <colgroup>
+                    <col style="width: 100px" />@*id*@
+                    <col />@*payment Date*@
+                    <col />@*patient Cid*@
+                    <col />@*companion cid*@
+                    <col style="width: 90px" />@*period*@
+                    <col style="width: 110px" />@*startdate*@
+                    <col style="width: 110px" />@*endDate*@
+                    <col style="width: 120px" />@*total due*@
+                    <col style="width: 90px" />@*delete*@
 
-<p>
-    @Html.ActionLink("New Payment", "Create", null, new { @class = "btn btn-lg btn-info fa fa-plus fa-1x" })
-</p>
-@if (Model.Any())
-{
-    <div class="p-3">
-        @{ Html.RenderPartial("_PaymentSearchForm"); }
-    </div>
-    <table class="table text-center table-bordered table-striped">
-        <tr>
-            <th>
-                Payment Id
-            </th>
-            <th>
 
-                Payment Date
-            </th>
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>
+                            Id
+                        </th>
+                        <th>
 
-            <th>
+                            Payment Date
+                        </th>
 
-                Patient CID
-            </th>
+                        <th>
 
-            <th>
+                            Patient CID
+                        </th>
 
-                Companion CID
-            </th>
+                        <th>
 
-            <th>
+                            Companion CID
+                        </th>
 
-                Beneficiary CID
-            </th>
+                        <th>
 
-            <th>
+                            Period
+                        </th>
 
-                Payment Start Date
-            </th>
-            <th>
+                        <th>
 
-                Payment End Date
-            </th>
+                            Start Date
+                        </th>
+                        <th>
 
-            <th>
+                            End Date
+                        </th>
 
-                Total Due
-            </th>
-            <th>
+                        <th>
 
-                Notes
-            </th>
-            <th>
+                            Amount
+                        </th>
 
-                Created Date
-            </th>
-            <th></th>
-        </tr>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <th>
+                                Delete
+                            </th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                {
+                        <tr>
+                            <td>
+                                @Html.ActionLink(item.Id.ToString(), "Details", new { paymentId = item.Id })
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PaymentDateFormatted)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PatientCID)
+                            </td>
 
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.ActionLink(item.Id.ToString(), "Details", new {paymentId = item.Id})
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PaymentDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PatientCID)
-                </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CompanionCID)
+                            </td>
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.CompanionCID)
-                </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PaymentLengthPeriod)
+                            </td>
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.BeneficiaryCID)
-                </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PaymentStartDateFormatted)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PaymentEndDateFormatted)
+                            </td>
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.PaymentStartDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PaymentEndDate)
-                </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TotalDue)
+                            </td>
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.TotalDue)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Notes)
-                </td>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <td>
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreatedDate)
-                </td>
+                                    <a href="javascript:confirmDelete('@item.Id','paymentId')" id="@item.Id"><i class="fa fa-times fa-2x" style="color: lightcoral"></i></a>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @*<span>Page</span>
+                @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+                <span>of</span>
+                        @Model.PageCount
+                        @Html.PagedListPager(Model, page => Url.Action("List", new { page }));*@
+        </div>
+                }
+                else
+                {
+                    <div class="alert-info">
+                        No Payments to show in our records!
+                    </div>
+                }
 
-                <td>
-                    @*@Html.ActionLink("Delete", "Delete", new { paymentId = item.Id})*@
-                    <a href="javascript:confirmDelete('@item.Id','paymentId')" class="btn btn-danger" id="@item.PatientCID">Delete</a>
-                </td>
-            </tr>
-        }
+</div>
 
-    </table>
-    <span>Page</span>
-    @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
-    <span>of</span>
-            @Model.PageCount
-            @Html.PagedListPager(Model, page => Url.Action("List", new { page }));
-}
-else
-{
-    <div class="alert-info">
-        No Payments to show in our records!
-    </div>
-}
+
 
 @section DeleteConfirm{
 
@@ -136,9 +154,79 @@ else
     <script type="text/javascript">
         $("#clear").click(function (e) {
             console.log("Clear serch");
-            $("#searchPatient").val("");
+            $("#searchPayment").val("");
             $("#clearSearch").val(true);
             //e.preventDefault();
         });
+    </script>
+    <script src="https://kendo.cdn.telerik.com/2018.2.516/js/pako_deflate.min.js"></script>
+    <script type="text/javascript">
+
+        $('document').ready(function () {
+            $("#content").css("visibility", "visible");
+            
+            $("#paymentList").kendoGrid({
+                toolbar: "<p>This is the list of all payments we have in our records</p>",
+                //toolbar: ["pdf"],
+                //pdf: {
+                //    allPages: true,
+                //    avoidLinks: true,
+                //    paperSize: "A4",
+                //    margin: { top: "2cm", left: ".5cm", right: ".5cm", bottom: ".5cm" },
+                //    landscape: true,
+                //    repeatHeaders: true,
+                //    template: $("#paymentList").html(),
+                //    scale: 0.2
+                //},
+                height: 550,
+                groupable: true,
+                sortable: true,
+                //filterable: true
+                pageable: {
+                    pageSize: 15,
+                    alwaysVisible: false
+                },
+                //dataBound: function (e) {
+                //    setTimeout(function () { kendo.ui.progress($("#content"), false); });
+                //}
+
+            });
+            //var draw = kendo.drawing;
+
+            //draw.drawDOM($("#paymentList"), {
+            //        allPages: true,
+            //        avoidLinks: true,
+            //        paperSize: "A4",
+            //        margin: { top: "2cm", left: "0cm", right: "0cm", bottom: "1cm" },
+            //        landscape: true,
+            //        repeatHeaders: true,
+            //        template: $("#paymentList").html(),
+            //        scale: 0.8,
+           // keepTogether: ".prevent-split"
+            //})
+            //.then(function (root) {
+            //    return draw.exportPDF(root);
+            //})
+            //.done(function (data) {
+            //    kendo.saveAs({
+            //        dataURI: data,
+            //        fileName: "paymentList.pdf"
+            //    });
+            //});
+            //kendo.ui.progress($("#patientList"), false);
+            $(".loader").css("display", "none");
+        });
+    </script>
+    <script type="x/kendo-template" id="page-template">
+        <div class="page-template">
+            <div class="header">
+                <div style="float: right">Page #: pageNum # of #: totalPages #</div>
+                Multi-page grid with automatic page breaking
+            </div>
+            <div class="watermark">KENDO UI</div>
+            <div class="footer">
+                Page #: pageNum # of #: totalPages #
+            </div>
+        </div>
     </script>
 }

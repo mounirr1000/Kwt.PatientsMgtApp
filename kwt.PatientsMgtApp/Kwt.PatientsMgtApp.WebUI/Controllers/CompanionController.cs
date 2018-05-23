@@ -243,6 +243,32 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             }
         }
 
+
+        [ExceptionHandler]
+        [Authorize(Roles = "Admin, Manager")]
+        public ActionResult Delete(string companionCid)
+        {
+            var companion = _companionRepository.GetCompanion(companionCid);
+
+            if (companion != null)
+            {
+                var deleted = _companionRepository.DeleteCompanion(companion.CompanionCID,companion.PatientCID);
+                if (deleted > 0)
+                {
+                    // display delete message success and redirect to patient list
+                    Success(
+                        string.Format("Companion with Civil ID <b>{0}</b> was Successfully Deleted.", companion.CompanionCID),
+                        true);
+                }
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(companionCid))
+                    Information(string.Format("Companion with Civil ID <b>{0}</b> was Not Deleted.", companionCid), true);
+            }
+            return RedirectToAction("List");
+        }
+
         private void ValidateCompanion(CompanionModel companion)
         {
             var companionType = _companionManagmentRepository.GetCompanionTypes()

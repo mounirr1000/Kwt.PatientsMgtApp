@@ -1,7 +1,6 @@
 ﻿@*@using PagedList.Mvc;
     @model PagedList.IPagedList<Kwt.PatientsMgtApp.Core.Models.PatientModel>*@
 @model List<Kwt.PatientsMgtApp.Core.Models.PatientModel>
-<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 @{
     ViewBag.Title = "Patient List";
     //var patientList = Model;
@@ -186,6 +185,7 @@
             $("#content").css("visibility", "visible");
 
             $("#patientList").kendoGrid({
+                toolbar: "<p>This is the list of all patient we have in our records, active and non active</p>",
                 height: 550,
                 groupable: true,
                 sortable: true,

@@ -16,7 +16,9 @@ namespace Kwt.PatientsMgtApp.Core.Models
         [DataType(DataType.Date)]
         [DisplayName("Payment Date")]
         public Nullable<System.DateTime> PaymentDate { get; set; }
+        public String PaymentDateFormatted { get { return String.Format("{0:d}", PaymentDate); } }
 
+        public bool IsActive { get; set; }
 
         [Required]
         [DisplayName("Patient Id")]
@@ -88,17 +90,19 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public decimal? CompanionPayRate { get; set; }
 
         [DisplayName("Patient Pay Rate")]
-        public decimal? PatientPayRate { get; set; }
+        public decimal? PatientPayRate { get; set; } = 75;
 
         [DisplayName("Payment Start Date")]
         [Required]
         [DataType(DataType.Date)]
         public Nullable<System.DateTime> PaymentStartDate { get; set; }
+        public String PaymentStartDateFormatted { get { return String.Format("{0:d}", PaymentStartDate); } }
 
         [DisplayName("Payment End Date")]
         [DataType(DataType.Date)]
         [Required]
         public Nullable<System.DateTime> PaymentEndDate { get; set; }
+        public String PaymentEndDateFormatted { get { return String.Format("{0:d}", PaymentEndDate); } }
 
         [DisplayName("Payment Period")]
         public Nullable<int> PaymentLengthPeriod { get; set; }
@@ -111,6 +115,8 @@ namespace Kwt.PatientsMgtApp.Core.Models
 
         [DisplayName("Total")]
         public Nullable<decimal> TotalDue { get; set; }
+
+        [MaxLength(250, ErrorMessage = "Maximum characters allowed is 250 ")]
         public string Notes { get; set; }
 
         [DisplayName("Created By")]
@@ -118,7 +124,8 @@ namespace Kwt.PatientsMgtApp.Core.Models
 
         [DataType(DataType.Date)]
         [DisplayName("Created Date")]
-        public System.DateTime CreatedDate { get; set; } 
+        public System.DateTime CreatedDate { get; set; }
+        public String CreatedDateFormatted { get { return String.Format("{0:d}", CreatedDate); } }
 
         [DisplayName("Modified By")]
         public string ModifiedBy { get; set; }
@@ -126,12 +133,14 @@ namespace Kwt.PatientsMgtApp.Core.Models
         [DataType(DataType.Date)]
         [DisplayName("Modified Date")]
         public Nullable<System.DateTime> ModifiedDate { get; set; }
+        public String ModifiedDateFormatted { get { return String.Format("{0:d}", ModifiedDate); } }
 
-
+        public int? PayRateID { get; set; }
         //================================
         public List<BeneficiaryModel> Beneficiaries { get; set; }
         public BeneficiaryModel Beneficiary { get; set; }
         public List<PayRateModel> PayRates { get; set; }
 
+        public List<PaymentModel> Payments { get; set; }
     }
 }
