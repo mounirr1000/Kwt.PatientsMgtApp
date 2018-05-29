@@ -22,15 +22,6 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
         
         /// <summary>
-        /// Label1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label1;
-        
-        /// <summary>
         /// StartDate control.
         /// </summary>
         /// <remarks>
@@ -38,15 +29,6 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox StartDate;
-        
-        /// <summary>
-        /// Label3 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label3;
         
         /// <summary>
         /// EndDate control.
@@ -58,15 +40,6 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
         protected global::System.Web.UI.WebControls.TextBox EndDate;
         
         /// <summary>
-        /// Label4 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label4;
-        
-        /// <summary>
         /// PatientCid control.
         /// </summary>
         /// <remarks>
@@ -76,31 +49,31 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
         protected global::System.Web.UI.WebControls.TextBox PatientCid;
         
         /// <summary>
-        /// Search control.
+        /// LinkSearchButton control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Search;
+        protected global::System.Web.UI.WebControls.LinkButton LinkSearchButton;
         
         /// <summary>
-        /// All control.
+        /// LinkClearButton control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button All;
+        protected global::System.Web.UI.WebControls.LinkButton LinkClearButton;
         
         /// <summary>
-        /// ResultMessage control.
+        /// ErrorMessage control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label ResultMessage;
+        protected global::System.Web.UI.WebControls.PlaceHolder ErrorMessage;
         
         /// <summary>
         /// Message control.

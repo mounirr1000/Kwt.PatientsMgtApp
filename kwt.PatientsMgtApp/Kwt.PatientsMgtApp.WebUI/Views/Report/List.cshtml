@@ -3,10 +3,13 @@
     ViewBag.Title = "Reports List";
 }
 
-<h2>Reports List</h2>
-<div class="p-2">
+<div class="pt-3 pb-3">
+    <a href="@Url.Action("Patient", "Report")" class="k-button"><i class="fa fa-book" style="color: yellowgreen"></i> Patient Report</a>
+    <a href="@Url.Action("Payment", "Report")" class="k-button"><i class="fa fa-bookmark-o" style="color:yellowgreen"></i> Payment Report</a>
+</div>
+@*<div class="p-2">
     @Html.ActionLink("Patient Report", "Patient", null, new {@class="btn btn-info"})
 </div>
 <div class="p-2">
     @Html.ActionLink("Payment Report", "Payment", null, new { @class = "btn btn-info" })
-</div>
+</div>*@

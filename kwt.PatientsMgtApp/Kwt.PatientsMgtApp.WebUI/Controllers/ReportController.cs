@@ -14,7 +14,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
 
         public ActionResult List()
         {
-            return View();
+            return View("Patient");
         }
         public ActionResult Patient()
         {

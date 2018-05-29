@@ -33,7 +33,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
             var endDate = new DateTime();
             var resultCount = 0;
 
-            if (DateTime.TryParse(StartDate.Text, out startDate) && DateTime.TryParse(StartDate.Text, out endDate))
+            if (DateTime.TryParse(StartDate.Text, out startDate) && DateTime.TryParse(EndDate.Text, out endDate))
             {
                 GenerateReport(PatientCid.Text, startDate, endDate);
             }
@@ -42,8 +42,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
 
                 resultCount= GenerateReport(PatientCid.Text).Count;
             }
-            ResultMessage.Enabled = true;
-            ResultMessage.Text = "Total Records returned from the search: "+ resultCount;
+            //ResultMessage.Enabled = true;
+            //ResultMessage.Text = "Total Records returned from the search: "+ resultCount;
 
         }
 
@@ -52,8 +52,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
             StartDate.Text = null;
             EndDate.Text = null;
             PatientCid.Text = null;
-            ResultMessage.Enabled = false;
-            ResultMessage.Text = "";
+            //ResultMessage.Enabled = false;
+            //ResultMessage.Text = "";
             GenerateReport();
         }
 
@@ -70,11 +70,13 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
             if (payments == null || payments.Count == 0)
             {
                 Message.Enabled = true;
-                Message.Text = "There is no payment in our records to display in the report";
+                ErrorMessage.Visible = true;
+                Message.Text = "There is no payment to display in the report";
             }
             else
             {
                 Message.Text = "";
+                ErrorMessage.Visible = false;
                 Message.Enabled = false;
             }
             ReportViewer1.LocalReport.ReportPath = Server.MapPath("~/Reports/PaymentReport.rdlc");
