@@ -12,6 +12,8 @@ using Kwt.PatientsMgtApp.WebUI.Models;
 using Kwt.PatientsMgtApp.WebUI.Utilities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using Kwt.PatientsMgtApp.Core;
+
 
 namespace Kwt.PatientsMgtApp.WebUI.Controllers
 {
@@ -21,11 +23,26 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
 
         private  ApplicationSignInManager _signInManager;
         private  ApplicationUserManager _userManager;
-
-
+        private readonly DoctorRepository _doctorRepository;
+        private readonly HospitalRepository _hospitalRepository;
+        private readonly BankRepository _bankRepository;
+        private readonly AgencyRepository _agencyRepository;
+        private readonly SpecialityRepository _specialityRepository;
+        private readonly PayRateRepository _payRateRepository;
+        private readonly CompanionTypeRepository _companionTypeRepository;
+        private readonly CompanionHistoryRepository _companionHistoryRepository;
+        private readonly PatientHistoryRepository _patientHistoryRepository;
         public AdminController()
         {
-     
+            _doctorRepository = new DoctorRepository();
+            _hospitalRepository =new HospitalRepository();
+            _bankRepository = new BankRepository();
+            _agencyRepository= new AgencyRepository();
+            _specialityRepository= new SpecialityRepository();
+            _payRateRepository = new PayRateRepository();
+            _companionTypeRepository= new CompanionTypeRepository();
+            _companionHistoryRepository = new CompanionHistoryRepository();
+            _patientHistoryRepository= new PatientHistoryRepository();
         }
 
         public AdminController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
@@ -45,6 +62,12 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             }
         }
 
+
+        public ActionResult List()
+        {
+
+            return View();
+        }
         public ApplicationUserManager UserManager
         {
             get
@@ -143,6 +166,239 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             {
                 ModelState.AddModelError("", error);
             }
+        }
+
+        //Doctors
+
+        public ActionResult DoctorsList()
+        {
+            var doctors =_doctorRepository.GetDoctors();
+            return View(doctors);
+        }
+        [HttpGet]
+        public ActionResult CreateDoctor()
+        {
+            DoctorModel doctor = new DoctorModel();
+            return View(doctor);
+        }
+
+        [HttpPost]
+        public ActionResult CreateDoctor(DoctorModel doctor)
+        {
+            if (ModelState.IsValid)
+            {
+                _doctorRepository.AddDorctor(doctor);
+            }
+            else
+            {
+                return View(doctor);
+            }
+            return RedirectToAction("DoctorsList");
+        }
+        //Hospital
+
+        public ActionResult HospitalsList()
+        {
+            var hospitals = _hospitalRepository.GetHospitals();
+            return View(hospitals);
+        }
+        [HttpGet]
+        public ActionResult CreateHospital()
+        {
+            HospitalModel hospital = new HospitalModel();
+            return View(hospital);
+        }
+
+        [HttpPost]
+        public ActionResult CreateHospital(HospitalModel hospital)
+        {
+            if (ModelState.IsValid)
+            {
+                _hospitalRepository.AddHospital(hospital);
+            }
+            else
+            {
+                return View(hospital);
+            }
+            return RedirectToAction("HospitalsList");
+        }
+        //Banks
+
+        public ActionResult BanksList()
+        {
+            var banks = _bankRepository.GetBanks();
+            return View(banks);
+        }
+        [HttpGet]
+        public ActionResult CreateBank()
+        {
+            BankModel bank = new BankModel();
+            return View(bank);
+        }
+
+        [HttpPost]
+        public ActionResult CreateBank(BankModel bank)
+        {
+            ValidateBank(bank);
+            if (ModelState.IsValid)
+            {
+                _bankRepository.AddBank(bank);
+                return RedirectToAction("BanksList");
+            }
+            else
+            { 
+                return View(bank);
+            }
+           
+        }
+
+        private void ValidateBank(BankModel bank)
+        {
+            if (ModelState.IsValidField("BankCode")
+               && !string.IsNullOrEmpty(bank.BankCode))
+            {
+                var banks = _bankRepository.GetBanks();
+                if (banks.Any(c => c.BankCode.Trim() == bank.BankCode.Trim()))
+                {
+                    ModelState.AddModelError("BankCode", "This Bank Code is already in our records, please use different bank code");
+                }
+                
+                    if (banks.Any(c => c.BankName.Trim() == bank.BankName.Trim()))
+                {
+                    ModelState.AddModelError("BankName", "This Bank Name is already in our records, please use different bank Name");
+                }
+            }
+            
+        }
+        //Agencies
+
+        public ActionResult AgenciesList()
+        {
+            var agencies = _agencyRepository.GetAgencies();
+            return View(agencies);
+        }
+        [HttpGet]
+        public ActionResult CreateAgency()
+        {
+            AgencyModel agency = new AgencyModel();
+            return View(agency);
+        }
+
+        [HttpPost]
+        public ActionResult CreateAgency(AgencyModel agency)
+        {
+ 
+            if (ModelState.IsValid)
+            {
+                _agencyRepository.AddAgency(agency);
+                return RedirectToAction("AgenciesList");
+            }
+            else
+            {
+                return View(agency);
+            }
+
+        }
+        //Specialties
+
+        public ActionResult SpecialtiesList()
+        {
+            var specialties = _specialityRepository.GetSpecialities();
+            return View(specialties);
+        }
+        [HttpGet]
+        public ActionResult CreateSpecialty()
+        {
+            SpecialtyModel specialty = new SpecialtyModel();
+            return View(specialty);
+        }
+
+        [HttpPost]
+        public ActionResult CreateSpecialty(SpecialtyModel specialty)
+        {
+
+            if (ModelState.IsValid)
+            {
+                _specialityRepository.AddSpeciality(specialty);
+                return RedirectToAction("SpecialtiesList");
+            }
+            else
+            {
+                return View(specialty);
+            }
+
+        }
+        //PayRates
+
+        public ActionResult PayRatesList()
+        {
+            var payRates = _payRateRepository.GetPayRatesList();
+            return View(payRates);
+        }
+        [HttpGet]
+        public ActionResult CreatePayRate()
+        {
+            PayRateModel payRate = new PayRateModel();
+            return View(payRate);
+        }
+
+        [HttpPost]
+        public ActionResult CreatePayRate(PayRateModel payRate)
+        {
+
+            if (ModelState.IsValid)
+            {
+                _payRateRepository.AddPayRate(payRate);
+                return RedirectToAction("PayRatesList");
+            }
+            else
+            {
+                return View(payRate);
+            }
+
+        }
+        //CompanionTypes
+
+        public ActionResult CompanionTypesList()
+        {
+            var companionTypes = _companionTypeRepository.GetCompanionTypes();
+            return View(companionTypes);
+        }
+        [HttpGet]
+        public ActionResult CreateCompanionType()
+        {
+            CompanionTypeModel companionType = new CompanionTypeModel();
+            return View(companionType);
+        }
+
+        [HttpPost]
+        public ActionResult CreateCompanionType(CompanionTypeModel ct)
+        {
+
+            if (ModelState.IsValid)
+            {
+                _companionTypeRepository.AddCompanionType(ct);
+                return RedirectToAction("CompanionTypesList");
+            }
+            else
+            {
+                return View(ct);
+            }
+
+        }
+        //CompanionHistory
+
+        public ActionResult CompanionHistoryList()
+        {
+            var companionHistory = _companionHistoryRepository.GetCompanionsHistory();
+            return View(companionHistory);
+        }
+        //PatientHistory
+
+        public ActionResult PatientHistoryList()
+        {
+            var patientHistory = _patientHistoryRepository.GetPatientsHistory();
+            return View(patientHistory);
         }
     }
 }

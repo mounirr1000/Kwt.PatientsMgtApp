@@ -1,13 +1,38 @@
 ﻿@model string
 @{ ViewBag.Title = "Create Role";}
-<h2>Create Role</h2>
-@Html.ValidationSummary(false)
-@using (Html.BeginForm())
+
+
+@using (Html.BeginForm("Create", "RoleAdmin", FormMethod.Post))
 {
-    <div class="form-group">
-        <label>Name</label>
-        <input name="name" value="@Model" class="form-control" />
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+       
+
+        <fieldset>
+            <legend>Create New Role</legend>
+            <ul class="fieldlist">
+
+                <li>
+                   <label>Name</label>
+                    @Html.TextBox("name",null, new { @class = "k-textbox", style = "width: 100%;" })
+                    <div>
+                        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                    </div>
+                </li>
+               
+            </ul>
+        </fieldset>
+        <div class="mt-3">
+            <p>
+                <a href="@Url.Action("Index")" class="k-button"><i class="fa fa-arrow-left" style="color: lightblue"></i> Back to List</a>
+                <button type="submit" class="k-button"><i class="fa fa-save" style="color: blueviolet"></i> Add</button>
+            </p>
+        </div>
     </div>
-    <button type="submit" class="btn btn-primary">Create</button>
-    @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-default" })
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
 }

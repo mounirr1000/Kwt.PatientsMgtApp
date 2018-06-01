@@ -7,10 +7,8 @@ using Kwt.PatientsMgtApp.Core.Models;
 
 namespace Kwt.PatientsMgtApp.DataAccess.SQL
 {
-    public interface IPayRateRepository
+    public interface ICompanionHistoryRepository
     {
-
-        List<PayRateModel> GetPayRatesList();
-        void AddPayRate(PayRateModel payRate);
+        List<CompanionHistoryModel> GetCompanionsHistory();
     }
 }

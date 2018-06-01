@@ -11,5 +11,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
     {
         List<SpecialtyModel> GetSpecialities();
         SpecialtyModel GetSpeciality(int specialityid);
+
+        void AddSpeciality(SpecialtyModel specialty);
     }
 }

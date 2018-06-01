@@ -1,0 +1,299 @@
+﻿@model IEnumerable<Kwt.PatientsMgtApp.Core.Models.PatientHistoryModel>
+
+@{
+    ViewBag.Title = "PatientHistoryList";
+}
+
+@*<h2>PatientHistoryList</h2>
+
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PatientCID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PatientFName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PatientMName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PatientLName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.KWTphone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.USphone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Hospital)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Doctor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Agency)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BankID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Iban)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstApptDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstApptDateFormatted)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndTreatDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndTreatDateFormatted)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsBeneficiary)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsActive)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Notes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OldCreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PrimaryCompanionCid)
+            </th>
+            <th></th>
+        </tr>
+
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.PatientCID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PatientFName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PatientMName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PatientLName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.KWTphone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.USphone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Hospital)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Doctor)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Agency)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BankID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Iban)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstApptDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstApptDateFormatted)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndTreatDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndTreatDateFormatted)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsBeneficiary)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsActive)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Notes)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OldCreatedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PrimaryCompanionCid)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+            </td>
+        </tr>
+    }
+
+    </table>*@
+
+<div class="pt-3 pb-3">
+    <a href="@Url.Action("List", "Admin")" class="k-button"><i class="fa fa-hand-o-left" style="color: lightblue"></i> Back To Admin</a>
+</div>
+<div class="loader"></div>
+@if (Model.Any())
+{
+    <div id="content" style="visibility: hidden;">
+        <table id="doctorsList">
+            <colgroup>
+                <col />@*CID*@
+                <col />@*Name*@
+
+                <col style="width: 100px" />@*Hospital*@
+                <col style="width: 100px" />@*Doctor*@
+                <col style="width: 90px" />@*Agency*@
+                <col style="width: 90px" />@*Date in*@
+                <col style="width: 90px" />@*Date out*@
+                <col  />@*Bene*@
+
+                <col />@*Companion cid*@
+            </colgroup>
+            <thead>
+                <tr>
+
+                    <th>
+                        CID
+                    </th>
+                    <th>
+                        Name
+                    </th>
+
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.Hospital)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Doctor)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Agency)
+                    </th>
+
+                    <th>
+                        Date In
+                    </th>
+
+                    <th>
+                        Date Out
+                    </th>
+
+                    <th>
+                        Beneficiary
+                    </th>
+
+
+
+                    <th>
+                       P. Companion Cid
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PatientCID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PatientFName)
+                            @Html.DisplayFor(modelItem => item.PatientMName)
+                            @Html.DisplayFor(modelItem => item.PatientLName)
+                        </td>
+
+
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Hospital)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Doctor)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Agency)
+                        </td>
+
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FirstApptDateFormatted)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EndTreatDateFormatted)
+                        </td>
+                        <td>
+                            @if (item.IsBeneficiary == true)
+                            {
+                                <text>YES</text>
+                            }
+                            else
+                            {
+                                <text>NO</text>
+                            }
+                        </td>
+
+
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PrimaryCompanionCid)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <span>No Patient History to show</span>
+}
+@section Scripts {
+
+
+    <script type="text/javascript">
+
+        $('document').ready(function () {
+            $("#content").css("visibility", "visible");
+
+            $("#doctorsList").kendoGrid({
+                toolbar: "<p>This is the list of all Inactive Patient we have as History</p>",
+                height: 550,
+                sortable: true,
+                pageable: {
+                    pageSize: 15,
+                    alwaysVisible: false
+                },
+                groupable: true,
+                
+            });
+            //kendo.ui.progress($("#patientList"), false);
+            $(".loader").css("display", "none");
+        });
+    </script>
+}

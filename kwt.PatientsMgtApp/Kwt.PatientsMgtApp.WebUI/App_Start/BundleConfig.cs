@@ -47,8 +47,8 @@ namespace Kwt.PatientsMgtApp.WebUI
                       //"~/Content/style.css",
 
                       "~/Content/themes/base/jquery.ui.css",
-                      "~/Content/fontawesome"));
-
+                       //"~/Content/fontawesome"));
+                       "~/Content/font-awesome.css"));
             //bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
             //  "~/Content/themes/base/jquery.ui.css"));
         }

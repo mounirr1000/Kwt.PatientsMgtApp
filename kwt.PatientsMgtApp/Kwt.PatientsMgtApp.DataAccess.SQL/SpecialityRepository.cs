@@ -32,5 +32,16 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             }).ToList();
         }
 
+        public void AddSpeciality(SpecialtyModel specialty)
+        {
+            if (specialty != null)
+            {
+                Specialty newSpecialty = new Specialty()
+                {
+                    Specialty1 = specialty.Speciality
+                };
+                _domainObjectRepository.Create<Specialty>(newSpecialty);
+            }
+        }
     }
 }

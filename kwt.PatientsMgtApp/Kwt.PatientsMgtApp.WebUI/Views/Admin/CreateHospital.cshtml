@@ -1,0 +1,49 @@
+﻿@model Kwt.PatientsMgtApp.Core.Models.HospitalModel
+
+@{
+    ViewBag.Title = "Create Hospital";
+}
+
+@using (Html.BeginForm("CreateHospital", "Admin", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @*<div class="form-group">
+                @Html.LabelFor(model => model.DoctorName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.DoctorName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.DoctorName, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+        <fieldset>
+            <legend>Create New Hospital</legend>
+            <ul class="fieldlist">
+
+                <li>
+                    @Html.LabelFor(model => model.HospitalName, new { @class = "" })
+                    @Html.TextBoxFor(model => model.HospitalName, new { @class = "k-textbox", style = "width: 100%;" })
+                    <div>
+                        @Html.ValidationMessageFor(model => model.HospitalName, "", new { @class = "k-error-colored" })
+                    </div>
+
+                </li>
+
+            </ul>
+        </fieldset>
+        <div class="mt-3">
+            <p>
+                @*<input type="submit" value="Save" class="k-button m-3"/>*@
+                <a href="@Url.Action("HospitalsList")" class="k-button"><i class="fa fa-arrow-left" style="color: lightblue"></i> Back to List</a>
+                @*@Html.ActionLink("Back to List", "Index", null, new {@class = "k-button m-3"})*@
+                <button type="submit" class="k-button"><i class="fa fa-save" style="color: blueviolet"></i> Add</button>
+            </p>
+        </div>
+    </div>
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}

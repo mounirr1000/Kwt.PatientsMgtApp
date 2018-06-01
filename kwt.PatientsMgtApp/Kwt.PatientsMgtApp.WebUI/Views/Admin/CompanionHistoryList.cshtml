@@ -1,0 +1,131 @@
+﻿@model IEnumerable<Kwt.PatientsMgtApp.Core.Models.CompanionHistoryModel>
+
+@{
+    ViewBag.Title = "Companion History List";
+}
+
+<div class="pt-3 pb-3">
+    <a href="@Url.Action("List", "Admin")" class="k-button"><i class="fa fa-hand-o-left" style="color: lightblue"></i> Back To Admin</a>
+</div>
+<div class="loader"></div>
+@if (Model.Any())
+{
+    <div id="content" style="visibility: hidden;">
+        <table id="doctorsList">
+            <colgroup>
+                <col/>@*patientcid*@
+                <col/>@*Name*@
+                <col/>@*patientcid*@
+                <col style="width: 100px"/>@*Name*@
+                <col style="width: 100px"/>@*patientcid*@
+                <col style="width: 100px"/>@*Name*@
+                <col style="width: 100px"/>@*patientcid*@
+                <col/>@*Name*@
+            </colgroup>
+            <thead>
+            <tr>
+
+                <th>
+                    CID
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    Patient CID
+                </th>
+                <th>
+                    Date In
+                </th>
+
+                <th>
+                    Date Out
+                </th>
+
+
+                <th>
+                    Type
+                </th>
+                <th>
+                    Beneficiary
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.Notes)
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CompanionCID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PatientCID)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateInFormatted)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateOutFormatted)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CompanionType)
+                    </td>
+                    <td>
+                        @if (item.IsBeneficiary == true)
+                        {
+                            <text>YES</text>
+                        }
+                        else
+                        {
+                            <text>NO</text>
+                        }
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Notes)
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <span>No Companion History to show</span>
+}
+@section Scripts {
+
+
+    <script type="text/javascript">
+
+        $('document').ready(function () {
+            $("#content").css("visibility", "visible");
+
+            $("#doctorsList").kendoGrid({
+                toolbar: "<p>This is the list of all Inactive Companion we have as History</p>",
+                height: 550,
+                sortable: true,
+                pageable: {
+                    pageSize: 15,
+                    alwaysVisible: false
+                },
+                groupable: true,
+
+            });
+            //kendo.ui.progress($("#patientList"), false);
+            $(".loader").css("display", "none");
+        });
+    </script>
+}

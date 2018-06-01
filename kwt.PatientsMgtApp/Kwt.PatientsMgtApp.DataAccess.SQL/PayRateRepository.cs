@@ -27,5 +27,17 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             }).ToList();
             
         }
+        public void AddPayRate(PayRateModel payRate)
+        {
+            if (payRate != null)
+            {
+                PayRate newPayRate = new PayRate()
+                {
+                    CompanionRate = payRate.CompanionRate,
+                    PatientRate = payRate.PatientRate
+                };
+                _domainObjectRepository.Create<PayRate>(newPayRate);
+            }
+        }
     }
 }

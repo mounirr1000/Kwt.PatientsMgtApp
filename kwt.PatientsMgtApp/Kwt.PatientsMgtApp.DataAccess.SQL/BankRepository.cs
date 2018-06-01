@@ -70,7 +70,12 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
 
         public BankModel AddBank(BankModel bank)
         {
-
+            var bankToAdd = new Bank()
+            {
+                BankName = bank.BankName,
+                BankCode = bank.BankCode
+            };
+            _domainObjectRepository.Create<Bank>(bankToAdd);
             return bank;
         }
     }

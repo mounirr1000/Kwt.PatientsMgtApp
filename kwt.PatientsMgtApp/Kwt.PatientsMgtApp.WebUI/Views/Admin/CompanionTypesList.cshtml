@@ -1,11 +1,11 @@
-﻿@using Kwt.PatientsMgtApp.WebUI.Models
-@model IEnumerable<ApplicationUser>
+﻿@model IEnumerable<Kwt.PatientsMgtApp.Core.Models.CompanionTypeModel>
+
 @{
-    ViewBag.Title = "User List";
+    ViewBag.Title = "Companion Types List";
 }
 
 <div class="pt-3 pb-3">
-    <a href="@Url.Action("Create", "Admin")" class="k-button"><i class="fa fa-plus" style="color: yellowgreen"></i> New User</a>
+    <a href="@Url.Action("CreateCompanionType", "Admin")" class="k-button" style="width: 180px;"><i class="fa fa-plus" style="color: yellowgreen"></i> Companion Type</a>
     <a href="@Url.Action("List", "Admin")" class="k-button"><i class="fa fa-hand-o-left" style="color: lightblue"></i> Back To Admin</a>
 </div>
 <div class="loader"></div>
@@ -14,19 +14,16 @@
     <div id="content" style="visibility: hidden;">
         <table id="doctorsList">
             <colgroup>
-                <col />
-                <col />
+                <col />@*patientcid*@
+                <col />@*Name*@
             </colgroup>
             <thead>
                 <tr>
-                    @*<th>
-                        @Html.DisplayNameFor(model => model.Id)
-                    </th>*@
                     <th>
-                        User Name
+                        @Html.DisplayNameFor(model => model.Id)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Email)
+                        @Html.DisplayNameFor(model => model.CompanionType)
                     </th>
                 </tr>
             </thead>
@@ -34,14 +31,11 @@
                 @foreach (var item in Model)
                 {
                     <tr>
-                        @*<td>
-                            @Html.DisplayFor(modelItem => item.Id)
-                        </td>*@
                         <td>
-                            @Html.DisplayFor(modelItem => item.UserName)
+                            @Html.DisplayFor(modelItem => item.Id)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Email)
+                            @Html.DisplayFor(modelItem => item.CompanionType)
                         </td>
                     </tr>
                 }

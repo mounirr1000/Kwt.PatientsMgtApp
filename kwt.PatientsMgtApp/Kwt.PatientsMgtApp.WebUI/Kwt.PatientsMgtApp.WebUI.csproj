@@ -289,9 +289,8 @@
     <Content Include="Content\bootstrap-reboot.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\fontawesome\font-awesome.css" />
-    <Content Include="Content\fontawesome\font-awesome.min.css" />
-    <Content Include="Content\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\Images\bg-sidebar-btn.png" />
     <Content Include="Content\Images\businessman.png" />
     <Content Include="Content\Images\img_trans.gif" />
@@ -361,6 +360,7 @@
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="favicon.ico" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Reports\Patient.aspx" />
@@ -388,13 +388,14 @@
     <Content Include="Scripts\esm\popper.js.map" />
     <Content Include="Scripts\esm\popper-utils.min.js.map" />
     <Content Include="Scripts\esm\popper-utils.js.map" />
-    <Content Include="Content\fonts\FontAwesome.otf" />
-    <Content Include="Content\fonts\fontawesome-webfont.woff" />
-    <Content Include="Content\fonts\fontawesome-webfont.ttf" />
-    <Content Include="Content\fonts\fontawesome-webfont.eot" />
     <Content Include="Reports\PatientDataSet.xsc">
       <DependentUpon>PatientDataSet.xsd</DependentUpon>
     </Content>
+    <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
     <None Include="Reports\PatientDataSet.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
@@ -519,6 +520,23 @@
     <Content Include="Scripts\kendo.all.min.js.map" />
     <Content Include="Views\Patient\PdfDoc.cshtml" />
     <Content Include="Views\Patient\_CompanionConfirmation.cshtml" />
+    <Content Include="Views\Admin\List.cshtml" />
+    <Content Include="Views\Admin\DoctorsList.cshtml" />
+    <Content Include="Views\Admin\CreateDoctor.cshtml" />
+    <Content Include="Views\Admin\HospitalsList.cshtml" />
+    <Content Include="Views\Admin\CreateHospital.cshtml" />
+    <Content Include="Views\Admin\BanksList.cshtml" />
+    <Content Include="Views\Admin\CreateBank.cshtml" />
+    <Content Include="Views\Admin\AgenciesList.cshtml" />
+    <Content Include="Views\Admin\CreateAgency.cshtml" />
+    <Content Include="Views\Admin\SpecialtiesList.cshtml" />
+    <Content Include="Views\Admin\CreateSpecialty.cshtml" />
+    <Content Include="Views\Admin\PayRatesList.cshtml" />
+    <Content Include="Views\Admin\CreatePayRate.cshtml" />
+    <Content Include="Views\Admin\CompanionTypesList.cshtml" />
+    <Content Include="Views\Admin\CreateCompanionType.cshtml" />
+    <Content Include="Views\Admin\CompanionHistoryList.cshtml" />
+    <Content Include="Views\Admin\PatientHistoryList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -5,50 +5,126 @@
 @using (Html.BeginForm())
 {
     <input type="hidden" name="roleName" value="@Model.Role.Name" />
-    <div class="panel panel-primary">
-        <div class="panel-heading">Add To @Model.Role.Name</div>
-        <table class="table table-striped">
-            @if (Model.NonMembers.Count() == 0)
-            {
-                <tr><td colspan="2">All Users Are Members</td></tr>
-            }
-            else
-            {
-                <tr><td>User ID</td><td>Add To Role</td></tr>
-                foreach (var user in Model.NonMembers)
+    @*<div class="panel panel-primary">
+            <div class="panel-heading">Add To @Model.Role.Name</div>
+            <table class="table table-striped">
+                @if (Model.NonMembers.Count() == 0)
                 {
-                    <tr>
-                        <td>@user.UserName</td>
-                        <td>
+                    <tr><td colspan="2">All Users Are Members</td></tr>
+                }
+                else
+                {
+                    <tr><td>User ID</td><td>Add To Role</td></tr>
+                    foreach (var user in Model.NonMembers)
+                    {
+                        <tr>
+                            <td>@user.UserName</td>
+                            <td>
+                                <input type="checkbox" name="IdsToAdd" value="@user.Id">
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">Remove from @Model.Role.Name</div>
+            <table class="table table-striped">
+                @if (Model.Members.Count() == 0)
+                {
+                    <tr><td colspan="2">No Users Are Members</td></tr>
+                }
+                else
+                {
+                    <tr><td>User ID</td><td>Remove From Role</td></tr>
+                    foreach (var user in Model.Members)
+                    {
+                        <tr>
+                            <td>@user.UserName</td>
+                            <td>
+                                <input type="checkbox" name="IdsToDelete" value="@user.Id">
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
+        </div>*@
+    <div class="mt-3">
+        <p>
+            @*<input type="submit" value="Save" class="k-button m-3"/>*@
+            <a href="@Url.Action("Index")" class="k-button"><i class="fa fa-ban" style="color: lightblue"></i> Cancel</a>
+            @*@Html.ActionLink("Back to List", "Index", null, new {@class = "k-button m-3"})*@
+            <button type="submit" class="k-button"><i class="fa fa-check" style="color: greenyellow"></i> Update</button>
+        </p>
+    </div>
+    <fieldset>
+        <legend>Add To Role @Model.Role.Name</legend>
+        @if (Model.NonMembers.Count() == 0)
+        {
+            <div class="alert-success">All Users Are Members</div>
+        }
+        else
+        {
+            <ul class="fieldlist">
+
+
+                <label>Select The User Email(s) To Add To @Model.Role.Name</label>
+
+                @foreach (var user in Model.NonMembers)
+                {
+
+                    <li>
+                        @user.UserName
+                        <span>
                             <input type="checkbox" name="IdsToAdd" value="@user.Id">
-                        </td>
-                    </tr>
+                        </span>
+                    </li>
+
                 }
-            }
-        </table>
-    </div>
-    <div class="panel panel-primary">
-        <div class="panel-heading">Remove from @Model.Role.Name</div>
-        <table class="table table-striped">
-            @if (Model.Members.Count() == 0)
-            {
-                <tr><td colspan="2">No Users Are Members</td></tr>
-            }
-            else
-            {
-                <tr><td>User ID</td><td>Remove From Role</td></tr>
-                foreach (var user in Model.Members)
+
+
+            </ul>
+
+        }
+
+    </fieldset>
+    <fieldset>
+        <legend>Remove from Role @Model.Role.Name</legend>
+        @if (Model.Members.Count() == 0)
+        {
+            <div class="alert-success">No Users Are Members</div>
+        }
+        else
+        {
+            <ul class="fieldlist">
+
+
+                <label>Select The User Email(s) To Remove From @Model.Role.Name</label>
+
+                @foreach (var user in Model.Members)
                 {
-                    <tr>
-                        <td>@user.UserName</td>
-                        <td>
+
+                    <li>
+                        @user.UserName
+                        <span>
                             <input type="checkbox" name="IdsToDelete" value="@user.Id">
-                        </td>
-                    </tr>
+                        </span>
+                    </li>
+
                 }
-            }
-        </table>
+
+
+            </ul>
+
+        }
+
+    </fieldset>
+    <div class="mt-3">
+        <p>
+            @*<input type="submit" value="Save" class="k-button m-3"/>*@
+            <a href="@Url.Action("Index")" class="k-button"><i class="fa fa-ban" style="color: lightblue"></i> Cancel</a>
+            @*@Html.ActionLink("Back to List", "Index", null, new {@class = "k-button m-3"})*@
+            <button type="submit" class="k-button"><i class="fa fa-check" style="color: greenyellow"></i> Update</button>
+        </p>
     </div>
-    <button type="submit" class="btn btn-primary">Save</button>
-    @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-default" })
 }
