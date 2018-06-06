@@ -21,6 +21,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             _patientRepository = new PatientRepository();
             _paymentRepository = new PaymentRepository();
         }
+
+        [Authorize]
         public ActionResult Index()
         {
             HomeViewModels model = new HomeViewModels();

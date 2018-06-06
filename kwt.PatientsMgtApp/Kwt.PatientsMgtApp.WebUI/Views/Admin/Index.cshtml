@@ -16,18 +16,22 @@
             <colgroup>
                 <col />
                 <col />
+                <col />
+                <col />
             </colgroup>
             <thead>
                 <tr>
                     @*<th>
-                        @Html.DisplayNameFor(model => model.Id)
-                    </th>*@
+                            @Html.DisplayNameFor(model => model.Id)
+                        </th>*@
                     <th>
                         User Name
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.Email)
                     </th>
+                    <th>Is Locked Out</th>
+                    <th>Delete</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,14 +39,27 @@
                 {
                     <tr>
                         @*<td>
-                            @Html.DisplayFor(modelItem => item.Id)
-                        </td>*@
+                                @Html.DisplayFor(modelItem => item.Id)
+                            </td>*@
                         <td>
-                            @Html.DisplayFor(modelItem => item.UserName)
+                            @Html.ActionLink(item.UserName.ToString(), "Edit", new { id = item.Id })
+                            @*@Html.ActionLink(item.UserName.ToString(), "Edit", "Admin", new {id = item.Id})*@
+                            @*@Html.DisplayFor(modelItem => item.UserName)*@
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Email)
                         </td>
+                        <td>
+                            @if (item.LockoutEnabled && item.LockoutEndDateUtc != null)
+                            {
+                                <text>Yes</text>
+                            }
+                            else
+                            {
+                                <text>No</text>
+                            }
+                        </td>
+                        <td></td>
                     </tr>
                 }
             </tbody>
@@ -54,19 +71,19 @@
 
     <script type="text/javascript">
 
-            $('document').ready(function () {
-                $("#content").css("visibility", "visible");
+        $('document').ready(function () {
+            $("#content").css("visibility", "visible");
 
-                $("#doctorsList").kendoGrid({
-                    height: 550,
-                    sortable: true,
-                    pageable: {
-                        pageSize: 15,
-                        alwaysVisible: false
-                    }
-                });
-                //kendo.ui.progress($("#patientList"), false);
-                $(".loader").css("display", "none");
+            $("#doctorsList").kendoGrid({
+                height: 550,
+                sortable: true,
+                pageable: {
+                    pageSize: 15,
+                    alwaysVisible: false
+                }
             });
+            //kendo.ui.progress($("#patientList"), false);
+            $(".loader").css("display", "none");
+        });
     </script>
 }

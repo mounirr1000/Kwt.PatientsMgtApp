@@ -10,69 +10,73 @@
         <h1> Kuwait Embassy</h1>
         <img src="~/Content/Images/Kuwait_embassyLogo.png" />
     </div>*@
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="homePage site">
+        <div class="row text-center pt-5 pb-5">
 
-<div class="homePage site">
-    <div class="row text-center">
-
-        <div class="col-md-6">
-            <label class="p-3 font-weight-bold text-info">Total Active Patients:</label> @Model.TotalActivePatients
+            <div class="col-md-6 alert-info p-3">
+                <label class="p-3 font-weight-bold text-info">Total Active Patients:</label> @Model.TotalActivePatients
+            </div>
+            <div class="col-md-6 alert-info p-3">
+                <label class="p-3 font-weight-bold text-info">Total Payments:</label> @Model.TotalPayments
+            </div>
         </div>
-        <div class="col-md-6">
-            <label class="p-3 font-weight-bold text-info">Total Payments:</label> @Model.TotalPayments
-        </div>
-    </div>
 
-    <div class="row text-center">
-        @if (!User.IsInRole("Admin"))
-        {
+        <div class="row text-center">
             <div style="margin: 0 auto;">
 
-                <a href="@Url.Action("List", "Patient")" style="text-decoration: none;">
-                    <h2>Patients</h2>
-                    <img src="~/Content/Images/patient.png"/>
-                </a>
-
-            </div>
-        }
-        
-        @if (User.IsInRole("Admin"))
-        {
-            <div class="col-md-3">
-
-                <a href="@Url.Action("List", "Patient")" style="text-decoration: none;">
+                <a href="@Url.Action("List", "Patient")" style="text-decoration: none;" class="hvr-grow hvr-overline-from-center">
                     <h2>Patients</h2>
                     <img src="~/Content/Images/patient.png" />
                 </a>
 
             </div>
-            <div class="col-md-3">
 
-                <a href="@Url.Action("List", "Payment")" style="text-decoration: none;">
-                    <h2>Payments</h2>
-                    <img src="~/Content/Images/money-bag.png" />
-                </a>
+            @if (User.IsInRole("Admin"))
+            {
+                @*<div class="col-md-3">
 
-            </div>
-            <div class="col-md-3">
+                    <a href="@Url.Action("List", "Patient")" style="text-decoration: none;">
+                        <h2>Patients</h2>
+                        <img src="~/Content/Images/patient.png"/>
+                    </a>
 
-                <a href="@Url.Action("List", "Report")" style="text-decoration: none;">
-                    <h2>Reports</h2>
-                    <img src="~/Content/Images/planning.png" />
-                </a>
+                </div>*@
+                <div class="col-md-3">
 
-            </div>
-            <div class="col-md-3">
+                    <a href="@Url.Action("List", "Payment")" style="text-decoration: none;" class="hvr-grow hvr-overline-from-center">
+                        <h2>Payments</h2>
+                        <img src="~/Content/Images/money-bag.png"/>
+                    </a>
 
-                <a href="@Url.Action("List", "Admin")" style="text-decoration: none;">
-                    <h2>Admin Portal</h2>
-                    <img src="~/Content/Images/businessman.png" />
+                </div>
+                <div class="col-md-3">
 
-                </a>
+                    <a href="@Url.Action("List", "Report")" style="text-decoration: none;" class="hvr-grow hvr-overline-from-center">
+                        <h2>Reports</h2>
+                        <img src="~/Content/Images/planning.png"/>
+                    </a>
 
-            </div>
-        }
+                </div>
+                <div class="col-md-3">
+
+                    <a href="@Url.Action("List", "Admin")" style="text-decoration: none;" class="hvr-grow hvr-overline-from-center">
+                        <h2>Admin Portal</h2>
+                        <img src="~/Content/Images/businessman.png"/>
+
+                    </a>
+
+                </div>
+            }
+        </div>
     </div>
-</div>
+}
+@*else
+{
+    @Html.Action("Login","Account")
+}*@
+
 @section scripts
 {
     <script type="text/javascript">

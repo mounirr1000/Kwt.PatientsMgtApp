@@ -9,69 +9,76 @@
     @Styles.Render("~/Content/fontawesome")
     <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
 
+    <link href="~/Content/hover.css" rel="stylesheet" />
     @*@Styles.Render("~/Content/themes/base/css")*@
     @Scripts.Render("~/bundles/modernizr")
 
 
 </head>
 <body>
-@RenderSection("DeleteConfirm", required: false)
-<div class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            @if (User.Identity.IsAuthenticated)
+    @RenderSection("DeleteConfirm", required: false)
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                @if (User.Identity.IsAuthenticated)
             {
                 Html.RenderPartial("_MenuPartial");
             }
+            </div>
+
         </div>
 
     </div>
 
-</div>
+    <div class="container body-content">
 
-<div class="container body-content">
+        @{ Html.RenderPartial("_Alerts"); }
+        @RenderBody()
+        @if (!Request.Path.ToString().Equals("/Account/login"))
+        {
+            <hr />
+            <footer class="footer-content">
+                <span class="h6 small">&copy; Kuwait Health Office @DateTime.Now.Year</span>
+                <span style="float: right" class="h6 small">
+                    <p>
+                        Application Developed by <a href="http://www.multiplesolutions.net" target="_blank">MSolution</a>
+                        | Icons made by Freepik from <a href="https://www.flaticon.com/" title="Flaticon" target="_blank">flaticon</a>
+                    </p>
+                    @*from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>*@
 
-    @{ Html.RenderPartial("_Alerts"); }
-    @RenderBody()
+                </span>
+            </footer>
+        }
 
-    <hr/>
-    <footer class="footer-content">
-            <span class="h6 small">&copy; Kuwait Health Office @DateTime.Now.Year</span>
-        <span style="float: right" class="h6 small">
-             <p>Application Developed by <a href="http://www.multiplesolutions.net" target="_blank">MSolution</a>
-                | Icons made by Freepik from <a href="https://www.flaticon.com/" title="Flaticon" target="_blank">flaticon</a></p>
-             @*from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>*@
-              
-            </span>
-        </footer>
-</div>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/bootstrap")
+
+    @Scripts.Render("~/bundles/kendoui")
+    @RenderSection("scripts", required: false)
     
-@Scripts.Render("~/bundles/jquery")
-@Scripts.Render("~/bundles/jqueryui")
-@Scripts.Render("~/bundles/bootstrap")
+    <script type="text/javascript">
+        $(function () {
+            $(".datepicker").datepicker();
+        });
+    </script>
+    <script type="text/javascript">
+        //$(document).ready(function() {
+        //    function setHeight() {
+        //        var windowHeight = $('html').height();
+        //        console.log("html "+windowHeight);
+        //        $('body').css('height', windowHeight * (-1));
+        //    };
 
-@Scripts.Render("~/bundles/kendoui")
-@RenderSection("scripts", required: false)
-<script type="text/javascript">
-    $(function() {
-        $(".datepicker").datepicker();
-    });
-</script>
-<script type="text/javascript">
-    //$(document).ready(function() {
-    //    function setHeight() {
-    //        var windowHeight = $('html').height();
-    //        console.log("html "+windowHeight);
-    //        $('body').css('height', windowHeight * (-1));
-    //    };
+        //    setHeight();
 
-    //    setHeight();
-
-    //    $(window).resize(function() {
-    //        setHeight();
-    //    });
-    //});
-</script>
+        //    $(window).resize(function() {
+        //        setHeight();
+        //    });
+        //});
+    </script>
 </body>
 
 </html>

@@ -109,16 +109,27 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             return View(model);
         }
 
-      
 
+        [HttpGet]
+        public  ActionResult Edit(string id)
+        {
+            ApplicationUser user =  UserManager.FindById(id);
+            if (user!=null)
+            {
+                return View(user);
+            }
+            Information(string.Format("There is no user in our records with id {0}",id),true);
+            return View("Index");
+        }
 
         [HttpPost]
-        public async Task<ActionResult> Edit(string id, string email, string password)
+        public async Task<ActionResult> Edit(string id, string email, string userName, string password,bool lockoutEnabled, DateTime? lockoutEndDateUtc)
         {
             ApplicationUser user = await UserManager.FindByIdAsync(id);
             if (user != null)
             {
                 user.Email = email;
+                user.UserName = userName;
                 IdentityResult validEmail
                     = await UserManager.UserValidator.ValidateAsync(user);
                 if (!validEmail.Succeeded)
@@ -126,7 +137,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                     AddErrorsFromResult(validEmail);
                 }
                 IdentityResult validPass = null;
-                if (password != string.Empty)
+                if (!string.IsNullOrEmpty(password))
                 {
                     validPass
                         = await UserManager.PasswordValidator.ValidateAsync(password);
@@ -143,9 +154,14 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                 if ((validEmail.Succeeded && validPass == null) || (validEmail.Succeeded
                         && password != string.Empty && validPass.Succeeded))
                 {
+                    user.LockoutEnabled = lockoutEnabled;
+                    //Lock user for 100 Years
+                    user.LockoutEndDateUtc = lockoutEndDateUtc;
                     IdentityResult result = await UserManager.UpdateAsync(user);
+                    
                     if (result.Succeeded)
                     {
+                        Success(string.Format("User Account {0} was successfully updated",user.Email),true);
                         return RedirectToAction("Index");
                     }
                     else
@@ -160,6 +176,61 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             }
             return View(user);
         }
+
+        public async Task<ActionResult> Delete(string id)
+        {
+            ApplicationUser user = await UserManager.FindByIdAsync(id);
+            if (user != null)
+            {
+              var result=  await UserManager.DeleteAsync(user);
+                if (result.Succeeded)
+                {
+                    Success(string.Format("<b>{0}</b> Was Successfully Deleted", user.Email));
+                }
+                else
+                {
+                    Information(string.Format("<b>{0}</b> Was Not Deleted", user.Email));
+                }
+            }
+            else
+            {
+                Information(string.Format("No User was found with id  <b>{0}</b>", id));
+            }
+            return View("Index");
+        }
+
+        public async Task<ActionResult> LockoutUser(string id)
+        {
+            ApplicationUser user = await UserManager.FindByIdAsync(id);
+            if (user != null)
+            {
+                user.LockoutEnabled = true;
+                //Lock user for 100 Years
+                user.LockoutEndDateUtc= new DateTime(DateTime.Now.Year*200);
+                
+            }
+            else
+            {
+                Information(string.Format("No User was found with id  <b>{0}</b>", id));
+            }
+            return View("Index");
+        }
+        public async Task<ActionResult> UnLockUser(string id)
+        {
+            ApplicationUser user = await UserManager.FindByIdAsync(id);
+            if (user != null)
+            {
+                user.LockoutEnabled = false;
+                //Lock user for 100 Years
+                user.LockoutEndDateUtc =null;
+
+            }
+            else
+            {
+                Information(string.Format("No User was found with id  <b>{0}</b>", id));
+            }
+            return View("Index");
+        }
         private void AddErrorsFromResult(IdentityResult result)
         {
             foreach (string error in result.Errors)
@@ -167,6 +238,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                 ModelState.AddModelError("", error);
             }
         }
+
 
         //Doctors
 

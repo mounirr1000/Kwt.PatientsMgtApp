@@ -147,7 +147,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 pay.BeneficiaryLName = payment.Beneficiary?.BeneficiaryLName;
                 pay.BeneficiaryMName = payment.Beneficiary?.BeneficiaryMName;
                 pay.BeneficiaryBank = payment.Beneficiary != null
-                    ? _domainObjectRepository.Get<Bank>(b => b.BankID == payment.Beneficiary.BankID).BankName
+                    ? _domainObjectRepository.Get<Bank>(b => b.BankID == payment.Beneficiary.BankID)?.BankName
                     : "";
                 pay.BeneficiaryIBan = payment.Beneficiary?.IBan;
                 pay.CompanionCID = payment.CompanionCID;
@@ -164,7 +164,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 pay.PatientAmount = payment.PAmount;
                 pay.CompanionPayRate = payment.PayRate?.CompanionRate;
                 pay.PatientPayRate = payment.PayRate?.PatientRate;
-                pay.PaymentDate = payment.PaymentDate;
+                pay.PaymentDate = payment.PaymentDate??payment.CreatedDate;
                 pay.PaymentLengthPeriod = payment.Period;
                 pay.PaymentStartDate = payment.StartDate;
                 pay.TotalDue = payment.TotalDue;
