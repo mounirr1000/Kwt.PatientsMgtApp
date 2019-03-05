@@ -1,0 +1,10 @@
+﻿
+@model HandleErrorInfo
+@{
+    ViewBag.Title = "Sorry, there was a problem!";
+}
+
+<div class="alert-danger">
+    
+    @Model.Exception.Message
+</div>

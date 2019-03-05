@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Kwt.PatientsMgtApp.Core.Models.SpecialtyModel>
+
+@{
+    ViewBag.Title = "Specialties List";
+}
+
+<div class="pt-3 pb-3">
+    <a href="@Url.Action("CreateSpecialty", "Admin")" class="k-button"><i class="fa fa-plus" style="color: yellowgreen"></i> New Specialty</a>
+    <a href="@Url.Action("List", "Admin")" class="k-button"><i class="fa fa-hand-o-left" style="color: lightblue"></i> Back To Admin</a>
+</div>
+<div class="loader"></div>
+@if (Model.Any())
+{
+    <div id="content" style="visibility: hidden;">
+        <table id="doctorsList">
+            <colgroup>
+                <col />@*patientcid*@
+                <col />@*Name*@
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SpecialtyId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Speciality)
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SpecialtyId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Speciality)
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+@section Scripts {
+
+
+    <script type="text/javascript">
+
+            $('document').ready(function () {
+                $("#content").css("visibility", "visible");
+
+                $("#doctorsList").kendoGrid({
+                    height: 550,
+                    sortable: true,
+                    pageable: {
+                        pageSize: 15,
+                        alwaysVisible: false
+                    }
+                });
+                //kendo.ui.progress($("#patientList"), false);
+                $(".loader").css("display", "none");
+            });
+    </script>
+}

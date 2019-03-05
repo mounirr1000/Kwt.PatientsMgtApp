@@ -1,0 +1,206 @@
+﻿@*@using PagedList.Mvc;
+    @model PagedList.IPagedList<Kwt.PatientsMgtApp.Core.Models.PatientModel>*@
+@model List<Kwt.PatientsMgtApp.Core.Models.PatientModel>
+@{
+    ViewBag.Title = "Patient List";
+    //var patientList = Model;
+}
+
+<div class="pt-3 pb-3">
+    <a href="@Url.Action("Create", "Patient")" class="k-button"><i class="fa fa-plus" style="color:yellowgreen"></i> New Patient</a>
+</div>
+@*@Ajax.ActionLink("","","",new AjaxOptions() {});*@
+<div id="patient-data"class="pb-5 pt-5">
+    @if (Model.Any())
+    {
+
+        <div class="pb-3">
+            @{ Html.RenderPartial("_PatientSearchForm"); }
+        </div>
+        <div class="loader"></div>
+        <div id="content" style="visibility:hidden;">
+            <table id="patientList">
+                @*class="k-content table text-center table-bordered table-striped">*@
+                <colgroup>
+                    <col style="width: 130px" />@*patientcid*@
+                    <col style="width: 130px" />@*Name*@
+                    <col />@*Hospital*@
+                    <col style="width: 100px" />@*doctor*@
+                    <col />@*specialty*@
+                    <col style="width: 110px" />@*startdate*@
+                    <col style="width: 110px" />@*endDate*@
+                    <col style="width: 90px" />@*status*@
+                    <col style="width: 105px" />@*delete*@
+
+
+                </colgroup>
+                <thead>
+
+                    <tr>
+                        <th>
+                            @*@Html.DisplayNameFor(model => model.PatientCID)*@
+                            @*@Html.ActionLink("Civil ID", "List", new { sortOrder = ViewBag.CidSortParm, currentFilter = ViewBag.CurrentFilter })*@
+                            Civil ID
+                        </th>
+
+                        <th>
+
+                            @*@Html.ActionLink("Name", "List", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })*@
+                            Name
+                        </th>
+                        <th>
+                            @*@Html.DisplayNameFor(model => model.KWTPhone)*@
+                            Hospital
+                        </th>
+                        <th>
+                            @*@Html.DisplayNameFor(model => model.USPhone)*@
+                            Doctor
+                        </th>
+
+                        <th>
+                            Specialty
+                        </th>
+                        @*<th>
+                                KU Phone
+                            </th>
+                            <th>
+                                US Phone
+                            </th>*@
+                        <th>
+                            @*@Html.DisplayNameFor(model => model.FirstApptDAte)*@
+                            @*@Html.ActionLink("Start Date", "List", new { sortOrder = ViewBag.AptSortParm, currentFilter = ViewBag.CurrentFilter })*@
+                            Start Date
+                        </th>
+                        <th>
+                            @*@Html.DisplayNameFor(model => model.EndTreatDate)*@
+                            End Date
+                        </th>
+
+                        <th>
+                            @*@Html.DisplayNameFor(model => model.IsActive)*@
+                            Status
+                        </th>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <th>Delete</th>
+                        }
+                    </tr>
+
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                {
+                        <tr>
+                            <td>
+                                @Html.ActionLink(item.PatientCID.ToString(), "Details", new { patientCid = item.PatientCID })
+                                @*@Html.DisplayFor(modelItem => item.PatientCID)*@
+                            </td>
+
+                            <td>
+                                @(item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Hospital)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Doctor)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Specialty)
+                            </td>
+                            @*<td>
+                                    @Html.DisplayFor(modelItem => item.KWTPhone)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.USPhone)
+                                </td>*@
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FirstApptDAte)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EndTreatDate)
+                            </td>
+
+                            <td>
+                                @if (item.IsActive == true)
+                                {
+                                    <label class="badge badge-success">Active</label>
+                                }
+                                else
+                                {
+                                    <label class="badge badge-info">Not Active</label>
+                                }
+                            </td>
+
+
+                            @if (User.IsInRole("Admin"))
+                            {
+
+                                <td>
+
+                                    <a href="javascript:confirmDelete('@item.PatientCID','patientCid')" id="@item.PatientCID"> <i class="fa fa-times fa-2x" style="color: lightcoral"></i></a>
+                                </td>
+                            }
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+
+        </div>
+                }
+                else
+                {
+                    <div class="text-info">
+                        There is no patient in our records
+                        @if (Request.QueryString["searchPatientText"] != null)
+                {
+                            <span> that contains :&nbsp;<b> @Request.QueryString["searchPatientText"]</b></span>
+                            <br />@Html.ActionLink("back to list", "List", "Patient", new { @class = "k-button" });
+                }
+                    </div>
+                }
+</div>
+
+@section DeleteConfirm{
+
+    @{ Html.RenderPartial("_DeleteConfirmationModel"); }
+
+}
+
+@section Scripts {
+
+    @{ Html.RenderPartial("_DeleteConfirmationjs"); }
+    <script type="text/javascript">
+        $("#clear").click(function (e) {
+            console.log("Clear serch");
+            $("#searchPatient").val("");
+            $("#clearSearch").val(true);
+            //e.preventDefault();
+        });
+    </script>
+    <script type="text/javascript">
+
+        $('document').ready(function () {
+            $("#content").css("visibility", "visible");
+
+            $("#patientList").kendoGrid({
+                toolbar: "<p>This is the list of all patient we have in our records, active and non active</p>",
+                height: 550,
+                groupable: true,
+                sortable: true,
+                //filterable: true
+                pageable: {
+                    pageSize: 15,
+                    alwaysVisible: false
+                }
+                //dataBound: function (e) {
+                //    setTimeout(function () { kendo.ui.progress($("#content"), false); });
+                //}
+
+            });
+            //kendo.ui.progress($("#patientList"), false);
+            $(".loader").css("display", "none");
+        });
+    </script>
+}

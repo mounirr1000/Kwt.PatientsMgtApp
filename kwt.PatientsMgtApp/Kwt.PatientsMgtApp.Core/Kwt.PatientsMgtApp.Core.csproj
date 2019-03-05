@@ -31,7 +31,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -40,8 +42,33 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="ExceptionLoggerObject.cs" />
+    <Compile Include="Infrastructure\RequiredIfAttribute.cs" />
+    <Compile Include="Interfaces\IDomainObject.cs" />
+    <Compile Include="Models\AgencyModel.cs" />
+    <Compile Include="Models\BankModel.cs" />
+    <Compile Include="Models\BaseEntity.cs" />
+    <Compile Include="Models\BeneficiaryModel.cs" />
+    <Compile Include="Models\CompanionHistoryModel.cs" />
+    <Compile Include="Models\CompanionModel.cs" />
+    <Compile Include="Models\CompanionTypeModel.cs" />
+    <Compile Include="Models\DoctorModel.cs" />
+    <Compile Include="Models\HospitalModel.cs" />
+    <Compile Include="Models\PatientHistoryModel.cs" />
+    <Compile Include="Models\PatientModel.cs" />
+    <Compile Include="Models\PatientReportModel.cs" />
+    <Compile Include="Models\PaymentModel.cs" />
+    <Compile Include="Models\PaymentReportModel.cs" />
+    <Compile Include="Models\PayRateModel.cs" />
+    <Compile Include="Models\RoleModel.cs" />
+    <Compile Include="Models\SpecialtyModel.cs" />
+    <Compile Include="Models\UserModel.cs" />
+    <Compile Include="Models\UserRolesModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

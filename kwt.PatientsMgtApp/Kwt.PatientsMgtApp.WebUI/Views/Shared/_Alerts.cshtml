@@ -1,0 +1,29 @@
+﻿@using Kwt.PatientsMgtApp.WebUI.Utilities
+@{
+    var alerts = TempData.ContainsKey(Alert.TempDataKey)
+                ? (List<Alert>)TempData[Alert.TempDataKey]
+                : new List<Alert>();
+}
+@if (alerts.Any())
+{
+    foreach (var alert in alerts)
+    {
+        var dismissableClass = alert.Dismissable ? "alert-dismissable" : null;
+        <div class="alert alert-@alert.AlertStyle @dismissableClass">
+            @if (alert.Dismissable)
+            {
+
+            <button class="close" data-dismiss="alert" aria-hidden="true">X</button>
+            @Html.Raw(alert.Message)
+            }
+        </div>
+
+    }
+}
+
+<script type="text/javascript">
+    //setTimeout(function () {
+    //    $(".alert").hide();
+    //}, 5000);
+</script>
+

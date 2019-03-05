@@ -1,0 +1,110 @@
+﻿@using Kwt.PatientsMgtApp.WebUI.Infrastructure
+@using Microsoft.AspNet.Identity.EntityFramework
+@model IEnumerable<IdentityRole>
+@{ ViewBag.Title = "Roles"; }
+
+<div class="pt-3 pb-3">
+    <a href="@Url.Action("Create", "RoleAdmin")" class="k-button"><i class="fa fa-plus" style="color: yellowgreen"></i> New Role</a>
+    <a href="@Url.Action("List", "Admin")" class="k-button"><i class="fa fa-hand-o-left" style="color: lightblue"></i> Back To Admin</a>
+</div>
+<div class="loader"></div>
+@if (Model.Any())
+{
+    <div id="content" style="visibility: hidden;">
+        <table id="doctorsList" style="text-align:center">
+            <colgroup>
+                <col style="width: 180px"/>
+                <col/>
+                <col style="width: 220px"/>
+                <col style="width: 90px"/>
+            </colgroup>
+            <thead>
+            <tr>
+                @*<th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>*@
+                <th style="text-align:center">
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th style="text-align:center">
+                    @Html.DisplayNameFor(model => model.Users)
+                </th>
+                <th style="text-align:center">Edit Users In Role</th>
+                <th>Delete</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    @Html.HiddenFor(modelItem => item.Id)
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                        
+                    </td>
+                    <td style="text-align:left">
+                        @if (item.Users == null || item.Users.Count == 0)
+                        {
+                            @: No Users in Role
+                        }
+                        else
+                        {
+                            <ul>
+                                @foreach (var user in item.Users)
+                                {
+                                    <li>
+                                        @Html.GetUserName(user.UserId)
+                                    </li>
+                                }
+                                @*@string.Join("|", item.Users.Select(x =>
+                                    Html.GetUserName(x.UserId)))*@
+
+                            </ul>
+                        }
+                    </td>
+                    <td style="text-align:center">
+                        <a href="@Url.Action("Edit", new {id = item.Id})"><i class="fa fa-pencil fa-2x" style="color: blueviolet"></i></a>
+                        @*@Html.ActionLink("Edit", "Edit", new {id = item.Id},
+                            new {@class = "btn btn-primary btn-xs"})*@
+                    </td>
+                    <td style="text-align:center">
+                        <a href="javascript:confirmDelete('@item.Id','roleId')"><i class="fa fa-times-circle fa-2x" style="color: lightcoral"></i></a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+       
+    </div>
+}
+
+@section DeleteConfirm{
+
+    @{ Html.RenderPartial("_DeleteConfirmationModel"); }
+
+}
+
+@section Scripts {
+
+    @{ Html.RenderPartial("_DeleteConfirmationjs"); }
+    <script type="text/javascript">
+
+        $('document').ready(function() {
+            $("#content").css("visibility", "visible");
+
+            $("#doctorsList").kendoGrid({
+                height: 550,
+                sortable: true,
+                pageable: {
+                    pageSize: 15,
+                    alwaysVisible: false
+                }
+            });
+            //kendo.ui.progress($("#patientList"), false);
+            $(".loader").css("display", "none");
+
+//
+
+        });
+    </script>
+}

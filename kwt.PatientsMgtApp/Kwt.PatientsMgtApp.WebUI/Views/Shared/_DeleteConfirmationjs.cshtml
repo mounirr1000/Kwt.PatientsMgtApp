@@ -1,0 +1,33 @@
+﻿
+<script type="text/javascript">
+    var toBeDeletedId;
+
+    //debugger;
+    // var controller;//='@ViewContext.RouteData.Values["controller"].ToString()';
+    var query;
+
+    function Delete(id, queryString) {
+       // debugger;
+        if (queryString) {
+            window.location.href = '@Url.Action("Delete")' + "/?" + queryString + "=" + id;
+            //console.log(window.location.href);
+        }
+        else $('#deleteConfirmModal').modal('hide');
+    }
+
+    function confirmDelete(id, queryString) {
+        toBeDeletedId = id;
+        //console.log(id);
+        // controller = controllerName,
+        query = queryString;
+        $('#deleteConfirmModal').modal('show');
+
+    }
+
+    $(function () {
+        $("#deleteConfirmModal").on('click', "#deleteConfirm", function () {
+            Delete(toBeDeletedId, query);
+        });
+    });
+
+</script>

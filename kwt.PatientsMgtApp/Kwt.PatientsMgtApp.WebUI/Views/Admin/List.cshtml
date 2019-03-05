@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewBag.Title = "Admin Console";
+}
+
+<div class="adminTab">
+    <fieldset>
+        <legend>Admin Console</legend>
+        <ul class="fieldlist">
+            <li class="editor-field">
+                <a href="@Url.Action("Index", "Admin")" class="k-button"><i class="fa fa-users" ></i> Manage Users</a>
+                <a href="@Url.Action("Index", "RoleAdmin")" class="k-button" ><i class="fa fa-key"></i> Manage Roles</a>
+            </li>
+
+        </ul>
+    </fieldset>
+    <fieldset>
+        <legend>Database Tables Console</legend>
+        <ul class="fieldlist">
+            <li class="editor-field">
+                <a href="@Url.Action("DoctorsList", "Admin")" class="k-button" ><i class="fa fa-user-md"></i> Doctors</a>
+                <a href="@Url.Action("HospitalsList", "Admin")" class="k-button" ><i class="fa fa-h-square"></i> Hospitals</a>
+                <a href="@Url.Action("BanksList", "Admin")" class="k-button" ><i class="fa fa-university"></i> Banks</a>
+                <a href="@Url.Action("AgenciesList", "Admin")" class="k-button" ><i class="fa fa-gears"></i> Agencies</a>
+
+                <a href="@Url.Action("SpecialtiesList", "Admin")" class="k-button" ><i class="fa fa-gears"></i> Specialties</a>
+                <a href="@Url.Action("PayRatesList", "Admin")" class="k-button" ><i class="fa fa-battery-quarter"></i> Pay Rates</a>
+                <a href="@Url.Action("CompanionTypesList", "Admin")" class="k-button" ><i class="fa fa-user"></i> Companion Types</a>
+            </li>
+
+        </ul>
+    </fieldset>
+    <fieldset>
+        <legend>History Console</legend>
+        <ul class="fieldlist">
+            <li class="editor-field">
+                <a href="@Url.Action("PatientHistoryList", "Admin")" class="k-button" ><i class="fa fa-history"></i> Patient History</a>
+                <a href="@Url.Action("CompanionHistoryList", "Admin")" class="k-button" ><i class="fa fa-history" aria-hidden="true"></i> Companion History</a>
+            </li>
+
+        </ul>
+    </fieldset>
+</div>

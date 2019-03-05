@@ -1,0 +1,133 @@
+﻿@using Kwt.PatientsMgtApp.WebUI.Infrastructure
+@model Kwt.PatientsMgtApp.Core.Models.CompanionModel
+
+@{
+    ViewBag.Title = "Companion Details";
+}
+
+
+<div class="mt-3">
+    <p>
+        <a href="@Url.Action("List")" class="k-button"><i class="fa fa-arrow-left" style="color: lightblue"></i> Back to List</a>
+        <a href="@Url.Action("Edit", new {companionCid = Model.CompanionCID})" class="k-button"><i class="fa fa-pencil" style="color: blueviolet"></i> Edit</a>
+
+    </p>
+</div>
+<div class="loader"></div>
+<div id="contentCompanionDetail" style="visibility:hidden;">
+
+    <fieldset>
+        <legend>Companion Details</legend>
+        <ul class="fieldlist">
+            <li>
+                @Html.LabelFor(model => model.CompanionCID, new {@class = ""})
+                @Html.TextBoxFor(model => model.CompanionCID, new {@class = "k-textbox edit", style = "width: 100%;", disabled= "disabled" })
+            </li>
+            @*<li>
+                @Html.LabelFor(model => model.CompanionFName, new { @class = "" })
+                @Html.DisplayFor(model => model.CompanionFName, new { @class = "k-textbox", style = "width: 100%;" })
+            </li>
+            <li>
+                @Html.LabelFor(model => model.CompanionMName, new { @class = "" })
+                @Html.DisplayFor(model => model.CompanionMName, new { @class = "k-textbox", style = "width: 100%;" })
+            </li>
+            <li>
+                @Html.LabelFor(model => model.CompanionLName, new { @class = "" })
+                @Html.DisplayFor(model => model.CompanionLName, new { @class = "k-textbox", style = "width: 100%;" })
+            </li>*@
+            <li>
+                @Html.LabelFor(model => model.Name, new {@class = ""})
+                @Html.TextBoxFor(model => model.Name, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li>
+                @Html.LabelFor(model => model.PatientCID, htmlAttributes: new {@class = ""})
+                @Html.TextBoxFor(model => model.PatientCID, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li>
+                @Html.LabelFor(model => model.DateIn, new {@class = ""})
+                @Html.TextBoxFor(model => (model.DateInFormatted), new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li>
+                @Html.LabelFor(model => model.DateOut, new { @class = "" })
+                @Html.TextBoxFor(model => model.DateOutFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li>
+                @Html.LabelFor(model => model.IsActive, new { @class = "" })
+                @Html.TextBoxFor(model => model.IsActive, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li>
+                @Html.LabelFor(model => model.Notes, new {@class = ""})
+                @Html.TextAreaFor(model => model.Notes, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li>
+                @Html.LabelFor(model => model.CompanionType, new {@class = ""})
+                @Html.TextBoxFor(model => model.CompanionType, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+        </ul>
+    </fieldset>
+
+    @if (User.IsInAnyRoles("Admin", "Manager", "Auditor"))
+    {
+        if (Model.IsBeneficiary)
+        {
+            <fieldset>
+                <legend>Companion Bank Info</legend>
+                <ul class="fieldlist">
+                    <li>
+                        @Html.LabelFor(model => model.IsBeneficiary, new { @class = "" })
+                        @Html.TextBoxFor(model => model.IsBeneficiary, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                    </li>
+                    <li>
+                        @Html.LabelFor(model => model.BankName, new { @class = "" })
+                        @Html.TextBoxFor(model => model.BankName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                    </li>
+                    <li>
+                        @Html.LabelFor(model => model.BankCode, new { @class = "" })
+                        @Html.TextBoxFor(model => model.BankCode, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                    </li>
+                    <li>
+                        @Html.LabelFor(model => model.IBan, new { @class = "" })
+                        @Html.TextBoxFor(model => model.IBan, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                    </li>
+                </ul>
+            </fieldset>
+        }
+    }
+   
+    <fieldset>
+        <legend>Audit Info</legend>
+        <ul class="fieldlist">
+            <li>
+                @Html.LabelFor(model => model.CreatedBy, new { @class = "" })
+                @Html.TextBoxFor(model => model.CreatedBy, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li>
+                @Html.LabelFor(model => model.CreatedDate, new { @class = "" })
+                @Html.TextBoxFor(model => model.CreatedDateFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li>
+                @Html.LabelFor(model => model.ModifiedBy, new { @class = "" })
+                @Html.TextBoxFor(model => model.ModifiedBy, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li>
+                @Html.LabelFor(model => model.ModifiedDate, new { @class = "" })
+                @Html.TextBoxFor(model => model.ModifiedDateFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+        </ul>
+    </fieldset>
+       
+</div>
+@*<p>
+    @Html.ActionLink("Edit", "Edit", new { companionCid = Model.CompanionCID }) |
+    @Html.ActionLink("Back to List", "List")
+</p>*@
+
+@section Scripts{
+    <script type="text/javascript">
+
+        $('document').ready(function () {
+            $("#contentCompanionDetail").css("visibility", "visible");
+            $(".loader").css("display", "none");
+        });
+    </script>
+}

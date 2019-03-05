@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewBag.Title = "Payment Report";
+}
+
+<div class="pt-3 pb-3">
+    <a href="@Url.Action("Patient", "Report")" class="k-button"><i class="fa fa-book" style="color: yellowgreen"></i> Patient Report</a>
+    @*<a href="@Url.Action("Payment", "Report")" class="k-button"><i class="fa fa-bookmark-o" style="color:yellowgreen"></i> Payment Report</a>*@
+</div>
+
+<fieldset style="width: 100%; min-width: fit-content;">
+    <legend>Payment Report</legend>
+    <iframe runat="server" id="Reports" src="~/Reports/Payment.aspx"
+            scrolling="no"
+            style="border: none"
+            onload="this.style.height = this.contentDocument.body.scrollHeight + 'px';
+        this.style.width = this.contentDocument.body.scrollWidth + 'px';"></iframe>
+</fieldset>

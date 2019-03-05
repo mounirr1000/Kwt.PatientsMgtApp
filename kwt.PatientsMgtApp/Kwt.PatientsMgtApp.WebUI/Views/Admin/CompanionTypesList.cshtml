@@ -1,0 +1,66 @@
+﻿@model IEnumerable<Kwt.PatientsMgtApp.Core.Models.CompanionTypeModel>
+
+@{
+    ViewBag.Title = "Companion Types List";
+}
+
+<div class="pt-3 pb-3">
+    <a href="@Url.Action("CreateCompanionType", "Admin")" class="k-button" style="width: 180px;"><i class="fa fa-plus" style="color: yellowgreen"></i> Companion Type</a>
+    <a href="@Url.Action("List", "Admin")" class="k-button"><i class="fa fa-hand-o-left" style="color: lightblue"></i> Back To Admin</a>
+</div>
+<div class="loader"></div>
+@if (Model.Any())
+{
+    <div id="content" style="visibility: hidden;">
+        <table id="doctorsList">
+            <colgroup>
+                <col />@*patientcid*@
+                <col />@*Name*@
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Id)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CompanionType)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CompanionType)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+@section Scripts {
+
+
+    <script type="text/javascript">
+
+            $('document').ready(function () {
+                $("#content").css("visibility", "visible");
+
+                $("#doctorsList").kendoGrid({
+                    height: 550,
+                    sortable: true,
+                    pageable: {
+                        pageSize: 15,
+                        alwaysVisible: false
+                    }
+                });
+                //kendo.ui.progress($("#patientList"), false);
+                $(".loader").css("display", "none");
+            });
+    </script>
+}

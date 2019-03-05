@@ -84,6 +84,9 @@ namespace Kwt.PatientsMgtApp.WebUI
                 manager.UserTokenProvider = 
                     new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
+            //
+            //manager.FindByIdAsync("");
+            // 
             return manager;
         }
     }

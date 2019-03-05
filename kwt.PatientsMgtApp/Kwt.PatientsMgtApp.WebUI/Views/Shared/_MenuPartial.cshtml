@@ -1,0 +1,74 @@
+﻿@using Kwt.PatientsMgtApp.WebUI.Infrastructure
+@using Kwt.PatientsMgtApp.WebUI.Models
+
+
+@{
+    var menu = (Menu)ViewBag.MenuItems ?? new Menu();
+}
+<header>
+    <div class="row logoSearch">
+
+        <div class="left">
+
+            
+            <a href="@Url.Action("Index", "Home")" style="text-decoration: none;" class="m-3">
+                <img src="~/Content/Images/Kuwait_embassyLogo.png" class="k-thumb"/>
+            </a>
+            <span class="text-uppercase">Kuwait Embassy Health Office</span>
+        </div>
+        <div class="right">
+            @using (Html.BeginForm("Search", "Patient", FormMethod.Get))
+            {
+                TempData["controller"] = Html.Controller();
+                TempData["action"] = Html.Action();
+
+                @*<div class="k-content">
+                    <span class="k-textbox k-space-right" style="width: 100%;">
+                        <input id="patientCids" type="text" name="patientCid" class="k-textbox" placeholder="Search a Patient..." style="width: 100%;" />
+                        <button type="submit" class="k-icon k-i-search">&nbsp;</button>
+                    </span>
+                </div>*@
+                <div class="k-content">
+                    <button type="submit" style="position: absolute;
+                             width: 12%; height: 100%;
+                             right: 0px; top: 0px;
+                             z-index: 1; background: #ffc107; cursor: pointer;
+                             border: none;padding: 0;">
+                        <i class="fa fa-search"></i>
+                    </button>
+                    <input id="patientCids" type="text" name="patientCid" class="k-textbox" placeholder="Search a Patient..." style="width: 100%;" />
+                </div>
+
+            }
+        </div>
+
+    </div>
+    <div id="header-menu" class="row">
+        <div class="col-md-12">
+            <span class="loginLogout">
+                @Html.Partial("_LoginPartial")
+            </span>
+            <ul id="topMenu" data-role="menu" class="h-menu k-menu k-menu-horizontal" tabindex="0" role="menubar">
+                @foreach (var item in menu.MenuItem)
+                {
+                    if (item.MenuId < 3)
+                    {
+                        @Html.ListItemAction(item.MenuName, item.ActionName, item.ControllerName, item.IconName, item.Color)
+                    }
+                    else
+                    {
+                        if (User.IsInRole("Admin"))
+                        {
+                            @Html.ListItemAction(item.MenuName, item.ActionName, item.ControllerName, item.IconName, item.Color)
+                        }
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+</header>
+
+@if (TempData["searchedPatient"] != null)
+{
+    Html.RenderPartial("_PatientDetailsSearched", (object)Model);
+}

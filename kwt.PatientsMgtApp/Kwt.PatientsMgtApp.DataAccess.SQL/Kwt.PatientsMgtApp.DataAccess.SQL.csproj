@@ -30,8 +30,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -40,7 +50,62 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AgencyRepository.cs" />
+    <Compile Include="BankRepository.cs" />
+    <Compile Include="BeneficiaryRepository.cs" />
+    <Compile Include="CompanionHistoryRepository.cs" />
+    <Compile Include="CompanionManagmentRepository.cs" />
+    <Compile Include="CompanionRepository.cs" />
+    <Compile Include="CompanionTypeRepository.cs" />
+    <Compile Include="DoctorRepository.cs" />
+    <Compile Include="DomainObjectRepository.cs" />
+    <Compile Include="ExceptionLoggerRepository.cs" />
+    <Compile Include="HospitalRepository.cs" />
+    <Compile Include="IAgencyRepository.cs" />
+    <Compile Include="IBankRepository.cs" />
+    <Compile Include="IBeneficiaryRepository.cs" />
+    <Compile Include="ICompanionHistoryRepository.cs" />
+    <Compile Include="ICompanionManagmentRepository.cs" />
+    <Compile Include="ICompanionRepository.cs" />
+    <Compile Include="ICompanionTypeRepository.cs" />
+    <Compile Include="IDoctorRepository.cs" />
+    <Compile Include="IDomainObjectRepository.cs" />
+    <Compile Include="IExceptionLoggerRepository.cs" />
+    <Compile Include="IHospitalRepository.cs" />
+    <Compile Include="IPatientHistoryRepository.cs" />
+    <Compile Include="IPatientManagmentRepository.cs" />
+    <Compile Include="IPatientRepository.cs" />
+    <Compile Include="IPaymentRepository.cs" />
+    <Compile Include="IPayRateRepository.cs" />
+    <Compile Include="ISpecialityRepository.cs" />
+    <Compile Include="IUserManagmentRepository.cs" />
+    <Compile Include="PatientHistoryRepository.cs" />
+    <Compile Include="PatientManagmentRepository.cs" />
+    <Compile Include="PatientRepository.cs" />
+    <Compile Include="PaymentRepository.cs" />
+    <Compile Include="PayRateRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SpecialityRepository.cs" />
+    <Compile Include="UserManagmentRepository.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Kwt.PatientsMgtApp.Core\Kwt.PatientsMgtApp.Core.csproj">
+      <Project>{44fee597-2421-4d5c-b24f-b7457a3ee5ad}</Project>
+      <Name>Kwt.PatientsMgtApp.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\kwt.PatientsMgtApp.Utilities\kwt.PatientsMgtApp.Utilities.csproj">
+      <Project>{1beae1d8-516d-4279-8503-6e5736d853d2}</Project>
+      <Name>kwt.PatientsMgtApp.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Kwt.PatientsMgtAppt.PersistenceDB\Kwt.PatientsMgtApp.PersistenceDB.csproj">
+      <Project>{1b7ada94-ab71-4ca4-a61e-035edbe8f2c3}</Project>
+      <Name>Kwt.PatientsMgtApp.PersistenceDB</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="ClassDiagram1.cd" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

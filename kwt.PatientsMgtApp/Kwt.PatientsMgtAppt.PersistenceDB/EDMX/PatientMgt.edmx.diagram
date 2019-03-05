@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="c8119d4fbc3d4cc8bc43d2c222053c26" Name="Diagram1" ZoomLevel="100">
+        <EntityTypeShape EntityType="PatientsMgtModel.Agency" Width="1.5" PointX="3.75" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PatientsMgtModel.Bank" Width="1.5" PointX="0.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PatientsMgtModel.Beneficiary" Width="1.5" PointX="9" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PatientsMgtModel.CompanionHistory" Width="1.5" PointX="8.25" PointY="8.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PatientsMgtModel.Companion" Width="1.5" PointX="3" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="PatientsMgtModel.CompanionType" Width="1.5" PointX="0.75" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PatientsMgtModel.Doctor" Width="1.5" PointX="3.75" PointY="2.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PatientsMgtModel.ExceptionLogger" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PatientsMgtModel.Hospital" Width="1.5" PointX="3.75" PointY="15.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="PatientsMgtModel.PatientHistory" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PatientsMgtModel.Patient" Width="1.5" PointX="6" PointY="7.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PatientsMgtModel.Payment" Width="1.5" PointX="11.25" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="PatientsMgtModel.PayRate" Width="1.5" PointX="9" PointY="13.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PatientsMgtModel.Role" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PatientsMgtModel.Specialty" Width="1.5" PointX="3.75" PointY="17.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PatientsMgtModel.UserRole" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PatientsMgtModel.User" Width="1.5" PointX="11.75" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="PatientsMgtModel.FK_Patients_Agencies" ManuallyRouted="false" />
+        <AssociationConnector Association="PatientsMgtModel.FK_Companions_Banks" ManuallyRouted="false" />
+        <AssociationConnector Association="PatientsMgtModel.FK_Patients_Banks" ManuallyRouted="false" />
+        <AssociationConnector Association="PatientsMgtModel.FK_Payments_Beneficiaries" ManuallyRouted="false" />
+        <AssociationConnector Association="PatientsMgtModel.FK_CompanionHistories_Companions_withCompositKey" ManuallyRouted="false" />
+        <AssociationConnector Association="PatientsMgtModel.FK_CompanionHistories_Patients" ManuallyRouted="false" />
+        <AssociationConnector Association="PatientsMgtModel.FK_Companions_CompanionTypes" ManuallyRouted="false" />
+        <AssociationConnector Association="PatientsMgtModel.FK_Companions_Patients" ManuallyRouted="false" />
+        <AssociationConnector Association="PatientsMgtModel.FK_Payments_Companions" ManuallyRouted="false" />
+        <AssociationConnector Association="PatientsMgtModel.FK_Patients_Doctors" ManuallyRouted="false" />
+        <AssociationConnector Association="PatientsMgtModel.FK_Patients_Hospitals" ManuallyRouted="false" />
+        <AssociationConnector Association="PatientsMgtModel.FK_Patients_Specialties" ManuallyRouted="false" />
+        <AssociationConnector Association="PatientsMgtModel.FK_Payments_Patients" ManuallyRouted="false" />
+        <AssociationConnector Association="PatientsMgtModel.FK_Payments_PayRates" ManuallyRouted="false" />
+        <AssociationConnector Association="PatientsMgtModel.FK_PatientHistories_Patients" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

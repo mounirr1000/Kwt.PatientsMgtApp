@@ -1,0 +1,40 @@
+﻿
+<div class="form-group">
+    @using (Html.BeginForm("List", "Payment", FormMethod.Get))
+    {
+        <input type="hidden" name="clearSearch" id="clearSearch" value="false" />
+
+        <div class="input-group mb-3" style="width: 80%">
+
+            <div style="float: left; width: 30%" class="pr-2">
+                @Html.TextBox("searchpaymentText", ViewBag.CurrentFilter as string, new { id = "searchPayment", @class = "k-textbox", placeholder = "Search Payment...", style = "width:100%" })
+            </div>
+
+            <div style="width: 40%; float: left;" class="k-group">
+                <button type="submit" class="k-button"><i class="fa fa-search" style="color: yellowgreen"></i> Search</button>
+
+                <button type="submit" class="k-button k-notification-button" id="clear"><i class="fa fa-times" style="color: lightblue"></i> Clear</button>
+            </div>
+        </div>
+    }
+
+</div>
+
+@*<hr />
+<div class="container">
+    <div class="container-fluid">
+        <div class="form-group">
+            @using (Html.BeginForm("List", "Payment", FormMethod.Get))
+            {
+                    @Html.TextBox("searchpaymentText", ViewBag.CurrentFilter as string, new { id = "searchPatient", @class = "form-control m-1", placeholder="Patient Civil ID / Payment Date" })
+                   
+                    <button type="submit" class="btn btn-sm btn-success m-1">Search</button>
+                    <input type="hidden" name="clearSearch" id="clearSearch" value="false" />
+                    <button type="submit" class="btn btn-sm btn-info m-1" id="clear">clear</button>
+            }
+
+        </div>
+    </div>
+</div>*@
+
+

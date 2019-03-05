@@ -21,7 +21,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base("PatientsMgtConnectionString", throwIfV1Schema: false)
         {
         }
 
@@ -29,5 +29,21 @@ namespace Kwt.PatientsMgtApp.WebUI.Models
         {
             return new ApplicationDbContext();
         }
+
+        //
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<ApplicationUser>().ToTable("Users").Property(u => u.Id).HasColumnName("UserID");
+            modelBuilder.Entity<IdentityUserRole>().ToTable("UserRoles");
+            modelBuilder.Entity<IdentityRole>().ToTable("Roles")
+                        .Property(u => u.Id).HasColumnName("RoleID");
+            modelBuilder.Entity<IdentityRole>().ToTable("Roles")
+                        .Property(u => u.Name).HasColumnName("RoleName");
+            modelBuilder.Entity<IdentityUserClaim>().ToTable("UserClaims");
+            modelBuilder.Entity<IdentityUserLogin>().ToTable("UserLogins");
+        }
+
+        //
     }
 }
