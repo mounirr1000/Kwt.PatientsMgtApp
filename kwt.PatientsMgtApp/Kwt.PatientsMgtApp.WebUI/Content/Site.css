@@ -950,3 +950,9 @@ thead tr th {
           opacity: 0.1;
           transform: rotate(-35deg) scale(1.7, 1.5);
         }*/
+
+/*remove the outline box around the button*/
+.btn:focus, .btn.focus {
+    outline: 0;
+    box-shadow: 0 0 0 0rem rgba(0, 123, 255, 0.25); 
+}

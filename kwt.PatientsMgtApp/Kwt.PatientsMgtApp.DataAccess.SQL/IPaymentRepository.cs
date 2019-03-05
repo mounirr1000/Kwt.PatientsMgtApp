@@ -9,6 +9,11 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
 {
     public interface IPaymentRepository
     {
+
+        //new February 28, 2019
+        List<PaymentModel> GetPaymentsWithPhone(DateTime? date);
+        //
+
         List<PaymentModel> GetPayments();
 
         PaymentModel GetPaymentById(int paymentid);
@@ -22,7 +27,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         int DeletePayment(PaymentModel payment);
 
         PaymentModel GetPaymentObject(string patientCid);
-        
+
         List<PaymentReportModel> GetPaymentsReport(string patientCid = null, DateTime? startDate = null, DateTime? endDate = null);
     }
 }

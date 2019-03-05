@@ -10,7 +10,38 @@
     <a href="@Url.Action("Create", "Payment")" class="k-button"><i class="fa fa-plus" style="color: yellowgreen"></i> New Payment</a>
     <a href="javascript:window.print()" class="k-button"><i class="fa fa-print" style="color: blueviolet"></i> Print This Page</a>
 </div>
+@* new February 28, 2019 *@
+<div class="pt-4">
+    <div style="display: inline">
+        <input id="paymentDt1" class="k-textbox" placeholder="MM/dd/YYYY"/><i class="fa fa-calendar" style="position: absolute; left: 280px; bottom: 55px"></i>
+    </div>
 
+    <div style="display: inline">
+
+        <input id="paymentDt2" class="k-textbox" placeholder="MM/dd/YYYY"/>
+        <i class="fa fa-calendar" style="position: absolute; left: 507px; bottom: 55px"></i>
+    </div>
+    <a href="javascript:showTodayPayments()" class="k-button">Get Payments</a>
+
+</div>
+<div class="modal fade bd-example-modal-lg" id="todayPaymentList" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="deleteLabel">
+                    <i id="payment1"></i> <i id="payment2"></i> Payments
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="paymentGrid"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+@* new February 28, 2019 *@
 <div class="pb-5 pt-5">
     @if (Model.Any())
     {
@@ -18,22 +49,21 @@
             @{Html.RenderPartial("_PaymentSearchForm");}
         </div>
         <div class="loader"></div>
-        <div id="content" style="visibility:hidden;">
-            <table id="paymentList">
-                <colgroup>
-                    <col style="width: 100px" />@*id*@
-                    <col />@*payment Date*@
-                    <col />@*patient Cid*@
-                    <col />@*companion cid*@
-                    <col style="width: 90px" />@*period*@
-                    <col style="width: 110px" />@*startdate*@
-                    <col style="width: 110px" />@*endDate*@
-                    <col style="width: 120px" />@*total due*@
-                    <col style="width: 90px" />@*delete*@
+
+        <div id="content" style="visibility: hidden;">
+            <div id="paymentList"></div>
+            @*<table id="paymentList">
+                    <colgroup>
+                        <col style="width: 100px"/>
+                        <col style="width: 90px"/>
+                        <col style="width: 110px"/>
+                        <col style="width: 110px"/>
+                        <col style="width: 120px"/>
+                        <col style="width: 90px"/>
 
 
-                </colgroup>
-                <thead>
+                    </colgroup>
+                    <thead>
                     <tr>
                         <th>
                             Id
@@ -79,13 +109,13 @@
                             </th>
                         }
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     @foreach (var item in Model)
-                {
+                    {
                         <tr>
                             <td>
-                                @Html.ActionLink(item.Id.ToString(), "Details", new { paymentId = item.Id })
+                                @Html.ActionLink(item.Id.ToString(), "Details", new {paymentId = item.Id})
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.PaymentDateFormatted)
@@ -122,13 +152,8 @@
                             }
                         </tr>
                     }
-                </tbody>
-            </table>
-            @*<span>Page</span>
-                @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
-                <span>of</span>
-                        @Model.PageCount
-                        @Html.PagedListPager(Model, page => Url.Action("List", new { page }));*@
+                    </tbody>
+                </table>*@
         </div>
                 }
                 else
@@ -153,10 +178,8 @@
     @{ Html.RenderPartial("_DeleteConfirmationjs"); }
     <script type="text/javascript">
         $("#clear").click(function (e) {
-            console.log("Clear serch");
             $("#searchPayment").val("");
             $("#clearSearch").val(true);
-            //e.preventDefault();
         });
     </script>
     <script src="https://kendo.cdn.telerik.com/2018.2.516/js/pako_deflate.min.js"></script>
@@ -164,69 +187,156 @@
 
         $('document').ready(function () {
             $("#content").css("visibility", "visible");
-            
-            $("#paymentList").kendoGrid({
-                toolbar: "<p>This is the list of all payments we have in our records</p>",
-                //toolbar: ["pdf"],
-                //pdf: {
-                //    allPages: true,
-                //    avoidLinks: true,
-                //    paperSize: "A4",
-                //    margin: { top: "2cm", left: ".5cm", right: ".5cm", bottom: ".5cm" },
-                //    landscape: true,
-                //    repeatHeaders: true,
-                //    template: $("#paymentList").html(),
-                //    scale: 0.2
-                //},
-                height: 550,
-                groupable: true,
-                sortable: true,
-                //filterable: true
-                pageable: {
-                    pageSize: 15,
-                    alwaysVisible: false
-                },
-                //dataBound: function (e) {
-                //    setTimeout(function () { kendo.ui.progress($("#content"), false); });
-                //}
+            //
+            $('#paymentDt1, #paymentDt2').datepicker();
 
-            });
-            //var draw = kendo.drawing;
+            //
+            var data = @Html.Raw(Json.Encode(Model));
 
-            //draw.drawDOM($("#paymentList"), {
-            //        allPages: true,
-            //        avoidLinks: true,
-            //        paperSize: "A4",
-            //        margin: { top: "2cm", left: "0cm", right: "0cm", bottom: "1cm" },
-            //        landscape: true,
-            //        repeatHeaders: true,
-            //        template: $("#paymentList").html(),
-            //        scale: 0.8,
-           // keepTogether: ".prevent-split"
-            //})
-            //.then(function (root) {
-            //    return draw.exportPDF(root);
-            //})
-            //.done(function (data) {
-            //    kendo.saveAs({
-            //        dataURI: data,
-            //        fileName: "paymentList.pdf"
-            //    });
+            //$("#paymentList").kendoGrid({
+            //    toolbar: "<p>This is the list of all payments we have in our records</p>",
+            //    height: 550,
+            //    groupable: true,
+            //    sortable: true,
+            //    pageable: {
+            //        pageSize: 15,
+            //        alwaysVisible: false
+            //    }
             //});
-            //kendo.ui.progress($("#patientList"), false);
+            $("#paymentList").kendoGrid({
+                toolbar: ["pdf"],
+                pdf: {
+                    fileName: "Today payments.pdf"
+                },
+
+                columns: [{
+                    field: "Id",
+                    title: "Payment Num",
+
+                    template: "<a href='@Url.Action("Details", "Payment")?paymentId=#= Id#'>#= Id #</a>",
+                    @*cellTemplate: '<div class="ui-grid-cell-contents"><a href={{@Url.Action("Details", "Payment")}} class="icon-bar">{{row.entity.Id}}</a></div>'*@
+                },
+                {
+                    field: "PaymentDateFormatted",
+                    title: "Payment Date"
+                },
+                {
+                    field: "PatientCID",
+                    title: "P_CID"
+                },
+                {
+                    field: "CompanionCID",
+                    title: "C_CID"
+                },
+                {
+                    field: "PaymentLengthPeriod",
+                    title: "Period"
+                },
+                {
+                    field: "PaymentStartDate",
+                    title: "From",
+                    template: "#= kendo.toString(kendo.parseDate(PaymentStartDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
+                },
+                {
+                    field: "PaymentEndDate",
+                    title: "To",
+                    template: "#= kendo.toString(kendo.parseDate(PaymentEndDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
+                },
+                {
+                    field: "TotalDue",
+                    title: "Amount"
+                }],
+                dataSource: {
+                    data: data
+                }
+            });
+
             $(".loader").css("display", "none");
         });
     </script>
-    <script type="x/kendo-template" id="page-template">
-        <div class="page-template">
-            <div class="header">
-                <div style="float: right">Page #: pageNum # of #: totalPages #</div>
-                Multi-page grid with automatic page breaking
-            </div>
-            <div class="watermark">KENDO UI</div>
-            <div class="footer">
-                Page #: pageNum # of #: totalPages #
-            </div>
-        </div>
+
+    @* new February 28, 2019 *@
+    <script type="text/javascript">
+
+
+        function showTodayPayments() {
+
+            var firstDate = $('#paymentDt1').val();
+            var secondDate = $('#paymentDt2').val();
+
+            $("#payment1").html(firstDate);
+            $('#payment2').html(function() {
+                if (secondDate && firstDate) {
+                    return " | " + secondDate;
+                }
+                return secondDate;
+            });
+            $('#todayPaymentList').modal('show');
+            var date1 = new Date(firstDate).toDateString();
+            date1 = new Date(date1).getTime();
+
+            var date2 = new Date(secondDate).toDateString();
+            date2 = new Date(date2).getTime();
+            var payments=@Html.Raw(Json.Encode(Model));
+
+            payments= payments.filter(function (entry) {
+                var paymentDate = new Date(entry.PaymentDateFormatted).toDateString();
+                /* if date1= paymentDate or pyamentDate = date2 or (paymentDate>date1 and paymentDate<date2
+                    (date1 === new Date(paymentDate).getTime() || date2=== new Date(paymentDate).getTime() )
+                    ||(date1 < new Date(paymentDate).getTime() && date2> new Date(paymentDate).getTime() )
+                */
+                return  (
+                        //date1 >= new Date(paymentDate).getTime() && date2<= new Date(paymentDate).getTime() 
+                    (date1 === new Date(paymentDate).getTime() || date2=== new Date(paymentDate).getTime() )
+                    ||(date1 < new Date(paymentDate).getTime() && date2> new Date(paymentDate).getTime() )  
+                        );
+            }).sort(function(a,b){
+                // Turn your strings into dates, and then subtract them
+                // to get a value that is either negative, positive, or zero.
+                return new Date(a.PaymentDateFormatted) - new Date(b.PaymentDateFormatted);
+            });
+            $("#paymentGrid").kendoGrid({
+                toolbar: ["pdf"],
+                pdf: {
+                    fileName: "Today payments.pdf"
+                },
+
+                columns: [
+                    {
+                        field: "PaymentDateFormatted",
+                        title: "Payment Date"
+                    },{
+                        field: "PatientPhone",
+                        title: "Patient Phone"
+                    },
+                {
+                    field: "PatientCID",
+                    title: "P_CID"
+                },{
+                    field: "PaymentStartDate",
+                    title: "From",
+                    template: "#= kendo.toString(kendo.parseDate(PaymentStartDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
+                },
+                {
+                    field: "PaymentEndDate",
+                    title: "To",
+                    template: "#= kendo.toString(kendo.parseDate(PaymentEndDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
+                },{
+                    field: "TotalDue",
+                    title: "Amount"
+                }],
+                dataSource: {
+                    data: payments
+                }
+            });
+
+        }
+
+        $(function () {
+            $("#deleteConfirmModal").on('click', "#deleteConfirm", function () {
+
+            });
+        });
+
     </script>
 }

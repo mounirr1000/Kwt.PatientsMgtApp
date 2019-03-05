@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Kwt.PatientsMgtApp.Core.Models
 {
-    public class PaymentModel :BaseEntity
+    public class PaymentModel : BaseEntity
     {
 
         public int PaymentID { get; set; }
@@ -80,7 +80,7 @@ namespace Kwt.PatientsMgtApp.Core.Models
         [DisplayName("Beneficiary Bank Account")]
         public string BeneficiaryIBan { get; set; }
 
-        
+
         public string Hospital { get; set; }
 
 
@@ -141,6 +141,9 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public BeneficiaryModel Beneficiary { get; set; }
         public List<PayRateModel> PayRates { get; set; }
 
+        // new February 28,2019
+        public string PatientPhone { get; set; }
+        //
         public List<PaymentModel> Payments { get; set; }
     }
 }

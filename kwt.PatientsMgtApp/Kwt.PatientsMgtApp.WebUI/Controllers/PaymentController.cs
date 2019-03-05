@@ -119,7 +119,13 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             //return View(payments.ToPagedList(pageNumber, PageSize));
             return View(payments);
         }
+        //new February 28, 2019
+        public ActionResult GetTodaysPayments()
+        {
 
+            return RedirectToAction("List");
+        }
+        //
         [ExceptionHandler]
         public ActionResult Details(int paymentId)
         {
@@ -262,11 +268,11 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         }
         private void ValidatePayment(PaymentModel payment, bool isEdit = false)
         {
-   //         --When payrateid = 1, for the same payment period, means both patient and compnaion get paid
-   //--When payrateid = 2, for the same payment period, means  patient get paid and not the compnaion
-   //  --When payrateid = 3, for the same payment period, means the companion get paid and not the patient
-                  if (ModelState.IsValidField("PaymentStartDate") &&
-                ModelState.IsValidField("PaymentEndDate"))
+            //         --When payrateid = 1, for the same payment period, means both patient and compnaion get paid
+            //--When payrateid = 2, for the same payment period, means  patient get paid and not the compnaion
+            //  --When payrateid = 3, for the same payment period, means the companion get paid and not the patient
+            if (ModelState.IsValidField("PaymentStartDate") &&
+          ModelState.IsValidField("PaymentEndDate"))
             {
                 //Todo: check for current date as well
                 if (DateTime.Parse(payment.PaymentStartDate?.ToString()) >
@@ -279,7 +285,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
 
             }
             //
-            if (ModelState.IsValidField("PatientPayRate")&& ModelState.IsValidField("CompanionPayRate"))
+            if (ModelState.IsValidField("PatientPayRate") && ModelState.IsValidField("CompanionPayRate"))
             {
                 if (payment.PatientPayRate == payment.CompanionPayRate && payment.PatientPayRate == 0)
                 {
@@ -287,13 +293,13 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                     ModelState.AddModelError("CompanionPayRate", "Companion Pay Rate and Patient Pay Rate cannot both be zero");
                 }
             }
-                //
-                var historyPaments = _paymentRepository.GetPaymentsByPatientCid(payment.PatientCID);
+            //
+            var historyPaments = _paymentRepository.GetPaymentsByPatientCid(payment.PatientCID);
             //==================
 
             var paymentMadeForBoth = historyPaments.Any(p => p.PaymentStartDate == payment.PaymentStartDate &&
-                                     p.PaymentEndDate == payment.PaymentEndDate 
-                                  && p.PayRateID==1);//when payrateid==1, means payment was made for both
+                                     p.PaymentEndDate == payment.PaymentEndDate
+                                  && p.PayRateID == 1);//when payrateid==1, means payment was made for both
             if (paymentMadeForBoth)
             {
                 if (ModelState.IsValidField("PaymentStartDate"))
@@ -303,7 +309,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             }
             var paymentMadeForPatient = historyPaments.Any(p => p.PaymentStartDate == payment.PaymentStartDate &&
                                     p.PaymentEndDate == payment.PaymentEndDate
-                                 && p.PayRateID == 2 && payment.PatientPayRate==75);//When payrateid = 2, for the same payment period, means  patient get paid and not the compnaion
+                                 && p.PayRateID == 2 && payment.PatientPayRate == 75);//When payrateid = 2, for the same payment period, means  patient get paid and not the compnaion
             if (paymentMadeForPatient)
             {
                 if (ModelState.IsValidField("PaymentStartDate"))
@@ -386,7 +392,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                 var samePatientPayRates = historyPaments
                                .Any(p => (p.PaymentStartDate == payment.PaymentStartDate
                                        && p.PaymentEndDate == payment.PaymentEndDate
-                                       &&p.PatientPayRate==payment.PatientPayRate));
+                                       && p.PatientPayRate == payment.PatientPayRate));
                 if (!isEdit && samePatientPayRates)
                 {
                     ModelState.AddModelError("PatientPayRate", "Our records indicates that there is payment conflict with this Patient Pay Rate");
@@ -395,7 +401,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                                .Any(p => (p.PaymentStartDate == payment.PaymentStartDate
                                        && p.PaymentEndDate == payment.PaymentEndDate
                                        && p.CompanionPayRate == payment.CompanionPayRate));
-                if (!isEdit && samePatientPayRates && payment.CompanionPayRate!=null)
+                if (!isEdit && samePatientPayRates && payment.CompanionPayRate != null)
                 {
                     ModelState.AddModelError("CompanionPayRate", "Our records indicates that there is payment conflict with this Companion Pay Rate");
                 }

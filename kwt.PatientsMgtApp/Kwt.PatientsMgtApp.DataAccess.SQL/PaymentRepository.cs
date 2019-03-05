@@ -31,6 +31,24 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             _payRateRepository = new PayRateRepository();
         }
 
+
+        //new February 28, 2019
+        public List<PaymentModel> GetPaymentsWithPhone(DateTime? date)
+        {
+            var payments = _domainObjectRepository.Filter<Payment>( p=>p.PaymentDate ==date,new[] {"Patient"});
+
+            return payments.Select(p => p.Beneficiary != null ? new PaymentModel()
+            {
+                PatientPhone = p.Patient.KWTphone ?? p.Patient.USphone,
+                PatientCID = p.PatientCID,
+                PaymentStartDate = p.StartDate,
+                PaymentEndDate = p.EndDate,
+                TotalDue = p.TotalDue,
+
+        } : null).OrderBy(p => p.CreatedDate).ToList();// returns null when the beneficiary is not set and the second null is returned when the companion is not set
+
+        }
+        //
         public List<PaymentReportModel> GetPaymentsReport(string patientCid = null, DateTime? startDate = null,
             DateTime? endDate = null)
         {
@@ -80,7 +98,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 TotalDue = p.TotalDue,
                 Id = p.PaymentID,
                 BeneficiaryCID = p.Beneficiary.BeneficiaryCID,
-                PayRateID =p.PayRateID
+                PayRateID =p.PayRateID,
+                PatientPhone = p.Patient.KWTphone ?? p.Patient.USphone
 
             } : null).OrderBy(p => p.CreatedDate).ToList();// returns null when the beneficiary is not set and the second null is returned when the companion is not set
 
