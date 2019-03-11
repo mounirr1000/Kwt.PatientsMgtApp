@@ -10,7 +10,6 @@ namespace Kwt.PatientsMgtApp.Core.Models
 {
     public class PaymentModel : BaseEntity
     {
-
         public int PaymentID { get; set; }
 
         [DataType(DataType.Date)]
@@ -145,5 +144,11 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public string PatientPhone { get; set; }
         //
         public List<PaymentModel> Payments { get; set; }
+
+        public PaymentDeductionModel PaymentDeductionModel { get; set; }
+
+        public PaymentDeductionModel PaymentDeductionObject { get; set; }
+        public ICollection<PaymentDeductionModel> PaymentDeductions { get; set; }
+
     }
 }

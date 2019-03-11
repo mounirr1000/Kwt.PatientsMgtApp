@@ -19,144 +19,157 @@
     <button data-toggle="collapse" data-target="#paymentDetail">
         <i></i> Payment Details
     </button>
-   
+
     <fieldset id="paymentDetail" class="collapse">
-            <legend>Payment Details</legend>
-            <ul class="fieldlist">
-                <li>
-                    @Html.LabelFor(model => model.PaymentDate, new { @class = "" })
-                    @Html.TextBoxFor(model => model.PaymentDateFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-                </li>
-                <li>
-                    @Html.LabelFor(model => model.CompanionPayRate, new { @class = "" })
-                    @Html.TextBoxFor(model => model.CompanionPayRate, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-                </li>
-                <li>
-                    @Html.LabelFor(model => model.PatientPayRate, new { @class = "" })
-                    @Html.TextBoxFor(model => model.PatientPayRate, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-                </li>
-                <li>
-                    @Html.LabelFor(model => model.PaymentStartDate, new { @class = "" })
-                    @Html.TextBoxFor(model => model.PaymentStartDateFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-                </li>
-                <li>
-                    @Html.LabelFor(model => model.PaymentEndDate, new { @class = "" })
-                    @Html.TextBoxFor(model => model.PaymentEndDateFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-                </li>
-                <li>
-                    @Html.LabelFor(model => model.PatientCID, htmlAttributes: new { @class = "" })
-                    @Html.TextBoxFor(model => model.PatientCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-                </li>
-                <li>
-                    @Html.LabelFor(model => model.PaymentLengthPeriod, new { @class = "" })
-                    @Html.TextBoxFor(model => (model.PaymentLengthPeriod), new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-                </li>
-                <li>
+        <legend>Payment Details</legend>
+        <ul class="fieldlist form-row">
+
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.PaymentDate, new { @class = "" })
+                @Html.TextBoxFor(model => model.PaymentDateFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.CompanionPayRate, new { @class = "" })
+                @Html.TextBoxFor(model => model.CompanionPayRate, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.PatientPayRate, new { @class = "" })
+                @Html.TextBoxFor(model => model.PatientPayRate, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.PaymentStartDate, new { @class = "" })
+                @Html.TextBoxFor(model => model.PaymentStartDateFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.PaymentEndDate, new { @class = "" })
+                @Html.TextBoxFor(model => model.PaymentEndDateFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.PatientCID, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.PatientCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.PaymentLengthPeriod, new { @class = "" })
+                @Html.TextBoxFor(model => (model.PaymentLengthPeriod), new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-2">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">$</div>
+                    </div>
                     @Html.LabelFor(model => model.PatientAmount, new { @class = "" })
-                    @Html.TextBoxFor(model => model.PatientAmount, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-                </li>
-                <li>
-                    @Html.LabelFor(model => model.CompanionAmount, new { @class = "" })
-                    @Html.TextBoxFor(model => model.CompanionAmount, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-                </li>
-                <li>
-                    @Html.LabelFor(model => model.TotalDue, new { @class = "" })
-                    @Html.TextBoxFor(model => model.TotalDue, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-                </li>
-                <li>
-                    @Html.LabelFor(model => model.Notes, new { @class = "" })
-                    @Html.TextAreaFor(model => model.Notes, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-                </li>
-            </ul>
-        </fieldset>
-    <button data-toggle="collapse" data-target="#BenfeciaryInfo" > <i></i> Beneficiary Info</button>
+                    @Html.TextBoxFor(model => model.PatientAmount, new { @class = "k-textbox input-control edit", style = "width: 100%;", @readonly = "readonly" })
+                </div>
+            </li>
+
+
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.CompanionAmount, new { @class = "" })
+                @Html.TextBoxFor(model => model.CompanionAmount, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.TotalDue, new { @class = "" })
+                @Html.TextBoxFor(model => model.TotalDue, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-6">
+                @Html.LabelFor(model => model.Notes, new { @class = "" })
+                @Html.TextAreaFor(model => model.Notes, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+
+        </ul>
+    </fieldset>
+
+    <button data-toggle="collapse" data-target="#paymentDeduction"><i></i> Deduction Info</button>
+    <div id="paymentDeduction" class="collapse"></div>
+    <button data-toggle="collapse" data-target="#BenfeciaryInfo"> <i></i> Beneficiary Info</button>
     <fieldset id="BenfeciaryInfo" class="collapse">
         <legend>Beneficiary Information</legend>
-        <ul class="fieldlist">
-            <li>
+        <ul class="fieldlist form-row">
+            <li class="col-md-3">
                 @Html.LabelFor(model => model.BeneficiaryCID, new { @class = "" })
                 @Html.TextBoxFor(model => model.BeneficiaryCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
             </li>
-            <li>
+            <li class="col-md-3">
                 @Html.LabelFor(model => model.BeneficiaryFName, new { @class = "" })
                 @Html.TextBoxFor(model => model.BeneficiaryFName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
             </li>
-            <li>
+            <li class="col-md-3">
                 @Html.LabelFor(model => model.BeneficiaryMName, new { @class = "" })
                 @Html.TextBoxFor(model => model.BeneficiaryMName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
             </li>
-            <li>
+            <li class="col-md-3">
                 @Html.LabelFor(model => model.BeneficiaryLName, new { @class = "" })
                 @Html.TextBoxFor(model => model.BeneficiaryLName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
             </li>
         </ul>
     </fieldset>
 
-    <button data-toggle="collapse" data-target="#BeneficiaryBankInfo" > <i ></i> Beneficiary Bank Info</button>
+    <button data-toggle="collapse" data-target="#BeneficiaryBankInfo"> <i></i> Beneficiary Bank Info</button>
     <fieldset id="BeneficiaryBankInfo" class="collapse">
         <legend>Beneficiary Bank Information</legend>
-        <ul class="fieldlist">
-            <li>
-                @Html.LabelFor(model => model.BeneficiaryBank, new {@class = ""})
-                @Html.TextBoxFor(model => model.BeneficiaryBank, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+        <ul class="fieldlist form-row">
+            <li class="col-md-6">
+                @Html.LabelFor(model => model.BeneficiaryBank, new { @class = "" })
+                @Html.TextBoxFor(model => model.BeneficiaryBank, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
             </li>
-            <li>
-                @Html.LabelFor(model => model.BeneficiaryIBan, new {@class = ""})
-                @Html.TextBoxFor(model => model.BeneficiaryIBan, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+            <li class="col-md-6">
+                @Html.LabelFor(model => model.BeneficiaryIBan, new { @class = "" })
+                @Html.TextBoxFor(model => model.BeneficiaryIBan, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
             </li>
         </ul>
     </fieldset>
-    <button data-toggle="collapse" data-target="#patientInformation" ><i ></i> Patient Info</button>
+    <button data-toggle="collapse" data-target="#patientInformation"><i></i> Patient Info</button>
     <fieldset id="patientInformation" class="collapse">
         <legend>Patient Information</legend>
-        <ul class="fieldlist">
-            <li>
-                @Html.LabelFor(model => model.PatientCID, new {@class = ""})
-                @Html.TextBoxFor(model => model.PatientCID, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+        <ul class="fieldlist form-row">
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.PatientCID, new { @class = "" })
+                @Html.TextBoxFor(model => model.PatientCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
             </li>
-            <li>
-                @Html.LabelFor(model => model.PatientFName, new {@class = ""})
-                @Html.TextBoxFor(model => model.PatientFName, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.PatientFName, new { @class = "" })
+                @Html.TextBoxFor(model => model.PatientFName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
             </li>
-            <li>
-                @Html.LabelFor(model => model.PatientMName, new {@class = ""})
-                @Html.TextBoxFor(model => model.PatientMName, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.PatientMName, new { @class = "" })
+                @Html.TextBoxFor(model => model.PatientMName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
             </li>
-            <li>
-                @Html.LabelFor(model => model.PatientLName, new {@class = ""})
-                @Html.TextBoxFor(model => model.PatientLName, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.PatientLName, new { @class = "" })
+                @Html.TextBoxFor(model => model.PatientLName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
             </li>
-            <li>
-                @Html.LabelFor(model => model.Hospital, new {@class = ""})
-                @Html.TextBoxFor(model => model.Hospital, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+            <li class="col-md-8">
+                @Html.LabelFor(model => model.Hospital, new { @class = "" })
+                @Html.TextBoxFor(model => model.Hospital, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
             </li>
-            <li>
-                @Html.LabelFor(model => model.Agency, new {@class = ""})
-                @Html.TextBoxFor(model => model.Agency, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.Agency, new { @class = "" })
+                @Html.TextBoxFor(model => model.Agency, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
             </li>
         </ul>
     </fieldset>
-    <button data-toggle="collapse" data-target="#companionInfo" ><i ></i> Companion Info</button>
+    <button data-toggle="collapse" data-target="#companionInfo"><i></i> Companion Info</button>
     <fieldset id="companionInfo" class="collapse">
         <legend>Companion Information</legend>
         @if (Model.CompanionCID != null)
         {
-            <ul class="fieldlist">
-                <li>
-                    @Html.LabelFor(model => model.CompanionCID, new {@class = ""})
-                    @Html.TextBoxFor(model => model.CompanionCID, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+            <ul class="fieldlist form-row">
+                <li class="col-md-3">
+                    @Html.LabelFor(model => model.CompanionCID, new { @class = "" })
+                    @Html.TextBoxFor(model => model.CompanionCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
                 </li>
-                <li>
-                    @Html.LabelFor(model => model.CompanionFName, new {@class = ""})
-                    @Html.TextBoxFor(model => model.CompanionFName, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+                <li class="col-md-3">
+                    @Html.LabelFor(model => model.CompanionFName, new { @class = "" })
+                    @Html.TextBoxFor(model => model.CompanionFName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
                 </li>
-                <li>
-                    @Html.LabelFor(model => model.CompanionMName, new {@class = ""})
-                    @Html.TextBoxFor(model => model.CompanionMName, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+                <li class="col-md-3">
+                    @Html.LabelFor(model => model.CompanionMName, new { @class = "" })
+                    @Html.TextBoxFor(model => model.CompanionMName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
                 </li>
-                <li>
-                    @Html.LabelFor(model => model.CompanionLName, new {@class = ""})
-                    @Html.TextBoxFor(model => model.CompanionLName, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+                <li class="col-md-3">
+                    @Html.LabelFor(model => model.CompanionLName, new { @class = "" })
+                    @Html.TextBoxFor(model => model.CompanionLName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
                 </li>
 
             </ul>
@@ -170,23 +183,23 @@
         }
 
     </fieldset>
-    <button data-toggle="collapse" data-target="#AuditInfo"><i ></i> Audit Info</button>
+    <button data-toggle="collapse" data-target="#AuditInfo"><i></i> Audit Info</button>
     <fieldset id="AuditInfo" class="collapse">
         <legend>Audit Info</legend>
-        <ul class="fieldlist">
-            <li>
+        <ul class="fieldlist form-row">
+            <li class="col-md-3">
                 @Html.LabelFor(model => model.CreatedBy, new { @class = "" })
                 @Html.TextBoxFor(model => model.CreatedBy, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
             </li>
-            <li>
+            <li class="col-md-3">
                 @Html.LabelFor(model => model.CreatedDate, new { @class = "" })
                 @Html.TextBoxFor(model => model.CreatedDateFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
             </li>
-            <li>
+            <li class="col-md-3">
                 @Html.LabelFor(model => model.ModifiedBy, new { @class = "" })
                 @Html.TextBoxFor(model => model.ModifiedBy, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
             </li>
-            <li>
+            <li class="col-md-3">
                 @Html.LabelFor(model => model.ModifiedDate, new { @class = "" })
                 @Html.TextBoxFor(model => model.ModifiedDateFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
             </li>
@@ -197,7 +210,8 @@
 
 @section Scripts{
     <script type="text/javascript">
-
+        var data = @Html.Raw(Json.Encode(Model.PaymentDeductions));
+        console.log(data);
         $('document').ready(function () {
             //class="btn btn-block mb-2 text-uppercase text-info"
             $('#contentPaymentDetail button').addClass('btn btn-block mb-2 text-uppercase text-white bg-info');
@@ -205,34 +219,71 @@
             $('#contentPaymentDetail button i').addClass('fa fa-angle-double-down pull-left');
             $("#contentPaymentDetail").css("visibility", "visible");
             $(".loader").css("display", "none");
-            //kendo.drawing.drawDOM("#contentPaymentDetail", {
-            //    paperSize: "A4",
-            //    margin: { top: "2cm", left: "0cm", right: "0cm", bottom: "1cm" },
-            //    landscape: true,
-            //}).then(function (group) {
-            //    kendo.drawing.pdf.saveAs(group, "paymentDetail.pdf");
-            //});
-            //$("#TotalDue").kendoNumericTextBox({
-            //    format: "c",
-            //    //decimals: 3
-            //});
-            //$("#CompanionPayRate, #PatientPayRate").kendoNumericTextBox({
-            //    format: "p0",
-            //        min: 0,
-            //        max: 100,
-            //    step: 1
-            //});
+
             $('#contentPaymentDetail button').click(function () {
-                
+
                 var $this = this;
                 var caret =$($this).find('i');
                 if ($(caret).hasClass('fa-angle-double-down'))
                     $(caret).removeClass('fa-angle-double-down').addClass("fa-angle-double-up");
                 else
                     $(caret).removeClass('fa-angle-double-up').addClass("fa-angle-double-down");
-                
+
             });
         });
-        
+        $("#paymentDeduction").kendoGrid({
+            toolbar: ["pdf"],
+            pdf: {
+                fileName: "Deduction List.pdf"
+            },
+
+            columns: [
+            {
+                field: "DeductionID",
+                title: "Payment Num",
+
+                template: "<a href='@Url.Action("Details", "Payment")?paymentId=#= DeductionID#'>#= DeductionID #</a>",
+                @*cellTemplate: '<div class="ui-grid-cell-contents"><a href={{@Url.Action("Details", "Payment")}} class="icon-bar">{{row.entity.Id}}</a></div>'*@
+            },
+
+            {
+                field: "PatientCID",
+                title: "P_CID"
+            },
+            {
+                field: "CompanionCID",
+                title: "C_CID"
+            },
+            {
+                field: "PaymentStartDate",
+                title: "start Date",
+                template: "#= kendo.toString(kendo.parseDate(PaymentStartDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
+            },
+            {
+                field: "PaymentEndDate",
+                title: "End Date",
+                template: "#= kendo.toString(kendo.parseDate(PaymentEndDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
+            },
+            {
+                field: "PDeduction",
+                title: "Patient Deduction"
+
+            },
+            {
+                field: "CDeduction",
+                title: "Companion Deduction"
+            },
+            {
+                field: "TotalDeduction",
+                title: "Total Deduction"
+            },
+            {
+                field: "FinalAmount",
+                title: "Final Amount"
+            }],
+            dataSource: {
+                data: data
+            }
+        });
     </script>
 }

@@ -13,15 +13,17 @@
 @* new February 28, 2019 *@
 <div class="pt-4">
     <div style="display: inline">
-        <input id="paymentDt1" class="k-textbox" placeholder="MM/dd/YYYY"/><i class="fa fa-calendar" style="position: absolute; left: 280px; bottom: 55px"></i>
+        <input id="paymentDt1" class="k-textbox" placeholder="MM/dd/YYYY"/>
+        
     </div>
 
     <div style="display: inline">
 
         <input id="paymentDt2" class="k-textbox" placeholder="MM/dd/YYYY"/>
-        <i class="fa fa-calendar" style="position: absolute; left: 507px; bottom: 55px"></i>
+        
     </div>
     <a href="javascript:showTodayPayments()" class="k-button">Get Payments</a>
+   
 
 </div>
 <div class="modal fade bd-example-modal-lg" id="todayPaymentList" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-hidden="true">
@@ -52,108 +54,7 @@
 
         <div id="content" style="visibility: hidden;">
             <div id="paymentList"></div>
-            @*<table id="paymentList">
-                    <colgroup>
-                        <col style="width: 100px"/>
-                        <col style="width: 90px"/>
-                        <col style="width: 110px"/>
-                        <col style="width: 110px"/>
-                        <col style="width: 120px"/>
-                        <col style="width: 90px"/>
-
-
-                    </colgroup>
-                    <thead>
-                    <tr>
-                        <th>
-                            Id
-                        </th>
-                        <th>
-
-                            Payment Date
-                        </th>
-
-                        <th>
-
-                            Patient CID
-                        </th>
-
-                        <th>
-
-                            Companion CID
-                        </th>
-
-                        <th>
-
-                            Period
-                        </th>
-
-                        <th>
-
-                            Start Date
-                        </th>
-                        <th>
-
-                            End Date
-                        </th>
-
-                        <th>
-
-                            Amount
-                        </th>
-
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <th>
-                                Delete
-                            </th>
-                        }
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>
-                                @Html.ActionLink(item.Id.ToString(), "Details", new {paymentId = item.Id})
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.PaymentDateFormatted)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.PatientCID)
-                            </td>
-
-                            <td>
-                                @Html.DisplayFor(modelItem => item.CompanionCID)
-                            </td>
-
-                            <td>
-                                @Html.DisplayFor(modelItem => item.PaymentLengthPeriod)
-                            </td>
-
-                            <td>
-                                @Html.DisplayFor(modelItem => item.PaymentStartDateFormatted)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.PaymentEndDateFormatted)
-                            </td>
-
-                            <td>
-                                @Html.DisplayFor(modelItem => item.TotalDue)
-                            </td>
-
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <td>
-
-                                    <a href="javascript:confirmDelete('@item.Id','paymentId')" id="@item.Id"><i class="fa fa-times fa-2x" style="color: lightcoral"></i></a>
-                                </td>
-                            }
-                        </tr>
-                    }
-                    </tbody>
-                </table>*@
+           
         </div>
                 }
                 else
@@ -183,6 +84,7 @@
         });
     </script>
     <script src="https://kendo.cdn.telerik.com/2018.2.516/js/pako_deflate.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2017.1.118/js/jszip.min.js"></script><!-- required to export grid to excel-->
     <script type="text/javascript">
 
         $('document').ready(function () {
@@ -204,11 +106,14 @@
             //    }
             //});
             $("#paymentList").kendoGrid({
-                toolbar: ["pdf"],
+                toolbar: ["pdf","excel"],
                 pdf: {
-                    fileName: "Today payments.pdf"
+                    fileName: $("#paymentDt1").val()+" "+$("#paymentDt2").val()+" payments.pdf"
                 },
-
+                excel: {
+                    fileName: $("#paymentDt1").val()+" "+$("#paymentDt2").val()+" payments.xlsx",
+                    filterable: true
+                },
                 columns: [{
                     field: "Id",
                     title: "Payment Num",
@@ -258,9 +163,13 @@
     @* new February 28, 2019 *@
     <script type="text/javascript">
 
-
+        //function printPayment() {
+        //    var grid = $("#paymentGrid").data("kendoGrid");
+        //    grid.saveAsExcel();
+        //    console.log("Print excel payment");
+        //}
         function showTodayPayments() {
-
+            
             var firstDate = $('#paymentDt1').val();
             var secondDate = $('#paymentDt2').val();
 
@@ -281,10 +190,7 @@
 
             payments= payments.filter(function (entry) {
                 var paymentDate = new Date(entry.PaymentDateFormatted).toDateString();
-                /* if date1= paymentDate or pyamentDate = date2 or (paymentDate>date1 and paymentDate<date2
-                    (date1 === new Date(paymentDate).getTime() || date2=== new Date(paymentDate).getTime() )
-                    ||(date1 < new Date(paymentDate).getTime() && date2> new Date(paymentDate).getTime() )
-                */
+                
                 return  (
                         //date1 >= new Date(paymentDate).getTime() && date2<= new Date(paymentDate).getTime() 
                     (date1 === new Date(paymentDate).getTime() || date2=== new Date(paymentDate).getTime() )
@@ -296,11 +202,15 @@
                 return new Date(a.PaymentDateFormatted) - new Date(b.PaymentDateFormatted);
             });
             $("#paymentGrid").kendoGrid({
-                toolbar: ["pdf"],
+                toolbar: ["pdf","excel"],
                 pdf: {
                     fileName: "Today payments.pdf"
                 },
-
+                excel: {
+                    fileName: firstDate+" "+secondDate+" Payments.xlsx",
+                    
+                    filterable: true
+                },
                 columns: [
                     {
                         field: "PaymentDateFormatted",
@@ -331,10 +241,10 @@
             });
 
         }
-
+        
         $(function () {
             $("#deleteConfirmModal").on('click', "#deleteConfirm", function () {
-
+                
             });
         });
 

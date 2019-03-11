@@ -7,8 +7,8 @@
     <ProjectGuid>{1B7ADA94-AB71-4CA4-A61E-035EDBE8F2C3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Kwt.PatientsMgtAppt.PersistenceDB</RootNamespace>
-    <AssemblyName>Kwt.PatientsMgtAppt.PersistenceDB</AssemblyName>
+    <RootNamespace>Kwt.PatientsMgtApp.PersistenceDB</RootNamespace>
+    <AssemblyName>Kwt.PatientsMgtApp.PersistenceDB</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -107,6 +107,9 @@
       <DependentUpon>PatientMgt.edmx</DependentUpon>
     </Compile>
     <Compile Include="EDMX\Payment.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\PaymentDeduction.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
     <Compile Include="EDMX\PayRate.cs">

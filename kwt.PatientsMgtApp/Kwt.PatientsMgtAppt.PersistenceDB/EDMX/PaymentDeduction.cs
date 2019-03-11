@@ -12,28 +12,21 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
     using System;
     using System.Collections.Generic;
     
-    public partial class Payment
+    public partial class PaymentDeduction
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Payment()
-        {
-            this.PaymentDeductions = new HashSet<PaymentDeduction>();
-        }
-    
+        public int DeductionID { get; set; }
         public int PaymentID { get; set; }
-        public Nullable<System.DateTime> PaymentDate { get; set; }
+        public Nullable<System.DateTime> DeductionDate { get; set; }
         public string PatientCID { get; set; }
         public string CompanionCID { get; set; }
         public Nullable<int> BeneficiaryID { get; set; }
-        public Nullable<int> HospitalID { get; set; }
-        public Nullable<int> AgencyID { get; set; }
         public Nullable<int> PayRateID { get; set; }
         public Nullable<System.DateTime> StartDate { get; set; }
         public Nullable<System.DateTime> EndDate { get; set; }
-        public Nullable<int> Period { get; set; }
-        public Nullable<decimal> PAmount { get; set; }
-        public Nullable<decimal> CAmount { get; set; }
-        public Nullable<decimal> TotalDue { get; set; }
+        public Nullable<decimal> PDeduction { get; set; }
+        public Nullable<decimal> CDeduction { get; set; }
+        public Nullable<decimal> TotalDeduction { get; set; }
+        public Nullable<decimal> FinalAmount { get; set; }
         public string Notes { get; set; }
         public string CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
@@ -43,8 +36,7 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public virtual Beneficiary Beneficiary { get; set; }
         public virtual Companion Companion { get; set; }
         public virtual Patient Patient { get; set; }
+        public virtual Payment Payment { get; set; }
         public virtual PayRate PayRate { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PaymentDeduction> PaymentDeductions { get; set; }
     }
 }

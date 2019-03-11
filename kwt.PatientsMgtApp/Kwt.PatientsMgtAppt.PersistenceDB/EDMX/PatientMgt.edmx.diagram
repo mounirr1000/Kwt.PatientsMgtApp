@@ -37,6 +37,12 @@
         <AssociationConnector Association="PatientsMgtModel.FK_Payments_Patients" ManuallyRouted="false" />
         <AssociationConnector Association="PatientsMgtModel.FK_Payments_PayRates" ManuallyRouted="false" />
         <AssociationConnector Association="PatientsMgtModel.FK_PatientHistories_Patients" />
+        <EntityTypeShape EntityType="PatientsMgtModel.PaymentDeduction" Width="1.5" PointX="13.5" PointY="7.625" />
+        <AssociationConnector Association="PatientsMgtModel.FK_PaymentDeductions_Beneficiaries" />
+        <AssociationConnector Association="PatientsMgtModel.FK_PaymentDeductions_Companions" />
+        <AssociationConnector Association="PatientsMgtModel.FK_PaymentDeductions_Patients" />
+        <AssociationConnector Association="PatientsMgtModel.FK_PaymentDeductions_Payments" />
+        <AssociationConnector Association="PatientsMgtModel.FK_PaymentDeductions_PayRates" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

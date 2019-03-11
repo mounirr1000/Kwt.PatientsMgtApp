@@ -21,6 +21,7 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
             this.Companions = new HashSet<Companion>();
             this.Payments = new HashSet<Payment>();
             this.PatientHistories = new HashSet<PatientHistory>();
+            this.PaymentDeductions = new HashSet<PaymentDeduction>();
         }
     
         public int Id { get; set; }
@@ -60,5 +61,7 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public virtual ICollection<Payment> Payments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PatientHistory> PatientHistories { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PaymentDeduction> PaymentDeductions { get; set; }
     }
 }

@@ -75,6 +75,7 @@
     <Compile Include="IPatientHistoryRepository.cs" />
     <Compile Include="IPatientManagmentRepository.cs" />
     <Compile Include="IPatientRepository.cs" />
+    <Compile Include="IPaymentDeductionRepository.cs" />
     <Compile Include="IPaymentRepository.cs" />
     <Compile Include="IPayRateRepository.cs" />
     <Compile Include="ISpecialityRepository.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="PatientHistoryRepository.cs" />
     <Compile Include="PatientManagmentRepository.cs" />
     <Compile Include="PatientRepository.cs" />
+    <Compile Include="PaymentDeductionRepository.cs" />
     <Compile Include="PaymentRepository.cs" />
     <Compile Include="PayRateRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

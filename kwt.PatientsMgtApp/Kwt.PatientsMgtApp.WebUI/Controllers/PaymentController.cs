@@ -9,7 +9,7 @@ using Kwt.PatientsMgtApp.Core.Models;
 using Kwt.PatientsMgtApp.DataAccess.SQL;
 using Kwt.PatientsMgtApp.PersistenceDB.EDMX;
 using Kwt.PatientsMgtApp.WebUI.CustomFilter;
-
+using Kwt.PatientsMgtApp.WebUI.Models;
 using Kwt.PatientsMgtApp.WebUI.Utilities;
 using PagedList;
 
@@ -24,12 +24,13 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         private readonly IPaymentRepository _paymentRepository;
         private readonly IBeneficiaryRepository _beneficiaryRepository;
         private readonly IPayRateRepository _payRateRepository;
-
+        // private readonly IPaymentDeductionRepository _paymentDeductionRepository;
         public PaymentController()
         {
             _paymentRepository = new PaymentRepository();
             _beneficiaryRepository = new BeneficiaryRepository();
             _payRateRepository = new PayRateRepository();
+            //   _paymentDeductionRepository = new PaymentDeductionRepository();
 
         }
         // GET: Companion
@@ -132,10 +133,14 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
 
             var payment = _paymentRepository.GetPaymentById(paymentId);
 
+
             if (payment != null)
             {
 
+                //new
+                //     payment.PaymentDeductionModel = _paymentDeductionRepository.GetPaymentDeductionByPaymentId(paymentId);
 
+                //
                 return View(payment);
             }
             else
@@ -209,32 +214,48 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         [ExceptionHandler]
         public ActionResult Edit(int paymentId)
         {
+            PaymentViewModel paymentView = new PaymentViewModel();
             var payment = _paymentRepository.GetPaymentById(paymentId);
             payment.PayRates = _payRateRepository.GetPayRatesList();
+            paymentView.Payment = payment;
+
             //companion.CompanionTypes = _companionManagmentRepository.GetCompanionTypes();
             //companion.Banks = _patientManagmentRepository.GetBanks();
-            return View(payment);
+            return View(paymentView);
         }
         [HttpPost]
         [ExceptionHandler]
-        public ActionResult Edit(PaymentModel payment)
+        public ActionResult Edit(PaymentViewModel pay)
         {
-            ValidatePayment(payment, true);
+            // ValidatePayment(payment, true);
+            //foreach (ModelState modelState in ViewData.ModelState.Values)
+            //{
+            //    var test = false;
+            //    if (modelState.Errors.Count > 0)
+            //    {
+            //         test = true;
+            //        foreach (ModelError error in modelState.Errors)
+            //        {
+            //            var message = error.ErrorMessage;
+            //        }
+            //    }
+            //}
+            
             if (ModelState.IsValid)
             {
-                payment.ModifiedBy = User.Identity.Name;
-                _paymentRepository.UpdatePayment(payment);
-                Success(string.Format("Payment for patient with  CId <b>{0}</b> was successfully updated.", payment.PatientCID), true);
-                return RedirectToAction("Details", "Payment", new { paymentId = payment.Id });
+                pay.Payment.ModifiedBy = User.Identity.Name;
+                _paymentRepository.UpdatePayment(pay.Payment);
+                Success(string.Format("Payment for patient with  CId <b>{0}</b> was successfully updated.", pay.Payment.PatientCID), true);
+                return RedirectToAction("Details", "Payment", new { paymentId = pay.Payment.Id });
             }
             else
             {
-                payment = _paymentRepository.GetPaymentById(payment.Id);
-                payment.PayRates = _payRateRepository.GetPayRatesList();
-                Information(string.Format("Payment for patient with  CId  <b>{0}</b> Was Not updated.", payment.PatientCID), true);
+                pay.Payment = _paymentRepository.GetPaymentById(pay.Payment.Id);
+                pay.Payment.PayRates = _payRateRepository.GetPayRatesList();
+                Information(string.Format("Payment for patient with  CId  <b>{0}</b> Was Not updated.", pay.Payment.PatientCID), true);
                 //companion.CompanionTypes = _companionManagmentRepository.GetCompanionTypes();
                 //companion.Banks = _patientManagmentRepository.GetBanks();
-                return View(payment);
+                return View(pay.Payment);
             }
         }
 
@@ -271,8 +292,19 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             //         --When payrateid = 1, for the same payment period, means both patient and compnaion get paid
             //--When payrateid = 2, for the same payment period, means  patient get paid and not the compnaion
             //  --When payrateid = 3, for the same payment period, means the companion get paid and not the patient
-            if (ModelState.IsValidField("PaymentStartDate") &&
-          ModelState.IsValidField("PaymentEndDate"))
+            ValidatePaymentDates(payment);
+            var historyPaments = _paymentRepository.GetPaymentsByPatientCid(payment.PatientCID);
+            CheckIfPaymentAlreadyMade(payment, historyPaments);
+            CheckIfDuplicatePayment(payment, historyPaments, isEdit);
+
+            //check for same dates with different total and different payrates
+            //in this case payment should not be blocked, 'cause patient can be paid sparatly than companion but in the same period
+            CheckIfNoDuplicatePayment(payment, historyPaments, isEdit);
+        }
+
+        private void ValidatePaymentDates(PaymentModel payment)
+        {
+            if (ModelState.IsValidField("PaymentStartDate") && ModelState.IsValidField("PaymentEndDate"))
             {
                 //Todo: check for current date as well
                 if (DateTime.Parse(payment.PaymentStartDate?.ToString()) >
@@ -293,9 +325,10 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                     ModelState.AddModelError("CompanionPayRate", "Companion Pay Rate and Patient Pay Rate cannot both be zero");
                 }
             }
-            //
-            var historyPaments = _paymentRepository.GetPaymentsByPatientCid(payment.PatientCID);
-            //==================
+        }
+
+        private void CheckIfPaymentAlreadyMade(PaymentModel payment, List<PaymentModel> historyPaments)
+        {
 
             var paymentMadeForBoth = historyPaments.Any(p => p.PaymentStartDate == payment.PaymentStartDate &&
                                      p.PaymentEndDate == payment.PaymentEndDate
@@ -327,7 +360,10 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                 if (ModelState.IsValidField("PaymentEndDate"))
                     ModelState.AddModelError("PaymentEndDate", "Companion already has a payment made with the same rate and with this end date");
             }
-            //===================
+        }
+
+        private void CheckIfDuplicatePayment(PaymentModel payment, List<PaymentModel> historyPaments, bool isEdit)
+        {
             var duplicatPayment = historyPaments
                                 .Any(p => p.PaymentStartDate == payment.PaymentStartDate &&
                                     p.PaymentEndDate == payment.PaymentEndDate &&
@@ -380,8 +416,10 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
 
                     ModelState.AddModelError("TotalDue", "Patient already has a payment with the same amount made with these start and end dates");
             }
-            //check for same dates with different total and different payrates
-            //in this case payment should not be blocked, 'cause patient can be paid sparatly than companion but in the same period
+        }
+
+        private void CheckIfNoDuplicatePayment(PaymentModel payment, List<PaymentModel> historyPaments, bool isEdit)
+        {
             var isNotduplicatPayment = historyPaments
                                .Any(p => (p.PaymentStartDate == payment.PaymentStartDate
                                        && p.PaymentEndDate == payment.PaymentEndDate)
@@ -429,91 +467,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                     ModelState.AddModelError("PaymentEndDate", "Our records indicates that there is payment conflict with this payment end date");
                 }
             }
-            //var companionType = _companionManagmentRepository.GetCompanionTypes()
-            //                             .Where(c => c.Id == (int)Enums.CompanionType.Primary)
-            //                             .Select(ct => ct.CompanionType).FirstOrDefault();
-            // get the patient Associated with this companion
-            //if (payment.PatientCID != null)
-            //{
-            //    var patient = _patientRepository.GetPatient(payment.PatientCID);
-            //    if (patient == null && ModelState.IsValidField("PatientCID"))
-            //    {
-            //        ModelState.AddModelError("PatientCID", payment.PatientCID + " is an incorrect Patient Cid, There is not patient in our record with this Cid");
-            //    }
-            //    if (patient != null && ModelState.IsValidField("PatientCID"))
-            //    {
-            //        //if (patient.IsBeneficiary && payment.IsBeneficiary)
-            //        //    ModelState.AddModelError("IsBeneficiary", "The patient with " + companion.PatientCID + " CID associated with this companion is already Beneficiary, You can't have the companion as beneficiary");
-            //        //if (!patient.IsBeneficiary && !companion.IsBeneficiary)
-            //        //    if (ModelState.IsValidField("CompanionType") && companion.CompanionType == companionType)
-            //        //        ModelState.AddModelError("IsBeneficiary", "The patient with " + companion.PatientCID +
-            //        //                    " CID associated with this companion is Not Beneficiary, So you need to set this companion as Beneficiary");
-            //    }
-            //    if (patient != null)
-            //    {
-            //        if (ModelState.IsValidField("CompanionType") && payment.CompanionType == companionType)
-            //        {
-            //            var existingCompanions = _companionRepository.GetCompanions().Where(c => c.PatientCID == companion.PatientCID && c.IsActive);
-
-            //            foreach (var comp in existingCompanions)
-            //            {
-            //                if (comp.CompanionCID != companion.CompanionCID)
-            //                {
-            //                    if (comp.CompanionType == companionType)
-            //                    {
-            //                        ModelState.AddModelError("CompanionType", "There is already a companion with the patient declared as Primary, You can't have this companion as primary");
-            //                        break;
-            //                    }
-            //                }
-            //            }
-            //        }
-            //        // see if there is a c primary companion with this patient, we can't have two companion as primary
-            //    }
-            //}
-            //if (ModelState.IsValidField("IsBeneficiary")
-            //   && companion.IsBeneficiary == true
-            //   && companion.IBan == null)
-            //{
-            //    ModelState.AddModelError("IBan", "Since the companion is Beneficiary, you need to enter the Bank Account field");
-            //}
-            //if (ModelState.IsValidField("IsBeneficiary")
-            //    && companion.IsBeneficiary == true
-            //    && companion.BankName == null)
-            //{
-            //    ModelState.AddModelError("BankName", "Since the companion is Beneficiary, you need to enter the Bank Name field");
-            //}
-            //if (ModelState.IsValidField("IsBeneficiary")
-            //    && companion.IsBeneficiary == false
-            //    && companion.BankName != null)
-            //{
-            //    ModelState.AddModelError("BankName", "The companion is Not Beneficiary, so no need to enter the Bank Name field");
-            //}
-            //if (ModelState.IsValidField("IsBeneficiary")
-            //    && companion.IsBeneficiary == false
-            //    && companion.IBan != null)
-            //{
-            //    ModelState.AddModelError("IBan", "The companion is Not Beneficiary, so no need to enter the Bank Account field");
-            //}
-            //if (ModelState.IsValidField("isActive")
-            //    && companion.IsActive == false
-            //    && companion.DateOut == null)
-            //{
-            //    ModelState.AddModelError("DateOut", "The companion is not active, so you need to enter the Date out field");
-            //}
-            //if (ModelState.IsValidField("DateOut")
-            //    && companion.DateOut != null
-            //    && companion.IsActive)
-            //{
-            //    ModelState.AddModelError("IsActive", "Date out is set, so the companion Active status should be No");
-            //}
-            //// if the companion is not Primary and the user select it to be beneficiary
-            //if (ModelState.IsValidField("CompanionType"))
-            //{
-
-            //    if (companion.IsBeneficiary && companion.CompanionType != companionType)
-            //        ModelState.AddModelError("CompanionType", companion.CompanionType +
-            //            " Can't be Beneficiary, Only " + companionType + " companion who can");
-            //}
         }
+
     }
 }

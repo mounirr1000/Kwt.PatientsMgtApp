@@ -112,6 +112,18 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         }
     }
 
+    //new 
+    public partial class PaymentDeduction : IDomainObject, IAuditObject
+    {
+        public int Id
+        {
+            get { return this.DeductionID; }
+
+            set { this.DeductionID = value; }
+        }
+    }
+
+    //
     public partial class PayRate : IDomainObject
     {
         public int Id

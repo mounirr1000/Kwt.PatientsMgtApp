@@ -106,7 +106,7 @@
             <PropertyRef Name="HospitalID" />
           </Key>
           <Property Name="HospitalID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="HospitalName" Type="nvarchar" MaxLength="50" />
+          <Property Name="HospitalName" Type="nvarchar" MaxLength="150" />
         </EntityType>
         <EntityType Name="PatientHistories">
           <Key>
@@ -155,6 +155,29 @@
           <Property Name="EndTreatDate" Type="date" />
           <Property Name="IsBeneficiary" Type="bit" />
           <Property Name="IsActive" Type="bit" />
+          <Property Name="Notes" Type="nvarchar" MaxLength="250" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="50" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="nvarchar" MaxLength="50" />
+          <Property Name="ModifiedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="PaymentDeductions">
+          <Key>
+            <PropertyRef Name="DeductionID" />
+          </Key>
+          <Property Name="DeductionID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PaymentID" Type="int" Nullable="false" />
+          <Property Name="DeductionDate" Type="date" />
+          <Property Name="PatientCID" Type="nvarchar" MaxLength="12" />
+          <Property Name="CompanionCID" Type="nvarchar" MaxLength="12" />
+          <Property Name="BeneficiaryID" Type="int" />
+          <Property Name="PayRateID" Type="int" />
+          <Property Name="StartDate" Type="date" />
+          <Property Name="EndDate" Type="date" />
+          <Property Name="PDeduction" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="CDeduction" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="TotalDeduction" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="FinalAmount" Type="decimal" Precision="18" Scale="0" />
           <Property Name="Notes" Type="nvarchar" MaxLength="250" />
           <Property Name="CreatedBy" Type="nvarchar" MaxLength="50" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
@@ -367,6 +390,68 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_PaymentDeductions_Beneficiaries">
+          <End Role="Beneficiaries" Type="Self.Beneficiaries" Multiplicity="0..1" />
+          <End Role="PaymentDeductions" Type="Self.PaymentDeductions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Beneficiaries">
+              <PropertyRef Name="BeneficiaryID" />
+            </Principal>
+            <Dependent Role="PaymentDeductions">
+              <PropertyRef Name="BeneficiaryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentDeductions_Companions">
+          <End Role="Companions" Type="Self.Companions" Multiplicity="0..1" />
+          <End Role="PaymentDeductions" Type="Self.PaymentDeductions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Companions">
+              <PropertyRef Name="CompanionCID" />
+              <PropertyRef Name="PatientCID" />
+            </Principal>
+            <Dependent Role="PaymentDeductions">
+              <PropertyRef Name="CompanionCID" />
+              <PropertyRef Name="PatientCID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentDeductions_Patients">
+          <End Role="Patients" Type="Self.Patients" Multiplicity="0..1" />
+          <End Role="PaymentDeductions" Type="Self.PaymentDeductions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patients">
+              <PropertyRef Name="PatientCID" />
+            </Principal>
+            <Dependent Role="PaymentDeductions">
+              <PropertyRef Name="PatientCID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentDeductions_Payments">
+          <End Role="Payments" Type="Self.Payments" Multiplicity="1" />
+          <End Role="PaymentDeductions" Type="Self.PaymentDeductions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Payments">
+              <PropertyRef Name="PaymentID" />
+            </Principal>
+            <Dependent Role="PaymentDeductions">
+              <PropertyRef Name="PaymentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentDeductions_PayRates">
+          <End Role="PayRates" Type="Self.PayRates" Multiplicity="0..1" />
+          <End Role="PaymentDeductions" Type="Self.PaymentDeductions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PayRates">
+              <PropertyRef Name="PayRateID" />
+            </Principal>
+            <Dependent Role="PaymentDeductions">
+              <PropertyRef Name="PayRateID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Payments_Beneficiaries">
           <End Role="Beneficiaries" Type="Self.Beneficiaries" Multiplicity="0..1" />
           <End Role="Payments" Type="Self.Payments" Multiplicity="*" />
@@ -441,6 +526,7 @@
           <EntitySet Name="Hospitals" EntityType="Self.Hospitals" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PatientHistories" EntityType="Self.PatientHistories" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Patients" EntityType="Self.Patients" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PaymentDeductions" EntityType="Self.PaymentDeductions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Payments" EntityType="Self.Payments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PayRates" EntityType="Self.PayRates" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
@@ -490,6 +576,26 @@
           <AssociationSet Name="FK_Patients_Specialties" Association="Self.FK_Patients_Specialties">
             <End Role="Specialties" EntitySet="Specialties" />
             <End Role="Patients" EntitySet="Patients" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentDeductions_Beneficiaries" Association="Self.FK_PaymentDeductions_Beneficiaries">
+            <End Role="Beneficiaries" EntitySet="Beneficiaries" />
+            <End Role="PaymentDeductions" EntitySet="PaymentDeductions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentDeductions_Companions" Association="Self.FK_PaymentDeductions_Companions">
+            <End Role="Companions" EntitySet="Companions" />
+            <End Role="PaymentDeductions" EntitySet="PaymentDeductions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentDeductions_Patients" Association="Self.FK_PaymentDeductions_Patients">
+            <End Role="Patients" EntitySet="Patients" />
+            <End Role="PaymentDeductions" EntitySet="PaymentDeductions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentDeductions_Payments" Association="Self.FK_PaymentDeductions_Payments">
+            <End Role="Payments" EntitySet="Payments" />
+            <End Role="PaymentDeductions" EntitySet="PaymentDeductions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentDeductions_PayRates" Association="Self.FK_PaymentDeductions_PayRates">
+            <End Role="PayRates" EntitySet="PayRates" />
+            <End Role="PaymentDeductions" EntitySet="PaymentDeductions" />
           </AssociationSet>
           <AssociationSet Name="FK_Payments_Beneficiaries" Association="Self.FK_Payments_Beneficiaries">
             <End Role="Beneficiaries" EntitySet="Beneficiaries" />
@@ -544,6 +650,7 @@
           <Property Name="BankID" Type="Int32" />
           <Property Name="IBan" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Payments" Relationship="Self.FK_Payments_Beneficiaries" FromRole="Beneficiaries" ToRole="Payments" />
+          <NavigationProperty Name="PaymentDeductions" Relationship="PatientsMgtModel.FK_PaymentDeductions_Beneficiaries" FromRole="Beneficiary" ToRole="PaymentDeduction" />
         </EntityType>
         <EntityType Name="CompanionHistory">
           <Key>
@@ -594,6 +701,7 @@
           <NavigationProperty Name="CompanionType" Relationship="Self.FK_Companions_CompanionTypes" FromRole="Companions" ToRole="CompanionTypes" />
           <NavigationProperty Name="Patient" Relationship="Self.FK_Companions_Patients" FromRole="Companions" ToRole="Patients" />
           <NavigationProperty Name="Payments" Relationship="Self.FK_Payments_Companions" FromRole="Companions" ToRole="Payments" />
+          <NavigationProperty Name="PaymentDeductions" Relationship="PatientsMgtModel.FK_PaymentDeductions_Companions" FromRole="Companion" ToRole="PaymentDeduction" />
         </EntityType>
         <EntityType Name="CompanionType">
           <Key>
@@ -626,7 +734,7 @@
             <PropertyRef Name="HospitalID" />
           </Key>
           <Property Name="HospitalID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="HospitalName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="HospitalName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Patients" Relationship="Self.FK_Patients_Hospitals" FromRole="Hospitals" ToRole="Patients" />
         </EntityType>
         <EntityType Name="PatientHistory">
@@ -691,6 +799,7 @@
           <NavigationProperty Name="Specialty" Relationship="Self.FK_Patients_Specialties" FromRole="Patients" ToRole="Specialties" />
           <NavigationProperty Name="Payments" Relationship="Self.FK_Payments_Patients" FromRole="Patients" ToRole="Payments" />
           <NavigationProperty Name="PatientHistories" Relationship="PatientsMgtModel.FK_PatientHistories_Patients" FromRole="Patient" ToRole="PatientHistory" />
+          <NavigationProperty Name="PaymentDeductions" Relationship="PatientsMgtModel.FK_PaymentDeductions_Patients" FromRole="Patient" ToRole="PaymentDeduction" />
         </EntityType>
         <EntityType Name="Payment">
           <Key>
@@ -719,6 +828,7 @@
           <NavigationProperty Name="Companion" Relationship="Self.FK_Payments_Companions" FromRole="Payments" ToRole="Companions" />
           <NavigationProperty Name="Patient" Relationship="Self.FK_Payments_Patients" FromRole="Payments" ToRole="Patients" />
           <NavigationProperty Name="PayRate" Relationship="Self.FK_Payments_PayRates" FromRole="Payments" ToRole="PayRates" />
+          <NavigationProperty Name="PaymentDeductions" Relationship="PatientsMgtModel.FK_PaymentDeductions_Payments" FromRole="Payment" ToRole="PaymentDeduction" />
         </EntityType>
         <EntityType Name="PayRate">
           <Key>
@@ -728,6 +838,7 @@
           <Property Name="CompanionRate" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="PatientRate" Type="Decimal" Precision="18" Scale="0" />
           <NavigationProperty Name="Payments" Relationship="Self.FK_Payments_PayRates" FromRole="PayRates" ToRole="Payments" />
+          <NavigationProperty Name="PaymentDeductions" Relationship="PatientsMgtModel.FK_PaymentDeductions_PayRates" FromRole="PayRate" ToRole="PaymentDeduction" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -1032,6 +1143,27 @@
             <End Role="Patient" EntitySet="Patients" />
             <End Role="PatientHistory" EntitySet="PatientHistories" />
           </AssociationSet>
+          <EntitySet Name="PaymentDeductions" EntityType="PatientsMgtModel.PaymentDeduction" />
+          <AssociationSet Name="FK_PaymentDeductions_Beneficiaries" Association="PatientsMgtModel.FK_PaymentDeductions_Beneficiaries">
+            <End Role="Beneficiary" EntitySet="Beneficiaries" />
+            <End Role="PaymentDeduction" EntitySet="PaymentDeductions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentDeductions_Companions" Association="PatientsMgtModel.FK_PaymentDeductions_Companions">
+            <End Role="Companion" EntitySet="Companions" />
+            <End Role="PaymentDeduction" EntitySet="PaymentDeductions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentDeductions_Patients" Association="PatientsMgtModel.FK_PaymentDeductions_Patients">
+            <End Role="Patient" EntitySet="Patients" />
+            <End Role="PaymentDeduction" EntitySet="PaymentDeductions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentDeductions_Payments" Association="PatientsMgtModel.FK_PaymentDeductions_Payments">
+            <End Role="Payment" EntitySet="Payments" />
+            <End Role="PaymentDeduction" EntitySet="PaymentDeductions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentDeductions_PayRates" Association="PatientsMgtModel.FK_PaymentDeductions_PayRates">
+            <End Role="PayRate" EntitySet="PayRates" />
+            <End Role="PaymentDeduction" EntitySet="PaymentDeductions" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="GetPatientListReport_SP_Result">
           <Property Type="Int32" Name="id" Nullable="false" />
@@ -1082,6 +1214,96 @@
             </Principal>
             <Dependent Role="PatientHistory">
               <PropertyRef Name="PatientCID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="PaymentDeduction">
+          <Key>
+            <PropertyRef Name="DeductionID" />
+          </Key>
+          <Property Name="DeductionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PaymentID" Type="Int32" Nullable="false" />
+          <Property Name="DeductionDate" Type="DateTime" Precision="0" />
+          <Property Name="PatientCID" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
+          <Property Name="CompanionCID" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
+          <Property Name="BeneficiaryID" Type="Int32" />
+          <Property Name="PayRateID" Type="Int32" />
+          <Property Name="StartDate" Type="DateTime" Precision="0" />
+          <Property Name="EndDate" Type="DateTime" Precision="0" />
+          <Property Name="PDeduction" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="CDeduction" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="TotalDeduction" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="FinalAmount" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Notes" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Beneficiary" Relationship="PatientsMgtModel.FK_PaymentDeductions_Beneficiaries" FromRole="PaymentDeduction" ToRole="Beneficiary" />
+          <NavigationProperty Name="Companion" Relationship="PatientsMgtModel.FK_PaymentDeductions_Companions" FromRole="PaymentDeduction" ToRole="Companion" />
+          <NavigationProperty Name="Patient" Relationship="PatientsMgtModel.FK_PaymentDeductions_Patients" FromRole="PaymentDeduction" ToRole="Patient" />
+          <NavigationProperty Name="Payment" Relationship="PatientsMgtModel.FK_PaymentDeductions_Payments" FromRole="PaymentDeduction" ToRole="Payment" />
+          <NavigationProperty Name="PayRate" Relationship="PatientsMgtModel.FK_PaymentDeductions_PayRates" FromRole="PaymentDeduction" ToRole="PayRate" />
+        </EntityType>
+        <Association Name="FK_PaymentDeductions_Beneficiaries">
+          <End Type="PatientsMgtModel.Beneficiary" Role="Beneficiary" Multiplicity="0..1" />
+          <End Type="PatientsMgtModel.PaymentDeduction" Role="PaymentDeduction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Beneficiary">
+              <PropertyRef Name="BeneficiaryID" />
+            </Principal>
+            <Dependent Role="PaymentDeduction">
+              <PropertyRef Name="BeneficiaryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentDeductions_Companions">
+          <End Type="PatientsMgtModel.Companion" Role="Companion" Multiplicity="0..1" />
+          <End Type="PatientsMgtModel.PaymentDeduction" Role="PaymentDeduction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Companion">
+              <PropertyRef Name="CompanionCID" />
+              <PropertyRef Name="PatientCID" />
+            </Principal>
+            <Dependent Role="PaymentDeduction">
+              <PropertyRef Name="CompanionCID" />
+              <PropertyRef Name="PatientCID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentDeductions_Patients">
+          <End Type="PatientsMgtModel.Patient" Role="Patient" Multiplicity="0..1" />
+          <End Type="PatientsMgtModel.PaymentDeduction" Role="PaymentDeduction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patient">
+              <PropertyRef Name="PatientCID" />
+            </Principal>
+            <Dependent Role="PaymentDeduction">
+              <PropertyRef Name="PatientCID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentDeductions_Payments">
+          <End Type="PatientsMgtModel.Payment" Role="Payment" Multiplicity="1" />
+          <End Type="PatientsMgtModel.PaymentDeduction" Role="PaymentDeduction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Payment">
+              <PropertyRef Name="PaymentID" />
+            </Principal>
+            <Dependent Role="PaymentDeduction">
+              <PropertyRef Name="PaymentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PaymentDeductions_PayRates">
+          <End Type="PatientsMgtModel.PayRate" Role="PayRate" Multiplicity="0..1" />
+          <End Type="PatientsMgtModel.PaymentDeduction" Role="PaymentDeduction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PayRate">
+              <PropertyRef Name="PayRateID" />
+            </Principal>
+            <Dependent Role="PaymentDeduction">
+              <PropertyRef Name="PayRateID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1382,6 +1604,30 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="PaymentDeductions">
+            <EntityTypeMapping TypeName="PatientsMgtModel.PaymentDeduction">
+              <MappingFragment StoreEntitySet="PaymentDeductions">
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="FinalAmount" ColumnName="FinalAmount" />
+                <ScalarProperty Name="TotalDeduction" ColumnName="TotalDeduction" />
+                <ScalarProperty Name="CDeduction" ColumnName="CDeduction" />
+                <ScalarProperty Name="PDeduction" ColumnName="PDeduction" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="PayRateID" ColumnName="PayRateID" />
+                <ScalarProperty Name="BeneficiaryID" ColumnName="BeneficiaryID" />
+                <ScalarProperty Name="CompanionCID" ColumnName="CompanionCID" />
+                <ScalarProperty Name="PatientCID" ColumnName="PatientCID" />
+                <ScalarProperty Name="DeductionDate" ColumnName="DeductionDate" />
+                <ScalarProperty Name="PaymentID" ColumnName="PaymentID" />
+                <ScalarProperty Name="DeductionID" ColumnName="DeductionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

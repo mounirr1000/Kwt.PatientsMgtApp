@@ -35,7 +35,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         //new February 28, 2019
         public List<PaymentModel> GetPaymentsWithPhone(DateTime? date)
         {
-            var payments = _domainObjectRepository.Filter<Payment>( p=>p.PaymentDate ==date,new[] {"Patient"});
+            var payments = _domainObjectRepository.Filter<Payment>(p => p.PaymentDate == date, new[] { "Patient" });
 
             return payments.Select(p => p.Beneficiary != null ? new PaymentModel()
             {
@@ -45,7 +45,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 PaymentEndDate = p.EndDate,
                 TotalDue = p.TotalDue,
 
-        } : null).OrderBy(p => p.CreatedDate).ToList();// returns null when the beneficiary is not set and the second null is returned when the companion is not set
+            } : null).OrderBy(p => p.CreatedDate).ToList();// returns null when the beneficiary is not set and the second null is returned when the companion is not set
 
         }
         //
@@ -98,7 +98,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 TotalDue = p.TotalDue,
                 Id = p.PaymentID,
                 BeneficiaryCID = p.Beneficiary.BeneficiaryCID,
-                PayRateID =p.PayRateID,
+                PayRateID = p.PayRateID,
                 PatientPhone = p.Patient.KWTphone ?? p.Patient.USphone
 
             } : null).OrderBy(p => p.CreatedDate).ToList();// returns null when the beneficiary is not set and the second null is returned when the companion is not set
@@ -131,9 +131,9 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 payment.BeneficiaryFName = ben.BeneficiaryFName;
                 payment.BeneficiaryLName = ben.BeneficiaryLName;
 
-               
+
                 //Todo: This should be done a better way
-                payment.Payments = GetPaymentsByPatientCid(patientCid)?.OrderByDescending(p=>p.CreatedDate).ToList();
+                payment.Payments = GetPaymentsByPatientCid(patientCid)?.OrderByDescending(p => p.CreatedDate).ToList();
                 payment.PayRates = _payRateRepository.GetPayRatesList();
                 payment.PatientPayRate = _domainObjectRepository.Get<PayRate>(c => c.PayRateID == 1).PatientRate;
                 payment.CompanionPayRate = !String.IsNullOrEmpty(ben.CompanionCID) ? _domainObjectRepository.Get<PayRate>(c => c.PayRateID == 1).CompanionRate : 0;
@@ -143,7 +143,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         public PaymentModel GetPaymentById(int paymentid)
         {
             var payment = _domainObjectRepository.Get<Payment>(p => p.PaymentID == paymentid,
-                new[] { "Beneficiary", "Patient", "PayRate", "Companion" });
+                new[] { "Beneficiary", "Patient", "PayRate", "Companion", "PaymentDeductions" });
             PaymentModel pay = new PaymentModel();
             if (payment != null)
             {
@@ -152,6 +152,46 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 var pr = payment.PayRate;
                 var be = payment.Beneficiary;
 
+                // get payment deduction if there is one
+                if (payment.PaymentDeductions != null && payment.PaymentDeductions.Count > 0)
+                {
+                    pay.PaymentDeductionObject = payment.PaymentDeductions.Select(pd => new PaymentDeductionModel()
+                    {
+                        PatientDeduction = pd.PDeduction,
+                        CompanionAmount = payment.CAmount,
+                        PatientAmount = payment.PAmount,
+                        PatientCID = pd.PatientCID,
+                        ModifiedDate = pd.ModifiedDate,
+                        Notes = pd.Notes,
+                        FinalAmount = pd.FinalAmount,
+                        CompanionDeduction = pd.CDeduction,
+                        PayRateID = pd.PayRateID,
+                        ModifiedBy = pd.ModifiedBy,
+                        PaymentID = pd.PaymentID,
+                        DeductionID = pd.DeductionID,
+                        DeductionDate = pd.DeductionDate,
+                        TotalDeduction = pd.TotalDeduction,
+                        CreatedBy = pd.CreatedBy,
+                        DeductionEndDate = pd.EndDate,
+                        DeductionStartDate = pd.StartDate,
+                        CreatedDate = pd.CreatedDate,
+                        AmountPaid = payment.TotalDue
+
+                    }).OrderBy(p => p.DeductionDate).FirstOrDefault();
+
+                }
+                else
+                {
+                    pay.PaymentDeductionObject = new PaymentDeductionModel()
+                    {
+                        PaymentID = payment.PaymentID,
+                        PatientCID = payment.PatientCID,
+                        AmountPaid = payment.TotalDue,
+                        PatientAmount = payment.PAmount,
+                        CompanionAmount = payment.CAmount,
+
+                    };
+                }
                 // PaymentModel pay = new PaymentModel();
                 //{
                 pay.PatientCID = payment.PatientCID;
@@ -183,7 +223,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 pay.PatientAmount = payment.PAmount;
                 pay.CompanionPayRate = payment.PayRate?.CompanionRate;
                 pay.PatientPayRate = payment.PayRate?.PatientRate;
-                pay.PaymentDate = payment.PaymentDate??payment.CreatedDate;
+                pay.PaymentDate = payment.PaymentDate ?? payment.CreatedDate;
                 pay.PaymentLengthPeriod = payment.Period;
                 pay.PaymentStartDate = payment.StartDate;
                 pay.TotalDue = payment.TotalDue;
@@ -192,6 +232,32 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 pay.CompanionFName = payment.Companion?.CompanionFName;
                 pay.CompanionLName = payment.Companion?.CompanionLName;
                 pay.CompanionMName = payment.Companion?.CompanionMName;
+
+                // new
+                pay.PaymentDeductions = payment.PaymentDeductions?.Select(pd => new PaymentDeductionModel()
+                {
+                    PatientDeduction = pd.PDeduction,
+                    CompanionAmount = payment.CAmount,
+                    PatientAmount = payment.PAmount,
+                    PatientCID = pd.PatientCID,
+                    ModifiedDate = pd.ModifiedDate,
+                    Notes = pd.Notes,
+                    FinalAmount = pd.FinalAmount,
+                    CompanionDeduction = pd.CDeduction,
+                    PayRateID = pd.PayRateID,
+                    ModifiedBy = pd.ModifiedBy,
+                    PaymentID = pd.PaymentID,
+                    DeductionID = pd.DeductionID,
+                    DeductionDate = pd.DeductionDate,
+                    TotalDeduction = pd.TotalDeduction,
+                    CreatedBy = pd.CreatedBy,
+                    DeductionEndDate = pd.EndDate,
+                    DeductionStartDate = pd.StartDate,
+                    CreatedDate = pd.CreatedDate,
+
+                }).ToList();
+
+                //
                 //};
                 return pay;
             }
@@ -302,7 +368,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
 
         public PaymentModel UpdatePayment(PaymentModel payment)
         {
-            var paymentToUpdate = _domainObjectRepository.Get<Payment>(p => p.PaymentID == payment.Id);
+            var paymentToUpdate = _domainObjectRepository.Get<Payment>(p => p.PaymentID == payment.Id, new [] { "PaymentDeductions" });
             if (paymentToUpdate != null)
             {
                 Payment updatedPayment = new Payment()
@@ -328,8 +394,10 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     TotalDue = payment.TotalDue,
                     Id = payment.Id,
                     PaymentID = payment.Id,
-                    ModifiedDate = DateTime.Now
+                    ModifiedDate = DateTime.Now,
+                    PaymentDeductions = paymentToUpdate.PaymentDeductions
                 };
+                AddOrUpdatePaymentDeduction(payment, paymentToUpdate.PaymentDeductions.Count > 0);
                 paymentToUpdate = updatedPayment;
                 //Todo This is a temp fix for updating the Payment
                 PatientsMgtEntities dbContext = new PatientsMgtEntities();
@@ -339,9 +407,69 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 dbContext.SaveChanges();
                 //
                 //_domainObjectRepository.Update<Payment>(paymentToUpdate);
-
+                
+                
             }
             return payment;
+        }
+
+        private void AddOrUpdatePaymentDeduction(PaymentModel paymentModel, bool? isDeductionExist=false)
+        {
+            var deductionObject = paymentModel.PaymentDeductionObject;
+            //there is already a deduction in Database with the same payment id
+            if (isDeductionExist == true || paymentModel.PaymentDeductions?.Count > 0) //update
+            {
+                if (deductionObject != null)
+                {
+                    var paymentDeduction = new PaymentDeduction()
+                    {
+                        CDeduction = deductionObject.CompanionDeduction,
+                        PDeduction = deductionObject.PatientDeduction,
+                        StartDate = deductionObject.DeductionStartDate,
+                        EndDate = deductionObject.DeductionEndDate,
+                        PaymentID = deductionObject.PaymentID,
+                        FinalAmount = deductionObject.FinalAmount,
+                        DeductionDate = deductionObject.DeductionDate,
+                        Notes = deductionObject.Notes,
+                        TotalDeduction = deductionObject.TotalDeduction,
+                        PatientCID = deductionObject.PatientCID,
+                        ModifiedBy = deductionObject.ModifiedBy,
+                        ModifiedDate = deductionObject.ModifiedDate,
+                        CompanionCID = deductionObject.CompanionCID,
+                        BeneficiaryID = deductionObject.BeneficiaryID,
+                        PayRateID = deductionObject.PayRateID
+                    };
+                    
+                    //_domainObjectRepository.Update<PaymentDeduction>(paymentDeduction);
+                }
+            }
+            else
+            {
+                if (deductionObject?.DeductionStartDate != null &&
+                    deductionObject?.DeductionEndDate != null) //add
+                {
+
+                    var paymentDeduction = new PaymentDeduction()
+                    {
+                        CDeduction = deductionObject.CompanionDeduction,
+                        PDeduction = deductionObject.PatientDeduction,
+                        StartDate = deductionObject.DeductionStartDate,
+                        EndDate = deductionObject.DeductionEndDate,
+                        PaymentID = deductionObject.PaymentID,
+                        FinalAmount = deductionObject.FinalAmount,
+                        DeductionDate = deductionObject.DeductionDate,
+                        Notes = deductionObject.Notes,
+                        TotalDeduction = deductionObject.TotalDeduction,
+                        PatientCID = deductionObject.PatientCID,
+                        CreatedDate = DateTime.Now,
+                        CreatedBy = deductionObject.CreatedBy,
+                        CompanionCID = deductionObject.CompanionCID,
+                        BeneficiaryID = deductionObject.BeneficiaryID,
+                        PayRateID = deductionObject.PayRateID
+                    };
+                    _domainObjectRepository.Create<PaymentDeduction>(paymentDeduction);
+                }
+            }
         }
 
         public int DeletePayment(PaymentModel payment)
@@ -351,7 +479,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             var index = 0;
             if (pay != null)
             {
-   
+
                 index = _domainObjectRepository.Delete<Payment>(pay);
             }
             return index;

@@ -40,33 +40,33 @@
         <div id="contentPaymentDetail" style="visibility: hidden;">
             <fieldset>
                 <legend>Patient Information</legend>
-                <ul class="fieldlist">
-                    <li>
+                <ul class="fieldlist row">
+                    <li class="col-md-3">
                         @Html.LabelFor(model => model.PatientCID, new {@class = ""})
                         @Html.TextBoxFor(model => model.PatientCID, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
                         @Html.HiddenFor(model => model.PatientCID)
                     </li>
-                    <li>
+                    <li class="col-md-3">
                         @Html.LabelFor(model => model.PatientFName, new {@class = ""})
                         @Html.TextBoxFor(model => model.PatientFName, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
 
                     </li>
-                    <li>
+                    <li class="col-md-3">
                         @Html.LabelFor(model => model.PatientMName, new {@class = ""})
                         @Html.TextBoxFor(model => model.PatientMName, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
 
                     </li>
-                    <li>
+                    <li class="col-md-3">
                         @Html.LabelFor(model => model.PatientLName, new {@class = ""})
                         @Html.TextBoxFor(model => model.PatientLName, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
 
                     </li>
-                    <li>
+                    <li class="col-md-3">
                         @Html.LabelFor(model => model.Hospital, new {@class = ""})
                         @Html.TextBoxFor(model => model.Hospital, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
                         @Html.HiddenFor(model => model.Hospital)
                     </li>
-                    <li>
+                    <li class="col-md-3">
                         @Html.LabelFor(model => model.Agency, new {@class = ""})
                         @Html.TextBoxFor(model => model.Agency, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
                         @Html.HiddenFor(model => model.Agency)
@@ -77,23 +77,23 @@
             {
                 <fieldset>
                     <legend>Companion Information</legend>
-                    <ul class="fieldlist">
-                        <li>
+                    <ul class="fieldlist row">
+                        <li class="col-md-3">
                             @Html.LabelFor(model => model.CompanionCID, new { @class = "" })
                             @Html.TextBoxFor(model => model.CompanionCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
                             @Html.HiddenFor(model => model.CompanionCID)
                         </li>
-                        <li>
+                        <li class="col-md-3">
                             @Html.LabelFor(model => model.CompanionFName, new { @class = "" })
                             @Html.TextBoxFor(model => model.CompanionFName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
 
                         </li>
-                        <li>
+                        <li class="col-md-3">
                             @Html.LabelFor(model => model.CompanionMName, new { @class = "" })
                             @Html.TextBoxFor(model => model.CompanionMName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
 
                         </li>
-                        <li>
+                        <li class="col-md-3">
                             @Html.LabelFor(model => model.CompanionLName, new { @class = "" })
                             @Html.TextBoxFor(model => model.CompanionLName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
 
@@ -104,23 +104,23 @@
             }
             <fieldset>
                 <legend>Beneficiary Information</legend>
-                <ul class="fieldlist">
-                    <li>
+                <ul class="fieldlist row">
+                    <li class="col-md-3">
                         @Html.LabelFor(model => model.BeneficiaryCID, new { @class = "" })
                         @Html.TextBoxFor(model => model.BeneficiaryCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
                         @Html.HiddenFor(model => model.BeneficiaryCID)
                     </li>
-                    <li>
+                    <li class="col-md-3">
                         @Html.LabelFor(model => model.BeneficiaryFName, new { @class = "" })
                         @Html.TextBoxFor(model => model.BeneficiaryFName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
 
                     </li>
-                    <li>
+                    <li class="col-md-3">
                         @Html.LabelFor(model => model.BeneficiaryMName, new { @class = "" })
                         @Html.TextBoxFor(model => model.BeneficiaryMName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
 
                     </li>
-                    <li>
+                    <li class="col-md-3">
                         @Html.LabelFor(model => model.BeneficiaryLName, new { @class = "" })
                         @Html.TextBoxFor(model => model.BeneficiaryLName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
 
@@ -131,13 +131,13 @@
 
             <fieldset>
                 <legend>Beneficiary Bank Information</legend>
-                <ul class="fieldlist">
-                    <li>
+                <ul class="fieldlist row">
+                    <li class="col-md-6">
                         @Html.LabelFor(model => model.BeneficiaryBank, new { @class = "" })
                         @Html.TextBoxFor(model => model.BeneficiaryBank, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
 
                     </li>
-                    <li>
+                    <li class="col-md-6">
                         @Html.LabelFor(model => model.BeneficiaryIBan, new { @class = "" })
                         @Html.TextBoxFor(model => model.BeneficiaryIBan, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
 
@@ -146,22 +146,22 @@
             </fieldset>
             <fieldset>
                 <legend>Payment Details</legend>
-                <ul class="fieldlist">
-                    <li>
+                <ul class="fieldlist row">
+                    <li class="col-md-3">
                         @Html.LabelFor(model => model.PatientCID, new { @class = "" })
                         @Html.TextBoxFor(model => model.PatientCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
                         @Html.HiddenFor(model => model.PatientCID)
                     </li>
                    
 
-                    <li>
+                    <li class="col-md-3">
                         @Html.LabelFor(model => model.PaymentDate, new { @class = "" })
                         @Html.TextBoxFor(model => model.PaymentDate, new { @class = "", style = "width: 60%;" })
 
                     </li>
                     @if (Model.PayRates != null && !String.IsNullOrEmpty(Model.CompanionCID))
                     {
-                        <li>
+                        <li class="col-md-3">
 
                             @Html.LabelFor(model => model.CompanionPayRate, new {@class = ""})
                             @Html.DropDownListFor(model => model.CompanionPayRate, new List<SelectListItem>
@@ -178,12 +178,12 @@
                     }
                     else
                     {
-                        <li>
+                        <li class="col-md-3">
                             @*@Html.Label("There is no Companion Associated with this patient")
                             @Html.TextBox("text",null, new { @class = "k-textbox edit", style = "width: 100%;" })*@
                         </li>
                     }
-                    <li>
+                    <li class="col-md-3">
                         @Html.LabelFor(model => model.PatientPayRate, new { @class = "" })
                         @*@Html.TextBoxFor(model => model.PatientPayRate, new { @class = "k-textbox", style = "width: 100%;" })*@
                         @if (Model.PayRates != null)
@@ -202,37 +202,37 @@
                         }
                         <div>@Html.ValidationMessageFor(model => model.PatientPayRate, "", new { @class = "text-danger" })</div>
                     </li>
-                    <li>
+                    <li class="col-md-3">
                         @Html.LabelFor(model => model.PaymentStartDate, new { @class = "" })
                         @Html.TextBoxFor(model => model.PaymentStartDate, new { @class = "k-textbox", style = "width: 60%;" })
                         <div>@Html.ValidationMessageFor(model => model.PaymentStartDate, "", new { @class = "text-danger" })</div>
                     </li>
-                    <li>
+                    <li class="col-md-3">
                         @Html.LabelFor(model => model.PaymentEndDate, new { @class = "" })
                         @Html.TextBoxFor(model => model.PaymentEndDate, new {@class = "k-textbox", style = "width: 60%;"})
                         <div>@Html.ValidationMessageFor(model => model.PaymentEndDate, "", new {@class = "text-danger"})</div>
                     </li>
-                    <li>
+                    <li class="col-md-3">
                         @Html.LabelFor(model => model.PaymentLengthPeriod, new { @class = "" })
                         @Html.TextBoxFor(model => (model.PaymentLengthPeriod), new { @class = "k-textbox paymentEdit", style = "width: 100%;", @readonly = "readonly" })
                         @Html.HiddenFor(model => model.PaymentLengthPeriod)
                     </li>
-                    <li>
+                    <li class="col-md-3">
                         @Html.LabelFor(model => model.PatientAmount, new { @class = "" })
                         @Html.TextBoxFor(model => model.PatientAmount, new { @class = "k-textbox paymentEdit", style = "width: 100%;", @readonly = "readonly" })
                         @Html.HiddenFor(model => model.PatientAmount)
                     </li>
-                    <li>
+                    <li class="col-md-3">
                         @Html.LabelFor(model => model.CompanionAmount, new { @class = "" })
                         @Html.TextBoxFor(model => model.CompanionAmount, new { @class = "k-textbox paymentEdit", style = "width: 100%;", @readonly = "readonly" })
                         @Html.HiddenFor(model => model.CompanionAmount)
                     </li>
-                    <li>
+                    <li class="col-md-3">
                         @Html.LabelFor(model => model.TotalDue, new { @class = "" })
                         @Html.TextBoxFor(model => model.TotalDue, new { @class = "k-textbox paymentEdit", style = "width: 100%;", @readonly = "readonly" })
                         @Html.HiddenFor(model => model.TotalDue)
                     </li>
-                    <li>
+                    <li class="col-md-6">
                         @Html.LabelFor(model => model.Notes, new { @class = "" })
                         @Html.TextAreaFor(model => model.Notes, new { @class = "k-textbox", style = "width: 100%;", maxlength = "250" })
                         <div style="text-transform: uppercase;text-transform: capitalize; color: #444;font-size: 12px;">
