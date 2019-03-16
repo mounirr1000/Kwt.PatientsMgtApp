@@ -224,39 +224,25 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             return View(paymentView);
         }
         [HttpPost]
-        [ExceptionHandler]
+        //[ExceptionHandler]
         public ActionResult Edit(PaymentViewModel pay)
         {
-            // ValidatePayment(payment, true);
-            //foreach (ModelState modelState in ViewData.ModelState.Values)
-            //{
-            //    var test = false;
-            //    if (modelState.Errors.Count > 0)
-            //    {
-            //         test = true;
-            //        foreach (ModelError error in modelState.Errors)
-            //        {
-            //            var message = error.ErrorMessage;
-            //        }
-            //    }
-            //}
-            
+            ValidatePayment(pay.Payment, true);
+
             if (ModelState.IsValid)
             {
                 pay.Payment.ModifiedBy = User.Identity.Name;
+                pay.PaymentDeduction.ModifiedBy = User.Identity.Name;
                 _paymentRepository.UpdatePayment(pay.Payment);
                 Success(string.Format("Payment for patient with  CId <b>{0}</b> was successfully updated.", pay.Payment.PatientCID), true);
                 return RedirectToAction("Details", "Payment", new { paymentId = pay.Payment.Id });
             }
-            else
-            {
-                pay.Payment = _paymentRepository.GetPaymentById(pay.Payment.Id);
-                pay.Payment.PayRates = _payRateRepository.GetPayRatesList();
-                Information(string.Format("Payment for patient with  CId  <b>{0}</b> Was Not updated.", pay.Payment.PatientCID), true);
-                //companion.CompanionTypes = _companionManagmentRepository.GetCompanionTypes();
-                //companion.Banks = _patientManagmentRepository.GetBanks();
-                return View(pay.Payment);
-            }
+            pay.Payment = _paymentRepository.GetPaymentById(pay.Payment.Id);
+            pay.Payment.PayRates = _payRateRepository.GetPayRatesList();
+            Information(string.Format("Payment for patient with  CId  <b>{0}</b> Was Not updated.", pay.Payment.PatientCID), true);
+            //companion.CompanionTypes = _companionManagmentRepository.GetCompanionTypes();
+            //companion.Banks = _patientManagmentRepository.GetBanks();
+            return View(pay.Payment);
         }
 
         [ExceptionHandler]
@@ -289,17 +275,19 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         }
         private void ValidatePayment(PaymentModel payment, bool isEdit = false)
         {
-            //         --When payrateid = 1, for the same payment period, means both patient and compnaion get paid
+            //--When payrateid = 1, for the same payment period, means both patient and compnaion get paid
             //--When payrateid = 2, for the same payment period, means  patient get paid and not the compnaion
-            //  --When payrateid = 3, for the same payment period, means the companion get paid and not the patient
+            //--When payrateid = 3, for the same payment period, means the companion get paid and not the patient
             ValidatePaymentDates(payment);
-            var historyPaments = _paymentRepository.GetPaymentsByPatientCid(payment.PatientCID);
-            CheckIfPaymentAlreadyMade(payment, historyPaments);
-            CheckIfDuplicatePayment(payment, historyPaments, isEdit);
+            var historyPayments = _paymentRepository.GetPaymentsByPatientCid(payment.PatientCID);
+            if (historyPayments.Count>0) {
+                CheckIfPaymentAlreadyMade(payment, historyPayments, isEdit);
+                CheckIfDuplicatePayment(payment, historyPayments, isEdit);
+                //check for same dates with different total and different payrates
+                //in this case payment should not be blocked, 'cause patient can be paid sparatly than companion but in the same period
+                CheckIfNoDuplicatePayment(payment, historyPayments, isEdit);
+            } 
 
-            //check for same dates with different total and different payrates
-            //in this case payment should not be blocked, 'cause patient can be paid sparatly than companion but in the same period
-            CheckIfNoDuplicatePayment(payment, historyPaments, isEdit);
         }
 
         private void ValidatePaymentDates(PaymentModel payment)
@@ -327,50 +315,55 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             }
         }
 
-        private void CheckIfPaymentAlreadyMade(PaymentModel payment, List<PaymentModel> historyPaments)
+        private void CheckIfPaymentAlreadyMade(PaymentModel payment, List<PaymentModel> historyPayments, bool isEdit)
         {
 
-            var paymentMadeForBoth = historyPaments.Any(p => p.PaymentStartDate == payment.PaymentStartDate &&
-                                     p.PaymentEndDate == payment.PaymentEndDate
-                                  && p.PayRateID == 1);//when payrateid==1, means payment was made for both
-            if (paymentMadeForBoth)
+            var paymentMadeForBoth = historyPayments.Any(p => p.PaymentStartDate == payment.PaymentStartDate &&
+                                                         p.PaymentEndDate == payment.PaymentEndDate &&
+                                                         (p.PayRateID == 1 ||//when payrateid==1, means payment was made for both
+                                                         (p.PatientAmount==payment.PatientAmount && p.CompanionAmount==payment.CompanionAmount)));
+            if (paymentMadeForBoth && !isEdit)
             {
                 if (ModelState.IsValidField("PaymentStartDate"))
                     ModelState.AddModelError("PaymentStartDate", "Patient and companion already has a payment made with this start date");
                 if (ModelState.IsValidField("PaymentEndDate"))
                     ModelState.AddModelError("PaymentEndDate", "Patient and companion already has a payment made with this end date");
             }
-            var paymentMadeForPatient = historyPaments.Any(p => p.PaymentStartDate == payment.PaymentStartDate &&
-                                    p.PaymentEndDate == payment.PaymentEndDate
-                                 && p.PayRateID == 2 && payment.PatientPayRate == 75);//When payrateid = 2, for the same payment period, means  patient get paid and not the compnaion
-            if (paymentMadeForPatient)
+            var paymentMadeForPatient = historyPayments.Any(p => p.PaymentStartDate == payment.PaymentStartDate &&
+                                                            p.PaymentEndDate == payment.PaymentEndDate &&
+                                                           //When payrateid = 2, for the same payment period, means  patient get paid and not the compnaion
+                                                           (p.PayRateID == 2 && payment.PatientPayRate == 75) ||
+                                                           (p.PatientAmount == payment.PatientAmount));
+            if (paymentMadeForPatient && !isEdit)
             {
                 if (ModelState.IsValidField("PaymentStartDate"))
                     ModelState.AddModelError("PaymentStartDate", "Patient already has a payment made with the same rate and with this start date");
                 if (ModelState.IsValidField("PaymentEndDate"))
                     ModelState.AddModelError("PaymentEndDate", "Patient already has a payment made with the same rate and with this end date");
             }
-            var paymentMadeForCompanion = historyPaments.Any(p => p.PaymentStartDate == payment.PaymentStartDate &&
-                                    p.PaymentEndDate == payment.PaymentEndDate
-                                 && p.PayRateID == 3 && payment.PatientPayRate == 25);//When payrateid = 3, for the same payment period, means the companion get paid and not the patient
-            if (paymentMadeForCompanion)
+            var paymentMadeForCompanion = historyPayments.Any(p => p.PaymentStartDate == payment.PaymentStartDate &&
+                                                                   p.PaymentEndDate == payment.PaymentEndDate &&
+                                                                  //When payrateid = 3, for the same payment period, means the companion get paid and not the patient
+                                                                  (p.PayRateID == 3 && payment.CompanionPayRate == 25)||
+                                                                  (p.CompanionAmount == payment.CompanionAmount));
+            if (paymentMadeForCompanion && !isEdit)
             {
                 if (ModelState.IsValidField("PaymentStartDate"))
-                    ModelState.AddModelError("PaymentStartDate", "Companion already has a payment made with the same rate and with this start date");
+                    ModelState.AddModelError("PaymentStartDate", "Companion already has a payment made on this start date");
                 if (ModelState.IsValidField("PaymentEndDate"))
-                    ModelState.AddModelError("PaymentEndDate", "Companion already has a payment made with the same rate and with this end date");
+                    ModelState.AddModelError("PaymentEndDate", "Companion already has a payment made on this end date");
             }
         }
 
-        private void CheckIfDuplicatePayment(PaymentModel payment, List<PaymentModel> historyPaments, bool isEdit)
+        private void CheckIfDuplicatePayment(PaymentModel payment, List<PaymentModel> historyPayments, bool isEdit)
         {
-            var duplicatPayment = historyPaments
-                                .Any(p => p.PaymentStartDate == payment.PaymentStartDate &&
-                                    p.PaymentEndDate == payment.PaymentEndDate &&
-                                    p.PatientPayRate == payment.PatientPayRate &&
-                                    p.CompanionPayRate == payment.CompanionPayRate
-                                    //check amount due if the same aswell
-                                    && p.TotalDue == payment.TotalDue);
+            var duplicatPayment = historyPayments.Any(  p => p.PaymentStartDate == payment.PaymentStartDate &&
+                                                        p.PaymentEndDate == payment.PaymentEndDate &&
+                                                        p.PatientPayRate == payment.PatientPayRate &&
+                                                        p.CompanionPayRate == payment.CompanionPayRate &&
+                                                      ((p.TotalDue == payment.TotalDue)||
+                                                       (p.CompanionAmount==payment.CompanionAmount && 
+                                                        p.PatientAmount==payment.PatientAmount)));         
             if (!isEdit && duplicatPayment)
             {
                 if (ModelState.IsValidField("PaymentStartDate"))
@@ -381,8 +374,9 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                 if (ModelState.IsValidField("TotalDue"))
 
                     ModelState.AddModelError("TotalDue", "Patient already has a payment with the same amount made with these start and end dates");
+                return;
             }
-            var duplicatCompanionPayment = historyPaments
+            var duplicatCompanionPayment = historyPayments
                                 .Any(p => p.PaymentStartDate == payment.PaymentStartDate &&
                                     p.PaymentEndDate == payment.PaymentEndDate &&
                                     p.CompanionPayRate == payment.CompanionPayRate
@@ -396,10 +390,10 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                     ModelState.AddModelError("PaymentEndDate", "Patient already has a payment made with this end date");
                 //total due should not be the same for the same dates
                 if (ModelState.IsValidField("TotalDue"))
-
                     ModelState.AddModelError("TotalDue", "Patient already has a payment with the same amount made with these start and end dates");
+                return;
             }
-            var duplicatPatientPayment = historyPaments
+            var duplicatPatientPayment = historyPayments
                                 .Any(p => p.PaymentStartDate == payment.PaymentStartDate &&
                                     p.PaymentEndDate == payment.PaymentEndDate &&
                                     p.PatientPayRate == payment.PatientPayRate
@@ -413,29 +407,29 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                     ModelState.AddModelError("PaymentEndDate", "Patient already has a payment made with this end date");
                 //total due should not be the same for the same dates
                 if (ModelState.IsValidField("TotalDue"))
-
                     ModelState.AddModelError("TotalDue", "Patient already has a payment with the same amount made with these start and end dates");
+                return;
             }
         }
 
-        private void CheckIfNoDuplicatePayment(PaymentModel payment, List<PaymentModel> historyPaments, bool isEdit)
+        private void CheckIfNoDuplicatePayment(PaymentModel payment, List<PaymentModel> historyPayments, bool isEdit)
         {
-            var isNotduplicatPayment = historyPaments
-                               .Any(p => (p.PaymentStartDate == payment.PaymentStartDate
-                                       && p.PaymentEndDate == payment.PaymentEndDate)
-                                       && p.TotalDue != payment.TotalDue);
+            var isNotduplicatPayment = historyPayments.Any(p => (  p.PaymentStartDate == payment.PaymentStartDate
+                                                                && p.PaymentEndDate == payment.PaymentEndDate)
+                                                                && ((p.TotalDue != payment.TotalDue)||
+                                                                (p.CompanionAmount!=payment.CompanionAmount||
+                                                                 p.PatientAmount!=payment.PatientAmount)));
             if (isNotduplicatPayment)//same dates, different total
             {
                 //check if the payrate for each payee is different than our history records
-                var samePatientPayRates = historyPaments
-                               .Any(p => (p.PaymentStartDate == payment.PaymentStartDate
-                                       && p.PaymentEndDate == payment.PaymentEndDate
-                                       && p.PatientPayRate == payment.PatientPayRate));
+                var samePatientPayRates = historyPayments.Any(p => (  p.PaymentStartDate == payment.PaymentStartDate
+                                                                   && p.PaymentEndDate == payment.PaymentEndDate
+                                                                   && p.PatientPayRate == payment.PatientPayRate));
                 if (!isEdit && samePatientPayRates)
                 {
                     ModelState.AddModelError("PatientPayRate", "Our records indicates that there is payment conflict with this Patient Pay Rate");
                 }
-                var sameCompanionPayRates = historyPaments
+                var sameCompanionPayRates = historyPayments
                                .Any(p => (p.PaymentStartDate == payment.PaymentStartDate
                                        && p.PaymentEndDate == payment.PaymentEndDate
                                        && p.CompanionPayRate == payment.CompanionPayRate));
@@ -447,16 +441,16 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             }
             if (!isNotduplicatPayment)
             {
-                var stratDateConflictPayment = historyPaments
-                                   .Any(p => (p.PaymentStartDate <= payment.PaymentStartDate
-                                           && payment.PaymentStartDate <= p.PaymentEndDate)
-                                           || (payment.PaymentEndDate <= p.PaymentEndDate
-                                           && payment.PaymentStartDate >= p.PaymentStartDate));
+                var stratDateConflictPayment = historyPayments.Any
+                                              (p => (p.PaymentStartDate <= payment.PaymentStartDate
+                                           &&        payment.PaymentStartDate <= p.PaymentEndDate)
+                                           || (      payment.PaymentEndDate <= p.PaymentEndDate
+                                           &&        payment.PaymentStartDate >= p.PaymentStartDate));
                 if (!isEdit && stratDateConflictPayment)
                 {
                     ModelState.AddModelError("PaymentStartDate", "Our records indicates that there is payment conflict with this payment start date");
                 }
-                var endDateConflictPayment = historyPaments
+                var endDateConflictPayment = historyPayments
                                    .Any(p => (payment.PaymentEndDate <= p.PaymentEndDate
                                            && payment.PaymentStartDate >= p.PaymentStartDate) ||
                                            (payment.PaymentEndDate <= p.PaymentEndDate

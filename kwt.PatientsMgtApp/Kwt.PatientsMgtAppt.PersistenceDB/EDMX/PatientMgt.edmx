@@ -183,6 +183,11 @@
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="ModifiedBy" Type="nvarchar" MaxLength="50" />
           <Property Name="ModifiedDate" Type="datetime" />
+          <Property Name="AmountPaid" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="PatientStartDate" Type="date" />
+          <Property Name="PatientEndDate" Type="date" />
+          <Property Name="CompanionStartDate" Type="date" />
+          <Property Name="CompanionEndDate" Type="date" />
         </EntityType>
         <EntityType Name="Payments">
           <Key>
@@ -207,6 +212,7 @@
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="ModifiedBy" Type="nvarchar" MaxLength="50" />
           <Property Name="ModifiedDate" Type="datetime" />
+          <Property Name="FinalAmountAfterCorrection" Type="decimal" Precision="18" Scale="0" />
         </EntityType>
         <EntityType Name="PayRates">
           <Key>
@@ -829,6 +835,7 @@
           <NavigationProperty Name="Patient" Relationship="Self.FK_Payments_Patients" FromRole="Payments" ToRole="Patients" />
           <NavigationProperty Name="PayRate" Relationship="Self.FK_Payments_PayRates" FromRole="Payments" ToRole="PayRates" />
           <NavigationProperty Name="PaymentDeductions" Relationship="PatientsMgtModel.FK_PaymentDeductions_Payments" FromRole="Payment" ToRole="PaymentDeduction" />
+          <Property Name="FinalAmountAfterCorrection" Type="Decimal" Precision="18" Scale="0" />
         </EntityType>
         <EntityType Name="PayRate">
           <Key>
@@ -1244,6 +1251,11 @@
           <NavigationProperty Name="Patient" Relationship="PatientsMgtModel.FK_PaymentDeductions_Patients" FromRole="PaymentDeduction" ToRole="Patient" />
           <NavigationProperty Name="Payment" Relationship="PatientsMgtModel.FK_PaymentDeductions_Payments" FromRole="PaymentDeduction" ToRole="Payment" />
           <NavigationProperty Name="PayRate" Relationship="PatientsMgtModel.FK_PaymentDeductions_PayRates" FromRole="PaymentDeduction" ToRole="PayRate" />
+          <Property Name="AmountPaid" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="PatientStartDate" Type="DateTime" Precision="0" />
+          <Property Name="PatientEndDate" Type="DateTime" Precision="0" />
+          <Property Name="CompanionStartDate" Type="DateTime" Precision="0" />
+          <Property Name="CompanionEndDate" Type="DateTime" Precision="0" />
         </EntityType>
         <Association Name="FK_PaymentDeductions_Beneficiaries">
           <End Type="PatientsMgtModel.Beneficiary" Role="Beneficiary" Multiplicity="0..1" />
@@ -1482,6 +1494,7 @@
           <EntitySetMapping Name="Payments">
             <EntityTypeMapping TypeName="PatientsMgtModel.Payment">
               <MappingFragment StoreEntitySet="Payments">
+                <ScalarProperty Name="FinalAmountAfterCorrection" ColumnName="FinalAmountAfterCorrection" />
                 <ScalarProperty Name="PaymentID" ColumnName="PaymentID" />
                 <ScalarProperty Name="PaymentDate" ColumnName="PaymentDate" />
                 <ScalarProperty Name="PatientCID" ColumnName="PatientCID" />
@@ -1607,6 +1620,11 @@
           <EntitySetMapping Name="PaymentDeductions">
             <EntityTypeMapping TypeName="PatientsMgtModel.PaymentDeduction">
               <MappingFragment StoreEntitySet="PaymentDeductions">
+                <ScalarProperty Name="CompanionEndDate" ColumnName="CompanionEndDate" />
+                <ScalarProperty Name="CompanionStartDate" ColumnName="CompanionStartDate" />
+                <ScalarProperty Name="PatientEndDate" ColumnName="PatientEndDate" />
+                <ScalarProperty Name="PatientStartDate" ColumnName="PatientStartDate" />
+                <ScalarProperty Name="AmountPaid" ColumnName="AmountPaid" />
                 <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
                 <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />

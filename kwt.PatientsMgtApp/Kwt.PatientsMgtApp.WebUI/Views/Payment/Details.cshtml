@@ -55,9 +55,6 @@
             </li>
             <li class="col-md-2">
                 <div class="input-group">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">$</div>
-                    </div>
                     @Html.LabelFor(model => model.PatientAmount, new { @class = "" })
                     @Html.TextBoxFor(model => model.PatientAmount, new { @class = "k-textbox input-control edit", style = "width: 100%;", @readonly = "readonly" })
                 </div>
@@ -238,13 +235,13 @@
             },
 
             columns: [
-            {
+            @*{
                 field: "DeductionID",
                 title: "Payment Num",
 
                 template: "<a href='@Url.Action("Details", "Payment")?paymentId=#= DeductionID#'>#= DeductionID #</a>",
-                @*cellTemplate: '<div class="ui-grid-cell-contents"><a href={{@Url.Action("Details", "Payment")}} class="icon-bar">{{row.entity.Id}}</a></div>'*@
-            },
+               
+            },*@
 
             {
                 field: "PatientCID",
@@ -254,23 +251,23 @@
                 field: "CompanionCID",
                 title: "C_CID"
             },
+            //{
+            //    field: "PaymentStartDate",
+            //    title: "start Date",
+            //    template: "#= kendo.toString(kendo.parseDate(PaymentStartDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
+            //},
+            //{
+            //    field: "PaymentEndDate",
+            //    title: "End Date",
+            //    template: "#= kendo.toString(kendo.parseDate(PaymentEndDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
+            //},
             {
-                field: "PaymentStartDate",
-                title: "start Date",
-                template: "#= kendo.toString(kendo.parseDate(PaymentStartDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
-            },
-            {
-                field: "PaymentEndDate",
-                title: "End Date",
-                template: "#= kendo.toString(kendo.parseDate(PaymentEndDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
-            },
-            {
-                field: "PDeduction",
+                field: "PatientDeduction",
                 title: "Patient Deduction"
 
             },
             {
-                field: "CDeduction",
+                field: "CompanionDeduction",
                 title: "Companion Deduction"
             },
             {

@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.Remoting;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 using kwt.PatientsMgtApp.Utilities.Errors;
 using Kwt.PatientsMgtApp.Core;
 using Kwt.PatientsMgtApp.Core.Models;
@@ -137,6 +139,14 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 payment.PayRates = _payRateRepository.GetPayRatesList();
                 payment.PatientPayRate = _domainObjectRepository.Get<PayRate>(c => c.PayRateID == 1).PatientRate;
                 payment.CompanionPayRate = !String.IsNullOrEmpty(ben.CompanionCID) ? _domainObjectRepository.Get<PayRate>(c => c.PayRateID == 1).CompanionRate : 0;
+
+                // Create a Payment Deduction object
+                payment.PaymentDeductionObject = new PaymentDeductionModel()
+                {
+                    PatientCID = payment.PatientCID,
+                    AmountPaid = payment.TotalDue,
+                };
+                //
             }
             return payment;
         }
@@ -175,7 +185,12 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                         DeductionEndDate = pd.EndDate,
                         DeductionStartDate = pd.StartDate,
                         CreatedDate = pd.CreatedDate,
-                        AmountPaid = payment.TotalDue
+                        AmountPaid = payment.TotalDue,
+                        
+                        CompanionEndDate = pd.CompanionEndDate,
+                        CompanionStartDate = pd.CompanionStartDate,
+                        PatientEndDate = pd.PatientEndDate,
+                        PatientStartDate = pd.PatientStartDate,
 
                     }).OrderBy(p => p.DeductionDate).FirstOrDefault();
 
@@ -189,6 +204,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                         AmountPaid = payment.TotalDue,
                         PatientAmount = payment.PAmount,
                         CompanionAmount = payment.CAmount,
+
 
                     };
                 }
@@ -254,6 +270,12 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     DeductionEndDate = pd.EndDate,
                     DeductionStartDate = pd.StartDate,
                     CreatedDate = pd.CreatedDate,
+                    AmountPaid = pd.AmountPaid,
+                    CompanionEndDate = pd.CompanionEndDate,
+                    CompanionStartDate = pd.CompanionStartDate,
+                    PatientEndDate = pd.PatientEndDate,
+                    PatientStartDate = pd.PatientStartDate,
+                    
 
                 }).ToList();
 
@@ -362,7 +384,38 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 TotalDue = payment.TotalDue,
 
             };
-            _domainObjectRepository.Create<Payment>(newPayment);
+            using (TransactionScope scope = new TransactionScope())
+            {
+                try
+                {
+                    newPayment.FinalAmountAfterCorrection = payment.PaymentDeductionObject?.FinalAmount;
+                    var createdPayment = _domainObjectRepository.Create<Payment>(newPayment);
+                    //chech if there payment deduction, if so add payment deduction
+                    if (createdPayment != null)
+                        if (payment.PaymentDeductionObject != null)
+                        {
+                            if (payment.PaymentDeductionObject.FinalAmount != payment.TotalDue)
+                            {
+                                // means there is a change in payment,
+                                //so we should create this deduction on deduction table
+                                payment.PaymentID = createdPayment.PaymentID;
+                                CreateDeduction(payment.PaymentDeductionObject, payment, false);
+                                // if the deduction is created successfully, i need to update the payment to set the totalpaymentafterdeduction 
+                               // newPayment.FinalAmountAfterCorrection = payment.PaymentDeductionObject.FinalAmount;
+                                //_domainObjectRepository.Update<Payment>(newPayment);
+                            }
+                        }
+                    scope.Complete();
+                }
+                finally 
+                {
+                    scope.Dispose();
+                    
+                }
+                
+            }
+            
+            
 
         }
 
@@ -395,20 +448,26 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     Id = payment.Id,
                     PaymentID = payment.Id,
                     ModifiedDate = DateTime.Now,
-                    PaymentDeductions = paymentToUpdate.PaymentDeductions
+                    PaymentDeductions = paymentToUpdate.PaymentDeductions,
+                    // if there is a deduction we get the final amount after deduction otherwise null
+                    FinalAmountAfterCorrection= payment.PaymentDeductionObject.FinalAmount > 0 ? payment.PaymentDeductionObject.FinalAmount : null
                 };
-                AddOrUpdatePaymentDeduction(payment, paymentToUpdate.PaymentDeductions.Count > 0);
+                
                 paymentToUpdate = updatedPayment;
                 //Todo This is a temp fix for updating the Payment
                 PatientsMgtEntities dbContext = new PatientsMgtEntities();
                 var entry = dbContext.Entry(paymentToUpdate);
+                var deduc=paymentToUpdate.PaymentDeductions.SingleOrDefault();
+                if(deduc!=null)
+                    deduc.Payment = null;
                 dbContext.Set<Payment>().Attach(paymentToUpdate);
                 entry.State = EntityState.Modified;
                 dbContext.SaveChanges();
+                AddOrUpdatePaymentDeduction(payment, paymentToUpdate.PaymentDeductions.Count > 0);
                 //
                 //_domainObjectRepository.Update<Payment>(paymentToUpdate);
-                
-                
+
+
             }
             return payment;
         }
@@ -434,13 +493,27 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                         TotalDeduction = deductionObject.TotalDeduction,
                         PatientCID = deductionObject.PatientCID,
                         ModifiedBy = deductionObject.ModifiedBy,
-                        ModifiedDate = deductionObject.ModifiedDate,
+                        ModifiedDate = DateTime.Now,
                         CompanionCID = deductionObject.CompanionCID,
                         BeneficiaryID = deductionObject.BeneficiaryID,
-                        PayRateID = deductionObject.PayRateID
+                        PayRateID = deductionObject.PayRateID,
+                        DeductionID = deductionObject.DeductionID,
+                        CreatedDate = deductionObject.CreatedDate,
+                        CreatedBy = deductionObject.CreatedBy,
+                        AmountPaid = deductionObject.AmountPaid,
+                        CompanionEndDate = deductionObject.CompanionEndDate,
+                        CompanionStartDate = deductionObject.CompanionStartDate,
+                        PatientEndDate = deductionObject.PatientEndDate,
+                        PatientStartDate = deductionObject.PatientStartDate,
+
                     };
-                    
-                    //_domainObjectRepository.Update<PaymentDeduction>(paymentDeduction);
+
+                    // _domainObjectRepository.Update<PaymentDeduction>(paymentDeduction);
+                    PatientsMgtEntities dbContext = new PatientsMgtEntities();
+                    var entry = dbContext.Entry(paymentDeduction);
+                    dbContext.Set<PaymentDeduction>().Attach(paymentDeduction);
+                    entry.State = EntityState.Modified;
+                    dbContext.SaveChanges();
                 }
             }
             else
@@ -449,29 +522,42 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     deductionObject?.DeductionEndDate != null) //add
                 {
 
-                    var paymentDeduction = new PaymentDeduction()
-                    {
-                        CDeduction = deductionObject.CompanionDeduction,
-                        PDeduction = deductionObject.PatientDeduction,
-                        StartDate = deductionObject.DeductionStartDate,
-                        EndDate = deductionObject.DeductionEndDate,
-                        PaymentID = deductionObject.PaymentID,
-                        FinalAmount = deductionObject.FinalAmount,
-                        DeductionDate = deductionObject.DeductionDate,
-                        Notes = deductionObject.Notes,
-                        TotalDeduction = deductionObject.TotalDeduction,
-                        PatientCID = deductionObject.PatientCID,
-                        CreatedDate = DateTime.Now,
-                        CreatedBy = deductionObject.CreatedBy,
-                        CompanionCID = deductionObject.CompanionCID,
-                        BeneficiaryID = deductionObject.BeneficiaryID,
-                        PayRateID = deductionObject.PayRateID
-                    };
-                    _domainObjectRepository.Create<PaymentDeduction>(paymentDeduction);
+                    CreateDeduction(deductionObject, paymentModel);
                 }
             }
         }
 
+        private void CreateDeduction(PaymentDeductionModel deductionObject, PaymentModel paymentModel, bool? isEdit = true)
+        {
+            var paymentDeduction = new PaymentDeduction()
+            {
+                CDeduction = deductionObject.CompanionDeduction,
+                PDeduction = deductionObject.PatientDeduction,
+                StartDate = deductionObject.DeductionStartDate,
+                EndDate = deductionObject.DeductionEndDate,
+                PaymentID = isEdit == true? deductionObject.PaymentID: paymentModel.PaymentID,
+                FinalAmount = deductionObject.FinalAmount,
+                DeductionDate = DateTime.Now,
+                Notes = deductionObject.Notes,
+                TotalDeduction = deductionObject.TotalDeduction,
+                PatientCID = deductionObject.PatientCID,
+                CreatedDate = DateTime.Now,
+                // since the deduction happens during the payment update,
+                // we get how did the payment update as the one who created the deuction in the next line
+                CreatedBy = deductionObject.ModifiedBy,
+                CompanionCID = deductionObject.CompanionCID,
+                BeneficiaryID = deductionObject.BeneficiaryID,
+                PayRateID = deductionObject.PayRateID,
+                AmountPaid = paymentModel.TotalDue,// we get the intial payment from Payment object
+                CompanionEndDate = deductionObject.CompanionEndDate,
+                CompanionStartDate = deductionObject.CompanionStartDate,
+                PatientEndDate = deductionObject.PatientEndDate,
+                PatientStartDate = deductionObject.PatientStartDate,
+                Id = paymentModel.PaymentID
+
+            };
+            _domainObjectRepository.Create<PaymentDeduction>(paymentDeduction);
+        }
         public int DeletePayment(PaymentModel payment)
         {
 

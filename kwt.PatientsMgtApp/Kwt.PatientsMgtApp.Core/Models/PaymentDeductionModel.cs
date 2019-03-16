@@ -94,6 +94,15 @@ namespace Kwt.PatientsMgtApp.Core.Models
 
         public int? PayRateID { get; set; }
         //================================
+        [DisplayName("Patient Start Date")]
+        public Nullable<System.DateTime> PatientStartDate { get; set; }
+        [DisplayName("Patient End Date")]
+        public Nullable<System.DateTime> PatientEndDate { get; set; }
+        [DisplayName("Companion Start Date")]
+        public Nullable<System.DateTime> CompanionStartDate { get; set; }
+        [DisplayName("Companion End Date")]
+        public Nullable<System.DateTime> CompanionEndDate { get; set; }
+
         public List<BeneficiaryModel> Beneficiaries { get; set; }
         public BeneficiaryModel Beneficiary { get; set; }
 

@@ -32,6 +32,11 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public System.DateTime CreatedDate { get; set; }
         public string ModifiedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
+        public Nullable<decimal> AmountPaid { get; set; }
+        public Nullable<System.DateTime> PatientStartDate { get; set; }
+        public Nullable<System.DateTime> PatientEndDate { get; set; }
+        public Nullable<System.DateTime> CompanionStartDate { get; set; }
+        public Nullable<System.DateTime> CompanionEndDate { get; set; }
     
         public virtual Beneficiary Beneficiary { get; set; }
         public virtual Companion Companion { get; set; }
