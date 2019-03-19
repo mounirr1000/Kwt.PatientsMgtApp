@@ -61,7 +61,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             parms.Add("endDate", endDate);
 
             //pCidParameter, hospitalParameter, doctorParameter, statusParameter, specialityParameter
-            return _domainObjectRepository.ExecuteProcedure<PaymentReportModel>("GetPaymentListReport_SP", parms, false);
+             var report = _domainObjectRepository.ExecuteProcedure<PaymentReportModel>("GetPaymentListReport_SP", parms, false);
+            return report;
         }
         public List<PaymentModel> GetPayments()
         {
@@ -109,6 +110,12 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
 
         public PaymentModel GetPaymentObject(string patientCid)
         {
+            IPaymentRepository paymentRepository = new PaymentRepository();
+
+            var lastPayment = paymentRepository.
+                            GetPaymentsByPatientCid(patientCid)?
+                            .OrderByDescending(p => p.PaymentDate).FirstOrDefault();
+
             PaymentModel payment = new PaymentModel();
             var ben = _beneficiaryRepository.GetBeneficiary(patientCid);
             var patient = _patientRepository.GetPatient(patientCid);
@@ -143,9 +150,15 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 // Create a Payment Deduction object
                 payment.PaymentDeductionObject = new PaymentDeductionModel()
                 {
+
                     PatientCID = payment.PatientCID,
                     AmountPaid = payment.TotalDue,
                 };
+                if (lastPayment?.PaymentStartDate != null && lastPayment?.PaymentEndDate != null)
+                {
+                    payment.PaymentDeductionObject.LastPaymentStartDate = lastPayment?.PaymentStartDate;
+                    payment.PaymentDeductionObject.LastPaymentEndDate = lastPayment?.PaymentEndDate;
+                }
                 //
             }
             return payment;
@@ -389,16 +402,29 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 try
                 {
                     newPayment.FinalAmountAfterCorrection = payment.PaymentDeductionObject?.FinalAmount;
+                    newPayment.TotalCorrection = payment.PaymentDeductionObject?.TotalDeduction > 0
+                        ? payment.PaymentDeductionObject.TotalDeduction
+                        : null;
                     var createdPayment = _domainObjectRepository.Create<Payment>(newPayment);
                     //chech if there payment deduction, if so add payment deduction
                     if (createdPayment != null)
                         if (payment.PaymentDeductionObject != null)
                         {
-                            if (payment.PaymentDeductionObject.FinalAmount != payment.TotalDue)
+                            if ((payment.PaymentDeductionObject.PatientStartDate!=null &&
+                                payment.PaymentDeductionObject.PatientEndDate != null) ||
+                                (payment.PaymentDeductionObject.CompanionStartDate != null &&
+                                payment.PaymentDeductionObject.CompanionEndDate != null))
                             {
                                 // means there is a change in payment,
                                 //so we should create this deduction on deduction table
                                 payment.PaymentID = createdPayment.PaymentID;
+
+                                // get last payment Startdate and endDate if there is history payment
+                                if (lastPayment?.PaymentStartDate!=null && lastPayment?.PaymentEndDate!=null)
+                                {
+                                    payment.PaymentDeductionObject.LastPaymentStartDate = lastPayment?.PaymentStartDate;
+                                    payment.PaymentDeductionObject.LastPaymentEndDate = lastPayment?.PaymentEndDate;
+                                }
                                 CreateDeduction(payment.PaymentDeductionObject, payment, false);
                                 // if the deduction is created successfully, i need to update the payment to set the totalpaymentafterdeduction 
                                // newPayment.FinalAmountAfterCorrection = payment.PaymentDeductionObject.FinalAmount;
@@ -450,7 +476,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     ModifiedDate = DateTime.Now,
                     PaymentDeductions = paymentToUpdate.PaymentDeductions,
                     // if there is a deduction we get the final amount after deduction otherwise null
-                    FinalAmountAfterCorrection= payment.PaymentDeductionObject.FinalAmount > 0 ? payment.PaymentDeductionObject.FinalAmount : null
+                    FinalAmountAfterCorrection= payment.PaymentDeductionObject.FinalAmount > 0 ? payment.PaymentDeductionObject.FinalAmount : null,
+                    TotalCorrection = payment.PaymentDeductionObject.TotalDeduction>0 ? payment.PaymentDeductionObject.TotalDeduction : null,
                 };
                 
                 paymentToUpdate = updatedPayment;
@@ -518,8 +545,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             }
             else
             {
-                if (deductionObject?.DeductionStartDate != null &&
-                    deductionObject?.DeductionEndDate != null) //add
+                if ((deductionObject?.PatientStartDate != null && deductionObject?.PatientEndDate!=null)||
+                    deductionObject?.CompanionStartDate != null&& deductionObject?.CompanionEndDate!=null) //add
                 {
 
                     CreateDeduction(deductionObject, paymentModel);

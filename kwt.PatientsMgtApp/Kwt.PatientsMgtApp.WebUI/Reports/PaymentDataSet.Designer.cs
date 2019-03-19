@@ -291,6 +291,10 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             
             private global::System.Data.DataColumn columnCreatedDate;
             
+            private global::System.Data.DataColumn columnFinalAmount;
+            
+            private global::System.Data.DataColumn columnDeductedAmount;
+            
             private global::System.Data.DataColumn columnPatientName;
             
             private global::System.Data.DataColumn columnBeneficiaryCID;
@@ -385,6 +389,22 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             public global::System.Data.DataColumn CreatedDateColumn {
                 get {
                     return this.columnCreatedDate;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn FinalAmountColumn {
+                get {
+                    return this.columnFinalAmount;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn DeductedAmountColumn {
+                get {
+                    return this.columnDeductedAmount;
                 }
             }
             
@@ -489,7 +509,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public GetPaymentListReport_SPRow AddGetPaymentListReport_SPRow(string PatientCID, System.DateTime StartDate, System.DateTime EndDate, decimal Amount, System.DateTime CreatedDate, string PatientName, string BeneficiaryCID, string BeneficiaryName, string CompanionName, string AgencyName, string IBan, string Bank, string Code) {
+            public GetPaymentListReport_SPRow AddGetPaymentListReport_SPRow(string PatientCID, System.DateTime StartDate, System.DateTime EndDate, decimal Amount, System.DateTime CreatedDate, decimal FinalAmount, decimal DeductedAmount, string PatientName, string BeneficiaryCID, string BeneficiaryName, string CompanionName, string AgencyName, string IBan, string Bank, string Code) {
                 GetPaymentListReport_SPRow rowGetPaymentListReport_SPRow = ((GetPaymentListReport_SPRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
@@ -498,6 +518,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
                         EndDate,
                         Amount,
                         CreatedDate,
+                        FinalAmount,
+                        DeductedAmount,
                         PatientName,
                         BeneficiaryCID,
                         BeneficiaryName,
@@ -541,6 +563,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
                 this.columnEndDate = base.Columns["EndDate"];
                 this.columnAmount = base.Columns["Amount"];
                 this.columnCreatedDate = base.Columns["CreatedDate"];
+                this.columnFinalAmount = base.Columns["FinalAmount"];
+                this.columnDeductedAmount = base.Columns["DeductedAmount"];
                 this.columnPatientName = base.Columns["PatientName"];
                 this.columnBeneficiaryCID = base.Columns["BeneficiaryCID"];
                 this.columnBeneficiaryName = base.Columns["BeneficiaryName"];
@@ -566,6 +590,10 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
                 base.Columns.Add(this.columnAmount);
                 this.columnCreatedDate = new global::System.Data.DataColumn("CreatedDate", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnCreatedDate);
+                this.columnFinalAmount = new global::System.Data.DataColumn("FinalAmount", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnFinalAmount);
+                this.columnDeductedAmount = new global::System.Data.DataColumn("DeductedAmount", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnDeductedAmount);
                 this.columnPatientName = new global::System.Data.DataColumn("PatientName", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnPatientName);
                 this.columnBeneficiaryCID = new global::System.Data.DataColumn("BeneficiaryCID", typeof(string), null, global::System.Data.MappingType.Element);
@@ -585,8 +613,6 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnPaymentID}, true));
                 this.columnPaymentID.AutoIncrement = true;
-                this.columnPaymentID.AutoIncrementSeed = -1;
-                this.columnPaymentID.AutoIncrementStep = -1;
                 this.columnPaymentID.AllowDBNull = false;
                 this.columnPaymentID.ReadOnly = true;
                 this.columnPaymentID.Unique = true;
@@ -833,6 +859,39 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public decimal FinalAmount {
+                get {
+                    try {
+                        return ((decimal)(this[this.tableGetPaymentListReport_SP.FinalAmountColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'FinalAmount\' in table \'GetPaymentListReport_SP\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.FinalAmountColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public decimal DeductedAmount {
+                get {
+                    try {
+                        return ((decimal)(this[this.tableGetPaymentListReport_SP.DeductedAmountColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'DeductedAmount\' in table \'GetPaymentListReport_SP\' is DBNul" +
+                                "l.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.DeductedAmountColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public string PatientName {
                 get {
                     try {
@@ -1008,6 +1067,30 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetAmountNull() {
                 this[this.tableGetPaymentListReport_SP.AmountColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsFinalAmountNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.FinalAmountColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetFinalAmountNull() {
+                this[this.tableGetPaymentListReport_SP.FinalAmountColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsDeductedAmountNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.DeductedAmountColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetDeductedAmountNull() {
+                this[this.tableGetPaymentListReport_SP.DeductedAmountColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1272,6 +1355,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports.PaymentDataSetTableAdapters {
             tableMapping.ColumnMappings.Add("EndDate", "EndDate");
             tableMapping.ColumnMappings.Add("Amount", "Amount");
             tableMapping.ColumnMappings.Add("CreatedDate", "CreatedDate");
+            tableMapping.ColumnMappings.Add("FinalAmount", "FinalAmount");
+            tableMapping.ColumnMappings.Add("DeductedAmount", "DeductedAmount");
             tableMapping.ColumnMappings.Add("PatientName", "PatientName");
             tableMapping.ColumnMappings.Add("BeneficiaryCID", "BeneficiaryCID");
             tableMapping.ColumnMappings.Add("BeneficiaryName", "BeneficiaryName");
@@ -1339,7 +1424,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports.PaymentDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
-        public virtual PaymentDataSet.GetPaymentListReport_SPDataTable GetPaymentListData(string pCid, global::System.Nullable<global::System.DateTime> startDate, global::System.Nullable<global::System.DateTime> endDate) {
+        public virtual PaymentDataSet.GetPaymentListReport_SPDataTable GetData(string pCid, global::System.Nullable<global::System.DateTime> startDate, global::System.Nullable<global::System.DateTime> endDate) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
             if ((pCid == null)) {
                 this.Adapter.SelectCommand.Parameters[1].Value = global::System.DBNull.Value;

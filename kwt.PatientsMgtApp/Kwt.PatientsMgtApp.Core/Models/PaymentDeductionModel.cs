@@ -103,6 +103,17 @@ namespace Kwt.PatientsMgtApp.Core.Models
         [DisplayName("Companion End Date")]
         public Nullable<System.DateTime> CompanionEndDate { get; set; }
 
+        
+        [DisplayName("Last Payment Start Date")]
+        [DataType(DataType.Date)]
+        public Nullable<System.DateTime> LastPaymentStartDate { get; set; }
+        public String LastPaymentStartDateFormatted { get { return String.Format("{0:d}", LastPaymentStartDate); } }
+
+        [DisplayName("Last Payment End Date")]
+        [DataType(DataType.Date)]
+        public Nullable<System.DateTime> LastPaymentEndDate { get; set; }
+        public String LastPaymentEndDateFormatted { get { return String.Format("{0:d}", LastPaymentEndDate); } }
+
         public List<BeneficiaryModel> Beneficiaries { get; set; }
         public BeneficiaryModel Beneficiary { get; set; }
 

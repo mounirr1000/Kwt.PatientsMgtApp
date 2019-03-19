@@ -437,9 +437,9 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 _domainObjectRepository.Delete<CompanionHistory>(ch => ch.PatientCID == patient.PatientCID);
                 _domainObjectRepository.Delete<Companion>(co => co.PatientCID == patient.PatientCID);
                 //_domainObjectRepository.Delete<Payment>(co => co.PatientCID == patient.PatientCID);
+                _domainObjectRepository.Delete<PatientHistory>(co => co.PatientCID == patient.PatientCID);
                 return _domainObjectRepository.Delete<Patient>(p);
             }
-            else
                 return 0;
         }
     }

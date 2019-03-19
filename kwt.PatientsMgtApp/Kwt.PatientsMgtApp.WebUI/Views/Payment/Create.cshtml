@@ -42,33 +42,33 @@
                 <legend>Patient Information</legend>
                 <ul class="fieldlist row">
                     <li class="col-md-3">
-                        @Html.LabelFor(model => model.PatientCID, new {@class = ""})
-                        @Html.TextBoxFor(model => model.PatientCID, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+                        @Html.LabelFor(model => model.PatientCID, new { @class = "" })
+                        @Html.TextBoxFor(model => model.PatientCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
                         @Html.HiddenFor(model => model.PatientCID)
                     </li>
                     <li class="col-md-3">
-                        @Html.LabelFor(model => model.PatientFName, new {@class = ""})
-                        @Html.TextBoxFor(model => model.PatientFName, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+                        @Html.LabelFor(model => model.PatientFName, new { @class = "" })
+                        @Html.TextBoxFor(model => model.PatientFName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
 
                     </li>
                     <li class="col-md-3">
-                        @Html.LabelFor(model => model.PatientMName, new {@class = ""})
-                        @Html.TextBoxFor(model => model.PatientMName, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+                        @Html.LabelFor(model => model.PatientMName, new { @class = "" })
+                        @Html.TextBoxFor(model => model.PatientMName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
 
                     </li>
                     <li class="col-md-3">
-                        @Html.LabelFor(model => model.PatientLName, new {@class = ""})
-                        @Html.TextBoxFor(model => model.PatientLName, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+                        @Html.LabelFor(model => model.PatientLName, new { @class = "" })
+                        @Html.TextBoxFor(model => model.PatientLName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
 
                     </li>
                     <li class="col-md-3">
-                        @Html.LabelFor(model => model.Hospital, new {@class = ""})
-                        @Html.TextBoxFor(model => model.Hospital, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+                        @Html.LabelFor(model => model.Hospital, new { @class = "" })
+                        @Html.TextBoxFor(model => model.Hospital, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
                         @Html.HiddenFor(model => model.Hospital)
                     </li>
                     <li class="col-md-3">
-                        @Html.LabelFor(model => model.Agency, new {@class = ""})
-                        @Html.TextBoxFor(model => model.Agency, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+                        @Html.LabelFor(model => model.Agency, new { @class = "" })
+                        @Html.TextBoxFor(model => model.Agency, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
                         @Html.HiddenFor(model => model.Agency)
                     </li>
                 </ul>
@@ -152,7 +152,7 @@
                         @Html.TextBoxFor(model => model.PatientCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
                         @Html.HiddenFor(model => model.PatientCID)
                     </li>
-                   
+
 
                     <li class="col-md-3">
                         @Html.LabelFor(model => model.PaymentDate, new { @class = "" })
@@ -163,16 +163,16 @@
                     {
                         <li class="col-md-3">
 
-                            @Html.LabelFor(model => model.CompanionPayRate, new {@class = ""})
+                            @Html.LabelFor(model => model.CompanionPayRate, new { @class = "" })
                             @Html.DropDownListFor(model => model.CompanionPayRate, new List<SelectListItem>
-                                (Model.PayRates.Select(a => new SelectListItem()
-                                {
-                                    Text = a.CompanionRate.ToString(),
-                                    Value = a.CompanionRate.ToString()
+                (Model.PayRates.Select(a => new SelectListItem()
+                {
+                    Text = a.CompanionRate.ToString(),
+                    Value = a.CompanionRate.ToString()
 
-                                }).ToList()))
+                }).ToList()))
 
-                            <div>@Html.ValidationMessageFor(model => model.CompanionPayRate, "", new {@class = "text-danger"})</div>
+                            <div>@Html.ValidationMessageFor(model => model.CompanionPayRate, "", new { @class = "text-danger" })</div>
 
                         </li>
                     }
@@ -180,21 +180,21 @@
                     {
                         <li class="col-md-3">
                             @*@Html.Label("There is no Companion Associated with this patient")
-                            @Html.TextBox("text",null, new { @class = "k-textbox edit", style = "width: 100%;" })*@
+                                @Html.TextBox("text",null, new { @class = "k-textbox edit", style = "width: 100%;" })*@
                         </li>
                     }
                     <li class="col-md-3">
                         @Html.LabelFor(model => model.PatientPayRate, new { @class = "" })
                         @*@Html.TextBoxFor(model => model.PatientPayRate, new { @class = "k-textbox", style = "width: 100%;" })*@
                         @if (Model.PayRates != null)
-                    {
+                        {
                             @Html.DropDownListFor(model => model.PatientPayRate, new List<SelectListItem>
-                            (Model.PayRates.Select(a => new SelectListItem()
-                            {
-                                Text = a.PatientRate.ToString(),
-                                Value = a.PatientRate.ToString()
+                (Model.PayRates.Select(a => new SelectListItem()
+                {
+                    Text = a.PatientRate.ToString(),
+                    Value = a.PatientRate.ToString()
 
-                            }).ToList()))
+                }).ToList()))
                         }
                         else
                         {
@@ -204,13 +204,13 @@
                     </li>
                     <li class="col-md-3">
                         @Html.LabelFor(model => model.PaymentStartDate, new { @class = "" })
-                        @Html.TextBoxFor(model => model.PaymentStartDate, new { @class = "k-textbox", style = "width: 60%;" })
+                        @Html.TextBoxFor(model => model.PaymentStartDate, new { @class = "", style = "width: 60%;" })
                         <div>@Html.ValidationMessageFor(model => model.PaymentStartDate, "", new { @class = "text-danger" })</div>
                     </li>
                     <li class="col-md-3">
                         @Html.LabelFor(model => model.PaymentEndDate, new { @class = "" })
-                        @Html.TextBoxFor(model => model.PaymentEndDate, new {@class = "k-textbox", style = "width: 60%;"})
-                        <div>@Html.ValidationMessageFor(model => model.PaymentEndDate, "", new {@class = "text-danger"})</div>
+                        @Html.TextBoxFor(model => model.PaymentEndDate, new { @class = "", style = "width: 60%;" })
+                        <div>@Html.ValidationMessageFor(model => model.PaymentEndDate, "", new { @class = "text-danger" })</div>
                     </li>
                     <li class="col-md-3">
                         @Html.LabelFor(model => model.PaymentLengthPeriod, new { @class = "" })
@@ -252,11 +252,7 @@
                         @Html.TextBoxFor(model => model.PaymentDeductionObject.PatientCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
                         @Html.HiddenFor(model => model.PaymentDeductionObject.PatientCID)
                     </li>
-                    <li class="col-md-3">
-                        @Html.LabelFor(model => model.PaymentDate, new { @class = "" })
-                        @Html.TextBoxFor(model => model.PaymentDate, new { @class = "edit", style = "width: 60%;", @readonly = "readonly" })
 
-                    </li>
                     @if (Model.PayRates != null && !String.IsNullOrEmpty(Model.CompanionCID))
                     {
                         <li class="col-md-3">
@@ -264,12 +260,12 @@
                             @*@Html.TextBoxFor(model => model.CompanionPayRate, new {@class = "k-textbox", style = "width: 100%;"})*@
 
                             @Html.DropDownListFor(model => model.CompanionPayRate, new List<SelectListItem>
-                            (Model.PayRates.Select(a => new SelectListItem()
-                            {
-                                Text = a.CompanionRate.ToString(),
-                                Value = a.CompanionRate.ToString()
+                (Model.PayRates.Select(a => new SelectListItem()
+                {
+                    Text = a.CompanionRate.ToString(),
+                    Value = a.CompanionRate.ToString()
 
-                            }).ToList()), new { @class = "k-dropdown" })
+                }).ToList()), new { @class = "k-dropdown" })
 
                             <div>@Html.ValidationMessageFor(model => model.CompanionPayRate, "", new { @class = "text-danger" })</div>
                         </li>
@@ -278,14 +274,14 @@
                         @Html.LabelFor(model => model.PatientPayRate, new { @class = "" })
 
                         @if (Model.PayRates != null)
-                    {
+                        {
                             @Html.DropDownListFor(model => model.PatientPayRate, new List<SelectListItem>
-                            (Model.PayRates.Select(a => new SelectListItem()
-                            {
-                                Text = a.PatientRate.ToString(),
-                                Value = a.PatientRate.ToString()
+                (Model.PayRates.Select(a => new SelectListItem()
+                {
+                    Text = a.PatientRate.ToString(),
+                    Value = a.PatientRate.ToString()
 
-                            }).ToList()), new { @class = "k-dropdown" })
+                }).ToList()), new { @class = "k-dropdown" })
                         }
                         else
                         {
@@ -294,8 +290,19 @@
 
                         <div>@Html.ValidationMessageFor(model => model.PatientPayRate, "", new { @class = "text-danger" })</div>
                     </li>
-
-                   
+                    <li class="col-md-3"></li>
+                    <li class="col-md-3">
+                        @Html.LabelFor(model => model.PaymentDeductionObject.LastPaymentStartDate, new { @class = "" })
+                        @Html.TextBoxFor(model => model.PaymentDeductionObject.LastPaymentStartDateFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                        @Html.HiddenFor(model => model.PaymentDeductionObject.LastPaymentStartDate)
+                    </li>
+                    <li class="col-md-3">
+                        @Html.LabelFor(model => model.PaymentDeductionObject.LastPaymentEndDate, new { @class = "" })
+                        @Html.TextBoxFor(model => model.PaymentDeductionObject.LastPaymentEndDateFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                        @Html.HiddenFor(model => model.PaymentDeductionObject.LastPaymentEndDate)
+                    </li>
+                    <li class="col-md-3"></li>
+                    <li class="col-md-3"></li>
                     <li class="col-md-3">
                         @Html.LabelFor(model => model.PaymentDeductionObject.PatientStartDate, new { @class = "" })
                         @Html.TextBoxFor(model => model.PaymentDeductionObject.PatientStartDate, new { @class = "", style = "width: 60%;" })
@@ -336,7 +343,7 @@
                     </li>
                     <li class="col-md-3">
                         @Html.LabelFor(model => model.PaymentDeductionObject.AmountPaid, new { @class = "" })
-                        @Html.TextBoxFor(model => model.PaymentDeductionObject.AmountPaid, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                        @Html.TextBoxFor(model => model.PaymentDeductionObject.AmountPaid, new { @class = "k-textbox", style = "width: 100%;", @readonly = "readonly" })
                         @Html.HiddenFor(model => model.PaymentDeductionObject.AmountPaid)
                     </li>
 
@@ -361,90 +368,90 @@
             <fieldset>
                 <legend>Payment History for the patient</legend>
                 @if (Model.Payments.Any())
-                    {
-                    
-                        <table id="patientPaymentInfo">
-                            <colgroup>
-                                <col/>@*patientcid*@
-                                <col />@*patientcid*@
-                                <col />@*Name*@
-                                <col />@*Hospital*@
-                                <col />@*doctor*@
-                                <col style="width: 100px" />@*endDate*@
-                                <col style="width: 100px" />@*status*@
-                                <col style="width: 100px" />@*delete*@
+                {
+
+                    <table id="patientPaymentInfo">
+                        <colgroup>
+                            <col />@*patientcid*@
+                            <col />@*patientcid*@
+                            <col />@*Name*@
+                            <col />@*Hospital*@
+                            <col />@*doctor*@
+                            <col style="width: 100px" />@*endDate*@
+                            <col style="width: 100px" />@*status*@
+                            <col style="width: 100px" />@*delete*@
 
 
-                            </colgroup>
-                            <thead >
-                                <tr >
-                                    <th>
-                                        Ben. CID
-                                    </th>
-                                    <th>
-                                        Ben. Name
-                                    </th>
-                                    <th>
-                                        Payment Date
-                                    </th>
-                                    <th>
-                                        Start Date
-                                    </th>
-                                    <th>
-                                        End Date
-                                    </th>
-                                    <th>
-                                        C. Rate
-                                    </th>
-                                    <th>
-                                        P. Rate
-                                    </th>
-                                    <th>
-                                        Amount
-                                    </th>
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>
+                                    Ben. CID
+                                </th>
+                                <th>
+                                    Ben. Name
+                                </th>
+                                <th>
+                                    Payment Date
+                                </th>
+                                <th>
+                                    Start Date
+                                </th>
+                                <th>
+                                    End Date
+                                </th>
+                                <th>
+                                    C. Rate
+                                </th>
+                                <th>
+                                    P. Rate
+                                </th>
+                                <th>
+                                    Amount
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var payment in Model.Payments)
+                            {
+                                <tr>
+                                    <td>
+                                        @payment.BeneficiaryCID
+                                    </td>
+                                    <td>
+                                        @payment.BeneficiaryFullName
+                                    </td>
+                                    <td>
+                                        @payment.PaymentDateFormatted
+                                    </td>
+                                    <td>
+                                        @payment.PaymentStartDateFormatted
+                                    </td>
+                                    <td>
+                                        @payment.PaymentEndDateFormatted
+                                    </td>
+                                    <td>
+                                        @payment.CompanionPayRate
+                                    </td>
+                                    <td>
+                                        @payment.PatientPayRate
+                                    </td>
+                                    <td>
+                                        @payment.TotalDue
+                                    </td>
+
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var payment in Model.Payments)
-                                {
-                                    <tr>
-                                        <td>
-                                            @payment.BeneficiaryCID
-                                        </td>
-                                        <td>
-                                            @payment.BeneficiaryFullName
-                                        </td>
-                                        <td>
-                                            @payment.PaymentDateFormatted
-                                        </td>
-                                        <td>
-                                            @payment.PaymentStartDateFormatted
-                                        </td>
-                                        <td>
-                                            @payment.PaymentEndDateFormatted
-                                        </td>
-                                        <td>
-                                            @payment.CompanionPayRate
-                                        </td>
-                                        <td>
-                                            @payment.PatientPayRate
-                                        </td>
-                                        <td>
-                                            @payment.TotalDue
-                                        </td>
+                            }
+                        </tbody>
 
-                                    </tr>
-                                }
-                            </tbody>
+                    </table>
 
-                        </table>
-                   
                 }
                 else
                 {
-                    
-                        <span>No payment found in our records for this patient</span>
-                   
+
+                    <span>No payment found in our records for this patient</span>
+
 
                 }
             </fieldset>
@@ -468,14 +475,14 @@
     @Scripts.Render("~/bundles/jqueryval")
     <script type="text/javascript">
 
-        $('document').ready(function() {
+        $('document').ready(function () {
             $("#contentPaymentDetail").css("visibility", "visible");
             $(".loader").css("display", "none");
             $("#PaymentDate").kendoDatePicker({
                 value: new Date()
             });
-            //$("#PaymentStartDate, #PaymentEndDate").kendoDatePicker();
-            $("#PaymentStartDate, #PaymentEndDate").datepicker();
+
+
             $("#patientPaymentInfo").kendoGrid({
                 height: 350,
                 scrollable: {
@@ -492,17 +499,16 @@
                 //groupable: true,
                 //sortable: true
             });
-            //Characters count
             var maxLength = 250;
             var intialLength = 0;
             if ($('#Notes').val()) {
-                 intialLength = $('#Notes').val().length;
+                intialLength = $('#Notes').val().length;
             }
-            
-            if (intialLength>0) {
+
+            if (intialLength > 0) {
                 $('#chars').text(intialLength);
             }
-           
+
             $('#Notes').keyup(function () {
                 var length = $(this).val().length;
                 length = maxLength - length;
@@ -514,12 +520,16 @@
 
     </script>
     <script type="text/javascript">
+        $("#PaymentStartDate, #PaymentEndDate, #PaymentDeductionObject_DeductionStartDate, #PaymentDeductionObject_DeductionEndDate, " +
+                "#PaymentDeductionObject_PatientStartDate , #PaymentDeductionObject_PatientEndDate ," +
+                "#PaymentDeductionObject_CompanionStartDate , #PaymentDeductionObject_CompanionEndDate").kendoDatePicker();
         var companionAmount = 0;
         var patientAmount = 0;
         var companionDeduction = 0;
         var patientDeduction = 0;
         var compRate = $("#CompanionPayRate").val();
         var patRate = $("#PatientPayRate").val();
+        var total = 0;
         function DaysDiff(startDate, endDate) {
             var diff = new Date(new Date(startDate) - new Date(endDate));
             diff = diff / (1000 * 60 * 60 * 24);
@@ -528,17 +538,34 @@
             }
             return Math.round(diff + 1);
         }
-        $('#CompanionPayRate, #PatientPayRate, #PaymentStartDate, #PaymentEndDate').change(function() {
-            debugger;
-            $("#PatientPayRate").val();
-            var days = new Date(new Date($("#PaymentStartDate").val()) -
-                new Date($("#PaymentEndDate").val()));
-            days = days / (1000 * 60 * 60 * 24);
-            console.log($("#PaymentEndDate").val());
-            console.log($("#PaymentStartDate").val());
-            if (days < 0) {
-                days = days * -1;
+        function deductionPeriod(paDays, coDays) {
+            var period = 0;
+            if (paDays)
+                period = period + parseInt(paDays);
+            if (coDays)
+                period = period + parseInt(coDays);
+            //if(patientDays>0&&companionDays>0)
+            //    period = parseInt(patientDays) + parseInt(companionDays);
+            return period;
+        }
+        function displayProperColor(finalAmount) {
+
+
+            if (finalAmount && parseInt(finalAmount) == 0) {
+                $("#PaymentDeductionObject_FinalAmount").removeAttr("style");
             }
+            if (finalAmount && finalAmount > 0) {
+                $("#PaymentDeductionObject_FinalAmount").css({ "background-color": "#2cc34f", 'color': 'white' });
+            }
+            else {
+                $("#PaymentDeductionObject_FinalAmount").css({ "background-color": "red", 'color': 'white' });
+            }
+        }
+        $('#CompanionPayRate, #PatientPayRate, #PaymentStartDate, #PaymentEndDate').change(function () {
+            // debugger;
+
+            var days = DaysDiff($("#PaymentStartDate").val(), $("#PaymentEndDate").val());
+
             if ($("#PaymentEndDate").val() && $("#PaymentStartDate").val() && days >= 0) {
 
                 console.log(Math.round(days + 1));
@@ -570,104 +597,157 @@
             }
             // get the amount paid from total due
             $('#PaymentDeductionObject_AmountPaid').val($("#TotalDue").val());
+            $("#PaymentDeductionObject_FinalAmount").val(
+                $("#PaymentDeductionObject_AmountPaid").val() - $("#PaymentDeductionObject_TotalDeduction").val());
+            var finalAmount = $('#PaymentDeductionObject_FinalAmount').val();
+            displayProperColor(finalAmount);
             //
         });
 
+        $(//'#PaymentDeductionObject_AmountPaid, ' +
+          '#PaymentDeductionObject_PatientStartDate, ' +
+          '#PaymentDeductionObject_PatientEndDate' +
+          ',#PaymentDeductionObject_CompanionStartDate,' +
+          ' #PaymentDeductionObject_CompanionEndDate').change(function () {
+              // debugger;
 
-        $("#PaymentDeductionObject_DeductionStartDate, #PaymentDeductionObject_DeductionEndDate, " +
-                "#PaymentDeductionObject_PatientStartDate , #PaymentDeductionObject_PatientEndDate ," +
-                "#PaymentDeductionObject_CompanionStartDate , #PaymentDeductionObject_CompanionEndDate").kendoDatePicker();
+              var lastPaymentStartDate = $("#PaymentDeductionObject_LastPaymentStartDateFormatted").val();
+              var lastPaymentEndDate = $("#PaymentDeductionObject_LastPaymentEndDateFormatted").val();
+              var lastPaymentsDiff = DaysDiff(lastPaymentStartDate, lastPaymentEndDate);
+              var patientdeductionStartDate = $("#PaymentDeductionObject_PatientStartDate").val();
+              var patientdeductionEndDate = $("#PaymentDeductionObject_PatientEndDate").val();
+              var companiondeductionStartDate = $("#PaymentDeductionObject_CompanionStartDate").val();
+              var companiondeductionEndDate = $("#PaymentDeductionObject_CompanionEndDate").val();
+              var patientdays = DaysDiff(patientdeductionStartDate, patientdeductionEndDate);
+              var companiondays = DaysDiff(companiondeductionStartDate, companiondeductionEndDate);
 
-        $('#PaymentDeductionObject_PatientStartDate, #PaymentDeductionObject_PatientEndDate').change(function () {
-            // debugger;
-            var deductionStartDate = $("#PaymentDeductionObject_PatientStartDate").val();
-            var deductionEndDate = $("#PaymentDeductionObject_PatientEndDate").val();
 
-            var days = DaysDiff(deductionStartDate, deductionEndDate);
-            if (deductionEndDate && deductionStartDate && days > 0) {
-                //$("#Payment_PaymentLengthPeriod").val(days);
-                // var companionRate = compRate * days;
-                var patientRate = patRate * days;
-                // since sometimes the companion does not exist, so the rate can be zero
-                //if (companionRate >= 0) {
-                //    $("#PaymentDeduction_CompanionDeduction").val(companionRate);
-                //    companionDeduction =  $("#PaymentDeduction_CompanionDeduction").val();
-                //}
+              //we need to know the number of days that need to be deducted from the payment
+              //
+            debugger;
+              var finalAmount = 0;
+
+              var patientdaysDiff = lastPaymentsDiff - patientdays;
+              var companiondaysDiff = lastPaymentsDiff - companiondays;
+
+              if (patientdaysDiff > 0 || companiondaysDiff > 0) {// we shoud do deduction
+                  //var patientRate = patRate * patientdays;
+                  //var companionRate = compRate * companiondays;
+                  //console.log("patient deduction", patientRate);
+                  //console.log("comapanion deduction", companionRate);
+
+                  //if (patientRate)
+                  //    $("#PaymentDeductionObject_PatientDeduction").val(patientRate);
+                  //else $("#PaymentDeductionObject_PatientDeduction").val("");
+                  //if (companionRate)
+                  //    $("#PaymentDeductionObject_CompanionDeduction").val(companionRate);
+                  //else $("#PaymentDeductionObject_CompanionDeduction").val("");
+                  //companionDeduction = $("#PaymentDeductionObject_CompanionDeduction").val();
+                  //patientDeduction = $("#PaymentDeductionObject_PatientDeduction").val();
+
+
+                  //if (patientDeduction && patientDeduction > 0)
+                  //    total = parseInt(patientDeduction);
+                  //if (patientDeduction && patientDeduction > 0 && companionDeduction && companionDeduction > 0)
+                  //    total = total + parseInt(companionDeduction);
+                  //if (!patientDeduction && companionDeduction && companionDeduction > 0)
+                  //    total = parseInt(companionDeduction);
+
+                  //$("#PaymentDeductionObject_TotalDeduction").val(total);
+                  //$("#PaymentDeductionObject_FinalAmount").val(
+                  //    $("#PaymentDeductionObject_AmountPaid").val() - $("#PaymentDeductionObject_TotalDeduction").val());
+                  doDeduction(patientdaysDiff, companiondaysDiff);
+                  $("#PaymentDeductionObject_DeductionPeriod").val(deductionPeriod(patientdaysDiff, companiondaysDiff));
+                  finalAmount = $('#PaymentDeductionObject_FinalAmount').val();
+                  displayProperColor(finalAmount);
+              }
+              if (patientdaysDiff < 0 || companiondaysDiff < 0) {
+                  doAddition(patientdaysDiff, companiondaysDiff);
+                  $("#PaymentDeductionObject_DeductionPeriod").val(deductionPeriod(patientdaysDiff, companiondaysDiff));
+                  finalAmount = $('#PaymentDeductionObject_FinalAmount').val();
+                  displayProperColor(finalAmount);
+              }
+              if ((!patientdaysDiff||patientdaysDiff == 0)) {
+                  $("#PaymentDeductionObject_PatientDeduction").val(0.00);
+              }
+              if (companiondaysDiff == 0) {
+                  $("#PaymentDeductionObject_CompanionDeduction").val(0.00);
+                  
+              }
+              if ((patientdaysDiff == 0 || !patientdaysDiff)) {
+                  if (companiondaysDiff == 0 || !companiondaysDiff) {
+                      $("#PaymentDeductionObject_FinalAmount").val($("#PaymentDeductionObject_AmountPaid").val()).removeAttr("style");
+                      $("#PaymentDeductionObject_TotalDeduction").val(0.00);
+                  }
+              }
+              if (companiondaysDiff == 0 || !companiondaysDiff) {
+                  if (patientdaysDiff == 0 || !patientdaysDiff) {
+                      $("#PaymentDeductionObject_FinalAmount").val($("#PaymentDeductionObject_AmountPaid").val()).removeAttr("style");
+                      $("#PaymentDeductionObject_TotalDeduction").val(0.00);
+                  }
+              }
+
+          });
+        function doDeduction(patientdays, companiondays) {
+
+            var patientRate = patRate * patientdays;
+            var companionRate = compRate * companiondays;
+            console.log("patient deduction", patientRate);
+            console.log("comapanion deduction", companionRate);
+
+            if (patientRate)
                 $("#PaymentDeductionObject_PatientDeduction").val(patientRate);
-                patientDeduction = $("#PaymentDeductionObject_PatientDeduction").val();
-                companionDeduction = $("#PaymentDeductionObject_CompanionDeduction").val();
-                var total = 0;
-                if (companionDeduction && companionDeduction > 0)
-                    total = parseInt(patientDeduction) + parseInt(companionDeduction);
-                else total = parseInt(patientDeduction);
-                $("#PaymentDeductionObject_TotalDeduction").val(total);
-                $("#PaymentDeductionObject_FinalAmount").val(
-                    $("#PaymentDeductionObject_AmountPaid").val() - $("#PaymentDeductionObject_TotalDeduction").val());
-
-
-                var finalAmount = $('#PaymentDeductionObject_FinalAmount').val();
-
-                if (finalAmount && parseInt(finalAmount) == 0) {
-                    $("#PaymentDeductionObject_FinalAmount").removeAttr("style");
-                }
-                if (finalAmount && finalAmount > 0) {
-                    $("#PaymentDeductionObject_FinalAmount").css({ "background-color": "#2cc34f", 'color': 'white' });
-                }
-                else {
-                    $("#PaymentDeductionObject_FinalAmount").css({ "background-color": "red", 'color': 'white' });
-                }
-            } else {
-                $("#PaymentDeductionObject_FinalAmount").val("").removeAttr("style");
-
-                $("#PaymentDeductionObject_PatientDeduction").val(0.00);
-                $("#PaymentDeductionObject_TotalDeduction").val(0.00);
-            }
-
-        });
-        $('#PaymentDeductionObject_CompanionStartDate, #PaymentDeductionObject_CompanionEndDate').change(function () {
-            // debugger;
-            var deductionStartDate = $("#PaymentDeductionObject_CompanionStartDate").val();
-            var deductionEndDate = $("#PaymentDeductionObject_CompanionEndDate").val();
-
-            var days = DaysDiff(deductionStartDate, deductionEndDate);
-            if (deductionEndDate && deductionStartDate && days > 0) {
-                //$("#Payment_PaymentLengthPeriod").val(days);
-                var companionRate = compRate * days;
-
-                // since sometimes the companion does not exist, so the rate can be zero
+            else $("#PaymentDeductionObject_PatientDeduction").val("");
+            if (companionRate)
                 $("#PaymentDeductionObject_CompanionDeduction").val(companionRate);
-                companionDeduction = $("#PaymentDeductionObject_CompanionDeduction").val();
-                patientDeduction = $("#PaymentDeductionObject_PatientDeduction").val();
-                var total = 0
-                if (patientDeduction && patientDeduction > 0)
-                    total = parseInt(patientDeduction) + parseInt(companionDeduction);
-                else total = parseInt(companionDeduction);
-
-                $("#PaymentDeductionObject_TotalDeduction").val(total);
-                $("#PaymentDeductionObject_FinalAmount").val(
-                    $("#PaymentDeductionObject_AmountPaid").val() - $("#PaymentDeductionObject_TotalDeduction").val());
+            else $("#PaymentDeductionObject_CompanionDeduction").val("");
+            companionDeduction = $("#PaymentDeductionObject_CompanionDeduction").val();
+            patientDeduction = $("#PaymentDeductionObject_PatientDeduction").val();
 
 
-                var finalAmount = $('#PaymentDeductionObject_FinalAmount').val();
+            if (patientDeduction)
+                total = parseInt(patientDeduction);
+            if (companionDeduction)
+                total = total + parseInt(companionDeduction);
+            if (!patientDeduction && companionDeduction)
+                total = parseInt(companionDeduction);
 
-                if (finalAmount && finalAmount == 0) {
-                    $("#PaymentDeductionObject_FinalAmount").removeAttr("style");
-                }
-                if (finalAmount && finalAmount > 0) {
-                    $("#PaymentDeductionObject_FinalAmount").css({ "background-color": "#2cc34f", 'color': 'white' });
-                }
-                else {
-                    $("#PaymentDeductionObject_FinalAmount").css({ "background-color": "red", 'color': 'white' });
-                }
-            } else {
-                // $("#Payment_PaymentLengthPeriod").val("");
-                $("#PaymentDeductionObject_FinalAmount").val("").removeAttr("style");
-                $("#PaymentDeductionObject_CompanionDeduction").val(0.00);
-                $("#PaymentDeductionObject_TotalDeduction").val(0.00);
+            $("#PaymentDeductionObject_TotalDeduction").val(total);
+            $("#PaymentDeductionObject_FinalAmount").val(
+            $("#PaymentDeductionObject_AmountPaid").val() - $("#PaymentDeductionObject_TotalDeduction").val());
 
-            }
+        }
+        function doAddition(patientdays, companiondays) {
 
-        });
+            var patientRate = patRate * patientdays * -1;
+            var companionRate = compRate * companiondays * -1;
+            console.log("patient deduction", patientRate);
+            console.log("comapanion deduction", companionRate);
+
+            if (patientRate)
+                $("#PaymentDeductionObject_PatientDeduction").val(patientRate);
+            else $("#PaymentDeductionObject_PatientDeduction").val("");
+            if (companionRate)
+                $("#PaymentDeductionObject_CompanionDeduction").val(companionRate);
+            else $("#PaymentDeductionObject_CompanionDeduction").val("");
+            companionDeduction = $("#PaymentDeductionObject_CompanionDeduction").val();
+            patientDeduction = $("#PaymentDeductionObject_PatientDeduction").val();
+
+
+            if (patientDeduction)
+                total = parseInt(patientDeduction);
+            if (companionDeduction)
+                total = total + parseInt(companionDeduction);
+            if (!patientDeduction && companionDeduction)
+                total = parseInt(companionDeduction);
+
+            $("#PaymentDeductionObject_TotalDeduction").val(total);
+            $("#PaymentDeductionObject_FinalAmount").val(
+                    parseInt($("#PaymentDeductionObject_AmountPaid").val()) +
+                    parseInt($("#PaymentDeductionObject_TotalDeduction").val()));
+
+        }
+
     </script>
 }
 

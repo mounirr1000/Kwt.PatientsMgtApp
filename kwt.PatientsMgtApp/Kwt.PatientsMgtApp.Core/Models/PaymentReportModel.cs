@@ -22,6 +22,8 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public string Bank { get; set; }
         public string Code { get; set; }
 
+        public Nullable<decimal> FinalAmount { get; set; }
+        public Nullable<decimal> DeductedAmount { get; set; }
         public System.DateTime CreatedDate { get; set; }
     }
 }

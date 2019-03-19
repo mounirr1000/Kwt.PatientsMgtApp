@@ -213,6 +213,7 @@
           <Property Name="ModifiedBy" Type="nvarchar" MaxLength="50" />
           <Property Name="ModifiedDate" Type="datetime" />
           <Property Name="FinalAmountAfterCorrection" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="TotalCorrection" Type="decimal" Precision="18" Scale="0" />
         </EntityType>
         <EntityType Name="PayRates">
           <Key>
@@ -836,6 +837,7 @@
           <NavigationProperty Name="PayRate" Relationship="Self.FK_Payments_PayRates" FromRole="Payments" ToRole="PayRates" />
           <NavigationProperty Name="PaymentDeductions" Relationship="PatientsMgtModel.FK_PaymentDeductions_Payments" FromRole="Payment" ToRole="PaymentDeduction" />
           <Property Name="FinalAmountAfterCorrection" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="TotalCorrection" Type="Decimal" Precision="18" Scale="0" />
         </EntityType>
         <EntityType Name="PayRate">
           <Key>
@@ -1494,6 +1496,7 @@
           <EntitySetMapping Name="Payments">
             <EntityTypeMapping TypeName="PatientsMgtModel.Payment">
               <MappingFragment StoreEntitySet="Payments">
+                <ScalarProperty Name="TotalCorrection" ColumnName="TotalCorrection" />
                 <ScalarProperty Name="FinalAmountAfterCorrection" ColumnName="FinalAmountAfterCorrection" />
                 <ScalarProperty Name="PaymentID" ColumnName="PaymentID" />
                 <ScalarProperty Name="PaymentDate" ColumnName="PaymentDate" />

@@ -9,6 +9,7 @@
     function Delete(id, queryString) {
        // debugger;
         if (queryString) {
+            queryString = queryString.toString();
             window.location.href = '@Url.Action("Delete")' + "/?" + queryString + "=" + id;
             //console.log(window.location.href);
         }

@@ -40,6 +40,7 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public string ModifiedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
         public Nullable<decimal> FinalAmountAfterCorrection { get; set; }
+        public Nullable<decimal> TotalCorrection { get; set; }
     
         public virtual Beneficiary Beneficiary { get; set; }
         public virtual Companion Companion { get; set; }

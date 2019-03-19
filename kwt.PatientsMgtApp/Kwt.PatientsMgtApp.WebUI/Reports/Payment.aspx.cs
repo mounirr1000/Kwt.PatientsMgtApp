@@ -78,6 +78,25 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                 Message.Text = "";
                 ErrorMessage.Visible = false;
                 Message.Enabled = false;
+                payments = payments?.Select(p => new PaymentReportModel()
+                {
+                    AgencyName = p.AgencyName,
+                    PaymentID = p.PaymentID,
+                    FinalAmount = p.FinalAmount ?? p.Amount,
+                    PatientCID = p.PatientCID,
+                    CreatedDate = p.CreatedDate,
+                    BeneficiaryCID = p.BeneficiaryCID,
+                    EndDate = p.EndDate,
+                    StartDate = p.StartDate,
+                    Amount = p.Amount,
+                    Bank = p.Bank,
+                    BeneficiaryName = p.BeneficiaryName,
+                    Code = p.Code,
+                    CompanionName = p.CompanionName,
+                    DeductedAmount = p.DeductedAmount ?? 0,
+                    IBan = p.IBan,
+                    PatientName = p.PatientName
+                }).ToList();
             }
             ReportViewer1.LocalReport.ReportPath = Server.MapPath("~/Reports/PaymentReport.rdlc");
             ReportViewer1.LocalReport.DataSources.Clear();
@@ -86,6 +105,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
            // ReportViewer1.EnableClientPrinting
             ReportViewer1.LocalReport.Refresh();
 
+            
             return payments;
         }
 
