@@ -203,7 +203,7 @@
           <Property Name="PayRateID" Type="int" />
           <Property Name="StartDate" Type="date" />
           <Property Name="EndDate" Type="date" />
-          <Property Name="Period" Type="int" StoreGeneratedPattern="Computed" />
+          <Property Name="Period" Type="int" StoreGeneratedPattern="None" />
           <Property Name="PAmount" Type="decimal" Precision="18" Scale="0" />
           <Property Name="CAmount" Type="decimal" Precision="18" Scale="0" />
           <Property Name="TotalDue" Type="decimal" Precision="18" Scale="0" />
@@ -822,7 +822,7 @@
           <Property Name="PayRateID" Type="Int32" />
           <Property Name="StartDate" Type="DateTime" Precision="0" />
           <Property Name="EndDate" Type="DateTime" Precision="0" />
-          <Property Name="Period" Type="Int32" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="Period" Type="Int32" annotation:StoreGeneratedPattern="None" />
           <Property Name="PAmount" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="CAmount" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="TotalDue" Type="Decimal" Precision="18" Scale="0" />

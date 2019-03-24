@@ -833,7 +833,10 @@
                             <TextRun>
                               <Value>=Fields!DeductedAmount.Value</Value>
                               <Style>
-                                <Format>'$'0.00;('$'0.00)</Format>
+                                <FontSize>11pt</FontSize>
+                                <Format>'$'0.00;'$'-0.00</Format>
+                                <Color>=IIF(Fields!FinalAmount.Value &lt; Fields!Amount.Value, "Red","SeaGreen")</Color>
+                                <rd:FormatSymbolCulture>en-US</rd:FormatSymbolCulture>
                               </Style>
                             </TextRun>
                           </TextRuns>

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Remoting;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -98,7 +99,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 PaymentDate = p.PaymentDate ?? p.CreatedDate,
                 PaymentLengthPeriod = p.Period,
                 PaymentStartDate = p.StartDate,
-                TotalDue = p.TotalDue,
+                TotalDue = p.FinalAmountAfterCorrection ?? p.TotalDue,
                 Id = p.PaymentID,
                 BeneficiaryCID = p.Beneficiary.BeneficiaryCID,
                 PayRateID = p.PayRateID,
@@ -114,7 +115,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
 
             var lastPayment = paymentRepository.
                             GetPaymentsByPatientCid(patientCid)?
-                            .OrderByDescending(p => p.PaymentDate).FirstOrDefault();
+                            .OrderByDescending(p => p.CreatedDate).ThenByDescending(p=>p.PaymentID).FirstOrDefault();
 
             PaymentModel payment = new PaymentModel();
             var ben = _beneficiaryRepository.GetBeneficiary(patientCid);
@@ -161,6 +162,14 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 }
                 //
             }
+            return payment;
+        }
+
+        public PaymentModel GetPaymentObject()
+        {
+            PaymentModel payment = new PaymentModel();
+            var patients=  _domainObjectRepository.Filter<Patient>(p => p.IsActive == true).ToList();
+            payment.ActivePatientCidList = patients?.Select(pa => pa.PatientCID).ToList();
             return payment;
         }
         public PaymentModel GetPaymentById(int paymentid)
@@ -395,12 +404,13 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 Period = payment.PaymentLengthPeriod,
                 StartDate = payment.PaymentStartDate,
                 TotalDue = payment.TotalDue,
-
+                 
             };
             using (TransactionScope scope = new TransactionScope())
             {
                 try
                 {
+                    
                     newPayment.FinalAmountAfterCorrection = payment.PaymentDeductionObject?.FinalAmount;
                     newPayment.TotalCorrection = payment.PaymentDeductionObject?.TotalDeduction > 0
                         ? payment.PaymentDeductionObject.TotalDeduction

@@ -106,6 +106,7 @@
             //    }
             //});
             $("#paymentList").kendoGrid({
+                resizable: true,
                 toolbar: ["pdf","excel"],
                 pdf: {
                     fileName: $("#paymentDt1").val()+" "+$("#paymentDt2").val()+" payments.pdf"
@@ -114,9 +115,14 @@
                     fileName: $("#paymentDt1").val()+" "+$("#paymentDt2").val()+" payments.xlsx",
                     filterable: true
                 },
+                pageable: {
+                    pageSize: 20,
+                    alwaysVisible: false,
+                    pageSizes: [5, 10, 15, "all"]
+                },
                 columns: [{
                     field: "Id",
-                    title: "Payment Num",
+                    title: "Voucher#",
 
                     template: "<a href='@Url.Action("Details", "Payment")?paymentId=#= Id#'>#= Id #</a>",
                     @*cellTemplate: '<div class="ui-grid-cell-contents"><a href={{@Url.Action("Details", "Payment")}} class="icon-bar">{{row.entity.Id}}</a></div>'*@
@@ -138,18 +144,18 @@
                     title: "Period"
                 },
                 {
-                    field: "PaymentStartDate",
+                    field: "PaymentStartDateFormatted",
                     title: "From",
-                    template: "#= kendo.toString(kendo.parseDate(PaymentStartDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
+                   // template: "#= kendo.toString(kendo.parseDate(PaymentStartDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
                 },
                 {
-                    field: "PaymentEndDate",
+                    field: "PaymentEndDateFormatted",
                     title: "To",
-                    template: "#= kendo.toString(kendo.parseDate(PaymentEndDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
+                   // template: "#= kendo.toString(kendo.parseDate(PaymentEndDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
                 },
                 {
                     field: "TotalDue",
-                    title: "Amount"
+                    title: "Final Amount"
                 }],
                 dataSource: {
                     data: data
@@ -211,6 +217,10 @@
                     
                     filterable: true
                 },
+                pageable: {
+                    pageSize: 15,
+                    alwaysVisible: false
+                },
                 columns: [
                     {
                         field: "PaymentDateFormatted",
@@ -223,14 +233,14 @@
                     field: "PatientCID",
                     title: "P_CID"
                 },{
-                    field: "PaymentStartDate",
+                    field: "PaymentStartDateFormatted",
                     title: "From",
-                    template: "#= kendo.toString(kendo.parseDate(PaymentStartDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
+                    //template: "#= kendo.toString(kendo.parseDate(PaymentStartDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
                 },
                 {
-                    field: "PaymentEndDate",
+                    field: "PaymentEndDateFormatted",
                     title: "To",
-                    template: "#= kendo.toString(kendo.parseDate(PaymentEndDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
+                   // template: "#= kendo.toString(kendo.parseDate(PaymentEndDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
                 },{
                     field: "TotalDue",
                     title: "Amount"

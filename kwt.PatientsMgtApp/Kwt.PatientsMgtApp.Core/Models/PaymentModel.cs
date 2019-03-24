@@ -150,5 +150,7 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public PaymentDeductionModel PaymentDeductionObject { get; set; }
         public ICollection<PaymentDeductionModel> PaymentDeductions { get; set; }
 
+        public IList<string> ActivePatientCidList { get; set; }
+
     }
 }
