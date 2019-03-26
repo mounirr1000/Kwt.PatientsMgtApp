@@ -1,6 +1,6 @@
 ﻿
-
-@model Kwt.PatientsMgtApp.WebUI.Models.PaymentViewModel
+@model Kwt.PatientsMgtApp.Core.Models.PaymentModel
+@*@model Kwt.PatientsMgtApp.WebUI.Models.PaymentViewModel*@
 
 @{
     ViewBag.Title = "Payment Details";
@@ -13,20 +13,20 @@
 {
     <div class="mt-3">
         <p>
-            <a href="@Url.Action("Details", new {paymentId = Model.Payment.Id})" class="k-button"><i class="fa fa-ban" style="color: lightblue"></i> Cancel</a>
+            <a href="@Url.Action("Details", new {paymentId = Model.Id})" class="k-button"><i class="fa fa-ban" style="color: lightblue"></i> Cancel</a>
             <button type="submit" class="k-button"><i class="fa fa-check" style="color: greenyellow"></i> Update</button>
         </p>
     </div>
     <div class="m-3 pl-4">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Payment.Id)
-        @Html.HiddenFor(model => model.Payment.CreatedDate)
-        @Html.HiddenFor(model => model.Payment.CreatedBy)
-        @Html.HiddenFor(model => model.Payment.PaymentID)
-        @Html.HiddenFor(model => model.PaymentDeduction.DeductionID)
-        @Html.HiddenFor(model => model.PaymentDeduction.PaymentID)
-        @Html.HiddenFor(model => model.PaymentDeduction.CreatedDate)
-        @Html.HiddenFor(model => model.PaymentDeduction.CreatedBy)
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.CreatedDate)
+        @Html.HiddenFor(model => model.CreatedBy)
+        @Html.HiddenFor(model => model.PaymentID)
+        @Html.HiddenFor(model => model.PaymentDeductionObject.DeductionID)
+        @Html.HiddenFor(model => model.PaymentDeductionObject.PaymentID)
+        @Html.HiddenFor(model => model.PaymentDeductionObject.CreatedDate)
+        @Html.HiddenFor(model => model.PaymentDeductionObject.CreatedBy)
     </div>
 
     @Html.AntiForgeryToken()
@@ -36,39 +36,39 @@
             <legend>Payment Details</legend>
             <ul class="fieldlist row">
                 <li class="col-md-3">
-                    @Html.LabelFor(model => model.Payment.PatientCID, new { @class = "" })
-                    @Html.TextBoxFor(model => model.Payment.PatientCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-                    @Html.HiddenFor(model => model.Payment.PatientCID)
+                    @Html.LabelFor(model => model.PatientCID, new { @class = "" })
+                    @Html.TextBoxFor(model => model.PatientCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                    @Html.HiddenFor(model => model.PatientCID)
                 </li>
                 <li class="col-md-3">
-                    @Html.LabelFor(model => model.Payment.PaymentDate, new {@class = ""})
-                    @Html.TextBoxFor(model => model.Payment.PaymentDate, new {@class = "", style = "width: 60%;"})
-                    <div>@Html.ValidationMessageFor(model => model.Payment.PaymentDate, "", new {@class = "text-danger"})</div>
+                    @Html.LabelFor(model => model.PaymentDate, new {@class = ""})
+                    @Html.TextBoxFor(model => model.PaymentDate, new {@class = "", style = "width: 60%;"})
+                    <div>@Html.ValidationMessageFor(model => model.PaymentDate, "", new {@class = "text-danger"})</div>
                 </li>
-                @if (Model.Payment.PayRates != null && !String.IsNullOrEmpty(Model.Payment.CompanionCID))
+                @if (Model.PayRates != null && !String.IsNullOrEmpty(Model.CompanionCID))
             {
             <li class="col-md-3">
-                @Html.LabelFor(model => model.Payment.CompanionPayRate, new {@class = ""})
+                @Html.LabelFor(model => model.CompanionPayRate, new {@class = ""})
                 @*@Html.TextBoxFor(model => model.CompanionPayRate, new {@class = "k-textbox", style = "width: 100%;"})*@
 
-                @Html.DropDownListFor(model => model.Payment.CompanionPayRate, new List<SelectListItem>
-                        (Model.Payment.PayRates.Select(a => new SelectListItem()
+                @Html.DropDownListFor(model => model.CompanionPayRate, new List<SelectListItem>
+                        (Model.PayRates.Select(a => new SelectListItem()
                         {
                             Text = a.CompanionRate.ToString(),
                             Value = a.CompanionRate.ToString()
 
                         }).ToList()))
 
-                <div>@Html.ValidationMessageFor(model => model.Payment.CompanionPayRate, "", new {@class = "text-danger"})</div>
+                <div>@Html.ValidationMessageFor(model => model.CompanionPayRate, "", new {@class = "text-danger"})</div>
             </li>
             }
                 <li class="col-md-3">
-                    @Html.LabelFor(model => model.Payment.PatientPayRate, new {@class = ""})
+                    @Html.LabelFor(model => model.PatientPayRate, new {@class = ""})
 
-                    @if (Model.Payment.PayRates != null)
+                    @if (Model.PayRates != null)
                 {
-                @Html.DropDownListFor(model => model.Payment.PatientPayRate, new List<SelectListItem>
-                        (Model.Payment.PayRates.Select(a => new SelectListItem()
+                @Html.DropDownListFor(model => model.PatientPayRate, new List<SelectListItem>
+                        (Model.PayRates.Select(a => new SelectListItem()
                         {
                             Text = a.PatientRate.ToString(),
                             Value = a.PatientRate.ToString()
@@ -77,196 +77,197 @@
                 }
                 else
                 {
-                @Html.TextBoxFor(model => model.Payment.PatientPayRate, new {@class = "k-textbox", style = "width: 100%;"})
+                @Html.TextBoxFor(model => model.PatientPayRate, new {@class = "k-textbox", style = "width: 100%;"})
                 }
 
-                    <div>@Html.ValidationMessageFor(model => model.Payment.PatientPayRate, "", new {@class = "text-danger"})</div>
+                    <div>@Html.ValidationMessageFor(model => model.PatientPayRate, "", new {@class = "text-danger"})</div>
                 </li>
                 
                 <li class="col-md-3">
-                    @Html.LabelFor(model => model.Payment.PaymentStartDate, new {@class = ""})
-                    @Html.TextBoxFor(model => model.Payment.PaymentStartDate, new {@class = "", style = "width: 60%;"})
-                    <div>@Html.ValidationMessageFor(model => model.Payment.PaymentStartDate, "", new {@class = "text-danger"})</div>
+                    @Html.LabelFor(model => model.PaymentStartDate, new {@class = ""})
+                    @Html.TextBoxFor(model => model.PaymentStartDate, new {@class = "", style = "width: 60%;"})
+                    <div>@Html.ValidationMessageFor(model => model.PaymentStartDate, "", new {@class = "text-danger"})</div>
                 </li>
                 <li class="col-md-3">
-                    @Html.LabelFor(model => model.Payment.PaymentEndDate, new {@class = ""})
-                    @Html.TextBoxFor(model => model.Payment.PaymentEndDate, new {@class = "", style = "width: 60%;"})
-                    <div>@Html.ValidationMessageFor(model => model.Payment.PaymentEndDate, "", new {@class = "text-danger"})</div>
+                    @Html.LabelFor(model => model.PaymentEndDate, new {@class = ""})
+                    @Html.TextBoxFor(model => model.PaymentEndDate, new {@class = "", style = "width: 60%;"})
+                    <div>@Html.ValidationMessageFor(model => model.PaymentEndDate, "", new {@class = "text-danger"})</div>
                 </li>
                 
                 <li class="col-md-3">
-                    @Html.LabelFor(model => model.Payment.PaymentLengthPeriod, new {@class = ""})
-                    @Html.TextBoxFor(model => (model.Payment.PaymentLengthPeriod), new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
-                    @Html.HiddenFor(model => model.Payment.PaymentLengthPeriod)
+                    @Html.LabelFor(model => model.PaymentLengthPeriod, new {@class = ""})
+                    @Html.TextBoxFor(model => (model.PaymentLengthPeriod), new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+                    @Html.HiddenFor(model => model.PaymentLengthPeriod)
                 </li>
                 <li class="col-md-3">
-                    @Html.LabelFor(model => model.Payment.PatientAmount, new {@class = ""})
-                    @Html.TextBoxFor(model => model.Payment.PatientAmount, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
-                    @Html.HiddenFor(model => model.Payment.PatientAmount)
+                    @Html.LabelFor(model => model.PatientAmount, new {@class = ""})
+                    @Html.TextBoxFor(model => model.PatientAmount, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+                    @Html.HiddenFor(model => model.PatientAmount)
                 </li>
                 <li class="col-md-3">
-                    @Html.LabelFor(model => model.Payment.CompanionAmount, new {@class = ""})
-                    @Html.TextBoxFor(model => model.Payment.CompanionAmount, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
-                    @Html.HiddenFor(model => model.Payment.CompanionAmount)
+                    @Html.LabelFor(model => model.CompanionAmount, new {@class = ""})
+                    @Html.TextBoxFor(model => model.CompanionAmount, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+                    @Html.HiddenFor(model => model.CompanionAmount)
                 </li>
                 <li class="col-md-3">
-                    @Html.LabelFor(model => model.Payment.TotalDue, new {@class = ""})
-                    @Html.TextBoxFor(model => model.Payment.TotalDue, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
-                    @Html.HiddenFor(model => model.Payment.TotalDue)
+                    @Html.LabelFor(model => model.TotalDue, new {@class = ""})
+                    @Html.TextBoxFor(model => model.TotalDue, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
+                    @Html.HiddenFor(model => model.TotalDue)
                 </li>
                 <li class="col-md-6">
-                    @Html.LabelFor(model => model.Payment.Notes, new {@class = ""})
-                    @Html.TextAreaFor(model => model.Payment.Notes, new {@class = "k-textbox", style = "width: 100%;"})
-                    <div>@Html.ValidationMessageFor(model => model.Payment.Notes, "", new {@class = "text-danger"})</div>
+                    @Html.LabelFor(model => model.Notes, new {@class = ""})
+                    @Html.TextAreaFor(model => model.Notes, new {@class = "k-textbox", style = "width: 100%;"})
+                    <div>@Html.ValidationMessageFor(model => model.Notes, "", new {@class = "text-danger"})</div>
                 </li>
             </ul>
         </fieldset>
-        @* Deduction section *@
-        <fieldset>
-            @* Deduction section *@
-        <legend>Deduction Details</legend>
-        <ul class="fieldlist row">
-            <li class="col-md-3">
-                @Html.LabelFor(model => model.PaymentDeduction.PatientCID, new { @class = "" })
-                @Html.TextBoxFor(model => model.PaymentDeduction.PatientCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-                @Html.HiddenFor(model => model.PaymentDeduction.PatientCID)
-            </li>
-            <li class="col-md-3">
-                @Html.LabelFor(model => model.Payment.PaymentDate, new { @class = "" })
-                @Html.TextBoxFor(model => model.Payment.PaymentDate, new { @class = "edit", style = "width: 60%;", @readonly = "readonly" })
+    @* Deduction section *@
+        @if (Model.PaymentDeductionObject.LastPaymentStartDate != null && Model.PaymentDeductionObject.LastPaymentEndDateFormatted != null)
+        {
+            <fieldset>
+                @* Deduction section *@
+                <legend>Deduction Details</legend>
+                <ul class="fieldlist row">
+                    <li class="col-md-3">
+                        @Html.LabelFor(model => model.PaymentDeductionObject.PatientCID, new { @class = "" })
+                        @Html.TextBoxFor(model => model.PaymentDeductionObject.PatientCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                        @Html.HiddenFor(model => model.PaymentDeductionObject.PatientCID)
+                    </li>
+                    @if (Model.PayRates != null && !String.IsNullOrEmpty(Model.CompanionCID))
+                    {
+                        <li class="col-md-3">
+                            @Html.LabelFor(model => model.CompanionPayRate, new { @class = "" })
+                            @*@Html.TextBoxFor(model => model.CompanionPayRate, new {@class = "k-textbox", style = "width: 100%;"})*@
 
-            </li>
-            @if (Model.Payment.PayRates != null && !String.IsNullOrEmpty(Model.Payment.CompanionCID))
-                {
-                <li class="col-md-3">
-                    @Html.LabelFor(model => model.Payment.CompanionPayRate, new { @class = "" })
-                    @*@Html.TextBoxFor(model => model.CompanionPayRate, new {@class = "k-textbox", style = "width: 100%;"})*@
-
-                    @Html.DropDownListFor(model => model.Payment.CompanionPayRate, new List<SelectListItem>
-                            (Model.Payment.PayRates.Select(a => new SelectListItem()
+                            @Html.DropDownListFor(model => model.CompanionPayRate, new List<SelectListItem>
+                            (Model.PayRates.Select(a => new SelectListItem()
                             {
                                 Text = a.CompanionRate.ToString(),
                                 Value = a.CompanionRate.ToString()
 
                             }).ToList()), new { @class = "k-dropdown" })
 
-                    <div>@Html.ValidationMessageFor(model => model.Payment.CompanionPayRate, "", new { @class = "text-danger" })</div>
-                </li>
-            }
-            <li class="col-md-3">
-                @Html.LabelFor(model => model.Payment.PatientPayRate, new {@class = ""})
-
-                @if (Model.Payment.PayRates != null)
-                    {
-                    @Html.DropDownListFor(model => model.Payment.PatientPayRate, new List<SelectListItem>
-                            (Model.Payment.PayRates.Select(a => new SelectListItem()
-                            {
-                                Text = a.PatientRate.ToString(),
-                                Value = a.PatientRate.ToString()
-
-                            }).ToList()), new {@class = "k-dropdown"})
+                            <div>@Html.ValidationMessageFor(model => model.CompanionPayRate, "", new { @class = "text-danger" })</div>
+                        </li>
                     }
-                    else
-                    {
-                    @Html.TextBoxFor(model => model.Payment.PatientPayRate, new {@class = "k-textbox", style = "width: 100%;"})
-                    }
+                    <li class="col-md-3">
+                        @Html.LabelFor(model => model.PatientPayRate, new { @class = "" })
 
-                <div>@Html.ValidationMessageFor(model => model.Payment.PatientPayRate, "", new {@class = "text-danger"})</div>
-            </li>
-           
-            @*<li class="col-md-3">
-                    @Html.LabelFor(model => model.PaymentDeduction.DeductionStartDate, new { @class = "" })
-                    @Html.TextBoxFor(model => model.PaymentDeduction.DeductionStartDate, new { @class = "", style = "width: 60%;" })
-                    <div>@Html.ValidationMessageFor(model => model.PaymentDeduction.DeductionStartDate, "", new { @class = "text-danger" })</div>
-                </li>
-                <li class="col-md-3">
-                    @Html.LabelFor(model => model.PaymentDeduction.DeductionEndDate, new { @class = "" })
-                    @Html.TextBoxFor(model => model.PaymentDeduction.DeductionEndDate, new { @class = "", style = "width: 60%;" })
-                    <div>@Html.ValidationMessageFor(model => model.PaymentDeduction.DeductionEndDate, "", new { @class = "text-danger" })</div>
-                </li>*@
-            <li class="col-md-3">
-                @Html.LabelFor(model => model.PaymentDeduction.PatientStartDate, new { @class = "" })
-                @Html.TextBoxFor(model => model.PaymentDeduction.PatientStartDate, new { @class = "", style = "width: 60%;" })
-                <div>@Html.ValidationMessageFor(model => model.PaymentDeduction.PatientStartDate, "", new { @class = "text-danger" })</div>
-            </li>
-            <li class="col-md-3">
-                @Html.LabelFor(model => model.PaymentDeduction.PatientEndDate, new { @class = "" })
-                @Html.TextBoxFor(model => model.PaymentDeduction.PatientEndDate, new { @class = "", style = "width: 60%;" })
-                <div>@Html.ValidationMessageFor(model => model.PaymentDeduction.PatientEndDate, "", new { @class = "text-danger" })</div>
-            </li>
+                        @if (Model.PayRates != null)
+                        {
+                            @Html.DropDownListFor(model => model.PatientPayRate, new List<SelectListItem>
+                        (Model.PayRates.Select(a => new SelectListItem()
+                        {
+                            Text = a.PatientRate.ToString(),
+                            Value = a.PatientRate.ToString()
 
-            <li class="col-md-3">
-                @Html.LabelFor(model => model.PaymentDeduction.PatientDeduction, new { @class = "" })
-                @Html.TextBoxFor(model => model.PaymentDeduction.PatientDeduction, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-                @Html.HiddenFor(model => model.PaymentDeduction.PatientDeduction)
-            </li>
-            <li class="col-md-3"></li>
-            <li class="col-md-3">
-                @Html.LabelFor(model => model.PaymentDeduction.CompanionStartDate, new { @class = "" })
-                @Html.TextBoxFor(model => model.PaymentDeduction.CompanionStartDate, new { @class = "", style = "width: 60%;" })
-                <div>@Html.ValidationMessageFor(model => model.PaymentDeduction.CompanionStartDate, "", new { @class = "text-danger" })</div>
-            </li>
-            <li class="col-md-3">
-                @Html.LabelFor(model => model.PaymentDeduction.CompanionEndDate, new { @class = "" })
-                @Html.TextBoxFor(model => model.PaymentDeduction.CompanionEndDate, new { @class = "", style = "width: 60%;" })
-                <div>@Html.ValidationMessageFor(model => model.PaymentDeduction.CompanionEndDate, "", new { @class = "text-danger" })</div>
-            </li>
-            <li class="col-md-3">
-                @Html.LabelFor(model => model.PaymentDeduction.CompanionDeduction, new { @class = "" })
-                @Html.TextBoxFor(model => model.PaymentDeduction.CompanionDeduction, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-                @Html.HiddenFor(model => model.PaymentDeduction.CompanionDeduction)
-            </li>
-            <li class="col-md-3"></li>
-            <li class="col-md-3">
-                @Html.LabelFor(model => model.PaymentDeduction.DeductionPeriod, new { @class = "" })
-                @Html.TextBoxFor(model => (model.PaymentDeduction.DeductionPeriod), new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-                @Html.HiddenFor(model => model.PaymentDeduction.DeductionPeriod)
-            </li>
-            <li class="col-md-3">
-                @Html.LabelFor(model => model.PaymentDeduction.AmountPaid, new { @class = "" })
-                @Html.TextBoxFor(model => model.PaymentDeduction.AmountPaid, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-                @Html.HiddenFor(model => model.PaymentDeduction.AmountPaid)
-            </li>
+                        }).ToList()), new { @class = "k-dropdown" })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(model => model.PatientPayRate, new { @class = "k-textbox", style = "width: 100%;" })
+                        }
+
+                        <div>@Html.ValidationMessageFor(model => model.PatientPayRate, "", new { @class = "text-danger" })</div>
+                    </li>
+                    <li class="col-md-3"></li>
+                    <li class="col-md-3">
+                        @Html.LabelFor(model => model.PaymentDeductionObject.LastPaymentStartDate, new { @class = "" })
+                        @Html.TextBoxFor(model => model.PaymentDeductionObject.LastPaymentStartDateFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                        @Html.HiddenFor(model => model.PaymentDeductionObject.LastPaymentStartDate)
+                    </li>
+                    <li class="col-md-3">
+                        @Html.LabelFor(model => model.PaymentDeductionObject.LastPaymentEndDate, new { @class = "" })
+                        @Html.TextBoxFor(model => model.PaymentDeductionObject.LastPaymentEndDateFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                        @Html.HiddenFor(model => model.PaymentDeductionObject.LastPaymentEndDate)
+                    </li>
+                    <li class="col-md-3"></li>
+                    <li class="col-md-3"></li>
+                    <li class="col-md-3">
+                        @Html.LabelFor(model => model.PaymentDeductionObject.PatientStartDate, new { @class = "" })
+                        @Html.TextBoxFor(model => model.PaymentDeductionObject.PatientStartDate, new { @class = "", style = "width: 60%;" })
+                        <div>@Html.ValidationMessageFor(model => model.PaymentDeductionObject.PatientStartDate, "", new { @class = "text-danger" })</div>
+                    </li>
+                    <li class="col-md-3">
+                        @Html.LabelFor(model => model.PaymentDeductionObject.PatientEndDate, new { @class = "" })
+                        @Html.TextBoxFor(model => model.PaymentDeductionObject.PatientEndDate, new { @class = "", style = "width: 60%;" })
+                        <div>@Html.ValidationMessageFor(model => model.PaymentDeductionObject.PatientEndDate, "", new { @class = "text-danger" })</div>
+                    </li>
+
+                    <li class="col-md-3">
+                        @Html.LabelFor(model => model.PaymentDeductionObject.PatientDeduction, new { @class = "" })
+                        @Html.TextBoxFor(model => model.PaymentDeductionObject.PatientDeduction, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                        @Html.HiddenFor(model => model.PaymentDeductionObject.PatientDeduction)
+                    </li>
+                    <li class="col-md-3"></li>
+                    <li class="col-md-3">
+                        @Html.LabelFor(model => model.PaymentDeductionObject.CompanionStartDate, new { @class = "" })
+                        @Html.TextBoxFor(model => model.PaymentDeductionObject.CompanionStartDate, new { @class = "", style = "width: 60%;" })
+                        <div>@Html.ValidationMessageFor(model => model.PaymentDeductionObject.CompanionStartDate, "", new { @class = "text-danger" })</div>
+                    </li>
+                    <li class="col-md-3">
+                        @Html.LabelFor(model => model.PaymentDeductionObject.CompanionEndDate, new { @class = "" })
+                        @Html.TextBoxFor(model => model.PaymentDeductionObject.CompanionEndDate, new { @class = "", style = "width: 60%;" })
+                        <div>@Html.ValidationMessageFor(model => model.PaymentDeductionObject.CompanionEndDate, "", new { @class = "text-danger" })</div>
+                    </li>
+                    <li class="col-md-3">
+                        @Html.LabelFor(model => model.PaymentDeductionObject.CompanionDeduction, new { @class = "" })
+                        @Html.TextBoxFor(model => model.PaymentDeductionObject.CompanionDeduction, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                        @Html.HiddenFor(model => model.PaymentDeductionObject.CompanionDeduction)
+                    </li>
+                    <li class="col-md-3"></li>
+                    <li class="col-md-3">
+                        @Html.LabelFor(model => model.PaymentDeductionObject.DeductionPeriod, new { @class = "" })
+                        @Html.TextBoxFor(model => (model.PaymentDeductionObject.DeductionPeriod), new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                        @Html.HiddenFor(model => model.PaymentDeductionObject.DeductionPeriod)
+                    </li>
+                    <li class="col-md-3">
+                        @Html.LabelFor(model => model.PaymentDeductionObject.AmountPaid, new { @class = "" })
+                        @Html.TextBoxFor(model => model.PaymentDeductionObject.AmountPaid, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                        @Html.HiddenFor(model => model.PaymentDeductionObject.AmountPaid)
+                    </li>
 
 
-            <li class="col-md-3">
-                @Html.LabelFor(model => model.PaymentDeduction.TotalDeduction, new { @class = "" })
-                @Html.TextBoxFor(model => model.PaymentDeduction.TotalDeduction, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-                @Html.HiddenFor(model => model.PaymentDeduction.TotalDeduction)
-            </li>
-            <li class="col-md-3">
-                @Html.LabelFor(model => model.PaymentDeduction.FinalAmount, new { @class = "" })
-                @Html.TextBoxFor(model => model.PaymentDeduction.FinalAmount, new { @class = "k-textbox", style = "width: 100%;", @readonly = "readonly" })
-                @Html.HiddenFor(model => model.PaymentDeduction.FinalAmount)
-            </li>
-            <li class="col-md-6">
-                @Html.LabelFor(model => model.PaymentDeduction.Notes, new { @class = "" })
-                @Html.TextAreaFor(model => model.PaymentDeduction.Notes, new { @class = "k-textbox", style = "width: 100%;" })
-                <div>@Html.ValidationMessageFor(model => model.PaymentDeduction.Notes, "", new { @class = "text-danger" })</div>
-            </li>
-        </ul>
-    </fieldset>
+                    <li class="col-md-3">
+                        @Html.LabelFor(model => model.PaymentDeductionObject.TotalDeduction, new { @class = "" })
+                        @Html.TextBoxFor(model => model.PaymentDeductionObject.TotalDeduction, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                        @Html.HiddenFor(model => model.PaymentDeductionObject.TotalDeduction)
+                    </li>
+                    <li class="col-md-3">
+                        @Html.LabelFor(model => model.PaymentDeductionObject.FinalAmount, new { @class = "" })
+                        @Html.TextBoxFor(model => model.PaymentDeductionObject.FinalAmount, new { @class = "k-textbox", style = "width: 100%;", @readonly = "readonly" })
+                        @Html.HiddenFor(model => model.PaymentDeductionObject.FinalAmount)
+                    </li>
+                    <li class="col-md-6">
+                        @Html.LabelFor(model => model.PaymentDeductionObject.Notes, new { @class = "" })
+                        @Html.TextAreaFor(model => model.PaymentDeductionObject.Notes, new { @class = "k-textbox", style = "width: 100%;" })
+                        <div>@Html.ValidationMessageFor(model => model.PaymentDeductionObject.Notes, "", new { @class = "text-danger" })</div>
+                    </li>
+                </ul>
+            </fieldset>
+        }
+       
     <fieldset>
         <legend>Beneficiary Information</legend>
         <ul class="fieldlist row">
             <li class="col-md-3">
-                @Html.LabelFor(model => model.Payment.BeneficiaryCID, new { @class = "" })
-                @Html.TextBoxFor(model => model.Payment.BeneficiaryCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-                @Html.HiddenFor(model => model.Payment.BeneficiaryCID)
+                @Html.LabelFor(model => model.BeneficiaryCID, new { @class = "" })
+                @Html.TextBoxFor(model => model.BeneficiaryCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                @Html.HiddenFor(model => model.BeneficiaryCID)
             </li>
             <li class="col-md-3">
-                @Html.LabelFor(model => model.Payment.BeneficiaryFName, new { @class = "" })
-                @Html.TextBoxFor(model => model.Payment.BeneficiaryFName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                @Html.LabelFor(model => model.BeneficiaryFName, new { @class = "" })
+                @Html.TextBoxFor(model => model.BeneficiaryFName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
 
             </li>
             <li class="col-md-3">
-                @Html.LabelFor(model => model.Payment.BeneficiaryMName, new { @class = "" })
-                @Html.TextBoxFor(model => model.Payment.BeneficiaryMName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                @Html.LabelFor(model => model.BeneficiaryMName, new { @class = "" })
+                @Html.TextBoxFor(model => model.BeneficiaryMName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
 
             </li>
             <li class="col-md-3">
-                @Html.LabelFor(model => model.Payment.BeneficiaryLName, new { @class = "" })
-                @Html.TextBoxFor(model => model.Payment.BeneficiaryLName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                @Html.LabelFor(model => model.BeneficiaryLName, new { @class = "" })
+                @Html.TextBoxFor(model => model.BeneficiaryLName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
 
             </li>
         </ul>
@@ -277,13 +278,13 @@
         <legend>Beneficiary Bank Information</legend>
         <ul class="fieldlist row">
             <li class="col-md-6">
-                @Html.LabelFor(model => model.Payment.BeneficiaryBank, new { @class = "" })
-                @Html.TextBoxFor(model => model.Payment.BeneficiaryBank, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                @Html.LabelFor(model => model.BeneficiaryBank, new { @class = "" })
+                @Html.TextBoxFor(model => model.BeneficiaryBank, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
 
             </li>
             <li class="col-md-6">
-                @Html.LabelFor(model => model.Payment.BeneficiaryIBan, new { @class = "" })
-                @Html.TextBoxFor(model => model.Payment.BeneficiaryIBan, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                @Html.LabelFor(model => model.BeneficiaryIBan, new { @class = "" })
+                @Html.TextBoxFor(model => model.BeneficiaryIBan, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
 
             </li>
         </ul>
@@ -293,34 +294,34 @@
         <legend>Patient Information</legend>
         <ul class="fieldlist row">
             <li class="col-md-3">
-                @Html.LabelFor(model => model.Payment.PatientCID, new { @class = "" })
-                @Html.TextBoxFor(model => model.Payment.PatientCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-                @Html.HiddenFor(model => model.Payment.PatientCID)
+                @Html.LabelFor(model => model.PatientCID, new { @class = "" })
+                @Html.TextBoxFor(model => model.PatientCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                @Html.HiddenFor(model => model.PatientCID)
             </li>
             <li class="col-md-3">
-                @Html.LabelFor(model => model.Payment.PatientFName, new { @class = "" })
-                @Html.TextBoxFor(model => model.Payment.PatientFName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                @Html.LabelFor(model => model.PatientFName, new { @class = "" })
+                @Html.TextBoxFor(model => model.PatientFName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
 
             </li>
             <li class="col-md-3">
-                @Html.LabelFor(model => model.Payment.PatientMName, new { @class = "" })
-                @Html.TextBoxFor(model => model.Payment.PatientMName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                @Html.LabelFor(model => model.PatientMName, new { @class = "" })
+                @Html.TextBoxFor(model => model.PatientMName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
 
             </li>
             <li class="col-md-3">
-                @Html.LabelFor(model => model.Payment.PatientLName, new { @class = "" })
-                @Html.TextBoxFor(model => model.Payment.PatientLName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                @Html.LabelFor(model => model.PatientLName, new { @class = "" })
+                @Html.TextBoxFor(model => model.PatientLName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
 
             </li>
             <li class="col-md-8">
-                @Html.LabelFor(model => model.Payment.Hospital, new { @class = "" })
-                @Html.TextBoxFor(model => model.Payment.Hospital, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-                @Html.HiddenFor(model => model.Payment.Hospital)
+                @Html.LabelFor(model => model.Hospital, new { @class = "" })
+                @Html.TextBoxFor(model => model.Hospital, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                @Html.HiddenFor(model => model.Hospital)
             </li>
             <li class="col-md-3">
-                @Html.LabelFor(model => model.Payment.Agency, new { @class = "" })
-                @Html.TextBoxFor(model => model.Payment.Agency, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-                @Html.HiddenFor(model => model.Payment.Agency)
+                @Html.LabelFor(model => model.Agency, new { @class = "" })
+                @Html.TextBoxFor(model => model.Agency, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                @Html.HiddenFor(model => model.Agency)
             </li>
         </ul>
     </fieldset>
@@ -329,23 +330,23 @@
         <legend>Companion Information</legend>
         <ul class="fieldlist row">
             <li class="col-md-3">
-                @Html.LabelFor(model => model.Payment.CompanionCID, new { @class = "" })
-                @Html.TextBoxFor(model => model.Payment.CompanionCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-                @Html.HiddenFor(model => model.Payment.CompanionCID)
+                @Html.LabelFor(model => model.CompanionCID, new { @class = "" })
+                @Html.TextBoxFor(model => model.CompanionCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                @Html.HiddenFor(model => model.CompanionCID)
             </li>
             <li class="col-md-3">
-                @Html.LabelFor(model => model.Payment.CompanionFName, new { @class = "" })
-                @Html.TextBoxFor(model => model.Payment.CompanionFName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                @Html.LabelFor(model => model.CompanionFName, new { @class = "" })
+                @Html.TextBoxFor(model => model.CompanionFName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
 
             </li>
             <li class="col-md-3">
-                @Html.LabelFor(model => model.Payment.CompanionMName, new { @class = "" })
-                @Html.TextBoxFor(model => model.Payment.CompanionMName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                @Html.LabelFor(model => model.CompanionMName, new { @class = "" })
+                @Html.TextBoxFor(model => model.CompanionMName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
 
             </li>
             <li class="col-md-3">
-                @Html.LabelFor(model => model.Payment.CompanionLName, new { @class = "" })
-                @Html.TextBoxFor(model => model.Payment.CompanionLName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                @Html.LabelFor(model => model.CompanionLName, new { @class = "" })
+                @Html.TextBoxFor(model => model.CompanionLName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
 
             </li>
 
@@ -355,20 +356,20 @@
         <legend>Audit Info</legend>
         <ul class="fieldlist row">
             <li class="col-md-4">
-                @Html.LabelFor(model => model.Payment.CreatedBy, new { @class = "" })
-                @Html.TextBoxFor(model => model.Payment.CreatedBy, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                @Html.LabelFor(model => model.CreatedBy, new { @class = "" })
+                @Html.TextBoxFor(model => model.CreatedBy, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
             </li>
             <li class="col-md-2">
-                @Html.LabelFor(model => model.Payment.CreatedDate, new { @class = "" })
-                @Html.TextBoxFor(model => model.Payment.CreatedDateFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                @Html.LabelFor(model => model.CreatedDate, new { @class = "" })
+                @Html.TextBoxFor(model => model.CreatedDateFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
             </li>
             <li class="col-md-4">
-                @Html.LabelFor(model => model.Payment.ModifiedBy, new { @class = "" })
-                @Html.TextBoxFor(model => model.Payment.ModifiedBy, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                @Html.LabelFor(model => model.ModifiedBy, new { @class = "" })
+                @Html.TextBoxFor(model => model.ModifiedBy, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
             </li>
             <li class="col-md-2">
-                @Html.LabelFor(model => model.Payment.ModifiedDate, new { @class = "" })
-                @Html.TextBoxFor(model => model.Payment.ModifiedDateFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                @Html.LabelFor(model => model.ModifiedDate, new { @class = "" })
+                @Html.TextBoxFor(model => model.ModifiedDateFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
             </li>
         </ul>
     </fieldset>
@@ -380,19 +381,342 @@
     @Scripts.Render("~/bundles/jqueryval")
     <script type="text/javascript">
 
-        $('document').ready(function () {
+        $('document').ready(function() {
             $("#contentPaymentDetail").css("visibility", "visible");
             $(".loader").css("display", "none");
             $("#Payment_PaymentDate, #Payment_PaymentStartDate, #Payment_PaymentEndDate" +
-                ",#PaymentDeduction_DeductionStartDate,#PaymentDeduction_DeductionEndDate, "+
-                "#PaymentDeduction_PatientStartDate ,#PaymentDeduction_PatientEndDate ,"+
+                ",#PaymentDeduction_DeductionStartDate,#PaymentDeduction_DeductionEndDate, " +
+                "#PaymentDeduction_PatientStartDate ,#PaymentDeduction_PatientEndDate ," +
                 "#PaymentDeduction_CompanionStartDate ,#PaymentDeduction_CompanionEndDate").kendoDatePicker();
 
-            var data= @Html.Raw(Json.Encode(Model));
-            console.log(data);
+            var data = @Html.Raw(Json.Encode(Model));
+            $("#PaymentDate").kendoDatePicker({
+            });
         });
     </script>
-    <script type="text/javascript">
+<script type="text/javascript">
+        var lastEndDatePayment = @Html.Raw(Json.Encode(Model?.PaymentDeductionObject?.LastPaymentEndDateFormatted));
+        var newStartdate = new Date();
+        if (lastEndDatePayment&&lastEndDatePayment !=null) {
+            newStartdate=  new Date(lastEndDatePayment);
+            newStartdate.setDate(newStartdate.getDate() + 1);
+        }
+        var start= $("#PaymentStartDate").kendoDatePicker({
+            value: newStartdate,
+            min: newStartdate,
+            change: startChange,
+            footer: "<button id='cleardate' class='k-button' onclick='clearDate(PaymentStartDate)'>Clear</button>"
+        }).attr("readonly", "").data("kendoDatePicker");
+        var newStartDate = $('#PaymentStartDate').val();
+        var newEndDate = new Date();
+        if (newStartDate && newStartDate != null) {
+            newEndDate = new Date(newStartDate);
+            newEndDate.setDate(newEndDate.getDate() + 1);
+        }
+        var end=   $("#PaymentEndDate").kendoDatePicker({
+            value: newEndDate,
+            // min: newEndDate,
+            change: endChange,
+            footer: "<button id='cleardate' class='k-button' onclick='clearDate(PaymentEndDate)'>Clear</button>"
+        }).attr("readonly", "").data("kendoDatePicker");
+
+        if (newEndDate && newStartdate) {
+            setPayment();
+            setDeduction();
+        }
+        start.max(end.value());
+        end.min(start.value());
+        //$("#PaymentEndDate").kendoDatePicker();
+        $("#PaymentDeductionObject_PatientStartDate").kendoDatePicker({
+            footer: "<button id='cleardate' class='k-button' onclick='clearDate(PaymentDeductionObject_PatientStartDate)'>Clear</button>"
+        }).attr("readonly","");
+        $("#PaymentDeductionObject_PatientEndDate").kendoDatePicker({
+            footer: "<button id='cleardate' class='k-button' onclick='clearDate(PaymentDeductionObject_PatientEndDate)'>Clear</button>"
+        }).attr("readonly","");
+        $("#PaymentDeductionObject_CompanionStartDate").kendoDatePicker({
+            footer: "<button id='cleardate' class='k-button' onclick='clearDate(PaymentDeductionObject_CompanionStartDate)'>Clear</button>"
+        }).attr("readonly","");
+        $("#PaymentDeductionObject_CompanionEndDate").kendoDatePicker({
+            footer: "<button id='cleardate' class='k-button' onclick='clearDate(PaymentDeductionObject_CompanionEndDate)'>Clear</button>"
+        }).attr("readonly","");
+      
+
+        function clearDate(elementId) {
+
+            setTimeout(function() {
+                $(elementId).data("kendoDatePicker").value(null);
+                setPayment();
+                setDeduction();
+            });
+
+        }
+        function DaysDiff(startDate, endDate) {
+      
+            var diff = new Date(new Date(startDate) - new Date(endDate));
+            diff = diff / (1000 * 60 * 60 * 24);
+            if (diff < 0) {
+                diff = diff * -1;
+            }
+            if(diff && diff>0)
+                return Math.round(diff + 1);
+            return 0;
+        }
+        function deductionPeriod(paDays, coDays) {
+            var period = 0;
+            if (paDays)
+                period = period + parseInt(paDays);
+            if (coDays)
+                period = period + parseInt(coDays);
+      
+            return period;
+        }
+        function displayProperColor(finalAmount) {
+
+
+            if (finalAmount && parseInt(finalAmount) == 0) {
+                $("#PaymentDeductionObject_FinalAmount").removeAttr("style");
+            }
+            if (finalAmount && finalAmount > 0) {
+                $("#PaymentDeductionObject_FinalAmount").css({ "background-color": "#2cc34f", 'color': 'white' });
+            }
+            else {
+                $("#PaymentDeductionObject_FinalAmount").css({ "background-color": "red", 'color': 'white' });
+            }
+        }
+        var companionAmount = 0;
+        var patientAmount = 0;
+        var companionDeduction = 0;
+        var patientDeduction = 0;
+        var compRate = $("#CompanionPayRate").val();
+        var patRate = $("#PatientPayRate").val();
+        var total = 0;
+        var lastPaymentStartDate = $("#PaymentDeductionObject_LastPaymentStartDateFormatted").val();
+        var lastPaymentEndDate = $("#PaymentDeductionObject_LastPaymentEndDateFormatted").val();
+        var lastPaymentsDiff = DaysDiff(lastPaymentStartDate, lastPaymentEndDate);
+        var finalAmount = 0;
+        $('#CompanionPayRate, #PatientPayRate, #PaymentStartDate, #PaymentEndDate').change(function () {
+            setPayment();
+            
+            setDeduction();
+            
+        });
+
+        $('#PaymentDeductionObject_PatientStartDate, ' +
+            '#PaymentDeductionObject_PatientEndDate' +
+            ',#PaymentDeductionObject_CompanionStartDate,' +
+            '#PaymentDeductionObject_CompanionEndDate').change(function () {
+           
+                var patientdeductionStartDate = $("#PaymentDeductionObject_PatientStartDate").val();
+                var patientdeductionEndDate = $("#PaymentDeductionObject_PatientEndDate").val();
+                var companiondeductionStartDate = $("#PaymentDeductionObject_CompanionStartDate").val();
+                var companiondeductionEndDate = $("#PaymentDeductionObject_CompanionEndDate").val();
+                var patientdays = DaysDiff(patientdeductionStartDate, patientdeductionEndDate);
+                var companiondays = DaysDiff(companiondeductionStartDate, companiondeductionEndDate);
+
+
+                //we need to know the number of days that need to be deducted from the payment
+                //
+                //debugger;
+                finalAmount = 0;
+                var patdaysDiff = 0;
+                var compdaysDiff = 0;
+                // debugger;
+                if (patientdays) {
+                    patdaysDiff = lastPaymentsDiff - patientdays;
+                }
+                if ( companiondays) {
+                    compdaysDiff = lastPaymentsDiff - companiondays;
+                }
+                setValues(patdaysDiff, compdaysDiff);
+
+            });
+
+        function setPayment() {
+            var days = DaysDiff($("#PaymentStartDate").val(), $("#PaymentEndDate").val());
+            if ($("#PaymentEndDate").val() && $("#PaymentStartDate").val() && days >= 0) {
+                $("#PaymentLengthPeriod").val(days);
+                var period = $("#PaymentLengthPeriod").val();
+                var companionRate = $("#CompanionPayRate").val() * period;
+                var patientRate = $("#PatientPayRate").val() * period;
+                var companionAmount = 0;
+                var patientAmount = 0;
+                if (companionRate >= 0) {
+                    $("#CompanionAmount").val(companionRate);
+                    companionAmount = $("#CompanionAmount").val();
+                }
+                if (companionRate) {
+
+                }
+                $("#PatientAmount").val(patientRate);
+
+                patientAmount = $("#PatientAmount").val();
+
+                $("#TotalDue").val(parseInt(patientAmount) + parseInt(companionAmount));
+
+
+            } else {
+                $("#PaymentLengthPeriod").val("");
+                $("#PatientAmount").val(0.00);
+                $("#CompanionAmount").val(0.00);
+                $("#TotalDue").val(0.00);
+            }
+        }
+        function setDeduction() {
+
+            var patientdeductionStartDate = $("#PaymentDeductionObject_PatientStartDate").val();
+            var patientdeductionEndDate = $("#PaymentDeductionObject_PatientEndDate").val();
+            var companiondeductionStartDate = $("#PaymentDeductionObject_CompanionStartDate").val();
+            var companiondeductionEndDate = $("#PaymentDeductionObject_CompanionEndDate").val();
+            var patientdays = DaysDiff(patientdeductionStartDate, patientdeductionEndDate);
+            var companiondays = DaysDiff(companiondeductionStartDate, companiondeductionEndDate);
+            $('#PaymentDeductionObject_AmountPaid').val($("#TotalDue").val());
+            $("#PaymentDeductionObject_FinalAmount").val(
+                $("#PaymentDeductionObject_AmountPaid").val() - $("#PaymentDeductionObject_TotalDeduction").val());
+            finalAmount = $('#PaymentDeductionObject_FinalAmount').val();
+            displayProperColor(finalAmount);
+
+            var patdaysDiff = 0;
+            var compdaysDiff = 0;
+            //debugger;
+            if (patientdays) {
+                patdaysDiff = lastPaymentsDiff - patientdays;
+
+            }if (companiondays) {
+                compdaysDiff = lastPaymentsDiff - companiondays;
+            }
+            setValues(patdaysDiff, compdaysDiff);
+        }
+        function setValues(patientdaysDiff, companiondaysDiff) {
+
+            if (patientdaysDiff > 0 || companiondaysDiff > 0) {// we shoud do deduction
+                doDeduction(patientdaysDiff, companiondaysDiff);
+                $("#PaymentDeductionObject_DeductionPeriod").val(deductionPeriod(patientdaysDiff, companiondaysDiff));
+                finalAmount = $('#PaymentDeductionObject_FinalAmount').val();
+                displayProperColor(finalAmount);
+            }
+            if (patientdaysDiff < 0 || companiondaysDiff < 0) {
+                doAddition(patientdaysDiff, companiondaysDiff);
+                $("#PaymentDeductionObject_DeductionPeriod").val(deductionPeriod(patientdaysDiff, companiondaysDiff));
+                finalAmount = $('#PaymentDeductionObject_FinalAmount').val();
+                displayProperColor(finalAmount);
+            }
+            if ((!patientdaysDiff || patientdaysDiff == 0)) {
+                $("#PaymentDeductionObject_PatientDeduction").val(0.00);
+            }
+            if (companiondaysDiff == 0) {
+                $("#PaymentDeductionObject_CompanionDeduction").val(0.00);
+
+            }
+            if ((patientdaysDiff == 0 || !patientdaysDiff)) {
+                if (companiondaysDiff == 0 || !companiondaysDiff) {
+                    $("#PaymentDeductionObject_FinalAmount").val($("#PaymentDeductionObject_AmountPaid").val()).removeAttr("style");
+                    $("#PaymentDeductionObject_TotalDeduction").val(0.00);
+                }
+            }
+            if (companiondaysDiff == 0 || !companiondaysDiff) {
+                if (patientdaysDiff == 0 || !patientdaysDiff) {
+                    $("#PaymentDeductionObject_FinalAmount").val($("#PaymentDeductionObject_AmountPaid").val()).removeAttr("style");
+                    $("#PaymentDeductionObject_TotalDeduction").val(0.00);
+                }
+            }
+        }
+        function doDeduction(patientdays, companiondays) {
+            //debugger;
+            var patientRate = patRate * patientdays;
+            var companionRate = compRate * companiondays;
+            console.log("patient deduction", patientRate);
+            console.log("comapanion deduction", companionRate);
+
+            if (patientRate)
+                $("#PaymentDeductionObject_PatientDeduction").val(patientRate);
+            else $("#PaymentDeductionObject_PatientDeduction").val("");
+            if (companionRate)
+                $("#PaymentDeductionObject_CompanionDeduction").val(companionRate);
+            else $("#PaymentDeductionObject_CompanionDeduction").val("");
+            companionDeduction = $("#PaymentDeductionObject_CompanionDeduction").val();
+            patientDeduction = $("#PaymentDeductionObject_PatientDeduction").val();
+
+
+            if (patientDeduction)
+                total = parseInt(patientDeduction);
+            if (companionDeduction)
+                total = total + parseInt(companionDeduction);
+            if (!patientDeduction && companionDeduction)
+                total = parseInt(companionDeduction);
+
+            $("#PaymentDeductionObject_TotalDeduction").val(total);
+            $("#PaymentDeductionObject_FinalAmount").val(
+                $("#PaymentDeductionObject_AmountPaid").val() - $("#PaymentDeductionObject_TotalDeduction").val());
+
+        }
+        function doAddition(patientdays, companiondays) {
+            // debugger;
+            var patientRate = patRate * patientdays * -1;
+            var companionRate = compRate * companiondays * -1;
+            console.log("patient deduction", patientRate);
+            console.log("comapanion deduction", companionRate);
+
+            if (patientRate)
+                $("#PaymentDeductionObject_PatientDeduction").val(patientRate);
+            else $("#PaymentDeductionObject_PatientDeduction").val("");
+            if (companionRate)
+                $("#PaymentDeductionObject_CompanionDeduction").val(companionRate);
+            else $("#PaymentDeductionObject_CompanionDeduction").val("");
+            companionDeduction = $("#PaymentDeductionObject_CompanionDeduction").val();
+            patientDeduction = $("#PaymentDeductionObject_PatientDeduction").val();
+
+
+            if (patientDeduction)
+                total = parseInt(patientDeduction);
+            if (companionDeduction)
+                total = total + parseInt(companionDeduction);
+            if (!patientDeduction && companionDeduction)
+                total = parseInt(companionDeduction);
+
+            $("#PaymentDeductionObject_TotalDeduction").val(total);
+            $("#PaymentDeductionObject_FinalAmount").val(
+                parseInt($("#PaymentDeductionObject_AmountPaid").val()) +
+                parseInt($("#PaymentDeductionObject_TotalDeduction").val()));
+
+        }
+
+        function startChange() {
+            debugger;
+            var startDate = start.value(),
+            endDate = end.value();
+
+            if (startDate) {
+                startDate = new Date(startDate);
+                startDate.setDate(startDate.getDate());
+                end.min(startDate);
+            } else if (endDate) {
+                start.max(new Date(endDate));
+            } else {
+                endDate = new Date();
+                start.max(endDate);
+                end.min(endDate);
+            }
+        }
+
+        function endChange() {
+            debugger;
+            var endDate = end.value(),
+            startDate = start.value();
+
+            if (endDate) {
+                endDate = new Date(endDate);
+                endDate.setDate(endDate.getDate());
+                start.max(endDate);
+            } else if (startDate) {
+                end.min(new Date(startDate));
+            } else {
+                endDate = new Date();
+                start.max(endDate);
+                end.min(endDate);
+            }
+        }
+</script>
+    @*<script type="text/javascript">
         "use strict";
         var companionAmount = 0;
         var patientAmount = 0;
@@ -416,7 +740,7 @@
                 $("#Payment_PaymentLengthPeriod").val(days);
                 var companionRate = compRate * days;
                 var patientRate = patRate * days;
-                if (companionRate >= 0) {// since sometimes the companion does not exist, so the rate can be zero
+                if (companionRate >= 0) {
                     $("#Payment_CompanionAmount").val(companionRate);
                     companionAmount =  $("#Payment_CompanionAmount").val();
                 }
@@ -432,49 +756,17 @@
             }
 
         });
-        //$('#PaymentDeduction_DeductionStartDate, #PaymentDeduction_DeductionEndDate').change(function () {
-        //    // debugger;
-        //    var deductionStartDate = $("#PaymentDeduction_DeductionStartDate").val();
-        //    var deductionEndDate = $("#PaymentDeduction_DeductionEndDate").val();
-        //    console.log(deductionStartDate + "  =  " + deductionEndDate);
-        //    var days= DaysDiff(deductionStartDate,deductionEndDate);
-        //    if (deductionEndDate && deductionStartDate && days >= 0) {
-        //        $("#Payment_PaymentLengthPeriod").val(days);
-        //        var companionRate = compRate * days;
-        //        var patientRate = patRate * days;
-        //        if (companionRate >= 0) {// since sometimes the companion does not exist, so the rate can be zero
-        //            $("#PaymentDeduction_CompanionDeduction").val(companionRate);
-        //            companionDeduction =  $("#PaymentDeduction_CompanionDeduction").val();
-        //        }
-        //        $("#PaymentDeduction_PatientDeduction").val(patientRate);
-        //        patientDeduction =  $("#PaymentDeduction_PatientDeduction").val();
-
-        //        $("#PaymentDeduction_TotalDeduction").val(parseInt(patientDeduction) + parseInt(companionDeduction));
-        //    } else {
-        //        $("#Payment_PaymentLengthPeriod").val("");
-        //        $("#PaymentDeduction_CompanionDeduction").val(0.00);
-        //        $("#PaymentDeduction_PatientDeduction").val(0.00);
-        //        $("#PaymentDeduction_TotalDeduction").val(0.00);
-        //    }
-        //    $("#PaymentDeduction_FinalAmount")
-        //            .val($("#PaymentDeduction_AmountPaid")
-        //            .val()-$("#PaymentDeduction_TotalDeduction").val());
-        //});
+        
         $('#PaymentDeduction_PatientStartDate, #PaymentDeduction_PatientEndDate').change(function () {
-            // debugger;
+            
             var deductionStartDate = $("#PaymentDeduction_PatientStartDate").val();
             var deductionEndDate = $("#PaymentDeduction_PatientEndDate").val();
 
             var days= DaysDiff(deductionStartDate,deductionEndDate);
             if (deductionEndDate && deductionStartDate && days > 0) {
-                //$("#Payment_PaymentLengthPeriod").val(days);
-                // var companionRate = compRate * days;
+            
                 var patientRate = patRate * days;
-                // since sometimes the companion does not exist, so the rate can be zero
-                //if (companionRate >= 0) {
-                //    $("#PaymentDeduction_CompanionDeduction").val(companionRate);
-                //    companionDeduction =  $("#PaymentDeduction_CompanionDeduction").val();
-                //}
+                
                 $("#PaymentDeduction_PatientDeduction").val(patientRate);
                 patientDeduction =  $("#PaymentDeduction_PatientDeduction").val();
                 companionDeduction =  $("#PaymentDeduction_CompanionDeduction").val();
@@ -507,16 +799,16 @@
             
         });
         $('#PaymentDeduction_CompanionStartDate, #PaymentDeduction_CompanionEndDate').change(function () {
-            // debugger;
+           
             var deductionStartDate = $("#PaymentDeduction_CompanionStartDate").val();
             var deductionEndDate = $("#PaymentDeduction_CompanionEndDate").val();
 
             var days= DaysDiff(deductionStartDate,deductionEndDate);
             if (deductionEndDate && deductionStartDate && days > 0) {
-                //$("#Payment_PaymentLengthPeriod").val(days);
+           
                  var companionRate = compRate * days;
                
-                // since sometimes the companion does not exist, so the rate can be zero
+           
                  $("#PaymentDeduction_CompanionDeduction").val(companionRate);
                  companionDeduction =  $("#PaymentDeduction_CompanionDeduction").val();
                  patientDeduction =  $("#PaymentDeduction_PatientDeduction").val();
@@ -542,7 +834,7 @@
                      $("#PaymentDeduction_FinalAmount").css( {"background-color": "red",'color':'white'} );
                  }
             } else {
-                // $("#Payment_PaymentLengthPeriod").val("");
+              
                 $("#PaymentDeduction_FinalAmount").val("").removeAttr( "style" );
                 $("#PaymentDeduction_CompanionDeduction").val(0.00);
                 $("#PaymentDeduction_TotalDeduction").val(0.00);
@@ -551,5 +843,5 @@
             
         });
         
-    </script>
+    </script>*@
 }

@@ -215,35 +215,35 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         [ExceptionHandler]
         public ActionResult Edit(int paymentId)
         {
-            PaymentViewModel paymentView = new PaymentViewModel();
+           // PaymentViewModel paymentView = new PaymentViewModel();
             var payment = _paymentRepository.GetPaymentById(paymentId);
             payment.PayRates = _payRateRepository.GetPayRatesList();
-            paymentView.Payment = payment;
+           // paymentView.Payment = payment;
 
             //companion.CompanionTypes = _companionManagmentRepository.GetCompanionTypes();
             //companion.Banks = _patientManagmentRepository.GetBanks();
-            return View(paymentView);
+            return View(payment);
         }
         [HttpPost]
         //[ExceptionHandler]
-        public ActionResult Edit(PaymentViewModel pay)
+        public ActionResult Edit(PaymentModel pay)
         {
-            ValidatePayment(pay.Payment, true);
+            ValidatePayment(pay, true);
 
             if (ModelState.IsValid)
             {
-                pay.Payment.ModifiedBy = User.Identity.Name;
-                pay.PaymentDeduction.ModifiedBy = User.Identity.Name;
-                _paymentRepository.UpdatePayment(pay.Payment);
-                Success(string.Format("Payment for patient with  CId <b>{0}</b> was successfully updated.", pay.Payment.PatientCID), true);
-                return RedirectToAction("Details", "Payment", new { paymentId = pay.Payment.Id });
+                pay.ModifiedBy = User.Identity.Name;
+                pay.PaymentDeductionObject.ModifiedBy = User.Identity.Name;
+                _paymentRepository.UpdatePayment(pay);
+                Success(string.Format("Payment for patient with  CId <b>{0}</b> was successfully updated.", pay.PatientCID), true);
+                return RedirectToAction("Details", "Payment", new { paymentId = pay.Id });
             }
-            pay.Payment = _paymentRepository.GetPaymentById(pay.Payment.Id);
-            pay.Payment.PayRates = _payRateRepository.GetPayRatesList();
-            Information(string.Format("Payment for patient with  CId  <b>{0}</b> Was Not updated.", pay.Payment.PatientCID), true);
+            pay = _paymentRepository.GetPaymentById(pay.Id);
+            pay.PayRates = _payRateRepository.GetPayRatesList();
+            Information(string.Format("Payment for patient with  CId  <b>{0}</b> Was Not updated.", pay.PatientCID), true);
             //companion.CompanionTypes = _companionManagmentRepository.GetCompanionTypes();
             //companion.Banks = _patientManagmentRepository.GetBanks();
-            return View(pay.Payment);
+            return View(pay);
         }
 
         [ExceptionHandler]

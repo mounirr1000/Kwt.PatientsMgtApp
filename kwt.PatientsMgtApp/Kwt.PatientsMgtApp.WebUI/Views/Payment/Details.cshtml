@@ -20,7 +20,7 @@
         <i></i> Payment Details
     </button>
 
-    <fieldset id="paymentDetail" class="collapse">
+    <fieldset id="paymentDetail" class="collapse show">
         <legend>Payment Details</legend>
         <ul class="fieldlist form-row">
 
@@ -77,8 +77,11 @@
         </ul>
     </fieldset>
 
+@if (Model.PaymentDeductions!=null&&Model.PaymentDeductions.Count>0)
+{
     <button data-toggle="collapse" data-target="#paymentDeduction"><i></i> Deduction Info</button>
-    <div id="paymentDeduction" class="collapse"></div>
+    <div id="paymentDeduction" class="collapse show"></div>
+}
     <button data-toggle="collapse" data-target="#BenfeciaryInfo"> <i></i> Beneficiary Info</button>
     <fieldset id="BenfeciaryInfo" class="collapse">
         <legend>Beneficiary Information</legend>

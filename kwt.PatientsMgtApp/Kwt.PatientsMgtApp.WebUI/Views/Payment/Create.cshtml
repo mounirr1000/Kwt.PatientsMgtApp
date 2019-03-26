@@ -247,7 +247,7 @@
             </fieldset>
             @* Deduction section *@
             @if (Model.PaymentDeductionObject.LastPaymentStartDate != null &&
-                                                                                Model.PaymentDeductionObject.LastPaymentEndDateFormatted != null)
+                                                                                                        Model.PaymentDeductionObject.LastPaymentEndDateFormatted != null)
             {
                 <fieldset>
                     @* Deduction section *@
@@ -481,7 +481,7 @@
 }
 @section Scripts{
     @Scripts.Render("~/bundles/jqueryval")
-    
+
     <script type="text/javascript">
         $("form").submit(function(event) {
             $(".k-widget").removeClass("input-validation-error");
@@ -553,45 +553,49 @@
             newStartdate=  new Date(lastEndDatePayment);
             newStartdate.setDate(newStartdate.getDate() + 1);
         }
-        $("#PaymentStartDate").kendoDatePicker({
-                value: newStartdate,
-                min: newStartdate,
-                footer: "<button id='cleardate' class='k-button' onclick='clearDate(PaymentStartDate)'>Clear</button>"
-            }).attr("readonly", "");
-            var newStartDate = $('#PaymentStartDate').val();
-            var newEndDate = new Date();
-            if (newStartDate && newStartDate != null) {
-                newEndDate = new Date(newStartDate);
-                newEndDate.setDate(newEndDate.getDate() + 1);
-            }
-            $("#PaymentEndDate").kendoDatePicker({
-                value: newEndDate,
-                min: newEndDate,
-                footer: "<button id='cleardate' class='k-button' onclick='clearDate(PaymentEndDate)'>Clear</button>"
-            }).attr("readonly", "");
+        var start= $("#PaymentStartDate").kendoDatePicker({
+            value: newStartdate,
+            min: newStartdate,
+            change: startChange,
+            footer: "<button id='cleardate' class='k-button' onclick='clearDate(PaymentStartDate)'>Clear</button>"
+        }).attr("readonly", "").data("kendoDatePicker");
+        var newStartDate = $('#PaymentStartDate').val();
+        var newEndDate = new Date();
+        if (newStartDate && newStartDate != null) {
+            newEndDate = new Date(newStartDate);
+            newEndDate.setDate(newEndDate.getDate() + 1);
+        }
+        var end=   $("#PaymentEndDate").kendoDatePicker({
+            value: newEndDate,
+            // min: newEndDate,
+            change: endChange,
+            footer: "<button id='cleardate' class='k-button' onclick='clearDate(PaymentEndDate)'>Clear</button>"
+        }).attr("readonly", "").data("kendoDatePicker");
 
-            if (newEndDate && newStartdate) {
-                setPayment();
-                setDeduction();
-            }
+        if (newEndDate && newStartdate) {
+            setPayment();
+            setDeduction();
+        }
+        start.max(end.value());
+        end.min(start.value());
 
-        //$("#PaymentEndDate").kendoDatePicker();
-        $("#PaymentDeductionObject_PatientStartDate").kendoDatePicker({
+        var patStartDate= $("#PaymentDeductionObject_PatientStartDate").kendoDatePicker({
+            change: doChanges,
             footer: "<button id='cleardate' class='k-button' onclick='clearDate(PaymentDeductionObject_PatientStartDate)'>Clear</button>"
-        }).attr("readonly","");
-        $("#PaymentDeductionObject_PatientEndDate").kendoDatePicker({
+        }).attr("readonly","").data("kendoDatePicker");
+        var patEndDate= $("#PaymentDeductionObject_PatientEndDate").kendoDatePicker({
+            change: doChanges,
             footer: "<button id='cleardate' class='k-button' onclick='clearDate(PaymentDeductionObject_PatientEndDate)'>Clear</button>"
-        }).attr("readonly","");
-        $("#PaymentDeductionObject_CompanionStartDate").kendoDatePicker({
+        }).attr("readonly","").data("kendoDatePicker");
+        var compStartDate=  $("#PaymentDeductionObject_CompanionStartDate").kendoDatePicker({
+            change: doChanges,
             footer: "<button id='cleardate' class='k-button' onclick='clearDate(PaymentDeductionObject_CompanionStartDate)'>Clear</button>"
-        }).attr("readonly","");
-        $("#PaymentDeductionObject_CompanionEndDate").kendoDatePicker({
+        }).attr("readonly","").data("kendoDatePicker");
+        var compEndDate=  $("#PaymentDeductionObject_CompanionEndDate").kendoDatePicker({
+            change: doChanges,
             footer: "<button id='cleardate' class='k-button' onclick='clearDate(PaymentDeductionObject_CompanionEndDate)'>Clear</button>"
-        }).attr("readonly","");
-        //$("#PaymentDeductionObject_PatientStartDate, #PaymentDeductionObject_PatientEndDate ," +
-        //    "#PaymentDeductionObject_CompanionStartDate, #PaymentDeductionObject_CompanionEndDate").kendoDatePicker({
-        //        footer: "<button id='cleardate' class='k-button' onclick='clearDate(PaymentDeductionObject_PatientStartDate)'>Clear</button>"
-        //    }).attr("readonly","");
+        }).attr("readonly","").data("kendoDatePicker");
+
 
         function clearDate(elementId) {
 
@@ -636,6 +640,36 @@
                 $("#PaymentDeductionObject_FinalAmount").css({ "background-color": "red", 'color': 'white' });
             }
         }
+        function doChanges() {
+
+            var patientdeductionStartDate = $("#PaymentDeductionObject_PatientStartDate").val();
+            var patientdeductionEndDate = $("#PaymentDeductionObject_PatientEndDate").val();
+            var companiondeductionStartDate = $("#PaymentDeductionObject_CompanionStartDate").val();
+            var companiondeductionEndDate = $("#PaymentDeductionObject_CompanionEndDate").val();
+            var patientdays = DaysDiff(patientdeductionStartDate, patientdeductionEndDate);
+            var companiondays = DaysDiff(companiondeductionStartDate, companiondeductionEndDate);
+
+            finalAmount = 0;
+            var patdaysDiff = 0;
+            var compdaysDiff = 0;
+
+            if (patientdays) {
+                patdaysDiff = lastPaymentsDiff - patientdays;
+            }
+            if ( companiondays) {
+                compdaysDiff = lastPaymentsDiff - companiondays;
+            }
+            setValues(patdaysDiff, compdaysDiff);
+
+            //change the patient deduction end date min value
+            patEndChange();
+            //change the companion deduction end date min value
+            compEndChange();
+            //change the end date deduction min value
+            patStartChange();
+            //change the end date deduction min value
+            compStartChange();
+        }
         var companionAmount = 0;
         var patientAmount = 0;
         var companionDeduction = 0;
@@ -656,37 +690,13 @@
             //
         });
 
-        $('#PaymentDeductionObject_PatientStartDate, ' +
-            '#PaymentDeductionObject_PatientEndDate' +
-            ',#PaymentDeductionObject_CompanionStartDate,' +
-            '#PaymentDeductionObject_CompanionEndDate').change(function () {
-                // debugger;
+        //$('#PaymentDeductionObject_PatientStartDate, ' +
+        //    '#PaymentDeductionObject_PatientEndDate' +
+        //    ',#PaymentDeductionObject_CompanionStartDate,' +
+        //    '#PaymentDeductionObject_CompanionEndDate').change(function () {
 
 
-                var patientdeductionStartDate = $("#PaymentDeductionObject_PatientStartDate").val();
-                var patientdeductionEndDate = $("#PaymentDeductionObject_PatientEndDate").val();
-                var companiondeductionStartDate = $("#PaymentDeductionObject_CompanionStartDate").val();
-                var companiondeductionEndDate = $("#PaymentDeductionObject_CompanionEndDate").val();
-                var patientdays = DaysDiff(patientdeductionStartDate, patientdeductionEndDate);
-                var companiondays = DaysDiff(companiondeductionStartDate, companiondeductionEndDate);
-
-
-                //we need to know the number of days that need to be deducted from the payment
-                //
-                //debugger;
-                finalAmount = 0;
-                var patdaysDiff = 0;
-                var compdaysDiff = 0;
-                debugger;
-                if (patientdays) {
-                    patdaysDiff = lastPaymentsDiff - patientdays;
-                }
-                if ( companiondays) {
-                    compdaysDiff = lastPaymentsDiff - companiondays;
-                }
-                setValues(patdaysDiff, compdaysDiff);
-
-            });
+        //    });
 
         function setPayment() {
             var days = DaysDiff($("#PaymentStartDate").val(), $("#PaymentEndDate").val());
@@ -734,7 +744,7 @@
 
             var patdaysDiff = 0;
             var compdaysDiff = 0;
-            debugger;
+            //debugger;
             if (patientdays) {
                 patdaysDiff = lastPaymentsDiff - patientdays;
 
@@ -778,7 +788,7 @@
             }
         }
         function doDeduction(patientdays, companiondays) {
-            debugger;
+            //debugger;
             var patientRate = patRate * patientdays;
             var companionRate = compRate * companiondays;
             console.log("patient deduction", patientRate);
@@ -807,7 +817,7 @@
 
         }
         function doAddition(patientdays, companiondays) {
-            debugger;
+            // debugger;
             var patientRate = patRate * patientdays * -1;
             var companionRate = compRate * companiondays * -1;
             console.log("patient deduction", patientRate);
@@ -835,6 +845,75 @@
                 parseInt($("#PaymentDeductionObject_AmountPaid").val()) +
                 parseInt($("#PaymentDeductionObject_TotalDeduction").val()));
 
+        }
+
+        function startChange() {
+
+            var startDate = start.value(),
+            endDate = end.value();
+
+            if (startDate) {
+                startDate = new Date(startDate);
+                startDate.setDate(startDate.getDate());
+                end.min(startDate);
+            } else if (endDate) {
+                start.max(new Date(endDate));
+            } else {
+                endDate = new Date();
+                start.max(endDate);
+                end.min(endDate);
+            }
+        }
+
+        function endChange() {
+            var endDate = end.value(),
+            startDate = start.value();
+
+            if (endDate) {
+                endDate = new Date(endDate);
+                endDate.setDate(endDate.getDate());
+                start.max(endDate);
+            } else if (startDate) {
+                end.min(new Date(startDate));
+            } else {
+                endDate = new Date();
+                start.max(endDate);
+                end.min(endDate);
+            }
+        }
+        function patEndChange() {
+            var patDeducEndDate = patStartDate.value();
+            if (patDeducEndDate) {
+                patDeducEndDate = new Date(patDeducEndDate);
+                patDeducEndDate.setDate(patDeducEndDate.getDate());
+                patEndDate.min(patDeducEndDate);
+            }
+        }
+        function patStartChange() {
+            var patDeducStartDate = patEndDate.value();
+            if (patDeducStartDate) {
+                patDeducStartDate = new Date(patDeducStartDate);
+                patDeducStartDate.setDate(patDeducStartDate.getDate());
+                patStartDate.max(patDeducStartDate);
+            }
+        }
+        function compEndChange() {
+            debugger;
+            var compDeducEndDate = compStartDate.value();
+            if (compDeducEndDate) {
+                compDeducEndDate = new Date(compDeducEndDate);
+                compDeducEndDate.setDate(compDeducEndDate.getDate());
+                compEndDate.min(compDeducEndDate);
+            }
+        }
+        function compStartChange() {
+            debugger;
+            var compDeducStartDate = compEndDate.value();
+            if (compDeducStartDate) {
+                compDeducStartDate = new Date(compDeducStartDate);
+                compDeducStartDate.setDate(compDeducStartDate.getDate());
+                compStartDate.max(compDeducStartDate);
+            }
         }
     </script>
 }
