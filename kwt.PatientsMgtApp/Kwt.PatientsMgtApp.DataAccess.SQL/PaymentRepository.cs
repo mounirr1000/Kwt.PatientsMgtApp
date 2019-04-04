@@ -103,8 +103,9 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 Id = p.PaymentID,
                 BeneficiaryCID = p.Beneficiary.BeneficiaryCID,
                 PayRateID = p.PayRateID,
-                PatientPhone = p.Patient.KWTphone ?? p.Patient.USphone
-
+                PatientPhone = p.Patient.KWTphone ?? p.Patient.USphone,
+                PaymentID = p.PaymentID
+                
             } : null).OrderBy(p => p.CreatedDate).ToList();// returns null when the beneficiary is not set and the second null is returned when the companion is not set
 
         }
@@ -130,6 +131,9 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 payment.PatientMName = patient.PatientMName;
                 payment.Agency = patient.Agency;
                 payment.Hospital = patient.Hospital;
+
+                payment.HasCompanion = patient.Companions?.Count>0;
+
                 payment.CompanionCID = ben.CompanionCID;
                 payment.CompanionFName = companion?.CompanionFName;
                 payment.CompanionLName = companion?.CompanionLName;
@@ -179,6 +183,12 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             PaymentModel pay = new PaymentModel();
             if (payment != null)
             {
+                var lastPayment = this.
+                            GetPaymentsByPatientCid(payment?.PatientCID)?
+                            .OrderByDescending(p => p.PaymentDate)
+                            .SkipWhile(py=>py.PaymentID ==payment.PaymentID)
+                            .FirstOrDefault();
+                
                 var pa = payment.Patient;
                 var c = payment.Companion;
                 var pr = payment.PayRate;
@@ -213,9 +223,12 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                         CompanionStartDate = pd.CompanionStartDate,
                         PatientEndDate = pd.PatientEndDate,
                         PatientStartDate = pd.PatientStartDate,
+                        //
+                        LastPaymentStartDate = lastPayment?.PaymentStartDate,
+                        LastPaymentEndDate = lastPayment?.PaymentEndDate
+                        //
 
                     }).OrderBy(p => p.DeductionDate).FirstOrDefault();
-
                 }
                 else
                 {
@@ -226,9 +239,17 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                         AmountPaid = payment.TotalDue,
                         PatientAmount = payment.PAmount,
                         CompanionAmount = payment.CAmount,
-
-
-                    };
+                };
+                    if (lastPayment?.PaymentStartDate != null && lastPayment?.PaymentEndDate != null)
+                    {
+                        //only get payment where lastpaymentdate is less than current payment start date
+                        if (lastPayment.PaymentEndDate < payment.StartDate)
+                        {
+                            pay.PaymentDeductionObject.LastPaymentStartDate = lastPayment?.PaymentStartDate;
+                            pay.PaymentDeductionObject.LastPaymentEndDate = lastPayment?.PaymentEndDate;
+                        }
+                        
+                    }
                 }
                 // PaymentModel pay = new PaymentModel();
                 //{

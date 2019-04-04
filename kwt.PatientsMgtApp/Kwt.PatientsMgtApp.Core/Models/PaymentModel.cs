@@ -38,6 +38,8 @@ namespace Kwt.PatientsMgtApp.Core.Models
             get { return this.PatientFName + " " + this.PatientMName + " " + this.PatientLName; }
         }
 
+        public bool? HasCompanion { get; set; }
+
         [DisplayName("Companion Id")]
         public string CompanionCID { get; set; }
 
@@ -92,6 +94,7 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public decimal? PatientPayRate { get; set; } = 75;
 
         [DisplayName("Payment Start Date")]
+        [DisplayFormat(DataFormatString = "{MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         [Required]
         [DataType(DataType.Date)]
         public Nullable<System.DateTime> PaymentStartDate { get; set; }

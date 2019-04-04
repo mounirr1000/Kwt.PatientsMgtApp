@@ -13,17 +13,17 @@
 @* new February 28, 2019 *@
 <div class="pt-4">
     <div style="display: inline">
-        <input id="paymentDt1" class="k-textbox" placeholder="MM/dd/YYYY"/>
-        
+        <input id="paymentDt1" class="k-textbox" placeholder="MM/dd/YYYY" />
+
     </div>
 
     <div style="display: inline">
 
-        <input id="paymentDt2" class="k-textbox" placeholder="MM/dd/YYYY"/>
-        
+        <input id="paymentDt2" class="k-textbox" placeholder="MM/dd/YYYY" />
+
     </div>
     <a href="javascript:showTodayPayments()" class="k-button">Get Payments</a>
-   
+
 
 </div>
 <div class="modal fade bd-example-modal-lg" id="todayPaymentList" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-hidden="true">
@@ -54,7 +54,7 @@
 
         <div id="content" style="visibility: hidden;">
             <div id="paymentList"></div>
-           
+
         </div>
                 }
                 else
@@ -95,25 +95,16 @@
             //
             var data = @Html.Raw(Json.Encode(Model));
 
-            //$("#paymentList").kendoGrid({
-            //    toolbar: "<p>This is the list of all payments we have in our records</p>",
-            //    height: 550,
-            //    groupable: true,
-            //    sortable: true,
-            //    pageable: {
-            //        pageSize: 15,
-            //        alwaysVisible: false
-            //    }
-            //});
-            $("#paymentList").kendoGrid({
+            var grid =  $("#paymentList").kendoGrid({
                 resizable: true,
-                toolbar: ["pdf","excel"],
-                pdf: {
-                    fileName: $("#paymentDt1").val()+" "+$("#paymentDt2").val()+" payments.pdf"
-                },
+                toolbar: [//"pdf",
+                        "excel"],
+                //pdf: {
+                //    fileName: $("#paymentDt1").val()+" "+$("#paymentDt2").val()+" payments.pdf"
+                //},
                 excel: {
                     fileName: $("#paymentDt1").val()+" "+$("#paymentDt2").val()+" payments.xlsx",
-                    filterable: true
+                    allPages:true
                 },
                 pageable: {
                     pageSize: 20,
@@ -124,7 +115,7 @@
                     field: "Id",
                     title: "Voucher#",
 
-                    template: "<a href='@Url.Action("Details", "Payment")?paymentId=#= Id#'>#= Id #</a>",
+                    template: "<a href='@Url.Action("Details", "Payment")?paymentId=#= Id#'>#= Id #</a>"
                     @*cellTemplate: '<div class="ui-grid-cell-contents"><a href={{@Url.Action("Details", "Payment")}} class="icon-bar">{{row.entity.Id}}</a></div>'*@
                 },
                 {
@@ -139,19 +130,19 @@
                     field: "CompanionCID",
                     title: "C_CID"
                 },
-                {
-                    field: "PaymentLengthPeriod",
-                    title: "Period"
-                },
+                //{
+                //    field: "PaymentLengthPeriod",
+                //    title: "Period"
+                //},
                 {
                     field: "PaymentStartDateFormatted",
-                    title: "From",
-                   // template: "#= kendo.toString(kendo.parseDate(PaymentStartDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
+                    title: "From"
+                    // template: "#= kendo.toString(kendo.parseDate(PaymentStartDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
                 },
                 {
                     field: "PaymentEndDateFormatted",
-                    title: "To",
-                   // template: "#= kendo.toString(kendo.parseDate(PaymentEndDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
+                    title: "To"
+                    // template: "#= kendo.toString(kendo.parseDate(PaymentEndDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
                 },
                 {
                     field: "TotalDue",
@@ -159,8 +150,36 @@
                 }],
                 dataSource: {
                     data: data
+                },
+                //
+
+                excelExport: function(e){
+                    var sheet = e.workbook.sheets[0];
+                    var data = grid.dataSource.data();
+                    var gridColumns = grid.columns;
+                    var columns = gridColumns.map(function(col){
+                        return {
+                            value: col.title ? col.title : col.field,
+                            autoWidth:true,
+                            background: "#7a7a7a",
+                            color: "#fff"
+                        };
+                    });
+
+                    var rows = [{cells:columns, type: "header"}];
+
+                    for (var i = 0; i < data.length; i++){
+                        var rowCells = [];
+                        for(var j=0;j < gridColumns.length;j++){
+                            var cellValue = data[i][gridColumns[j].field];
+                            rowCells.push({value: cellValue});
+                        }
+                        rows.push({cells: rowCells, type: "data"});
+                    }
+                    sheet.rows = rows;
                 }
-            });
+                //
+            }).data("kendoGrid");
 
             $(".loader").css("display", "none");
         });
@@ -175,7 +194,7 @@
         //    console.log("Print excel payment");
         //}
         function showTodayPayments() {
-            
+
             var firstDate = $('#paymentDt1').val();
             var secondDate = $('#paymentDt2').val();
 
@@ -196,29 +215,29 @@
 
             payments= payments.filter(function (entry) {
                 var paymentDate = new Date(entry.PaymentDateFormatted).toDateString();
-                
+
                 return  (
-                        //date1 >= new Date(paymentDate).getTime() && date2<= new Date(paymentDate).getTime() 
+                        //date1 >= new Date(paymentDate).getTime() && date2<= new Date(paymentDate).getTime()
                     (date1 === new Date(paymentDate).getTime() || date2=== new Date(paymentDate).getTime() )
-                    ||(date1 < new Date(paymentDate).getTime() && date2> new Date(paymentDate).getTime() )  
+                    ||(date1 < new Date(paymentDate).getTime() && date2> new Date(paymentDate).getTime() )
                         );
             }).sort(function(a,b){
                 // Turn your strings into dates, and then subtract them
                 // to get a value that is either negative, positive, or zero.
                 return new Date(a.PaymentDateFormatted) - new Date(b.PaymentDateFormatted);
             });
-            $("#paymentGrid").kendoGrid({
-                toolbar: ["pdf","excel"],
-                pdf: {
-                    fileName: "Today payments.pdf"
-                },
+            var paymentGrid=  $("#paymentGrid").kendoGrid({
+                toolbar: [//"pdf",
+                        "excel"],
+                //pdf: {
+                //    fileName: firstDate+" "+secondDate+" payments.pdf"
+                //},
                 excel: {
                     fileName: firstDate+" "+secondDate+" Payments.xlsx",
-                    
-                    filterable: true
+                    allPages:true
                 },
                 pageable: {
-                    pageSize: 15,
+                    pageSize: 10,
                     alwaysVisible: false
                 },
                 columns: [
@@ -240,21 +259,48 @@
                 {
                     field: "PaymentEndDateFormatted",
                     title: "To",
-                   // template: "#= kendo.toString(kendo.parseDate(PaymentEndDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
+                    // template: "#= kendo.toString(kendo.parseDate(PaymentEndDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
                 },{
                     field: "TotalDue",
                     title: "Amount"
                 }],
                 dataSource: {
                     data: payments
+                },
+                //
+                excelExport: function(e){
+                    var sheet = e.workbook.sheets[0];
+                    var data = paymentGrid.dataSource.data();
+                    var gridColumns = paymentGrid.columns;
+                    var columns = gridColumns.map(function(col){
+                        return {
+                            value: col.title ? col.title : col.field,
+                            autoWidth:true,
+                            background: "#7a7a7a",
+                            color: "#fff"
+                        };
+                    });
+
+                    var rows = [{cells:columns, type: "header"}];
+
+                    for (var i = 0; i < data.length; i++){
+                        var rowCells = [];
+                        for(var j=0;j < gridColumns.length;j++){
+                            var cellValue = data[i][gridColumns[j].field];
+                            rowCells.push({value: cellValue});
+                        }
+                        rows.push({cells: rowCells, type: "data"});
+                    }
+                    sheet.rows = rows;
                 }
-            });
+                //
+            }).data("kendoGrid");;
 
         }
-        
+
         $(function () {
             $("#deleteConfirmModal").on('click', "#deleteConfirm", function () {
-                
+
             });
         });
 

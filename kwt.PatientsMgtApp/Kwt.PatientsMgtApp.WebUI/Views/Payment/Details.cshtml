@@ -1,5 +1,4 @@
-﻿@using Kwt.PatientsMgtApp.WebUI.Infrastructure
-@model Kwt.PatientsMgtApp.Core.Models.PaymentModel
+﻿@model Kwt.PatientsMgtApp.Core.Models.PaymentModel
 
 @{
     ViewBag.Title = "Payment Details";
@@ -232,10 +231,10 @@
             });
         });
         $("#paymentDeduction").kendoGrid({
-            toolbar: ["pdf"],
-            pdf: {
-                fileName: "Deduction List.pdf"
-            },
+            //toolbar: ["pdf"],
+            //pdf: {
+            //    fileName: "Deduction List.pdf"
+            //},
 
             columns: [
             @*{
