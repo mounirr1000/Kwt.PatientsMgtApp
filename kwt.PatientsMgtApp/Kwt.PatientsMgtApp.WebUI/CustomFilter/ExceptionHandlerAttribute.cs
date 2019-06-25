@@ -15,21 +15,27 @@ namespace Kwt.PatientsMgtApp.WebUI.CustomFilter
         //protected override void OnException(ExceptionContext filterContext)
 
         readonly IExceptionLoggerRepository _exceptionLogger = new ExceptionLoggerRepository();
+
         public void OnException(ExceptionContext filterContext)
         {
-            if (!filterContext.ExceptionHandled)
-            {
+
+            //if (!filterContext.ExceptionHandled)
+            //{
                 ExceptionLoggerObject logger = new ExceptionLoggerObject()
                 {
                     ExceptionMessage = filterContext.Exception.Message,
                     ExceptionStackTrace = filterContext.Exception.StackTrace,
                     ControllerName = filterContext.RouteData.Values["controller"].ToString(),
                 };
+                // delete all the exception from the exception table before inserting new one
+                _exceptionLogger.DeleteExceptionsLogger();
 
                 _exceptionLogger.AddExceptionLogger(logger);
 
                 //filterContext.ExceptionHandled = true;
-            }
+           // }
+         
+
         }
     }
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]

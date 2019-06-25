@@ -51,12 +51,40 @@
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="DnDns, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Galactic.ActiveDirectory.1.3.0.499\lib\DnDns.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Galactic.ActiveDirectory, Version=1.3.0.499, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Galactic.ActiveDirectory.1.3.0.499\lib\Galactic.ActiveDirectory.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Galactic.Configuration, Version=1.3.0.499, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Galactic.Configuration.1.3.0.499\lib\Galactic.Configuration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Galactic.Cryptography, Version=1.3.0.499, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Galactic.Cryptography.1.3.0.499\lib\Galactic.Cryptography.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Galactic.EventLog, Version=1.3.0.499, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Galactic.EventLog.1.3.0.499\lib\Galactic.EventLog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Galactic.FileSystem, Version=1.3.0.499, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Galactic.FileSystem.1.3.0.499\lib\Galactic.FileSystem.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Galactic.LDAP, Version=1.3.0.499, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Galactic.LDAP.1.3.0.499\lib\Galactic.LDAP.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="itextsharp, Version=5.5.13.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
@@ -142,6 +170,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
+    <Reference Include="System.DirectoryServices.Protocols" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />

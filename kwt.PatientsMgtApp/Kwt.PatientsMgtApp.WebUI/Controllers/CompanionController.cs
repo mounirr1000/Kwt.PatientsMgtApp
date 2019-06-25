@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.OleDb;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -9,12 +10,13 @@ using Kwt.PatientsMgtApp.Core;
 using Kwt.PatientsMgtApp.DataAccess.SQL;
 using Kwt.PatientsMgtApp.WebUI.Utilities;
 using Kwt.PatientsMgtApp.WebUI.CustomFilter;
+using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity.Owin;
 using PagedList;
 namespace Kwt.PatientsMgtApp.WebUI.Controllers
 {
-    [HandleError(ExceptionType = typeof(PatientsMgtException), View = "PatientMgtException")]
-    [Authorize(Roles = "Admin, Manager")]
+    [HandleError(ExceptionType = typeof(PatientsMgtException), View = "ExceptionHandler")]
+    [Authorize(Roles = "Admin, Manager, Super Admin, Auditor, Editor, User")]
     public class CompanionController : BaseController
     {
         private const int PageSize = 5;
@@ -108,29 +110,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                                     && p.CompanionMName.Trim().ToLower().Contains(term))
                                 || p.Name.Trim().ToLower().Contains(term)
                             ).ToList();
-
-                        // filter isBeneficiary
-                        //if (isBeneficiary == true)
-                        //{
-                        //    result = result?.Where(p => p.IsBeneficiary).ToList();
-                        //}
-                        //else if (isBeneficiary == false)
-                        //{
-                        //    result = result?.Where(p => !p.IsBeneficiary).ToList();
-                        //}
                     }
-                    //else
-                    //{
-                    //    // filter isBeneficiary
-                    //    if (isBeneficiary == true)
-                    //    {
-                    //        result = companions?.Where(p => p.IsBeneficiary).ToList();
-                    //    }
-                    //    else if (isBeneficiary == false)
-                    //    {
-                    //        result = companions?.Where(p => !p.IsBeneficiary).ToList();
-                    //    }
-                    //}
+                   
                     if (result?.Count > 0)
                     {
                         Success(string.Format("We have <b>{0}</b> returned results from the searched criteria", result.Count),
@@ -173,7 +154,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             else
             {
                 Information(string.Format("Companion with Civil Id <b>{0}</b> Does Not exist in our records.", companionCid), true);
-                return View("List");
+                return RedirectToAction("List");// View("List");
             }
         }
 
@@ -195,7 +176,13 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         [HttpPost]
         public ActionResult Create(CompanionModel companion)
         {
+            ////
+            //throw new PatientsMgtException(1, "error", "Creating new Companion",
+            //        "You can't have two companions as primary type associated to the same user");
+
+            ////
             ValidateCompanion(companion);
+            ViewBag.IsValid = ModelState.IsValid;
             if (ModelState.IsValid)
             {
                 companion.CreatedBy = User.Identity.Name;
@@ -226,7 +213,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         [ExceptionHandler]
         public ActionResult Edit(CompanionModel companion)
         {
-            ValidateCompanion(companion);
+            ValidateCompanion(companion, true);
+            ViewBag.IsValid = ModelState.IsValid;
             if (ModelState.IsValid)
             {
                 companion.ModifiedBy = User.Identity.Name;
@@ -252,7 +240,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
 
             if (companion != null)
             {
-                var deleted = _companionRepository.DeleteCompanion(companion.CompanionCID,companion.PatientCID);
+                var deleted = _companionRepository.DeleteCompanion(companion.CompanionCID, companion.PatientCID);
                 if (deleted > 0)
                 {
                     // display delete message success and redirect to patient list
@@ -269,52 +257,15 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             return RedirectToAction("List");
         }
 
-        private void ValidateCompanion(CompanionModel companion)
+        private void ValidateCompanion(CompanionModel companion, bool isEdit = false)
         {
-            var companionType = _companionManagmentRepository.GetCompanionTypes()
+            var primaryCompanionType = _companionManagmentRepository.GetCompanionTypes()
                                          .Where(c => c.Id == (int)Enums.CompanionType.Primary)
                                          .Select(ct => ct.CompanionType).FirstOrDefault();
             // get the patient Associated with this companion
-            if (companion.PatientCID != null)
+            if (!companion.PatientCID.IsNullOrWhiteSpace())
             {
-                var patient = _patientRepository.GetPatient(companion.PatientCID);
-                if (patient == null && ModelState.IsValidField("PatientCID"))
-                {
-                    ModelState.AddModelError("PatientCID", companion.PatientCID + " is an incorrect Patient Cid, There is not patient in our record with this Cid");
-                }
-                if (patient != null && ModelState.IsValidField("PatientCID"))
-                {
-                    if (patient.IsActive)
-                    {
-                        if (patient.IsBeneficiary && companion.IsBeneficiary)
-                            ModelState.AddModelError("IsBeneficiary", "The patient with " + companion.PatientCID + " CID associated with this companion is already Beneficiary, You can't have the companion as beneficiary");
-                        if (!patient.IsBeneficiary && !companion.IsBeneficiary)
-                            if (ModelState.IsValidField("CompanionType") && companion.CompanionType == companionType)
-                                ModelState.AddModelError("IsBeneficiary", "The patient with " + companion.PatientCID +
-                                            " CID associated with this companion is Not Beneficiary, So you need to set this companion as Beneficiary");
-                    }
-
-                }
-                if (patient != null)
-                {
-                    if (ModelState.IsValidField("CompanionType") && companion.CompanionType == companionType)
-                    {
-                        var existingCompanions = _companionRepository.GetCompanions().Where(c => c.PatientCID == companion.PatientCID && c.IsActive);
-
-                        foreach (var comp in existingCompanions.Where(c => c.IsActive == true))
-                        {
-                            if (comp.CompanionCID != companion.CompanionCID)
-                            {
-                                if (comp.CompanionType == companionType)
-                                {
-                                    ModelState.AddModelError("CompanionType", "There is already a companion with the patient declared as Primary, You can't have this companion as primary");
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    // see if there is a c primary companion with this patient, we can't have two companion as primary
-                }
+                ValidatePatient(companion, primaryCompanionType, isEdit);
             }
             if (ModelState.IsValidField("IsBeneficiary")
                && companion.IsBeneficiary == true
@@ -356,9 +307,94 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             if (ModelState.IsValidField("CompanionType"))
             {
 
-                if (companion.IsBeneficiary && companion.CompanionType != companionType)
+                if (companion.IsBeneficiary && companion.CompanionType != primaryCompanionType)
                     ModelState.AddModelError("CompanionType", companion.CompanionType +
-                        " Can't be Beneficiary, Only " + companionType + " companion who can");
+                        " Can't be Beneficiary, Only " + primaryCompanionType + " companion who can");
+            }
+        }
+
+
+        private void ValidatePatient(CompanionModel companion, string primaryCompanionType, bool isEdit = false)
+        {
+            var patient = _patientRepository.GetPatient(companion.PatientCID);
+            if (patient == null && ModelState.IsValidField("PatientCID"))
+            {
+                ModelState.AddModelError("PatientCID", "There is no patient in our record with this CID");
+            }
+            if (patient != null && ModelState.IsValidField("PatientCID"))
+            {
+                if (patient.IsActive && companion.CompanionType== primaryCompanionType)
+                {
+                    if (patient.IsBeneficiary && companion.IsBeneficiary)
+                        ModelState.AddModelError("IsBeneficiary", "The patient with " + companion.PatientCID + " CID associated with this companion is already Beneficiary, You can't have the companion as beneficiary");
+                    if (!patient.IsBeneficiary && !companion.IsBeneficiary)
+                        if (ModelState.IsValidField("CompanionType") && companion.CompanionType == primaryCompanionType)
+                            ModelState.AddModelError("IsBeneficiary", "The patient with " + companion.PatientCID +
+                                        " CID associated with this companion is Not Beneficiary, So you need to set this companion as Beneficiary");
+                }
+
+            }
+            if (patient != null)
+            {
+                var companionList = _companionRepository.GetCompanions();//check if this companion already exist with the same patient
+                var existingCompanions = companionList?.Where(c => c.PatientCID == companion.PatientCID).ToList();
+                //if (ModelState.IsValidField("CompanionType") && companion.CompanionType == primaryCompanionType)//primary companion
+                //{
+
+
+                if (existingCompanions != null && existingCompanions.Count > 0)
+                {
+                    if (!isEdit)
+                    {
+                        if (existingCompanions.Exists(c => c.CompanionCID == companion.CompanionCID))
+                        {
+                            ModelState.AddModelError("CompanionCID",
+                                "This companion is already in our records with the same patient");
+                            return;
+                        }
+                        // this means we have already an active companion who is primary with the same patient, so we can't have two primary companion to the same patient
+                        if (existingCompanions.Exists(c => c.CompanionType == primaryCompanionType && c.IsActive))
+                        {
+                            ModelState.AddModelError("CompanionType",
+                                "There is already a primary companion with this patient, you need to make this companion non primary");
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        if (existingCompanions.Exists(c => c.CompanionType == primaryCompanionType 
+                            && c.IsActive 
+                            && c.CompanionCID!=companion.CompanionCID))
+                        {
+                            ModelState.AddModelError("CompanionType",
+                                "There is already a primary companion with this patient, you need to make this companion non primary");
+                            return;
+                        }
+                    }
+
+                    //foreach (var comp in existingCompanions.Where(c => c.IsActive == true))
+                    //{
+
+                    //    if (comp.CompanionCID == companion.CompanionCID)
+                    //    {
+                    //        if (comp.CompanionType == primaryCompanionType)
+                    //        {
+                    //            ModelState.AddModelError("CompanionCID", "This companion is already in our records with the same patient");
+                    //            break;
+                    //        }
+                    //    }
+                    //    if (comp.CompanionCID != companion.CompanionCID)
+                    //    {
+                    //        if (comp.CompanionType == primaryCompanionType)
+                    //        {
+                    //            ModelState.AddModelError("CompanionType", "There is already a companion with the patient declared as Primary, You can't have this companion as primary");
+                    //            break;
+                    //        }
+                    //    }
+                    //}
+                }
+                //}
+                // see if there is a c primary companion with this patient, we can't have two companion as primary
             }
         }
     }

@@ -19,7 +19,7 @@
             <i class="fa fa-lock fa-stack-1x" style="color: black"></i>
         </span>
     </h2>
-
+    
     @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "login" }))
             {
         @Html.AntiForgeryToken()
@@ -32,7 +32,7 @@
 
             </p>
         
-            <p>@Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })</p>
+            <p style="color: white">@Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })</p>
 
 
             @*<p> @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })</p>*@
@@ -40,7 +40,7 @@
                     <span class="input-group-addon"style="position: relative;top: 45px;right: -340px;z-index: 10;color: black;"><i class="fa fa-lock fa-2x"></i></span>
                      @Html.PasswordFor(m => m.Password, new {@class = "form-control", required = "required", placeholder = "Password"})
                 </p>
-            <p> @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })</p>
+            <p style="color: white"> @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })</p>
             <p> @Html.LabelFor(m => m.RememberMe) @Html.CheckBoxFor(m => m.RememberMe)</p>
             <p>
                 <input type="submit" value="Log in" class="btn btn-default" />

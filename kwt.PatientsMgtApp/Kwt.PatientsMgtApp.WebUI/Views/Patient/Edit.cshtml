@@ -10,252 +10,158 @@
 
     <div class="mt-3">
         <p>
-            @*<input type="submit" value="Save" class="k-button m-3"/>*@
+
             <a href="@Url.Action("Details",new {patientCid = Model.PatientCID})" class="k-button"><i class="fa fa-ban" style="color: lightblue"></i> Cancel</a>
-            @*@Html.ActionLink("Back to List", "Index", null, new {@class = "k-button m-3"})*@
+
             <button type="submit" class="k-button"><i class="fa fa-check" style="color: greenyellow"></i> Update</button>
         </p>
     </div>
 
 
-            @Html.AntiForgeryToken()
+    @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.PatientCID)
         @Html.HiddenFor(model => model.Id)
-
-        <fieldset>
-            <legend>Patient Details</legend>
-            <ul class="fieldlist">
-                <li>
-
-                    @Html.LabelFor(model => model.PatientFName, new { @class = "" })
-
-                    @Html.TextBoxFor(model => model.PatientFName, new { @class = "k-textbox", style = "width: 100%;" })
-                    @Html.ValidationMessageFor(model => model.PatientFName, "", new { @class = "text-danger" })
-
-                </li>
-                <li>
-
-                    @Html.LabelFor(model => model.PatientMName, new { @class = "" })
-
-                    @Html.TextBoxFor(model => model.PatientMName, new { @class = "k-textbox", style = "width: 100%;" })
-                    @Html.ValidationMessageFor(model => model.PatientMName, "", new { @class = "text-danger" })
-
-
-                </li>
-                <li>
-
-                    @Html.LabelFor(model => model.PatientLName, new { @class = "" })
-
-                    @Html.TextBoxFor(model => model.PatientLName, new { @class = "k-textbox", style = "width: 100%;" })
-                    @Html.ValidationMessageFor(model => model.PatientLName, "", new { @class = "text-danger" })
-
-
-                </li>
-                <li>
-
-                    @Html.LabelFor(model => model.KWTPhone, new { @class = "" })
-
-                    @Html.TextBoxFor(model => model.KWTPhone, new { @class = "k-textbox", style = "width: 100%;" })
-                    @Html.ValidationMessageFor(model => model.KWTPhone, "", new { @class = "text-danger" })
-
-
-                </li>
-                <li>
-
-                    @Html.LabelFor(model => model.USPhone, htmlAttributes: new { @class = "" })
-
-                    @Html.TextBoxFor(model => model.USPhone, new { @class = "k-textbox", style = "width: 100%;" })
-                    @Html.ValidationMessageFor(model => model.USPhone, "", new { @class = "text-danger" })
-
-
-                </li>
-                <li>
-
-                    @Html.LabelFor(model => model.Agency, new { @class = "" })
-
-                    @*@Html.EditorFor(model => model.Agency, new { htmlAttributes = new { @class = "form-control" } })*@
-                    @Html.DropDownListFor(model => model.Agency, new List<SelectListItem>(Model.Agencies.Select(a => new SelectListItem()
-                       {
-                           Text = a.AgencyName,
-                           Value = a.AgencyName
-
-                       }).ToList()), "", new { style = "width:50%" })
-                    @Html.ValidationMessageFor(model => model.Agency, "", new { @class = "text-danger" })
-
-
-                </li>
-
-            </ul>
-        </fieldset>
-        <fieldset>
-            <legend>Dignosis Details</legend>
-            <ul class="fieldlist">
-
-                <li>
-
-                    @Html.LabelFor(model => model.Hospital, new { @class = "" })
-
-                    @*@Html.EditorFor(model => model.Hospital, new { htmlAttributes = new { @class = "form-control" } })*@
-                    @Html.DropDownListFor(model => model.Hospital, new List<SelectListItem>(Model.Hospitals.Select(a => new SelectListItem()
+        <div id="patientEdit" style="visibility:hidden;">
+            <button data-toggle="collapse" data-target="#patientDetail"><i></i> Patient Details</button>
+            <fieldset id="patientDetail" class="collapse show">
+                <legend></legend>
+                <ul class="fieldlist row">
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.PatientFName, new { @class = "" })
+                        @Html.TextBoxFor(model => model.PatientFName, new { @class = "k-textbox", style = "width: 100%;" })
+                        @Html.ValidationMessageFor(model => model.PatientFName, "", new { @class = "text-danger" })
+                    </li>
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.PatientMName, new { @class = "" })
+                        @Html.TextBoxFor(model => model.PatientMName, new { @class = "k-textbox", style = "width: 100%;" })
+                        @Html.ValidationMessageFor(model => model.PatientMName, "", new { @class = "text-danger" })
+                    </li>
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.PatientLName, new { @class = "" })
+                        @Html.TextBoxFor(model => model.PatientLName, new { @class = "k-textbox", style = "width: 100%;" })
+                        @Html.ValidationMessageFor(model => model.PatientLName, "", new { @class = "text-danger" })
+                    </li>
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.KWTPhone, new { @class = "" })
+                        @Html.TextBoxFor(model => model.KWTPhone, new { @class = "k-textbox", style = "width: 100%;" })
+                        @Html.ValidationMessageFor(model => model.KWTPhone, "", new { @class = "text-danger" })
+                    </li>
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.USPhone, htmlAttributes: new { @class = "" })
+                        @Html.TextBoxFor(model => model.USPhone, new { @class = "k-textbox", style = "width: 100%;" })
+                        @Html.ValidationMessageFor(model => model.USPhone, "", new { @class = "text-danger" })
+                    </li>
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.Agency, new { @class = "" })
+                        @Html.DropDownListFor(model => model.Agency, new List<SelectListItem>(Model.Agencies.Select(a => new SelectListItem()
+                   {
+                       Text = a.AgencyName,
+                       Value = a.AgencyName
+                   }).ToList()), "", new { style = "width:50%" })
+                        @Html.ValidationMessageFor(model => model.Agency, "", new { @class = "text-danger" })
+                    </li>
+                </ul>
+            </fieldset>
+            <button data-toggle="collapse" data-target="#dignosisDetails"><i></i> Dignosis Details</button>
+            <fieldset id="dignosisDetails" class="collapse">
+                <legend></legend>
+                <ul class="fieldlist row">
+                    <li class="col-md-6">
+                        @Html.LabelFor(model => model.Hospital, new { @class = "" })
+                        @Html.DropDownListFor(model => model.Hospital, new List<SelectListItem>(Model.Hospitals.Select(a => new SelectListItem()
                        {
                            Text = a.HospitalName,
                            Value = a.HospitalName
-
                        }).ToList()), "", new { style = "width:90%" })
-                    @Html.ValidationMessageFor(model => model.Hospital, "", new { @class = "text-danger" })
-
-                </li>
-                <li>
-
-
-                    @Html.LabelFor(model => model.Specialty, new { @class = "" })
-
-                    @*@Html.EditorFor(model => model.Patient.Doctor, new { htmlAttributes = new { @class = "form-control" } })*@
-                    @Html.DropDownListFor(model => model.Specialty, new List<SelectListItem>(Model.Sepcialities.Select(a => new SelectListItem()
+                        @Html.ValidationMessageFor(model => model.Hospital, "", new { @class = "text-danger" })
+                    </li>
+                    <li class="col-md-6">
+                        @Html.LabelFor(model => model.Specialty, new { @class = "" })
+                        @Html.DropDownListFor(model => model.Specialty, new List<SelectListItem>(Model.Sepcialities.Select(a => new SelectListItem()
                        {
                            Text = a.Speciality,
                            Value = a.Speciality
-
                        }).ToList()), "", new { style = "width:50%" })
-                    @Html.ValidationMessageFor(model => model.Specialty, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(model => model.Specialty, "", new { @class = "text-danger" })
+                    </li>
+                    <li class="col-md-6">
+                        @Html.LabelFor(model => model.Doctor, new {@class = ""})
+                        @Html.DropDownListFor(model => model.Doctor, new List<SelectListItem>(Model.Doctors.Select(a => new SelectListItem()
+                        {
+                            Text = a.DoctorName,
+                            Value = a.DoctorName
+                        }).ToList()), "", new {style = "width:50%"})
+                        @Html.ValidationMessageFor(model => model.Doctor, "", new {@class = "text-danger"})
+                    </li>
+                    <li class="col-md-6">
+                        @Html.LabelFor(model => model.Diagnosis, new { @class = "" })
+                        @Html.TextAreaFor(model => model.Diagnosis, new { @class = "k-editor-textarea", style = "width: 100%;", maxlength = "250" })
+                        @Html.ValidationMessageFor(model => model.Diagnosis, "", new { @class = "text-danger" })
+                    </li>
+                </ul>
+            </fieldset>
+            <button data-toggle="collapse" data-target="#bankDetails"><i> </i> Bank Details</button>
+            <fieldset id="bankDetails" class="collapse">
+                <legend></legend>
+                <ul class="fieldlist row">
+                    <li class="col-md-2">
+                        @Html.LabelFor(model => model.IsBeneficiary, new {@class = "k-checkbox-label"})
+                        @Html.EditorFor(model => model.IsBeneficiary, new {@class = "k-checkbox"})
+                        @Html.ValidationMessageFor(model => model.IsBeneficiary, "", new {@class = "text-danger"})
+                    </li>
+                </ul>
+                <ul class="fieldlist row">
+                    <li class="col-md-6 pt-2">
+                        @Html.LabelFor(model => model.BankName, new { @class = "" })
+                        @Html.DropDownListFor(model => model.BankName, new List<SelectListItem>(Model.Banks.Select(a => new SelectListItem()
+                           {
+                               Text = a.BankName,
+                               Value = a.BankName
+                           }).ToList()), "", new { style = "width:60%" })
+                        @Html.ValidationMessageFor(model => model.BankName, "", new { @class = "text-danger" })
+                    </li>
+                    <li class="col-md-6 pt-2">
+                        @Html.LabelFor(model => model.Iban, new { @class = "" })
+                        @Html.TextBoxFor(model => model.Iban, new { @class = "k-textbox", style = "width:100%" })
+                        @Html.ValidationMessageFor(model => model.Iban, "", new { @class = "text-danger" })
+                    </li>
+                </ul>
+            </fieldset>
+            <button data-toggle="collapse" data-target="#treatmentDetails"><i> </i> Treatment Details</button>
+            <fieldset id="treatmentDetails" class="collapse">
+                <legend></legend>
+                <ul class="fieldlist row">
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.FirstApptDAte, new { @class = "" })
+                        @Html.TextBoxFor(model => model.FirstApptDAte, "{0:MM/dd/yyyy}", new { @class = "", style = "width: 60%" })
+                        @Html.ValidationMessageFor(model => model.FirstApptDAte, "", new { @class = "text-danger" })
+                    </li>
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.EndTreatDate, new { @class = "" })                        
+                        @Html.TextBoxFor(model => model.EndTreatDate, "{0:MM/dd/yyyy}", new { @class = "", style = "width: 60%" })
+                        @Html.ValidationMessageFor(model => model.EndTreatDate, "", new { @class = "text-danger" })
+                    </li>
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.IsActive, new { @class = "" })
+                        @Html.EditorFor(model => model.IsActive, new { @class = "form-control", style = "width: 100%" })
+                        @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
+                    </li>
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.Notes, new { @class = "" })
+                        @Html.TextAreaFor(model => model.Notes, new { @class = "k-editor-textarea", maxlength = "250", style = "width: 100%" })
+                        @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                    </li>
 
 
-                </li>
-                <li>
-
-
-                    @Html.LabelFor(model => model.Diagnosis, new { @class = "" })
-
-                    @Html.TextAreaFor(model => model.Diagnosis, new { @class = "k-editor-textarea", style = "width: 100%;", maxlength = "250" })
-                    @*@Html.TextBoxFor(model => model.Diagnosis, new { @class = "k-textbox", style = "width: 100%;" })*@
-                    @Html.ValidationMessageFor(model => model.Diagnosis, "", new { @class = "text-danger" })
-
-
-                </li>
-                <li>
-
-                    @Html.LabelFor(model => model.Doctor, new { @class = "" })
-
-                    @*@Html.EditorFor(model => model.Doctor, new { htmlAttributes = new { @class = "form-control" } })*@
-                    @Html.DropDownListFor(model => model.Doctor, new List<SelectListItem>(Model.Doctors.Select(a => new SelectListItem()
-                       {
-                           Text = a.DoctorName,
-                           Value = a.DoctorName
-
-                       }).ToList()), "", new { style = "width:50%" })
-                    @Html.ValidationMessageFor(model => model.Doctor, "", new { @class = "text-danger" })
-
-                </li>
-            </ul>
-        </fieldset>
-
-        <fieldset>
-            <legend>Bank Details</legend>
-            <ul class="fieldlist">
-                <li>
-
-                    @Html.LabelFor(model => model.IsBeneficiary, new { @class = "k-checkbox-label" })
-
-                    @Html.EditorFor(model => model.IsBeneficiary, new { @class = "k-checkbox" })
-                    @Html.ValidationMessageFor(model => model.IsBeneficiary, "", new { @class = "text-danger" })
-
-                </li>
-                <li>
-                    @Html.LabelFor(model => model.BankName, new { @class = "" })
-
-
-                    @Html.DropDownListFor(model => model.BankName, new List<SelectListItem>(Model.Banks.Select(a => new SelectListItem()
-                       {
-                           Text = a.BankName,
-                           Value = a.BankName
-
-                       }).ToList()), "", new { style = "width:60%" })
-                    @Html.ValidationMessageFor(model => model.BankName, "", new { @class = "text-danger" })
-
-
-                </li>
-                @*<li>
-                             @Html.LabelFor(model => model.BankCode, new { @class = "" })
-
-
-                             @Html.DropDownListFor(model => model.BankCode, new List<SelectListItem>(Model.Banks.Select(a => new SelectListItem()
-                    {
-                        Text = a.BankCode,
-                        Value = a.BankCode
-
-                    }).ToList()), "", new { style = "width:100%" })
-                             @Html.ValidationMessageFor(model => model.BankCode, "", new { @class = "text-danger" })
-
-
-                         </li>*@
-                <li>
-
-                    @Html.LabelFor(model => model.Iban, new { @class = "" })
-
-                    @Html.TextBoxFor(model => model.Iban, new { @class = "k-textbox", style = "width:100%" })
-                    @Html.ValidationMessageFor(model => model.Iban, "", new { @class = "text-danger" })
-
-                </li>
-            </ul>
-        </fieldset>
-        <fieldset>
-            <legend>Treatment Details</legend>
-            <ul class="fieldlist">
-                <li>
-                    @Html.LabelFor(model => model.FirstApptDAte, new { @class = "" })
-
-                    @*@Html.EditorFor(model => model.FirstApptDAte, new { htmlAttributes = new { @class = "form-control" } })*@
-                    @Html.TextBoxFor(model => model.FirstApptDAte, "{0:MM/dd/yyyy}", new { @class = "", style = "width: 60%" })
-                    @Html.ValidationMessageFor(model => model.FirstApptDAte, "", new { @class = "text-danger" })
-
-
-                </li>
-
-
-                <li>
-                    @Html.LabelFor(model => model.EndTreatDate, new { @class = "" })
-
-                    @*@Html.EditorFor(model => model.EndTreatDate, new { htmlAttributes = new { @class = "form-control" } })*@
-                    @Html.TextBoxFor(model => model.EndTreatDate, "{0:MM/dd/yyyy}", new { @class = "", style = "width: 60%" })
-                    @Html.ValidationMessageFor(model => model.EndTreatDate, "", new { @class = "text-danger" })
-
-
-
-                </li>
-
-
-                <li>
-                    @Html.LabelFor(model => model.IsActive, new { @class = "" })
-
-                    @Html.EditorFor(model => model.IsActive, new { @class = "form-control", style = "width: 100%" })
-                    @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
-
-
-                </li>
-
-
-                <li>
-                    @Html.LabelFor(model => model.Notes, new { @class = "" })
-
-                    @Html.TextAreaFor(model => model.Notes, new { @class = "k-editor-textarea", maxlength = "250", style = "width: 100%" })
-                    @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
-
-
-                </li>
-
-
-            </ul>
-        </fieldset>
-
+                </ul>
+            </fieldset>
+        </div>
         <div class="mt-3">
             <p>
-
-                @*<input type="submit" value="Save" class="k-button m-3"/>*@
                 <a href="@Url.Action("Details", new {patientCid = Model.PatientCID})" class="k-button"><i class="fa fa-ban" style="color: lightblue"></i> Cancel</a>
-                @*@Html.ActionLink("Back to List", "Index", null, new {@class = "k-button m-3"})*@
                 <button type="submit" class="k-button"><i class="fa fa-check" style="color: greenyellow"></i> Update</button>
             </p>
         </div>
@@ -272,7 +178,7 @@
         //$('.datepicker').datepicker({
         //    dateFormat: "m/d/yy"
         //});
-       
+
 
         $(document).ready(function () {
             $("#EndTreatDate, #FirstApptDAte").kendoDatePicker();
@@ -287,6 +193,24 @@
                 mask: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
                 //
             });
+            $("#patientEdit").css("visibility", "visible");
+
+            $('#patientEdit button').addClass('btn btn-block mb-2 text-uppercase text-white bg-info');
+            //fa fa-angle-double-down pull-left
+            $('#patientEdit button i').addClass('fa fa-angle-double-down pull-left');
+
+
+            $('#patientEdit button').click(function (e) {
+                e.preventDefault();
+                var $this = this;
+                var caret = $($this).find('i');
+                if ($(caret).hasClass('fa-angle-double-down'))
+                    $(caret).removeClass('fa-angle-double-down').addClass("fa-angle-double-up");
+                else
+                    $(caret).removeClass('fa-angle-double-up').addClass("fa-angle-double-down");
+
+            });
+            $(".loader").css("display", "none");
         });
     </script>
 

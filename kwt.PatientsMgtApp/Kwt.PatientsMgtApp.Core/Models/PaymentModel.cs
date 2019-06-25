@@ -70,7 +70,7 @@ namespace Kwt.PatientsMgtApp.Core.Models
         [DisplayName("Beneficiary Last Name")]
         public string BeneficiaryLName { get; set; }
 
-        [DisplayName("Companion Name")]
+        [DisplayName("Beneficiary Name")]
         public string BeneficiaryFullName
         {
             get { return this.BeneficiaryFName + " " + this.BeneficiaryMName + " " + this.BeneficiaryLName; }
@@ -78,7 +78,7 @@ namespace Kwt.PatientsMgtApp.Core.Models
         [DisplayName("Beneficiary Bank Name")]
         public string BeneficiaryBank { get; set; }
 
-        [DisplayName("Beneficiary Bank Account")]
+        [DisplayName("IBan")]
         public string BeneficiaryIBan { get; set; }
 
 

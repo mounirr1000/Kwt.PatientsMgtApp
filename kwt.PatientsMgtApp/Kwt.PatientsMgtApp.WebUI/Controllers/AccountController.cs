@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
@@ -10,6 +11,10 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Kwt.PatientsMgtApp.WebUI.Models;
 using Kwt.PatientsMgtApp.WebUI.Utilities;
+using System.DirectoryServices.AccountManagement;
+using System.Security;
+using System.Web.Security;
+using Galactic.ActiveDirectory;
 
 namespace Kwt.PatientsMgtApp.WebUI.Controllers
 {
@@ -77,6 +82,43 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             {
                 return View(model);
             }
+//            #region creat login for active directory to use window authentication instead
+//#if DEBUG
+//            // authenticates against your local machine - for development time
+//            ContextType authenticationType = ContextType.Machine;
+//#else
+//            // authenticates against your Domain AD
+//            ContextType authenticationType = ContextType.Domain;
+//#endif
+//            PrincipalContext principalContext = new PrincipalContext(authenticationType);
+//            //Check user credentials
+//            string serverName = ConfigurationManager.AppSettings["ADServer"];
+//            SecureString securePwd = null;
+//            if (model.Password != null)
+//            {
+                
+//                securePwd = new SecureString();
+//                foreach (char chr in model.Password.ToCharArray())
+//                {
+//                    securePwd.AppendChar(chr);
+//                }
+//            }
+//            try
+//            {
+//                //Check user credentials
+               
+               
+//                ActiveDirectory adVerifyUser = new ActiveDirectory(@"DESKTOP-62207FN",  model.Email, securePwd);
+//                FormsAuthentication.SetAuthCookie(model.Email, model.RememberMe);
+//                return RedirectToLocal(returnUrl);
+//            }
+//            catch
+//            {
+//                // If we got this far, something failed, redisplay form
+//                ModelState.AddModelError("", "The user name or password provided is incorrect.");
+//                return View(model);
+//            }
+//            #endregion
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
@@ -91,7 +133,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
+                    ModelState.AddModelError("Password", "Invalid login attempt.");
+                    ModelState.AddModelError("Email", "Invalid login attempt.");
                     return View(model);
             }
         }

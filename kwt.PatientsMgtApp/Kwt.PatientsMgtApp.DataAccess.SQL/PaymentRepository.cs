@@ -122,7 +122,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             var ben = _beneficiaryRepository.GetBeneficiary(patientCid);
             var patient = _patientRepository.GetPatient(patientCid);
             var companion = _companionRepository.GetCompanion(ben?.CompanionCID);
-            if (patient != null && ben != null)
+            if (patient != null)
             {
                 payment.IsActive = patient.IsActive;
                 payment.PatientCID = patientCid;
@@ -131,9 +131,11 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 payment.PatientMName = patient.PatientMName;
                 payment.Agency = patient.Agency;
                 payment.Hospital = patient.Hospital;
-
-                payment.HasCompanion = patient.Companions?.Count>0;
-
+                payment.HasCompanion = patient.Companions?.Count > 0;
+            }
+                
+            if (patient != null && ben != null)
+            {
                 payment.CompanionCID = ben.CompanionCID;
                 payment.CompanionFName = companion?.CompanionFName;
                 payment.CompanionLName = companion?.CompanionLName;

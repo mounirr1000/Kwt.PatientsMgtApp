@@ -84,6 +84,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         /// <returns></returns>
         int Delete<T>(Expression<Func<T, bool>> predicate) where T : class, IDomainObject;
 
+
+        int Delete(string command);
         /// <summary>
         /// Update object changes and save to database.
         /// </summary>

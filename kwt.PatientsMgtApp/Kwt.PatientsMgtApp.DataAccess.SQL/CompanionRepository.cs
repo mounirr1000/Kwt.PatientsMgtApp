@@ -21,23 +21,24 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         }
         public List<CompanionModel> GetCompanions()
         {
-            var result = _domainObjectRepository.All<Companion>().ToList();
+
+            var result = _domainObjectRepository.All<Companion>(new[] { "Bank", "CompanionType" }).ToList();
             //Map to returnable object
             //var bank = _domainObjectRepository.All<Bank>(new[] { "Beneficiary", "Companion", "Patient", "PayRate" }).ToList();
             return result.Select(c => new CompanionModel()
             {
                 CompanionCID = c.CompanionCID,
-                BankName = _domainObjectRepository.Get<Bank>(b => b.BankID == c.BankID)?.BankName,
+                BankName = c.Bank?.BankName,// _domainObjectRepository.Get<Bank>(b => b.BankID == c.BankID)?.BankName,
                 CompanionFName = c.CompanionFName,
                 CompanionMName = c.CompanionMName,
                 CompanionLName = c.CompanionLName,
-                CompanionType = _domainObjectRepository.Get<CompanionType>(ct => ct.CompanionTypeID == c.CompanionTypeID)?.CompanionType1,
+                CompanionType = c.CompanionType.CompanionType1,//, _domainObjectRepository.Get<CompanionType>(ct => ct.CompanionTypeID == c.CompanionTypeID)?.CompanionType1,
                 DateIn = c.DateIn,
                 DateOut = c.DateOut,
-                IsActive = c.IsActive == true ? true : false,
+                IsActive = c.IsActive == true,
                 IBan = c.IBan,
-                BankCode = _domainObjectRepository.Get<Bank>(b => b.BankID == c.BankID)?.BankCode,
-                IsBeneficiary = c.IsBeneficiary == true ? true : false,
+                BankCode = c.Bank?.BankName,//_domainObjectRepository.Get<Bank>(b => b.BankID == c.BankID)?.BankCode,
+                IsBeneficiary = c.IsBeneficiary == true,
                 Notes = c.Notes,
                 PatientCID = c.PatientCID,
                 CreatedBy = c.CreatedBy,
@@ -79,7 +80,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             }
             else
             {
-                coModel = new CompanionModel();
+                coModel = null;
 
             }
             return coModel;
@@ -102,8 +103,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         {
             if (companionList.Any(comp => comp.CompanionTypeID == newCompanionTypeid))
             {
-                throw new PatientsMgtException(1, "error", "Creating new Companion",
-                    "You can't have two companions as primary type associated to the same user");
+                throw new PatientsMgtException(1, "error", "Creating/updating Companion",
+                    "You can't have two companions as primary associated to the same user");
             }
         }
         public void AddCompanion(CompanionModel companion)
@@ -180,14 +181,14 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 (patient.IsBeneficiary == newCompanion.IsBeneficiary
                 && companionTypeId == (int)Enums.CompanionType.Primary))
             {
-                throw new PatientsMgtException(1, "error", "Creating new Companion",
+                throw new PatientsMgtException(1, "error", "Creating/updating Companion",
                     "The Patient is already benificiary!! " +
                     "You can't have the companion as benificiary");
             }
             if (patient.IsBeneficiary == false &&
                 (patient.IsBeneficiary == newCompanion.IsBeneficiary
                 && companionTypeId == (int)Enums.CompanionType.Primary))
-                throw new PatientsMgtException(1, "error", "Creating new Companion", "You need to set either the patient or the Companion as Beneficiary ");
+                throw new PatientsMgtException(1, "error", "Creating/updating Companion", "The Patient is not beneficiary, You need to set either the patient or the Companion as Beneficiary ");
             // only one Companion asscoiated to the patient should be benificiary and not more
             var duplicateComp = new Companion();
 
@@ -200,7 +201,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 existingCompanion != null &&
                 existingCompanion.Any(comp => comp.IsBeneficiary == newCompanion.IsBeneficiary))
             {
-                throw new PatientsMgtException(1, "error", "Creating new Companion",
+                throw new PatientsMgtException(1, "error", "Creating/updating Companion",
                     "There is already one companion associated with the patient declared as beneficiary!!" +
                     "\r\n Only one companion should be beneficiary");
             }
@@ -239,7 +240,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     ben.BeneficiaryMName = patient.PatientMName;
                     ben.BankID = patient.BankID;
                     ben.IBan = patient.Iban;
-                    if (companion.CompanionTypeID == (int)Enums.CompanionType.Primary && companion.IsActive==true)
+                    if (companion.CompanionTypeID == (int)Enums.CompanionType.Primary && companion.IsActive == true)
                     {
                         ben.CompanionCID = companion.CompanionCID;
                     }
@@ -298,30 +299,30 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             {
                 // check that the companion is not in the table with the same patient
                 // we can have more than one history for the same companion if the patient is diffrent
-               // var comp = _domainObjectRepository.Get<CompanionHistory>(c => c.CompanionCID == companion.CompanionCID
-               //             && c.PatientCID == companion.PatientCID);
+                // var comp = _domainObjectRepository.Get<CompanionHistory>(c => c.CompanionCID == companion.CompanionCID
+                //             && c.PatientCID == companion.PatientCID);
 
-            //    if (comp == null)
-               // {
-                    _domainObjectRepository.Create<CompanionHistory>(new CompanionHistory()
-                    {
-                        CompanionCID = companion.CompanionCID,
-                        DateIn = companion.DateIn,
-                        DateOut = companion.DateOut,
-                        PatientCID = companion.PatientCID,
-                        CompanionType = _domainObjectRepository.Get<CompanionType>(ct => ct.CompanionTypeID == companion.CompanionTypeID)?.CompanionType1,
-                        IsActive = companion.IsActive,
-                        CreatedDate = companion.CreatedDate,
-                        IsBeneficiary = companion.IsBeneficiary,
-                        ModifiedBy = companion.ModifiedBy,
-                        ModifiedDate = companion.ModifiedDate,
-                        Name = companion.CompanionFName +" "+companion.CompanionMName+" "+companion.CompanionLName,
-                        Notes = companion.Notes,
-                        CreatedBy = companion.CreatedBy,
-                        
-                    });
+                //    if (comp == null)
+                // {
+                _domainObjectRepository.Create<CompanionHistory>(new CompanionHistory()
+                {
+                    CompanionCID = companion.CompanionCID,
+                    DateIn = companion.DateIn,
+                    DateOut = companion.DateOut,
+                    PatientCID = companion.PatientCID,
+                    CompanionType = _domainObjectRepository.Get<CompanionType>(ct => ct.CompanionTypeID == companion.CompanionTypeID)?.CompanionType1,
+                    IsActive = companion.IsActive,
+                    CreatedDate = companion.CreatedDate,
+                    IsBeneficiary = companion.IsBeneficiary,
+                    ModifiedBy = companion.ModifiedBy,
+                    ModifiedDate = companion.ModifiedDate,
+                    Name = companion.CompanionFName + " " + companion.CompanionMName + " " + companion.CompanionLName,
+                    Notes = companion.Notes,
+                    CreatedBy = companion.CreatedBy,
 
-               // }
+                });
+
+                // }
 
             }
         }
@@ -344,7 +345,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 companionToUpdate.DateOut = companion.DateOut;
                 companionToUpdate.IsActive = companion.IsActive;
                 companionToUpdate.IBan = companion.IBan;
-                companionToUpdate.BankID = _domainObjectRepository.Get<Bank>(b => b.BankName == companion.BankName)?.BankID;
+                //companionToUpdate.BankID = _domainObjectRepository.Get<Bank>(b => b.BankName == companion.BankName)?.BankID;
                 companionToUpdate.IsBeneficiary = companion.IsBeneficiary;
                 companionToUpdate.Notes = companion.Notes;
                 companionToUpdate.PatientCID = companion.PatientCID;
@@ -367,30 +368,32 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 CheckBeneficiary(patient, companion, companionList, newCompanionTypeid);
                 // no 2 companions should be beneficiary or confelect with the patient
                 CheckCompanionType(companionList.Where(c => c.IsActive == true)?.ToList(), newCompanionTypeid); // No 2 companions should have primary as a type
-                if (companionToUpdate.IsBeneficiary == true &&
-                    (companionToUpdate.Bank == null || String.IsNullOrEmpty(companionToUpdate.IBan)))
-                {
-                    throw new PatientsMgtException(1, "error", "Update a Companion",
-                        "You must eneter the bank info! since this companion is beneficiary");
-                }
-                if (companionToUpdate.IsBeneficiary == true &&
-                    companionToUpdate.IsActive == false)
-                {
-                    throw new PatientsMgtException(1, "error", "Update a Companion",
-                        "The companion should be active since is beneficiary");
-                }
-                if (companionToUpdate.IsBeneficiary == true &&
-                        companionToUpdate.CompanionTypeID == (int)Enums.CompanionType.Secondary)
-                {
-                    throw new PatientsMgtException(1, "error", "Update a Companion",
-                        String.Format("The companion should not be {0} since is beneficiary", companionToUpdate?.CompanionType?.CompanionType1));
-                }
-                if (companionToUpdate.IsActive == false && companionToUpdate.DateOut == null)
-                {
-                    throw new PatientsMgtException(1, "error", "Update a Companion",
-                        String.Format("You have set the companion as inactive, so the date out should be set", companionToUpdate?.CompanionType?.CompanionType1));
-                }
+                //if (companionToUpdate.IsBeneficiary == true &&
+                //    (companionToUpdate.Bank == null || String.IsNullOrEmpty(companionToUpdate.IBan)))
+                //{
+                //    throw new PatientsMgtException(1, "error", "Update a Companion",
+                //        "You must eneter the bank info! since this companion is beneficiary");
+                //}
+                //if (companionToUpdate.IsBeneficiary == true &&
+                //    companionToUpdate.IsActive == false)
+                //{
+                //    throw new PatientsMgtException(1, "error", "Update a Companion",
+                //        "The companion should be active since is beneficiary");
+                //}
+                //if (companionToUpdate.IsBeneficiary == true &&
+                //        companionToUpdate.CompanionTypeID == (int)Enums.CompanionType.Secondary)
+                //{
+                //    throw new PatientsMgtException(1, "error", "Update a Companion",
+                //        String.Format("The companion should not be {0} since is beneficiary", companionToUpdate?.CompanionType?.CompanionType1));
+                //}
+                //if (companionToUpdate.IsActive == false && companionToUpdate.DateOut == null)
+                //{
+                //    throw new PatientsMgtException(1, "error", "Update a Companion",
+                //        String.Format("You have set the companion as inactive, so the date out should be set", companionToUpdate?.CompanionType?.CompanionType1));
+                //}
                 // whene every rule is complied with, we do an update
+
+                UpdateBeneficiary(companion, companionToUpdate, patient);
                 _domainObjectRepository.Update<Companion>(companionToUpdate);
 
                 //insert into history when the companion is not active, or date out is set
@@ -399,7 +402,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     InsertIntoCompanionHistoryTable(companionToUpdate);
                 }
                 //Update the beneficiary table
-                UpdateBeneficiary(companion, companionToUpdate, patient);
+
             }
 
             return companion;
@@ -410,18 +413,18 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             var ben = _domainObjectRepository.Get<Beneficiary>(b => b.PatientCID == companion.PatientCID);
             if (ben != null)
             {
-                if (companionToUpdate.IsActive == false)
+                if (companionToUpdate.IsActive == false)// the new change to companion
                 {
-                    ben.CompanionCID = null;
-                    if (ben.BeneficiaryCID == companion.CompanionCID)
+                    ben.CompanionCID = null;// set the companion cid associoted with the benefeciary to null
+                    if (ben.BeneficiaryCID == companion.CompanionCID)// we have the companion as beneficiary
                     {
-                        if (patient.IsBeneficiary == false && patient.IsActive == true)
+                        if (patient.IsBeneficiary == false && patient.IsActive == true)// there is no beneficiary to the patient, the update should not happen
                             throw new PatientsMgtException(1, "Error", "Update Companion",
                                 "the primary companion associated with the patient is no " +
                                 "longer active, and the patient is not beneficiary, " +
                                 "Make the patient beneficary or add a another primary companion " +
                                 "who is beneficiary before setting this comapnion as inactive");
-                        else if (patient.IsBeneficiary == true)
+                        if (patient.IsBeneficiary == true)
                         {
                             ben.BeneficiaryCID = patient.PatientCID;
                             ben.BeneficiaryFName = patient.PatientFName;
@@ -434,50 +437,54 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     _domainObjectRepository.Update<Beneficiary>(ben);
                     return;
                 }
-                if (companion.IsBeneficiary == true &&
-                    ben.BeneficiaryCID != companion.CompanionCID)
+                if (companion.IsBeneficiary == true //&& // the companion is the benefeciary, and was not intially , patient was, or some other companion
+                                                    // ben.BeneficiaryCID != companion.CompanionCID
+                    )
                 {
-                    
+
                     ben.BeneficiaryCID = companion.CompanionCID;
                     ben.BeneficiaryFName = companion.CompanionFName;
                     ben.BeneficiaryLName = companion.CompanionLName;
                     ben.BeneficiaryMName = companion.CompanionMName;
                     ben.BankID = _domainObjectRepository.Get<Bank>(b => b.BankName == companion.BankName).BankID;
                     ben.IBan = companion.IBan;
+                    ben.CompanionCID = companion.CompanionCID;
                     _domainObjectRepository.Update<Beneficiary>(ben);
+                    return;
                 }
-                if (companion.IsBeneficiary == false &&
-                    ben.BeneficiaryCID == companion.CompanionCID)
+                if (companion.IsBeneficiary == false
+                    //&& ben.BeneficiaryCID == companion.CompanionCID
+                    )
                 {
                     if (patient.IsBeneficiary == false)
                     {
                         throw new PatientsMgtException(1, "Error", "Update Companion",
-                            "Neither the patient or the companion are beneficiary, Make one of them beneficiary to make an update");
+                            "You can't make the companion as not beneficiary, since the patient already not beneficiary");
                     }
-                    else
-                    {
-                        ben.BeneficiaryCID = patient.PatientCID;
-                        ben.BeneficiaryFName = patient.PatientFName;
-                        ben.BeneficiaryLName = patient.PatientLName;
-                        ben.BeneficiaryMName = patient.PatientMName;
-                        ben.BankID = patient.BankID;
-                        ben.IBan = patient.Iban;
-                        _domainObjectRepository.Update<Beneficiary>(ben);
-                    }
-                }
-                //when the companion is not beneficiary but he is primary companion, the beneficiary table companion cid should be update it to take the primary comanion cid
 
-                if (companionToUpdate.IsActive == true &&
+                    ben.BeneficiaryCID = patient.PatientCID;
+                    ben.BeneficiaryFName = patient.PatientFName;
+                    ben.BeneficiaryLName = patient.PatientLName;
+                    ben.BeneficiaryMName = patient.PatientMName;
+                    ben.BankID = patient.BankID;
+                    ben.IBan = patient.Iban;
+                    if (companionToUpdate.IsActive == true &&
                    (companionToUpdate.CompanionTypeID ==
                     (int)Enums.CompanionType.Primary))
-                {
-                    if (ben.CompanionCID != companionToUpdate.CompanionCID)
                     {
-                        ben.CompanionCID = companionToUpdate.CompanionCID;
-                        _domainObjectRepository.Update<Beneficiary>(ben);
+                        if (ben.CompanionCID != companionToUpdate.CompanionCID)
+                        {
+                            ben.CompanionCID = companionToUpdate.CompanionCID;
+                        }
+
                     }
+                    _domainObjectRepository.Update<Beneficiary>(ben);
 
                 }
+                //when the companion is not beneficiary but he is primary companion, 
+                //the beneficiary table companion cid should be update it to take the primary comanion cid
+
+
             }
         }
         public int DeleteCompanion(string companionCid, string patientCid)
@@ -523,7 +530,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             var beneficiaries = _domainObjectRepository.All<Beneficiary>().ToList();
 
 
-            List<Companion> compToAdd = comapnions.Where(comp => comp.IsBeneficiary == true && comp.CompanionTypeID == (int)Enums.CompanionType.Primary && comp.IsActive==true)
+            List<Companion> compToAdd = comapnions.Where(comp => comp.IsBeneficiary == true && comp.CompanionTypeID == (int)Enums.CompanionType.Primary && comp.IsActive == true)
                                     .Where(comp => !beneficiaries.Any(b => b.BeneficiaryCID == comp.CompanionCID)).ToList();
             List<Patient> patToAdd = patients.Where(pat => pat.IsBeneficiary == true && pat.IsActive == true)
                                     .Where(pat => !beneficiaries.Any(b => b.BeneficiaryCID == pat.PatientCID)).ToList();

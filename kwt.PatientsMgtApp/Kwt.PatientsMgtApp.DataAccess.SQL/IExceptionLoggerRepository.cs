@@ -10,5 +10,12 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
     public interface IExceptionLoggerRepository
     {
         void AddExceptionLogger(ExceptionLoggerObject exception);
+        ExceptionLoggerObject GetExceptionLogger(int exceptionId);
+
+        ExceptionLoggerObject GetLatestExceptionLogger();
+
+        List<ExceptionLoggerObject> GetExceptionsLogger();
+
+        int DeleteExceptionsLogger();
     }
 }

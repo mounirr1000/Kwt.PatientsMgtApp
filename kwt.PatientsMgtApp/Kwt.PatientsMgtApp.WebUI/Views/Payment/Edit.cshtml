@@ -18,7 +18,7 @@
         </p>
     </div>
     <div class="m-3 pl-4">
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Id)
         @Html.HiddenFor(model => model.CreatedDate)
         @Html.HiddenFor(model => model.CreatedBy)
@@ -423,7 +423,7 @@
         var start= $("#PaymentStartDate").kendoDatePicker({
             format: 'MM/dd/yyyy',
             //value: newStartdate,
-            min: newStartdate,
+           // min: newStartdate,// temp fix
             change: startChange,
             footer: "<button id='cleardate' class='k-button' onclick='clearDate(PaymentStartDate)'>Clear</button>"
         }).attr("readonly", "").data("kendoDatePicker");

@@ -36,7 +36,9 @@ namespace Kwt.PatientsMgtApp.WebUI
                     OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser>(
                         validateInterval: TimeSpan.FromMinutes(30),
                         regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
-                }
+                },
+                CookieName = "KWTMSolutionCookie",
+                ExpireTimeSpan = TimeSpan.FromHours(9),
             });            
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 

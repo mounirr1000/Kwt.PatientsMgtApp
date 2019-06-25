@@ -28,5 +28,46 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             };
             _domainObjectRepository.Create<ExceptionLogger>(exceptionLoggerObject);
         }
+
+        public ExceptionLoggerObject GetExceptionLogger(int exceptionId)
+        {
+            var exception=
+            _domainObjectRepository.Get<ExceptionLogger>(e => e.Id == exceptionId);
+
+            return new ExceptionLoggerObject()
+            {
+                ControllerName = exception.ControllerName,
+                ExceptionStackTrace = exception.ExceptionStackTrace,
+                ExceptionMessage = exception.ExceptionMessage,
+                Id = exception.Id,
+                LogTime = exception.LogTime
+            };
+
+
+        }
+
+        public List<ExceptionLoggerObject> GetExceptionsLogger()
+        {
+            var exceptions = _domainObjectRepository.All<ExceptionLogger>();
+            return exceptions?.Select(e => new ExceptionLoggerObject()
+            {
+                ControllerName = e.ControllerName,
+                ExceptionStackTrace = e.ExceptionStackTrace,
+                ExceptionMessage = e.ExceptionMessage,
+                Id = e.Id,
+                LogTime = e.LogTime
+            }).ToList(); 
+            
+        }
+
+        public ExceptionLoggerObject GetLatestExceptionLogger()
+        {
+            return GetExceptionsLogger()?.OrderByDescending(c => c.LogTime).ThenByDescending(e=>e.Id).FirstOrDefault();
+        }
+
+       public int DeleteExceptionsLogger()
+       {
+            return _domainObjectRepository.Delete("DELETE FROM ExceptionLoggers");
+       }
     }
 }

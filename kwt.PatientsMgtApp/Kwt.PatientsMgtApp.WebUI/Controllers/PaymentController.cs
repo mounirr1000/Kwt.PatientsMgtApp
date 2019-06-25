@@ -16,7 +16,7 @@ using PagedList;
 namespace Kwt.PatientsMgtApp.WebUI.Controllers
 {
     [Authorize(Roles = "Admin, Manager")]
-    [HandleError(ExceptionType = typeof(PatientsMgtException), View = "PatientMgtException")]
+    [HandleError(ExceptionType = typeof(PatientsMgtException), View = "ExceptionHandler")]
     public class PaymentController : BaseController
     {
         private const int PageSize = 2;
@@ -146,7 +146,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             else
             {
                 Information(string.Format("Payment with Id <b>{0}</b> Does Not exist in our records.", paymentId), true);
-                return View("List");
+                return RedirectToAction("List");// View("List");
             }
         }
 
@@ -165,15 +165,24 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             PaymentModel payment = new PaymentModel();
             payment = patientCid != null ? _paymentRepository.GetPaymentObject(patientCid) : _paymentRepository.GetPaymentObject();
             if (!String.IsNullOrEmpty(patientCid) &&
-                (payment.PatientCID == null || payment.BeneficiaryCID == null))
+                (payment.PatientCID == null))
             {
 
                 Information(
                     String.Format(
-                        "There is No patient in our records with this CID <b>{0}</b> Or This patient is Not Active! Please Enter a Valid CID",
+                        "There is No patient in our records with this CID <b>{0}</b> Please Enter a Valid CID",
                         patientCid), true);
             }
-            if (!String.IsNullOrEmpty(patientCid)
+          else  if (!String.IsNullOrEmpty(patientCid) &&
+                (payment.BeneficiaryCID == null))
+            {
+
+                Information(
+                    String.Format(
+                        "There is No Beneficiary with this patient <b>{0}</b> You can't make payment to this patient",
+                        patientCid), true);
+            }
+            else if(!String.IsNullOrEmpty(patientCid)
                 && payment.PatientCID != null
                 && !payment.IsActive)
             {

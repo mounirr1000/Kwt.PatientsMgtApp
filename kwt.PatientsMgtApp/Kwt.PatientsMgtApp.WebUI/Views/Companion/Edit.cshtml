@@ -13,147 +13,145 @@
 
         <div class="mt-3">
             <p>
-                @*<input type="submit" value="Save" class="k-button m-3"/>*@
+
                 <a href="@Url.Action("Details", new {companionCid = Model.CompanionCID})" class="k-button"><i class="fa fa-ban" style="color: lightblue"></i> Cancel</a>
-                @*@Html.ActionLink("Back to List", "Index", null, new {@class = "k-button m-3"})*@
+
                 <button type="submit" class="k-button"><i class="fa fa-check" style="color: greenyellow"></i> Update</button>
             </p>
         </div>
         <div class="m-3 pl-4">
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
             @Html.HiddenFor(model => model.Id)
         </div>
-        <fieldset>
-            <legend>Companion Details</legend>
-            <ul class="fieldlist">
-                @*<li>
-                    @Html.LabelFor(model => model.CompanionCID, new { @class = "" })
-                    @Html.TextBoxFor(model => model.CompanionCID, new { @class = "k-textbox", style = "width: 100%;" })
-                    @Html.ValidationMessageFor(model => model.CompanionCID, "", new { @class = "text-danger" })
-                </li>*@
-                <li>
-                    @Html.LabelFor(model => model.CompanionFName, new { @class = "" })
-                    @Html.TextBoxFor(model => model.CompanionFName, new { @class = "k-textbox", style = "width: 100%;" })
-                    <div>@Html.ValidationMessageFor(model => model.CompanionFName, "", new { @class = "text-danger" })</div>
-                </li>
-                <li>
-                    @Html.LabelFor(model => model.CompanionMName, new { @class = "" })
-                    @Html.TextBoxFor(model => model.CompanionMName, new { @class = "k-textbox", style = "width: 100%;" })
-                    <div>@Html.ValidationMessageFor(model => model.CompanionMName, "", new { @class = "text-danger" })</div>
-                </li>
-                <li>
-                    @Html.LabelFor(model => model.CompanionLName, new { @class = "" })
-                    @Html.TextBoxFor(model => model.CompanionLName, new { @class = "k-textbox", style = "width: 100%;" })
-                    <div>@Html.ValidationMessageFor(model => model.CompanionLName, "", new { @class = "text-danger" })</div>
-                </li>
-                
-                <li>
-                    @Html.LabelFor(model => model.PatientCID, new { @class = "" })
-                    @Html.TextBoxFor(model => model.PatientCID, new { @class = "k-textbox", style = "width: 100%;" })
-                    <div>@Html.ValidationMessageFor(model => model.PatientCID, "", new { @class = "text-danger" })</div>
-                </li>
-                <li>
-                    @Html.LabelFor(model => model.DateIn, new { @class = "" })
-                    @*@Html.TextBoxFor(model => (model.DateIn), new { @class = "k-textbox", style = "width: 100%;" })*@
-                    @Html.TextBoxFor(model => model.DateIn, "{0:MM/dd/yyyy}", new { @class = "", style = "width: 70%" })
-                    <div>@Html.ValidationMessageFor(model => model.DateIn, "", new { @class = "text-danger" })</div>
-                </li>
-                <li>
-                    @Html.LabelFor(model => model.DateOut, new { @class = "" })
-                    @*@Html.TextBoxFor(model => model.DateOut, new { @class = "k-textbox", style = "width: 100%;" })*@
-                    @Html.TextBoxFor(model => model.DateOut, "{0:MM/dd/yyyy}", new { @class = "", style = "width: 70%" })
-                    <div>@Html.ValidationMessageFor(model => model.DateOut, "", new { @class = "text-danger" })</div>
-                </li>
-                <li>
-                    @Html.LabelFor(model => model.IsActive, new { @class = "" })
-                    @Html.EditorFor(model => model.IsActive, new { @class = "k-textbox", style = "width: 100%;" })
-                    <div>@Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })</div>
-                </li>
-                <li>
-                    @Html.LabelFor(model => model.Notes, new { @class = "" })
-                    @Html.TextAreaFor(model => model.Notes, new { @class = "k-textbox", style = "width: 100%;" })
-                    <div>@Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })</div>
-                </li>
-                <li>
-                    @Html.LabelFor(model => model.CompanionType, new { @class = "" })
-                    @*@Html.TextBoxFor(model => model.CompanionType, new { @class = "k-textbox", style = "width: 100%;" })*@
-                    @Html.DropDownListFor(model => model.CompanionType, new List<SelectListItem>(Model.CompanionTypes.Select(a => new SelectListItem()
-               {
-                   Text = a.CompanionType,
-                   Value = a.CompanionType
+        <div id="companionEdit">
+            <button data-toggle="collapse" data-target="#companionDetails"><i></i> Companion Info</button>
+            <fieldset id="companionDetails" class="collapse show">
 
-               }).ToList()), "", new { style = "width:50%" })
-                    <div>@Html.ValidationMessageFor(model => model.CompanionType, "", new { @class = "text-danger" })</div>
-                </li>
-            </ul>
-        </fieldset>
+                <ul class="fieldlist row">
 
-        if (User.IsInAnyRoles("Admin", "Manager", "Auditor"))
-        {
-            //if (Model.IsBeneficiary)
-            //{
-                <fieldset>
-                    <legend>Companion Bank Info</legend>
-                    <ul class="fieldlist">
-                        <li>
-                            @Html.LabelFor(model => model.IsBeneficiary, new { @class = "" })
-                            @Html.EditorFor(model => model.IsBeneficiary, new { @class = "k-textbox", style = "width: 100%;" })
-                            <div>@Html.ValidationMessageFor(model => model.IsBeneficiary, "", new { @class = "text-danger" })</div>
-                        </li>
-                        <li>
-                            @Html.LabelFor(model => model.BankName, new { @class = "" })
-                            @*@Html.TextBoxFor(model => model.BankName, new { @class = "k-textbox", style = "width: 100%;" })*@
-                            @Html.DropDownListFor(model => model.BankName, new List<SelectListItem>(Model.Banks.Select(a => new SelectListItem()
-                       {
-                           Text = a.BankName,
-                           Value = a.BankName
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.CompanionFName, new { @class = "" })
+                        @Html.TextBoxFor(model => model.CompanionFName, new { @class = "k-textbox", style = "width: 100%;" })
+                        <div>@Html.ValidationMessageFor(model => model.CompanionFName, "", new { @class = "text-danger" })</div>
+                    </li>
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.CompanionMName, new { @class = "" })
+                        @Html.TextBoxFor(model => model.CompanionMName, new { @class = "k-textbox", style = "width: 100%;" })
+                        <div>@Html.ValidationMessageFor(model => model.CompanionMName, "", new { @class = "text-danger" })</div>
+                    </li>
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.CompanionLName, new { @class = "" })
+                        @Html.TextBoxFor(model => model.CompanionLName, new { @class = "k-textbox", style = "width: 100%;" })
+                        <div>@Html.ValidationMessageFor(model => model.CompanionLName, "", new { @class = "text-danger" })</div>
+                    </li>
 
-                       }).ToList()), "", new { style = "width:50%" })
-                            <div> @Html.ValidationMessageFor(model => model.BankName, "", new { @class = "text-danger" })</div>
-                        </li>
-                       
-                        <li>
-                            @Html.LabelFor(model => model.IBan, new { @class = "" })
-                            @Html.TextBoxFor(model => model.IBan, new { @class = "k-textbox", style = "width: 100%;" })
-                            <div>@Html.ValidationMessageFor(model => model.IBan, "", new { @class = "text-danger" })</div>
-                        </li>
-                    </ul>
-                </fieldset>
-            //}
-        }
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.PatientCID, new { @class = "" })
+                        @Html.TextBoxFor(model => model.PatientCID, new { @class = "k-textbox", style = "width: 100%;" })
+                        <div>@Html.ValidationMessageFor(model => model.PatientCID, "", new { @class = "text-danger" })</div>
+                    </li>
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.DateIn, new { @class = "" })
 
-        <fieldset>
-            <legend>Audit Info</legend>
-            <ul class="fieldlist">
-                <li>
-                    @Html.LabelFor(model => model.CreatedBy, new {@class = ""})
-                    @Html.TextBoxFor(model => model.CreatedBy, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
-                </li>
-                <li>
-                    @Html.LabelFor(model => model.CreatedDate, new {@class = ""})
-                    @Html.TextBoxFor(model => model.CreatedDateFormatted, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
-                </li>
-                <li>
-                    @Html.LabelFor(model => model.ModifiedBy, new {@class = ""})
-                    @Html.TextBoxFor(model => model.ModifiedBy, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
-                </li>
-                <li>
-                    @Html.LabelFor(model => model.ModifiedDate, new {@class = ""})
-                    @Html.TextBoxFor(model => model.ModifiedDateFormatted, new {@class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly"})
-                </li>
-            </ul>
-        </fieldset>
+                        @Html.TextBoxFor(model => model.DateIn, "{0:MM/dd/yyyy}", new { @class = "", style = "width: 70%" })
+                        <div>@Html.ValidationMessageFor(model => model.DateIn, "", new { @class = "text-danger" })</div>
+                    </li>
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.DateOut, new { @class = "" })
+
+                        @Html.TextBoxFor(model => model.DateOut, "{0:MM/dd/yyyy}", new { @class = "", style = "width: 70%" })
+                        <div>@Html.ValidationMessageFor(model => model.DateOut, "", new { @class = "text-danger" })</div>
+                    </li>                    
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.CompanionType, new {@class = ""})
+
+                        @Html.DropDownListFor(model => model.CompanionType, new List<SelectListItem>(Model.CompanionTypes.Select(a => new SelectListItem()
+                        {
+                            Text = a.CompanionType,
+                            Value = a.CompanionType
+
+                        }).ToList()), "", new {style = "width:50%"})
+                        <div>@Html.ValidationMessageFor(model => model.CompanionType, "", new {@class = "text-danger"})</div>
+                    </li>
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.IsActive, new {@class = ""})
+                        @Html.EditorFor(model => model.IsActive, new {@class = "k-textbox", style = "width: 100%;"})
+                        <div>@Html.ValidationMessageFor(model => model.IsActive, "", new {@class = "text-danger"})</div>
+                    </li>
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.Notes, new { @class = "" })
+                        @Html.TextAreaFor(model => model.Notes, new { @class = "k-textbox", style = "width: 100%;" })
+                        <div>@Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })</div>
+                    </li>
+                </ul>
+            </fieldset>
+
+            @if (User.IsInAnyRoles("Admin", "Manager", "Auditor"))
+            {
+            <button data-toggle="collapse" data-target="#companionBaninfo"><i></i> Companion Bank Info</button>
+            <fieldset id="companionBaninfo" class="collapse">
+                <legend></legend>
+                <ul class="fieldlist row">
+                    <li class="col-md-12">
+                        @Html.LabelFor(model => model.IsBeneficiary, new { @class = "" })
+                        @Html.EditorFor(model => model.IsBeneficiary, new { @class = "k-textbox", style = "width: 100%;" })
+                        <div>@Html.ValidationMessageFor(model => model.IsBeneficiary, "", new { @class = "text-danger" })</div>
+                    </li>
+                    <li class="col-md-6">
+                        @Html.LabelFor(model => model.BankName, new { @class = "" })
+
+                        @Html.DropDownListFor(model => model.BankName, new List<SelectListItem>(Model.Banks.Select(a => new SelectListItem()
+                   {
+                       Text = a.BankName,
+                       Value = a.BankName
+
+                   }).ToList()), "", new { style = "width:50%" })
+                        <div> @Html.ValidationMessageFor(model => model.BankName, "", new { @class = "text-danger" })</div>
+                    </li>
+
+                    <li class="col-md-6">
+                        @Html.LabelFor(model => model.IBan, new { @class = "" })
+                        @Html.TextBoxFor(model => model.IBan, new { @class = "k-textbox", style = "width: 100%;" })
+                        <div>@Html.ValidationMessageFor(model => model.IBan, "", new { @class = "text-danger" })</div>
+                    </li>
+                </ul>
+            </fieldset>
+
+            }
+            <button data-toggle="collapse" data-target="#auditInformation"><i></i> Audit Info</button>
+            <fieldset id="auditInformation" class="collapse">
+                <legend></legend>
+                <ul class="fieldlist row">
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.CreatedBy, new { @class = "" })
+                        @Html.TextBoxFor(model => model.CreatedBy, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                    </li>
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.CreatedDate, new { @class = "" })
+                        @Html.TextBoxFor(model => model.CreatedDateFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                    </li>
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.ModifiedBy, new { @class = "" })
+                        @Html.TextBoxFor(model => model.ModifiedBy, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                    </li>
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.ModifiedDate, new { @class = "" })
+                        @Html.TextBoxFor(model => model.ModifiedDateFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                    </li>
+                </ul>
+            </fieldset>
+        </div>
         <div class="mt-3">
             <p>
-                @*<input type="submit" value="Save" class="k-button m-3"/>*@
+
                 <a href="@Url.Action("Details",new {companionCid = Model.CompanionCID})" class="k-button"><i class="fa fa-ban" style="color: lightblue"></i> Cancel</a>
-                @*@Html.ActionLink("Back to List", "Index", null, new {@class = "k-button m-3"})*@
+
                 <button type="submit" class="k-button"><i class="fa fa-check" style="color: greenyellow"></i> Update</button>
             </p>
         </div>
     }
 
-   
+
 </div>
 
 
@@ -173,6 +171,23 @@
             });
             $("#PatientCID").kendoMaskedTextBox({
                 mask: "AAAAAAAAAAAA"
+            });
+
+            $('#companionEdit button').addClass('btn btn-block mb-2 text-uppercase text-white bg-info');
+            //fa fa-angle-double-down pull-left
+            $('#companionEdit button i').addClass('fa fa-angle-double-down pull-left');
+
+
+
+            $('#companionEdit button').click(function (e) {
+                e.preventDefault();
+                var $this = this;
+                var caret = $($this).find('i');
+                if ($(caret).hasClass('fa-angle-double-down'))
+                    $(caret).removeClass('fa-angle-double-down').addClass("fa-angle-double-up");
+                else
+                    $(caret).removeClass('fa-angle-double-up').addClass("fa-angle-double-down");
+
             });
         });
     </script>

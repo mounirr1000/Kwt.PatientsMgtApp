@@ -32,7 +32,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Tests
         [TestMethod]
         public void GetPatientTest()
         {
-            var result = patientRepository.GetPatient("09187654232");
+            var result = patientRepository.GetPatient("233110900285");
 
             Assert.IsNotNull(result);
         }

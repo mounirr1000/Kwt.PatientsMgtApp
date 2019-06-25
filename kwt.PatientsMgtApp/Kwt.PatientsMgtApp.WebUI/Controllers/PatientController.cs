@@ -17,7 +17,7 @@ using PagedList;
 namespace Kwt.PatientsMgtApp.WebUI.Controllers
 {
 
-    [HandleError(ExceptionType = typeof(PatientsMgtException), View = "PatientMgtException")]
+    [HandleError(ExceptionType = typeof(PatientsMgtException), View = "ExceptionHandler")]
     [Authorize]
     public class PatientController : BaseController
     {
@@ -136,7 +136,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             else
             {
                 Information(string.Format("Patient with Civil ID <b>{0}</b> Does Not exist in our records.", patientCid), true);
-                return View("List");
+                return RedirectToAction("List");// View("List");
             }
         }
         [ExceptionHandler]
@@ -156,7 +156,10 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(PatientModel patient)
         {
+            //throw new PatientsMgtException(1, "error", "Creating new Companion",
+            //        "You can't have two companions as primary type associated to the same user");
             ValidatePatientModel(patient);
+            ViewBag.IsValid = ModelState.IsValid;
             if (ModelState.IsValid)
             {
                 patient.CreatedBy = User.Identity.Name;

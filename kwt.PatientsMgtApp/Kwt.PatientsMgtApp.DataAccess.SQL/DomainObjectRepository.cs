@@ -164,7 +164,12 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 dbContext.Set<T>().Remove(obj);
             return dbContext.SaveChanges();
         }
-
+        //
+        public int Delete(string command) 
+        {
+            return dbContext.Database.ExecuteSqlCommand(command);
+        }
+            //
         public int Update<T>(T TObject) where T : class, IDomainObject
         {
 

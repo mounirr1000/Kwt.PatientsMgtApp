@@ -13,131 +13,132 @@
     </p>
 </div>
 <div class="loader"></div>
-<div id="contentPatientDetail" style="visibility:hidden;">
-    <ul id="panelbarPatient">
-        <li class="k-link k-state-active">
-            <h3>Patient Information</h3>
-            <ul>
-                <li>
-                    <table id="patientinfo">
+<div id="contentPatientDetail" style="visibility: hidden;">
+    <button data-target="#panelbarPatient" data-toggle="collapse"><i></i> Patient Information</button>
+<fieldset id="panelbarPatient" class="collapse show">
+    <legend></legend>
+    
+        <h3>Patient Information</h3>
+    <ul>
+        <li>
+            <table id="patientinfo">
 
-                        <thead>
-                            <tr>
-                                <th>
-                                    Patient CID
-                                </th>
-                                <th>
-                                    Name
-                                </th>
+                <thead>
+                <tr>
+                    <th>
+                        Patient CID
+                    </th>
+                    <th>
+                        Name
+                    </th>
 
-                                <th>
-                                    KU Phone
-                                </th>
-                                <th>
-                                    US Phone
-                                </th>
-                                <th>
-                                    Start Date
-                                </th>
-                                <th>
-                                    End Date
-                                </th>
-                                <th>
-                                    Status
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    @Model.PatientCID
-                                </td>
-                                <td>
-                                    @Model.Name
-                                </td>
-                                <td>
-                                    @Model.KWTPhone
-                                </td>
-                                <td>
-                                    @Model.USPhone
-                                </td>
-                                <td>
-                                    @Model.FirstApptDAteFormatted
-                                </td>
-                                <td>
-                                    @Model.EndTreatDateFormatted
-                                </td>
-                                <td>
-                                    @if (Model.IsActive)
-                                    {
-                                        <span style="color: yellowgreen"> Active</span>
-                                    }
-                                    else
-                                    {<span style="color: lightcoral"> Not Active</span>}
-                                </td>
-                            </tr>
-                        </tbody>
+                    <th>
+                        KU Phone
+                    </th>
+                    <th>
+                        US Phone
+                    </th>
+                    <th>
+                        Start Date
+                    </th>
+                    <th>
+                        End Date
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        @Model.PatientCID
+                    </td>
+                    <td>
+                        @Model.Name
+                    </td>
+                    <td>
+                        @Model.KWTPhone
+                    </td>
+                    <td>
+                        @Model.USPhone
+                    </td>
+                    <td>
+                        @Model.FirstApptDAteFormatted
+                    </td>
+                    <td>
+                        @Model.EndTreatDateFormatted
+                    </td>
+                    <td>
+                        @if (Model.IsActive)
+                        {
+                            <span style="color: yellowgreen"> Active</span>
+                        }
+                        else
+                        {<span style="color: lightcoral"> Not Active</span>}
+                    </td>
+                </tr>
+                </tbody>
 
-                    </table>
-                </li>
-            </ul>
-
-        </li>
-        <li class="k-link k-state-active">
-            <h3>Medical Information</h3>
-            <ul>
-                <li>
-                    <table id="patientDiseaseInfo">
-
-                        <thead>
-                            <tr>
-
-                                <th>
-                                    Hospital
-                                </th>
-                                <th>
-                                    Doctor
-                                </th>
-                                <th>
-                                    Specilty
-                                </th>
-                                <th>
-                                    Dignosis
-                                </th>
-                                <th>
-                                    Agency
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-
-                                <td>
-                                    @Model.Hospital
-                                </td>
-                                <td>
-                                    @Model.Doctor
-                                </td>
-                                <td>
-                                    @Model.Specialty
-                                </td>
-                                <td>
-                                    @Model.Diagnosis
-                                </td>
-                                <td>
-                                    @Model.Agency
-                                </td>
-                            </tr>
-                        </tbody>
-
-                    </table>
-                </li>
-            </ul>
-
+            </table>
         </li>
     </ul>
-    <ul id="panelbarCompanion">
-        <li>
+    
+        <h3>Medical Information</h3>
+        <ul>
+            <li>
+                <table id="patientDiseaseInfo">
+
+                    <thead>
+                    <tr>
+
+                        <th>
+                            Hospital
+                        </th>
+                        <th>
+                            Doctor
+                        </th>
+                        <th>
+                            Specilty
+                        </th>
+                        <th>
+                            Dignosis
+                        </th>
+                        <th>
+                            Agency
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+
+                        <td>
+                            @Model.Hospital
+                        </td>
+                        <td>
+                            @Model.Doctor
+                        </td>
+                        <td>
+                            @Model.Specialty
+                        </td>
+                        <td>
+                            @Model.Diagnosis
+                        </td>
+                        <td>
+                            @Model.Agency
+                        </td>
+                    </tr>
+                    </tbody>
+
+                </table>
+            </li>
+        </ul>
+
+    
+</fieldset>
+    <button data-target="#panelbarCompanion" data-toggle="collapse"><i></i> Companions Information</button>
+    <fieldset id="panelbarCompanion" class="collapse">
+        <legend></legend>
             <h3>Priamary Companions Information</h3>
             <ul>
 
@@ -176,7 +177,7 @@
                                 {
                                     <tr>
                                         <td>
-                                            @companion.CompanionCID
+                                            <a href='@Url.Action("Details", "Companion")?CompanionCid=@companion.CompanionCID'>@companion.CompanionCID</a>
                                         </td>
                                         <td>
                                             @companion.Name
@@ -228,8 +229,8 @@
 
             </ul>
 
-        </li>
-        <li>
+        
+        
             <h3>Secondary Companions Information</h3>
             <ul>
 
@@ -320,12 +321,13 @@
 
             </ul>
 
-        </li>
-    </ul>
+        
+    </fieldset>
     @if (User.IsInAnyRoles("Admin", "Manager", "Auditor"))
     {
-        <ul id="panelbarPayment">
-            <li>
+        <button data-target="#panelbarPayment" data-toggle="collapse"><i></i> Payments Information</button>
+        <fieldset id="panelbarPayment" class="collapse">
+            <legend></legend>
                 <h3>Payments Information</h3>
                 <ul>
 
@@ -421,11 +423,12 @@
 
                 </ul>
 
-            </li>
-        </ul>
+            
+        </fieldset>
     }
-    <ul id="panelbarPatientHistory">
-        <li>
+    <button data-target="#panelbarPatientHistory" data-toggle="collapse"><i></i> Record History</button>
+    <fieldset id="panelbarPatientHistory" class="collapse">
+        <legend></legend>
             <h3>Patient History</h3>
             @if (Model.PatientHistories.Any())
             {
@@ -504,8 +507,8 @@
                 </ul>
                 
             }
-        </li>
-        <li>
+        
+        
             <h3>Companions History</h3>
             @if (Model.CompanionHistories.Any())
             {
@@ -602,8 +605,8 @@
                 </ul>
                 
             }
-        </li>
-    </ul>
+        
+    </fieldset>
 
 </div>
 @section Scripts{
@@ -611,6 +614,23 @@
 
         $('document').ready(function () {
             $("#contentPatientDetail").css("visibility", "visible");
+
+            $('#contentPatientDetail button').addClass('btn btn-block mb-2 text-uppercase text-white bg-info');
+            //fa fa-angle-double-down pull-left
+            $('#contentPatientDetail button i').addClass('fa fa-angle-double-down pull-left');
+
+
+            $('#contentPatientDetail button').click(function (e) {
+                e.preventDefault();
+                var $this = this;
+                var caret = $($this).find('i');
+                if ($(caret).hasClass('fa-angle-double-down'))
+                    $(caret).removeClass('fa-angle-double-down').addClass("fa-angle-double-up");
+                else
+                    $(caret).removeClass('fa-angle-double-up').addClass("fa-angle-double-down");
+
+            });
+
             $("#panelbarPatient").kendoPanelBar();
             $("#panelbarCompanion").kendoPanelBar();
             $("#panelbarPayment").kendoPanelBar();

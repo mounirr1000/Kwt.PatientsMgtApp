@@ -1,5 +1,5 @@
 ﻿
-@model HandleErrorInfo
+@*@model HandleErrorInfo
 @{
     ViewBag.Title = "Sorry, there was a problem!";
 }
@@ -7,4 +7,14 @@
 <div class="alert-danger">
     
     @Model.Exception.Message
-</div>
+</div>*@
+@model HandleErrorInfo
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4>Error Details:</h4>
+<p>Controller Name: @Model.ControllerName</p>
+<p>Action Name: @Model.ActionName</p>
+<p>Exception: @Model.Exception</p> 
