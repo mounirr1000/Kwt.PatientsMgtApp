@@ -23,6 +23,14 @@ namespace Kwt.PatientsMgtApp.WebUI.Tests
         }
 
         [TestMethod]
+        public void GetNextPatientPayment()
+        {
+            int? numberOfDays = -3;
+            var patientList = _paymentRepository.GetNextPatientPayment(numberOfDays);
+            Assert.IsNotNull(patientList);
+
+        }
+        [TestMethod]
         public void GetPaymentByIdTest()
         {
             int id = 5;

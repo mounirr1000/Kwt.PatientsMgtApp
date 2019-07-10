@@ -25,5 +25,10 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public Nullable<decimal> FinalAmount { get; set; }
         public Nullable<decimal> DeductedAmount { get; set; }
         public System.DateTime CreatedDate { get; set; }
+        //new 
+        public int? TotalPayments { get; set; }
+        public int? TotalPatients { get; set; }
+        public decimal? TotalAmount { get; set; }
+
     }
 }

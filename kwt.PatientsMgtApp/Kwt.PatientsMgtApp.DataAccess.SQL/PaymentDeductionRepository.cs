@@ -63,7 +63,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 //Id = p.PaymentID,
                // BeneficiaryCID = p.Beneficiary.BeneficiaryCID,
                 PayRateID = p.PayRateID,
-                PatientPhone = p.Patient.KWTphone ?? p.Patient.USphone,
+                PatientPhone =  p.Patient.USphone ?? p.Patient.KWTphone,
                 Payment = new PaymentModel()
                 {
                     PaymentID = p.Payment.PaymentID,

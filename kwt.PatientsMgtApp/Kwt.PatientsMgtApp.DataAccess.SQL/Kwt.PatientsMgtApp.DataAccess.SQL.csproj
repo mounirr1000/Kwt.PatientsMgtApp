@@ -57,6 +57,7 @@
     <Compile Include="CompanionManagmentRepository.cs" />
     <Compile Include="CompanionRepository.cs" />
     <Compile Include="CompanionTypeRepository.cs" />
+    <Compile Include="DeductionReasonRepository.cs" />
     <Compile Include="DoctorRepository.cs" />
     <Compile Include="DomainObjectRepository.cs" />
     <Compile Include="ExceptionLoggerRepository.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="ICompanionManagmentRepository.cs" />
     <Compile Include="ICompanionRepository.cs" />
     <Compile Include="ICompanionTypeRepository.cs" />
+    <Compile Include="IDeductionReasonRepository.cs" />
     <Compile Include="IDoctorRepository.cs" />
     <Compile Include="IDomainObjectRepository.cs" />
     <Compile Include="IExceptionLoggerRepository.cs" />

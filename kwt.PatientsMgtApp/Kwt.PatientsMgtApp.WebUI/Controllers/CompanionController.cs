@@ -317,6 +317,10 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         private void ValidatePatient(CompanionModel companion, string primaryCompanionType, bool isEdit = false)
         {
             var patient = _patientRepository.GetPatient(companion.PatientCID);
+            // we need to check if this patient already have companion
+            var companionList = _companionRepository.GetCompanions();//check if this companion already exist with the same patient
+            var existingCompanions = companionList?.Where(c => c.PatientCID == companion.PatientCID).ToList();
+
             if (patient == null && ModelState.IsValidField("PatientCID"))
             {
                 ModelState.AddModelError("PatientCID", "There is no patient in our record with this CID");
@@ -328,16 +332,30 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                     if (patient.IsBeneficiary && companion.IsBeneficiary)
                         ModelState.AddModelError("IsBeneficiary", "The patient with " + companion.PatientCID + " CID associated with this companion is already Beneficiary, You can't have the companion as beneficiary");
                     if (!patient.IsBeneficiary && !companion.IsBeneficiary)
-                        if (ModelState.IsValidField("CompanionType") && companion.CompanionType == primaryCompanionType)
-                            ModelState.AddModelError("IsBeneficiary", "The patient with " + companion.PatientCID +
-                                        " CID associated with this companion is Not Beneficiary, So you need to set this companion as Beneficiary");
+                    {
+                        // new 
+                        if ((existingCompanions != null &&
+                            !existingCompanions.Exists(
+                                c => c.IsActive && c.IsBeneficiary && c.CompanionType == primaryCompanionType)) 
+                                || existingCompanions==null)
+                        {
+                            // means no primary active beneficiary companion with this patient
+                            if (ModelState.IsValidField("CompanionType") && companion.CompanionType == primaryCompanionType)
+                                ModelState.AddModelError("IsBeneficiary", "The patient with " + companion.PatientCID +
+                                            " CID associated with this companion is Not Beneficiary," +
+                                              " and no companion with this patient is set as Beneficiary," +
+                                             " So you need to set this companion as Beneficiary since is primary");
+                        }
+                            
+                        
+                    }
+                        
                 }
 
             }
             if (patient != null)
             {
-                var companionList = _companionRepository.GetCompanions();//check if this companion already exist with the same patient
-                var existingCompanions = companionList?.Where(c => c.PatientCID == companion.PatientCID).ToList();
+               
                 //if (ModelState.IsValidField("CompanionType") && companion.CompanionType == primaryCompanionType)//primary companion
                 //{
 
@@ -361,10 +379,13 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                         }
                     }
                     else
-                    {
+                    { // list of companion with the same patient ( 2 primary  1 active 1 nonactive)
                         if (existingCompanions.Exists(c => c.CompanionType == primaryCompanionType 
                             && c.IsActive 
-                            && c.CompanionCID!=companion.CompanionCID))
+                            && c.CompanionCID!=companion.CompanionCID
+                            // new 
+                            && companion.CompanionType == primaryCompanionType
+                            ))
                         {
                             ModelState.AddModelError("CompanionType",
                                 "There is already a primary companion with this patient, you need to make this companion non primary");

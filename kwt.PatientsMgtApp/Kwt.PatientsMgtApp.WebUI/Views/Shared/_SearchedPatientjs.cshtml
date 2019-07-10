@@ -1,0 +1,168 @@
+﻿@using Kwt.PatientsMgtApp.Core.Models
+@{
+    var patient = (PatientModel)TempData["searchedPatient"] ?? new PatientModel();
+}
+<script src="https://kendo.cdn.telerik.com/2018.2.516/js/pako_deflate.min.js"></script>
+<script type="text/javascript">
+    $('document').ready(function () {
+
+        var patientdata = @Html.Raw(Json.Encode(patient));
+        console.log(patientdata);
+        var patientInfo = [];
+        patientInfo.push(patientdata);
+        var isAdmin =   @Html.Raw(Json.Encode(User.IsInRole("Admin")));
+        function getTemplate(paymentId) {
+            if (isAdmin) {
+                return '<a href="javascript:confirmDelete('+paymentId+','+'\'paymentId\''+')" id='+paymentId+'> <i class="fa fa-times fa-2x" style="color: lightcoral"></i></a>';
+            }
+            return '';
+        }
+
+        $("#searchedPatientDetail").kendoGrid({
+            dataSource: {
+                data: patientInfo
+            },
+            resizable: true,
+            columns: [
+                {
+                    field: "Agency",
+                    title: "Agency"
+
+                },
+                {
+                    field: "Name",
+                    title: "Name"
+                },
+                {
+                    field: "USPhone",
+                    title: "US Phone"
+                },
+                {
+                    field: "IsBeneficiary",
+                    title: "IsBeneficiary"
+                },
+                {
+                    field: "Doctor",
+                    title: "Doctor"
+
+                },
+                {
+                    field: "FirstApptDAteFormatted",
+                    title: "Date In"
+
+                },
+                {
+                    field: "IsActive",
+                    title: "Active"
+                },
+                {
+                    field: "Hospital",
+                    title: "Hospital"
+                },
+                //{
+                //    field: "Id",
+                //    title: "Delete",
+                //    template: getTemplate('#=Id#'),
+                //    hidden: !isAdmin
+                //}
+            ]
+        });
+
+        var patientBenefeciary = [];
+        patientBenefeciary.push(patientdata.Beneficiary);
+         $("#searchedPatientBenefeciary").kendoGrid({
+                dataSource: {
+                    data: patientBenefeciary
+                },
+                resizable: true,
+                columns: [
+                    {
+                        field: "BeneficiaryCID",
+                        title: "Ben CID"
+
+                    },
+                    {
+                        field: "BeneficiaryFName",
+                        title: "Ben FName"
+                    },
+                    {
+                        field: "BeneficiaryMName",
+                        title: "Bene MName"
+                    },
+                    {
+                        field: "BeneficiaryLName",
+                        title: "Ben LName"
+                    },
+                    {
+                        field: "IBan",
+                        title: "IBan",
+                        width: 320
+
+                    },
+                    //{
+                    //    field: "BankCode",
+                    //    title: "Bank Code"
+
+                    //},
+                    //{
+                    //    field: "BankName",
+                    //    title: "Bank Name"
+                    //}
+                    
+                ]
+         });
+         
+         
+        
+         $("#searchedPatientPayment").kendoGrid({
+             dataSource: {
+                 data: patientdata.Payments
+             },
+             resizable: true,
+             columns: [
+                 {
+                     field: "PaymentID",
+                     title: "Voucher #"
+                 },{
+                     field: "PaymentDateFormatted",
+                     title: "Payment Date"
+
+                 }, 
+                 {
+                     field: "PaymentStartDateFormatted",
+                     title: "Start Date"
+                 },
+                 {
+                     field: "PaymentEndDateFormatted",
+                     title: "End Date"
+                 },
+                 {
+                     field: "TotalDue",
+                     title: "Amount"
+                 },
+                 {
+                     field: "DeductedAmount",
+                     title: "Deducted Amount",
+                     width: 150
+                 },                 
+                 {
+                     field: "FinalAmountAfterCorrection",
+                     title: "Final Amount"
+                 },                 
+                 {
+                     field: "DeductionNotes",
+                     title: "Deduction Notes",
+                     width: 270
+                 }
+                 //,
+                 //{
+                 //    field: "PaymentDeductions",
+                 //    title: "has Deduction",
+                 //    template: "#if(PaymentDeductions!=null && PaymentDeductions.count>0 ){# Yes #}else{# No #}#"
+                 //}
+                 
+                    
+             ]
+         });
+    });
+</script>

@@ -20,7 +20,9 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="org-col-md-3">
-                                <table>
+                                <label>Patient Info</label>
+                                <div id="searchedPatientDetail"></div>
+                                @*<table>
                                     <tr>
                                         <td class="title">Agency:</td>
                                         <td>@patient.Agency</td>
@@ -37,10 +39,12 @@
                                         <td class="title">Hospital:</td>
                                         <td>@patient.Hospital</td>
                                     </tr>
-                                </table>
+                                </table>*@
                             </div>
                             <div class="org-col-md-4">
-                                <table>
+                                <label>Benefeciary Info</label>
+                                <div id="searchedPatientBenefeciary"></div>
+                                @*<table>
                                     <tr>
                                         <td class="title">Active Status</td>
                                         <td>
@@ -76,11 +80,13 @@
                                         <td class="title">Specialty</td>
                                         <td>@patient.Specialty</td>
                                     </tr>
-                                </table>
+                                </table>*@
 
                             </div>
                             <div class="org-col-md-3">
-                                <table>
+                                <label>History of Last 3 Payments:</label>
+                                <div id="searchedPatientPayment"></div>
+                                @*<table>
                                     <tr>
                                         <td class="title">Us Phone/Hospital Phone:</td>
                                         <td>@patient.USPhone</td>
@@ -89,12 +95,12 @@
                                         <td class="title">End Treatment Date</td>
                                         <td>@patient.EndTreatDate</td>
                                     </tr>
-                                </table>
+                                </table>*@
 
                             </div>
                             @if (User.IsInAnyRoles("Admin", "Super Admin", "Accountant", "Auditor")) {
                             <div class="org-col-md-3">
-                                <table>
+                                @*<table>
                                     <tr>
                                         <td class="title">Bank:</td>
                                         <td>@patient.BankName</td>
@@ -107,7 +113,20 @@
                                         <td class="title">IBan</td>
                                         <td>@patient.Iban</td>
                                     </tr>
-                                </table>
+                                   
+                                    <tr>
+                                        <td class="title">Bank:</td>
+                                        <td>@patient.BankName</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="title">Bank Code:</td>
+                                        <td>@patient.BankCode</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="title">IBan</td>
+                                        <td>@patient.Iban</td>
+                                    </tr>
+                                </table>*@
 
                             </div>
                             }
@@ -118,3 +137,71 @@
             </div>
         </div>
     </div>
+
+@section Scripts {
+
+    @*<script src="https://kendo.cdn.telerik.com/2018.2.516/js/pako_deflate.min.js"></script>
+
+    <script type="text/javascript">
+        var data = @Html.Raw(Json.Encode(patient));
+        console.log(data);
+        $('document').ready(function () {
+
+            var data = @Html.Raw(Json.Encode(patient));
+            console.log(data);
+            var isAdmin =   @Html.Raw(Json.Encode(User.IsInRole("Admin")));
+            function getTemplate(paymentId) {
+                if (isAdmin) {
+                    return '<a href="javascript:confirmDelete('+paymentId+','+'\'paymentId\''+')" id='+paymentId+'> <i class="fa fa-times fa-2x" style="color: lightcoral"></i></a>';
+                }
+                return '';
+            }
+            var grid =  $("#patientDetail").kendoGrid({
+                resizable: true,
+
+                columns: [{
+                    field: "Id",
+                    title: "Voucher#",
+
+                    template: "<a href='@Url.Action("Details", "Payment")?paymentId=#= Id#'>#= Id #</a>"
+
+                },
+                {
+                    field: "PaymentDateFormatted",
+                    title: "Payment Date"
+                },
+                {
+                    field: "PatientCID",
+                    title: "P_CID"
+                },
+                {
+                    field: "CompanionCID",
+                    title: "C_CID"
+                },
+
+                {
+                    field: "PaymentStartDateFormatted",
+                    title: "From"
+
+                },
+                {
+                    field: "PaymentEndDateFormatted",
+                    title: "To"
+
+                },
+                {
+                    field: "TotalDue",
+                    title: "Final Amount"
+                },{
+                    field: "Id",
+                    title: "Delete",
+                    template: getTemplate('#=Id#'),
+                    hidden: !isAdmin
+                }],
+                dataSource: {
+                    data: data
+                }
+            }).data("kendoGrid");
+        });
+    </script>*@
+}

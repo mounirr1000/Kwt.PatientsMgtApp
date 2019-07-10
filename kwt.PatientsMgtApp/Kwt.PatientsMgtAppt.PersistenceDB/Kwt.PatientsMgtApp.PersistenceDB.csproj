@@ -70,10 +70,16 @@
     <Compile Include="EDMX\CompanionType.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
+    <Compile Include="EDMX\DeductionReason.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
     <Compile Include="EDMX\Doctor.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
     <Compile Include="EDMX\ExceptionLogger.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\GetNextPaymentPatientList_SP_Result.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
     <Compile Include="EDMX\GetPatientListReport_SP_Result.cs">

@@ -127,6 +127,14 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             return RedirectToAction("List");
         }
         //
+        //new June 29, 2019
+        [ExceptionHandler]
+        public JsonResult GetNextPayment(int? numberOfDays = null)
+        {
+            var payments = _paymentRepository.GetNextPatientPayment(numberOfDays);
+            return Json(payments, JsonRequestBehavior.AllowGet);
+        }
+        //
         [ExceptionHandler]
         public ActionResult Details(int paymentId)
         {
@@ -234,7 +242,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             return View(payment);
         }
         [HttpPost]
-        //[ExceptionHandler]
+        [ExceptionHandler]
         public ActionResult Edit(PaymentModel pay)
         {
             ValidatePayment(pay, true);
@@ -453,42 +461,33 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             {           // check if the start date is between the history start date and end date   history.startDate  <= new.startDate <= history.endDate
                         //history.endDate  <= new.EndDate <= history.startDate
                 var startDateConflictPayment = historyPayments.Any
-                    (p =>
-                    //   (p.PaymentStartDate <= payment.PaymentStartDate && payment.PaymentStartDate <= p.PaymentEndDate)
-                    //|| (payment.PaymentEndDate <= p.PaymentEndDate && payment.PaymentEndDate >= p.PaymentStartDate)
-                    //|| (payment.PaymentStartDate <= p.PaymentStartDate && payment.PaymentEndDate >= p.PaymentEndDate)
-                    //new
-                    //  (((p.PaymentStartDate <= payment.PaymentStartDate) && (p.PaymentEndDate >= payment.PaymentEndDate)) 
-                    //|| ((payment.PaymentStartDate <= p.PaymentStartDate) && (p.PaymentEndDate <= payment.PaymentEndDate)) 
-                    //|| ((payment.PaymentStartDate <= p.PaymentStartDate) && (payment.PaymentEndDate <= p.PaymentEndDate))
-                    //|| ((p.PaymentStartDate <= payment.PaymentStartDate) && (p.PaymentEndDate >= payment.PaymentEndDate))
-                    //new 3/4/2019 3/15/2019
-                    ((
-                        //payment.PaymentStartDate>p.PaymentStartDate && payment.PaymentStartDate >p.PaymentEndDate 
-                        //  && payment.PaymentStartDate<payment.PaymentEndDate) 
-                        //||(payment.PaymentEndDate<p.PaymentStartDate && payment.PaymentStartDate < payment.PaymentEndDate)
-                        //(StartDate1 <= EndDate2) and (StartDate2 <= EndDate1)
-                        //(StartA <= EndB)  and  (EndA >= StartB)  a=>payment b=>p
-                        (payment.PaymentStartDate <= p.PaymentEndDate) && (payment.PaymentEndDate>=p.PaymentStartDate)
-                    )));
+                    (p => (payment.PaymentStartDate <= p.PaymentEndDate) && (payment.PaymentEndDate>=p.PaymentStartDate));
 
                 if (!isEdit && startDateConflictPayment)
                 {
-                    ModelState.AddModelError("PaymentStartDate", "Conflicts with old payment, check payments history to select correct date");
-                    ModelState.AddModelError("PaymentEndDate", "Conflicts with old payment, check payments history to select correct date");
-                    
+                    var duplicateList =
+                        historyPayments.Where(
+                            p =>
+                                (payment.PaymentStartDate <= p.PaymentEndDate) &&
+                                (payment.PaymentEndDate >= p.PaymentStartDate)).ToList();
+                    //add error only when
+                    if (payment.CompanionCID !=null
+                        && duplicateList.Any(dp=>(dp.CompanionCID==payment.CompanionCID) 
+                        && payment.CompanionAmount>0
+                        && dp.CompanionAmount>0
+                        //&& ( dp.CompanionAmount== payment.CompanionAmount )
+                        ))// trying to pay companion that was already paid
+                    {
+                        ModelState.AddModelError("PaymentStartDate", "Conflicts with old payment, This Companion already got paid with this start date, please check history payments");
+                        ModelState.AddModelError("PaymentEndDate", "Conflicts with old payment, This Companion already got paid with this end date, please check history payments");
+                    }
+                    if (payment.PatientAmount>0
+                        && duplicateList.Any(dp => (dp.PatientAmount>0)))// patient already got paid in the conflicted period
+                    {
+                        ModelState.AddModelError("PaymentStartDate", "Conflicts with old payment, This Patient already got paid with this start date, please check history payment");
+                        ModelState.AddModelError("PaymentEndDate", "Conflicts with old payment, This Patient already got paid with this start date, please check history payment");
+                    }
                 }
-                //var endDateConflictPayment = historyPayments.Any
-                //                           (p =>
-                //                                 //  (payment.PaymentEndDate <= p.PaymentEndDate && payment.PaymentEndDate >= p.PaymentStartDate) 
-                //                                 //||(payment.PaymentEndDate <= p.PaymentEndDate && payment.PaymentStartDate < p.PaymentStartDate));
-                //                                 (payment.PaymentEndDate > p.PaymentEndDate && payment.PaymentEndDate > p.PaymentStartDate)
-                //                               || (payment.PaymentEndDate < p.PaymentEndDate && payment.PaymentEndDate < p.PaymentStartDate));
-
-                //if (!isEdit && !endDateConflictPayment)
-                //{
-                //    ModelState.AddModelError("PaymentEndDate", "Conflicts with old payment, check payments history to select correct date");
-                //}
             }
             
         }

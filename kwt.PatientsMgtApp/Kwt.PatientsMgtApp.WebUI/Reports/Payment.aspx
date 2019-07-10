@@ -11,7 +11,7 @@
     <link href="../Content/kendo.common.min.css" rel="stylesheet" />
     <link href="../Content/kendo.metro.min.css" rel="stylesheet" />
     <link href="../Content/Site.css" rel="stylesheet" />
-    <link href="../Content/fontawesome/font-awesome.min.css" rel="stylesheet" />
+    <%--<link href="../Content/fontawesome/font-awesome.min.css" rel="stylesheet" />--%>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -50,42 +50,70 @@
         <%--<div class="row">
             <asp:ImageButton ID="btnPrint" AlternateText="Print Report" runat="server" OnClick="btnPrint_Click"  />
         </div>--%>
-           <div class="panel-group">
+        <%--   Format:
+    <asp:RadioButtonList ID="rbFormat" runat="server" RepeatDirection="Horizontal">
+        <asp:ListItem Text="Word" Value="WORD" Selected="True" />
+        <asp:ListItem Text="Excel" Value="EXCEL" />
+        <asp:ListItem Text="PDF" Value="PDF" />
+        <asp:ListItem Text="Image" Value="IMAGE" />
+    </asp:RadioButtonList>
+    <br />
+    <asp:Button ID="btnExport" Text="Export" runat="server" OnClick="Export" />--%>
+        <div class="panel-group">
             <div id="panelbar" class="panel">
                 <div class="panel-success">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" href="#collapse1"><span class="p-2"><i class="fa fa-search"></i> Filter Payment Report</span> <i class="fa fa-angle-down"></i></a>
+                        <a data-toggle="collapse" href="#collapse1"><span class="p-2" style="text-decoration: underline">
+                            Filter Payment Report
+                        </span><i class="fa fa-angle-down"></i></a>
                     </h4>
 
                 </div>
                 <div id="collapse1" class="panel-collapse collapse">
-                    <div class="panel-body" >
+                    <div class="panel-body">
+                        <ul class="row" style="list-style: none">
+                            <li class="col-md-3">
+                                <label style="text-transform: uppercase;" for="ReportTypes">Select Report Type</label>
+                                <asp:DropDownList ID="ReportTypes" runat="server" Style="margin-bottom: 21px;" CssClass="k-dropdown" OnSelectedIndexChanged="reportTypes_SelectedIndexChanged">
+                                    <asp:ListItem Text="BANK REPORT" Value="1"></asp:ListItem>
+                                    <asp:ListItem Text="ARCHIVE REPORT" Value="2"></asp:ListItem>
+                                    <asp:ListItem Text="DETAILS REPORT" Value="3" Selected="True"></asp:ListItem>
+                                </asp:DropDownList>
+                            </li>
+                        </ul>
+                        <hr />
                         <ul class="fieldlistReport" style="margin: 0">
+                            <%-- new --%>
+                            <%--<li class="editor-field">
+                                
+                            </li>--%>
                             <li class="editor-field">
 
                                 <label class="" for="StartDate">Payment Start Date</label>
-                               
-                               <asp:TextBox ID="StartDate" runat="server" ></asp:TextBox>
+
+                                <asp:TextBox ID="StartDate" runat="server"></asp:TextBox>
                             </li>
-                           <li class="editor-field">
+                            <li class="editor-field">
 
                                 <label class="" for="EndDate">Payment End Date</label>
-                               
-                              <asp:TextBox ID="EndDate" runat="server" ></asp:TextBox>
+
+                                <asp:TextBox ID="EndDate" runat="server"></asp:TextBox>
                             </li>
-                             <li class="editor-field">
+                            <li class="editor-field">
 
                                 <label class="" for="PatientCid">Patient Cid</label>
-                               
-                               <asp:TextBox ID="PatientCid" runat="server" Class="k-textbox"></asp:TextBox>
+
+                                <asp:TextBox ID="PatientCid" runat="server" Class="k-textbox"></asp:TextBox>
                             </li>
                             <li class="editor-field">
                                 <label class="">&nbsp;</label>
-                               
+
                                 <asp:LinkButton ID="LinkSearchButton" runat="server" Class="k-button" OnClick="Search_Click"><i class="fa fa-search" style="color:yellowgreen"></i> Search</asp:LinkButton>
                                 <asp:LinkButton ID="LinkClearButton" runat="server" Class="k-button" OnClick="Clear_Click"><i class="fa fa-ban" style="color:lightblue"></i> Clear</asp:LinkButton>
-                                
+
+
                             </li>
+
                         </ul>
                     </div>
 
@@ -93,13 +121,13 @@
             </div>
         </div>
         <asp:PlaceHolder ID="ErrorMessage" runat="server" Visible="False">
-           <div class="mt-3 mb-3" >
-            <asp:Label ID="Message" runat="server"  Class="alert alert-danger"></asp:Label>
-        </div> 
-        </asp:PlaceHolder>  
+            <div class="mt-3 mb-3">
+                <asp:Label ID="Message" runat="server" Class="alert alert-danger"></asp:Label>
+            </div>
+        </asp:PlaceHolder>
         <div>
 
-           <%-- <asp:Label ID="Message" runat="server" Text="" CssClass="alert-danger"></asp:Label>--%>
+            <%-- <asp:Label ID="Message" runat="server" Text="" CssClass="alert-danger"></asp:Label>--%>
             <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
             <rsweb:ReportViewer ID="ReportViewer1" runat="server" AsyncRendering="false"
                 PageCountMode="Actual"

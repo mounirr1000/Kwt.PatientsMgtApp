@@ -293,7 +293,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         {
             var url = System.Web.HttpContext.Current.Request.UrlReferrer;
 
-            var patient = _patientRepository.GetPatient(patientCid);
+            var patient = _patientRepository.GetSearchedPatient(patientCid);
             string controllerName = (string)TempData["controller"] ?? "Home";
             string actionName = (string)TempData["action"] ?? "Index";
 

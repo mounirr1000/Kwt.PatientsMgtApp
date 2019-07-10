@@ -20,5 +20,19 @@ namespace Kwt.PatientsMgtApp.Core
             Anticipated = 1,
             Confirmed = 2
         }
+
+        public enum PayRates
+        {
+            PatientRate = 75,
+            CompanionRate = 25,
+            Other = 0
+        }
+
+        public enum ReportType
+        {
+            Kuwait = 1,
+            Archive = 2,
+            Details = 0
+        }
     }
 }

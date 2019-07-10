@@ -43,6 +43,8 @@
         <AssociationConnector Association="PatientsMgtModel.FK_PaymentDeductions_Patients" />
         <AssociationConnector Association="PatientsMgtModel.FK_PaymentDeductions_Payments" />
         <AssociationConnector Association="PatientsMgtModel.FK_PaymentDeductions_PayRates" />
+        <EntityTypeShape EntityType="PatientsMgtModel.DeductionReason" Width="1.5" PointX="14.375" PointY="0.75" />
+        <AssociationConnector Association="PatientsMgtModel.FK_PaymentDeductions_DeductionReasons" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

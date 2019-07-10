@@ -3,6 +3,7 @@
 /// <reference path="bootstrap.min.js" />
 /// <reference path="esm/popper.js" />
 /// <reference path="esm/popper-utils.js" />
+/// <reference path="jquery.unobtrusive-ajax.min.js" />
 /// <reference path="jquery.validate.min.js" />
 /// <reference path="jquery.validate.unobtrusive.min.js" />
 /// <reference path="jquery-3.3.1.min.js" />

@@ -61,7 +61,7 @@ namespace Kwt.PatientsMgtApp.Core.Models
         [DisplayName("Total Deduction")]
         public Nullable<decimal> TotalDeduction { get; set; }
 
-        [DisplayName("Amount Paid")]
+        [DisplayName("Amount To Be Paid")]
         public Nullable<decimal> AmountPaid { get; set; }
 
         [DisplayName("Final Amount")]
@@ -112,6 +112,13 @@ namespace Kwt.PatientsMgtApp.Core.Models
         [DisplayName("Last Payment End Date")]
         [DataType(DataType.Date)]
         public Nullable<System.DateTime> LastPaymentEndDate { get; set; }
+
+        //new
+        [DisplayName("Patient Deduction Rate")]
+        public decimal? PatientDeductionRate { get; set; }
+
+        [DisplayName("Comp Deduction Rate")]
+        public decimal? CompanionDeductionRate { get; set; }
         public String LastPaymentEndDateFormatted { get { return String.Format("{0:d}", LastPaymentEndDate); } }
 
         public List<BeneficiaryModel> Beneficiaries { get; set; }
@@ -124,5 +131,11 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public string PatientPhone { get; set; }
         //
         public List<PaymentModel> Payments { get; set; }
+
+        //new 7/7/2019
+        public List<DeductionReasonModel> DeductionReasons { get; set; }
+
+        [DisplayName("Deduction Reason")]
+        public int? DeductionReasonId { get; set; }
     }
 }

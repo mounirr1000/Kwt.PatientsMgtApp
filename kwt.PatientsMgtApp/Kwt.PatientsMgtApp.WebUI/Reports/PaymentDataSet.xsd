@@ -51,7 +51,7 @@
   <xs:element name="PaymentDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="PaymentDataSet" msprop:Generator_UserDSName="PaymentDataSet">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="GetPaymentListReport_SP" msprop:Generator_TableClassName="GetPaymentListReport_SPDataTable" msprop:Generator_TableVarName="tableGetPaymentListReport_SP" msprop:Generator_TablePropName="GetPaymentListReport_SP" msprop:Generator_RowDeletingName="GetPaymentListReport_SPRowDeleting" msprop:Generator_RowChangingName="GetPaymentListReport_SPRowChanging" msprop:Generator_RowEvHandlerName="GetPaymentListReport_SPRowChangeEventHandler" msprop:Generator_RowDeletedName="GetPaymentListReport_SPRowDeleted" msprop:Generator_UserTableName="GetPaymentListReport_SP" msprop:Generator_RowChangedName="GetPaymentListReport_SPRowChanged" msprop:Generator_RowEvArgName="GetPaymentListReport_SPRowChangeEvent" msprop:Generator_RowClassName="GetPaymentListReport_SPRow">
+        <xs:element name="GetPaymentListReport_SP" msprop:Generator_TableClassName="GetPaymentListReport_SPDataTable" msprop:Generator_TableVarName="tableGetPaymentListReport_SP" msprop:Generator_RowChangedName="GetPaymentListReport_SPRowChanged" msprop:Generator_TablePropName="GetPaymentListReport_SP" msprop:Generator_RowDeletingName="GetPaymentListReport_SPRowDeleting" msprop:Generator_RowChangingName="GetPaymentListReport_SPRowChanging" msprop:Generator_RowEvHandlerName="GetPaymentListReport_SPRowChangeEventHandler" msprop:Generator_RowDeletedName="GetPaymentListReport_SPRowDeleted" msprop:Generator_RowClassName="GetPaymentListReport_SPRow" msprop:Generator_UserTableName="GetPaymentListReport_SP" msprop:Generator_RowEvArgName="GetPaymentListReport_SPRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="PaymentID" msdata:ReadOnly="true" msdata:AutoIncrement="true" msprop:Generator_ColumnVarNameInTable="columnPaymentID" msprop:Generator_ColumnPropNameInRow="PaymentID" msprop:Generator_ColumnPropNameInTable="PaymentIDColumn" msprop:Generator_UserColumnName="PaymentID" type="xs:int" />
@@ -124,6 +124,9 @@
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
+              <xs:element name="TotalPayments" msprop:Generator_ColumnVarNameInTable="columnTotalPayments" msprop:Generator_ColumnPropNameInRow="TotalPayments" msprop:Generator_ColumnPropNameInTable="TotalPaymentsColumn" msprop:Generator_UserColumnName="TotalPayments" type="xs:int" minOccurs="0" />
+              <xs:element name="TotalPatients" msprop:Generator_ColumnVarNameInTable="columnTotalPatients" msprop:Generator_ColumnPropNameInRow="TotalPatients" msprop:Generator_ColumnPropNameInTable="TotalPatientsColumn" msprop:Generator_UserColumnName="TotalPatients" type="xs:int" minOccurs="0" />
+              <xs:element name="TotalAmount" msprop:Generator_ColumnVarNameInTable="columnTotalAmount" msprop:Generator_ColumnPropNameInRow="TotalAmount" msprop:Generator_ColumnPropNameInTable="TotalAmountColumn" msprop:Generator_UserColumnName="TotalAmount" type="xs:decimal" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

@@ -45,6 +45,7 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<PaymentDeduction> PaymentDeductions { get; set; }
+        public virtual DbSet<DeductionReason> DeductionReasons { get; set; }
     
         public virtual ObjectResult<GetPatientListReport_SP_Result> GetPatientListReport_SP(string pCid, string hospital, string doctor, Nullable<bool> status, string speciality)
         {
@@ -86,6 +87,15 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
                 new ObjectParameter("endDate", typeof(System.DateTime));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetPaymentListReport_SP_Result>("GetPaymentListReport_SP", pCidParameter, startDateParameter, endDateParameter);
+        }
+    
+        public virtual ObjectResult<GetNextPaymentPatientList_SP_Result> GetNextPaymentPatientList_SP(Nullable<int> numberOfDays)
+        {
+            var numberOfDaysParameter = numberOfDays.HasValue ?
+                new ObjectParameter("numberOfDays", numberOfDays) :
+                new ObjectParameter("numberOfDays", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetNextPaymentPatientList_SP_Result>("GetNextPaymentPatientList_SP", numberOfDaysParameter);
         }
     }
 }

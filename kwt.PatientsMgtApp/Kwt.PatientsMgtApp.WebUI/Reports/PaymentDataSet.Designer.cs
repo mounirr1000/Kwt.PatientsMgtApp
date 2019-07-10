@@ -311,6 +311,12 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             
             private global::System.Data.DataColumn columnCode;
             
+            private global::System.Data.DataColumn columnTotalPayments;
+            
+            private global::System.Data.DataColumn columnTotalPatients;
+            
+            private global::System.Data.DataColumn columnTotalAmount;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public GetPaymentListReport_SPDataTable() {
@@ -474,6 +480,30 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn TotalPaymentsColumn {
+                get {
+                    return this.columnTotalPayments;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn TotalPatientsColumn {
+                get {
+                    return this.columnTotalPatients;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn TotalAmountColumn {
+                get {
+                    return this.columnTotalAmount;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -509,7 +539,25 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public GetPaymentListReport_SPRow AddGetPaymentListReport_SPRow(string PatientCID, System.DateTime StartDate, System.DateTime EndDate, decimal Amount, System.DateTime CreatedDate, decimal FinalAmount, decimal DeductedAmount, string PatientName, string BeneficiaryCID, string BeneficiaryName, string CompanionName, string AgencyName, string IBan, string Bank, string Code) {
+            public GetPaymentListReport_SPRow AddGetPaymentListReport_SPRow(
+                        string PatientCID, 
+                        System.DateTime StartDate, 
+                        System.DateTime EndDate, 
+                        decimal Amount, 
+                        System.DateTime CreatedDate, 
+                        decimal FinalAmount, 
+                        decimal DeductedAmount, 
+                        string PatientName, 
+                        string BeneficiaryCID, 
+                        string BeneficiaryName, 
+                        string CompanionName, 
+                        string AgencyName, 
+                        string IBan, 
+                        string Bank, 
+                        string Code, 
+                        int TotalPayments, 
+                        int TotalPatients, 
+                        decimal TotalAmount) {
                 GetPaymentListReport_SPRow rowGetPaymentListReport_SPRow = ((GetPaymentListReport_SPRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
@@ -527,7 +575,10 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
                         AgencyName,
                         IBan,
                         Bank,
-                        Code};
+                        Code,
+                        TotalPayments,
+                        TotalPatients,
+                        TotalAmount};
                 rowGetPaymentListReport_SPRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowGetPaymentListReport_SPRow);
                 return rowGetPaymentListReport_SPRow;
@@ -573,6 +624,9 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
                 this.columnIBan = base.Columns["IBan"];
                 this.columnBank = base.Columns["Bank"];
                 this.columnCode = base.Columns["Code"];
+                this.columnTotalPayments = base.Columns["TotalPayments"];
+                this.columnTotalPatients = base.Columns["TotalPatients"];
+                this.columnTotalAmount = base.Columns["TotalAmount"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -610,6 +664,12 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
                 base.Columns.Add(this.columnBank);
                 this.columnCode = new global::System.Data.DataColumn("Code", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnCode);
+                this.columnTotalPayments = new global::System.Data.DataColumn("TotalPayments", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnTotalPayments);
+                this.columnTotalPatients = new global::System.Data.DataColumn("TotalPatients", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnTotalPatients);
+                this.columnTotalAmount = new global::System.Data.DataColumn("TotalAmount", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnTotalAmount);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnPaymentID}, true));
                 this.columnPaymentID.AutoIncrement = true;
@@ -1023,6 +1083,56 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int TotalPayments {
+                get {
+                    try {
+                        return ((int)(this[this.tableGetPaymentListReport_SP.TotalPaymentsColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'TotalPayments\' in table \'GetPaymentListReport_SP\' is DBNull" +
+                                ".", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.TotalPaymentsColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int TotalPatients {
+                get {
+                    try {
+                        return ((int)(this[this.tableGetPaymentListReport_SP.TotalPatientsColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'TotalPatients\' in table \'GetPaymentListReport_SP\' is DBNull" +
+                                ".", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.TotalPatientsColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public decimal TotalAmount {
+                get {
+                    try {
+                        return ((decimal)(this[this.tableGetPaymentListReport_SP.TotalAmountColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'TotalAmount\' in table \'GetPaymentListReport_SP\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.TotalAmountColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsPatientCIDNull() {
                 return this.IsNull(this.tableGetPaymentListReport_SP.PatientCIDColumn);
             }
@@ -1187,6 +1297,42 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetCodeNull() {
                 this[this.tableGetPaymentListReport_SP.CodeColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsTotalPaymentsNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.TotalPaymentsColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetTotalPaymentsNull() {
+                this[this.tableGetPaymentListReport_SP.TotalPaymentsColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsTotalPatientsNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.TotalPatientsColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetTotalPatientsNull() {
+                this[this.tableGetPaymentListReport_SP.TotalPatientsColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsTotalAmountNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.TotalAmountColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetTotalAmountNull() {
+                this[this.tableGetPaymentListReport_SP.TotalAmountColumn] = global::System.Convert.DBNull;
             }
         }
         

@@ -84,6 +84,13 @@
           <Property Name="CompanionTypeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CompanionType" Type="nvarchar" MaxLength="12" Nullable="false" />
         </EntityType>
+        <EntityType Name="DeductionReasons">
+          <Key>
+            <PropertyRef Name="ReasonId" />
+          </Key>
+          <Property Name="ReasonId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Reason" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
         <EntityType Name="Doctors">
           <Key>
             <PropertyRef Name="DoctorID" />
@@ -188,6 +195,9 @@
           <Property Name="PatientEndDate" Type="date" />
           <Property Name="CompanionStartDate" Type="date" />
           <Property Name="CompanionEndDate" Type="date" />
+          <Property Name="PatientDeductionRate" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="CompanionDeductionRate" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="ReasonId" Type="int" />
         </EntityType>
         <EntityType Name="Payments">
           <Key>
@@ -203,7 +213,7 @@
           <Property Name="PayRateID" Type="int" />
           <Property Name="StartDate" Type="date" />
           <Property Name="EndDate" Type="date" />
-          <Property Name="Period" Type="int" StoreGeneratedPattern="None" />
+          <Property Name="Period" Type="int" />
           <Property Name="PAmount" Type="decimal" Precision="18" Scale="0" />
           <Property Name="CAmount" Type="decimal" Precision="18" Scale="0" />
           <Property Name="TotalDue" Type="decimal" Precision="18" Scale="0" />
@@ -423,6 +433,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_PaymentDeductions_DeductionReasons">
+          <End Role="DeductionReasons" Type="Self.DeductionReasons" Multiplicity="0..1" />
+          <End Role="PaymentDeductions" Type="Self.PaymentDeductions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DeductionReasons">
+              <PropertyRef Name="ReasonId" />
+            </Principal>
+            <Dependent Role="PaymentDeductions">
+              <PropertyRef Name="ReasonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_PaymentDeductions_Patients">
           <End Role="Patients" Type="Self.Patients" Multiplicity="0..1" />
           <End Role="PaymentDeductions" Type="Self.PaymentDeductions" Multiplicity="*" />
@@ -509,6 +531,9 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="GetNextPaymentPatientList_SP" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="numberOfDays" Type="int" Mode="In" />
+        </Function>
         <Function Name="GetPatientListReport_SP" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="pCid" Type="nvarchar" Mode="In" />
           <Parameter Name="hospital" Type="nvarchar" Mode="In" />
@@ -528,6 +553,7 @@
           <EntitySet Name="CompanionHistories" EntityType="Self.CompanionHistories" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Companions" EntityType="Self.Companions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CompanionTypes" EntityType="Self.CompanionTypes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DeductionReasons" EntityType="Self.DeductionReasons" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Doctors" EntityType="Self.Doctors" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ExceptionLoggers" EntityType="Self.ExceptionLoggers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Hospitals" EntityType="Self.Hospitals" Schema="dbo" store:Type="Tables" />
@@ -590,6 +616,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_PaymentDeductions_Companions" Association="Self.FK_PaymentDeductions_Companions">
             <End Role="Companions" EntitySet="Companions" />
+            <End Role="PaymentDeductions" EntitySet="PaymentDeductions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PaymentDeductions_DeductionReasons" Association="Self.FK_PaymentDeductions_DeductionReasons">
+            <End Role="DeductionReasons" EntitySet="DeductionReasons" />
             <End Role="PaymentDeductions" EntitySet="PaymentDeductions" />
           </AssociationSet>
           <AssociationSet Name="FK_PaymentDeductions_Patients" Association="Self.FK_PaymentDeductions_Patients">
@@ -1173,6 +1203,14 @@
             <End Role="PayRate" EntitySet="PayRates" />
             <End Role="PaymentDeduction" EntitySet="PaymentDeductions" />
           </AssociationSet>
+          <FunctionImport Name="GetNextPaymentPatientList_SP" ReturnType="Collection(PatientsMgtModel.GetNextPaymentPatientList_SP_Result)">
+          <Parameter Name="numberOfDays" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="DeductionReasons" EntityType="PatientsMgtModel.DeductionReason" />
+          <AssociationSet Name="FK_PaymentDeductions_DeductionReasons" Association="PatientsMgtModel.FK_PaymentDeductions_DeductionReasons">
+            <End Role="DeductionReason" EntitySet="DeductionReasons" />
+            <End Role="PaymentDeduction" EntitySet="PaymentDeductions" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="GetPatientListReport_SP_Result">
           <Property Type="Int32" Name="id" Nullable="false" />
@@ -1258,6 +1296,10 @@
           <Property Name="PatientEndDate" Type="DateTime" Precision="0" />
           <Property Name="CompanionStartDate" Type="DateTime" Precision="0" />
           <Property Name="CompanionEndDate" Type="DateTime" Precision="0" />
+          <Property Name="PatientDeductionRate" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="CompanionDeductionRate" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="ReasonId" Type="Int32" />
+          <NavigationProperty Name="DeductionReason" Relationship="PatientsMgtModel.FK_PaymentDeductions_DeductionReasons" FromRole="PaymentDeduction" ToRole="DeductionReason" />
         </EntityType>
         <Association Name="FK_PaymentDeductions_Beneficiaries">
           <End Type="PatientsMgtModel.Beneficiary" Role="Beneficiary" Multiplicity="0..1" />
@@ -1318,6 +1360,31 @@
             </Principal>
             <Dependent Role="PaymentDeduction">
               <PropertyRef Name="PayRateID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="GetNextPaymentPatientList_SP_Result">
+          <Property Type="String" Name="PatientCID" Nullable="true" MaxLength="12" />
+          <Property Type="DateTime" Name="StartDate" Nullable="true" />
+          <Property Type="DateTime" Name="EndDate" Nullable="true" />
+        </ComplexType>
+        <EntityType Name="DeductionReason">
+          <Key>
+            <PropertyRef Name="ReasonId" />
+          </Key>
+          <Property Name="ReasonId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Reason" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="PaymentDeductions" Relationship="PatientsMgtModel.FK_PaymentDeductions_DeductionReasons" FromRole="DeductionReason" ToRole="PaymentDeduction" />
+        </EntityType>
+        <Association Name="FK_PaymentDeductions_DeductionReasons">
+          <End Type="PatientsMgtModel.DeductionReason" Role="DeductionReason" Multiplicity="0..1" />
+          <End Type="PatientsMgtModel.PaymentDeduction" Role="PaymentDeduction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DeductionReason">
+              <PropertyRef Name="ReasonId" />
+            </Principal>
+            <Dependent Role="PaymentDeduction">
+              <PropertyRef Name="ReasonId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1623,6 +1690,9 @@
           <EntitySetMapping Name="PaymentDeductions">
             <EntityTypeMapping TypeName="PatientsMgtModel.PaymentDeduction">
               <MappingFragment StoreEntitySet="PaymentDeductions">
+                <ScalarProperty Name="ReasonId" ColumnName="ReasonId" />
+                <ScalarProperty Name="CompanionDeductionRate" ColumnName="CompanionDeductionRate" />
+                <ScalarProperty Name="PatientDeductionRate" ColumnName="PatientDeductionRate" />
                 <ScalarProperty Name="CompanionEndDate" ColumnName="CompanionEndDate" />
                 <ScalarProperty Name="CompanionStartDate" ColumnName="CompanionStartDate" />
                 <ScalarProperty Name="PatientEndDate" ColumnName="PatientEndDate" />
@@ -1646,6 +1716,23 @@
                 <ScalarProperty Name="DeductionDate" ColumnName="DeductionDate" />
                 <ScalarProperty Name="PaymentID" ColumnName="PaymentID" />
                 <ScalarProperty Name="DeductionID" ColumnName="DeductionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetNextPaymentPatientList_SP" FunctionName="PatientsMgtModel.Store.GetNextPaymentPatientList_SP">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="PatientsMgtModel.GetNextPaymentPatientList_SP_Result">
+                <ScalarProperty Name="PatientCID" ColumnName="PatientCID" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="DeductionReasons">
+            <EntityTypeMapping TypeName="PatientsMgtModel.DeductionReason">
+              <MappingFragment StoreEntitySet="DeductionReasons">
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="ReasonId" ColumnName="ReasonId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

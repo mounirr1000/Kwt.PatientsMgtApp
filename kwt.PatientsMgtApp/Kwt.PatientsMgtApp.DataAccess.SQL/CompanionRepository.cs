@@ -179,7 +179,10 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             //var companionTypeId = newDomain.Get<CompanionType>(ct => ct.CompanionType1 == newCompanion.CompanionType).CompanionTypeID;
             if (patient.IsBeneficiary == true &&
                 (patient.IsBeneficiary == newCompanion.IsBeneficiary
-                && companionTypeId == (int)Enums.CompanionType.Primary))
+                && companionTypeId == (int)Enums.CompanionType.Primary)
+                //new 
+                && newCompanion.IsActive
+                )
             {
                 throw new PatientsMgtException(1, "error", "Creating/updating Companion",
                     "The Patient is already benificiary!! " +
@@ -187,7 +190,10 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             }
             if (patient.IsBeneficiary == false &&
                 (patient.IsBeneficiary == newCompanion.IsBeneficiary
-                && companionTypeId == (int)Enums.CompanionType.Primary))
+                && companionTypeId == (int)Enums.CompanionType.Primary)
+                //new 
+                && newCompanion.IsActive
+                )
                 throw new PatientsMgtException(1, "error", "Creating/updating Companion", "The Patient is not beneficiary, You need to set either the patient or the Companion as Beneficiary ");
             // only one Companion asscoiated to the patient should be benificiary and not more
             var duplicateComp = new Companion();
@@ -199,11 +205,14 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             }
             if (newCompanion.IsBeneficiary == true &&
                 existingCompanion != null &&
-                existingCompanion.Any(comp => comp.IsBeneficiary == newCompanion.IsBeneficiary))
+                existingCompanion.Any(comp => comp.IsBeneficiary == newCompanion.IsBeneficiary && comp.IsActive == true)
+                //new 
+                && newCompanion.IsActive
+                )
             {
                 throw new PatientsMgtException(1, "error", "Creating/updating Companion",
-                    "There is already one companion associated with the patient declared as beneficiary!!" +
-                    "\r\n Only one companion should be beneficiary");
+                    "There is already one companion associated with the patient declared as beneficiary!! " +
+                    "Only one companion should be beneficiary");
             }
 
         }
@@ -415,15 +424,22 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             {
                 if (companionToUpdate.IsActive == false)// the new change to companion
                 {
-                    ben.CompanionCID = null;// set the companion cid associoted with the benefeciary to null
+                    if (ben.CompanionCID == companionToUpdate.CompanionCID)
+                        ben.CompanionCID = null;// set the companion cid associoted with the benefeciary to null
                     if (ben.BeneficiaryCID == companion.CompanionCID)// we have the companion as beneficiary
                     {
-                        if (patient.IsBeneficiary == false && patient.IsActive == true)// there is no beneficiary to the patient, the update should not happen
-                            throw new PatientsMgtException(1, "Error", "Update Companion",
-                                "the primary companion associated with the patient is no " +
-                                "longer active, and the patient is not beneficiary, " +
-                                "Make the patient beneficary or add a another primary companion " +
-                                "who is beneficiary before setting this comapnion as inactive");
+                        //if (patient.IsBeneficiary == false && patient.IsActive == true)// there is no beneficiary to the patient, the update should not happen
+                        //    throw new PatientsMgtException(1, "Error", "Update Companion",
+                        //        "the primary companion associated with the patient is no " +
+                        //        "longer active, and the patient is not beneficiary, " +
+                        //        "Make the patient beneficary or add a another primary companion " +
+                        //        "who is beneficiary before setting this comapnion as inactive");
+                        ben.BeneficiaryCID = null;
+                        ben.BeneficiaryFName = null;
+                        ben.BeneficiaryLName = null;
+                        ben.BeneficiaryMName = null;
+                        ben.BankID = null;
+                        ben.IBan = null;
                         if (patient.IsBeneficiary == true)
                         {
                             ben.BeneficiaryCID = patient.PatientCID;
@@ -456,18 +472,53 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     //&& ben.BeneficiaryCID == companion.CompanionCID
                     )
                 {
-                    if (patient.IsBeneficiary == false)
+                    // check if there is other companion associated to this patient who is active and beneficiary and primary
+                    // get the list of primary companion for the patient
+                    var companionList = GetCompanionListByPatientCid(patient.PatientCID);
+                    if (companionList != null)
                     {
-                        throw new PatientsMgtException(1, "Error", "Update Companion",
-                            "You can't make the companion as not beneficiary, since the patient already not beneficiary");
-                    }
+                        var primaryCompanions = companionList.Where(c => c.CompanionTypeID == (int)Enums.CompanionType.Primary && c.IsActive == true).ToList();
+                        if (primaryCompanions.Count() > 1)// more than one primary companion to the same user
+                        {
+                            throw new PatientsMgtException(1, "Error", "Update Companion",
+                            "You can't have more than one active primary companion to the same patient, Only one primary companion can be assigned to the same patient");
+                        }
+                        if (patient.IsBeneficiary == false)
+                        {
+                            if (primaryCompanions.Any()) // means we have only one primary companion who is active
+                            {
 
-                    ben.BeneficiaryCID = patient.PatientCID;
-                    ben.BeneficiaryFName = patient.PatientFName;
-                    ben.BeneficiaryLName = patient.PatientLName;
-                    ben.BeneficiaryMName = patient.PatientMName;
-                    ben.BankID = patient.BankID;
-                    ben.IBan = patient.Iban;
+                                if (primaryCompanions.Exists(c => c.IsBeneficiary == false))
+                                    // the only active primary companion with patient is not beneficiary
+                                    throw new PatientsMgtException(1, "Error", "Update Companion",
+                                        "You can't make the companion as not beneficiary, since the patient already not beneficiary");
+                                // if we pass this far, means the companion in our records is the beneiciary
+                                var compBene = primaryCompanions.FirstOrDefault();// get the only bene
+                                ben.BeneficiaryCID = compBene?.PatientCID;
+                                ben.BeneficiaryFName = compBene?.CompanionFName;
+                                ben.BeneficiaryLName = compBene?.CompanionLName;
+                                ben.BeneficiaryMName = compBene?.CompanionMName;
+                                ben.BankID = compBene?.BankID;
+                                ben.IBan = compBene?.IBan;
+                                ben.CompanionCID = compBene?.CompanionCID;
+                            }
+                        }
+                        else
+                        {
+                            ben.BeneficiaryCID = patient.PatientCID;
+                            ben.BeneficiaryFName = patient.PatientFName;
+                            ben.BeneficiaryLName = patient.PatientLName;
+                            ben.BeneficiaryMName = patient.PatientMName;
+                            ben.BankID = patient.BankID;
+                            ben.IBan = patient.Iban;
+                        }
+
+
+                    }
+                    //
+
+
+
                     if (companionToUpdate.IsActive == true &&
                    (companionToUpdate.CompanionTypeID ==
                     (int)Enums.CompanionType.Primary))

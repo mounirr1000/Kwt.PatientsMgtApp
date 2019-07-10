@@ -37,11 +37,15 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public Nullable<System.DateTime> PatientEndDate { get; set; }
         public Nullable<System.DateTime> CompanionStartDate { get; set; }
         public Nullable<System.DateTime> CompanionEndDate { get; set; }
+        public Nullable<decimal> PatientDeductionRate { get; set; }
+        public Nullable<decimal> CompanionDeductionRate { get; set; }
+        public Nullable<int> ReasonId { get; set; }
     
         public virtual Beneficiary Beneficiary { get; set; }
         public virtual Companion Companion { get; set; }
         public virtual Patient Patient { get; set; }
         public virtual Payment Payment { get; set; }
         public virtual PayRate PayRate { get; set; }
+        public virtual DeductionReason DeductionReason { get; set; }
     }
 }

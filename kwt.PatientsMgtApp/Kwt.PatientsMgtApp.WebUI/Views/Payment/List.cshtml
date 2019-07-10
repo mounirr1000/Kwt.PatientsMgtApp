@@ -10,6 +10,15 @@
     <a href="@Url.Action("Create", "Payment")" class="k-button"><i class="fa fa-plus" style="color: yellowgreen"></i> New Payment</a>
     <a href="javascript:window.print()" class="k-button"><i class="fa fa-print" style="color: blueviolet"></i> Print This Page</a>
 </div>
+@* new June 29, 2019 *@
+<div class="pt-4">
+    <div style="display: inline">
+        <input id="numberOfDays" class="k-textbox" placeholder="Enter Number Of Days" />
+
+    </div>
+    <a href="javascript:showNextPatientPayments()" class="k-button" data-toggle="tooltip" title="Enter Number Of Days first!"><i class="fa fa-warning" style="color: orangered"></i> Payment Alert</a>
+
+</div>
 @* new February 28, 2019 *@
 <div class="pt-4">
     <div style="display: inline">
@@ -36,6 +45,22 @@
             </div>
             <div class="modal-body">
                 <div id="paymentGrid"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bd-example-modal-lg" id="patientDueForNextPayment" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="deleteModalLabel"></h4>
+            </div>
+            <div class="modal-body">
+                <div id="patientDueForNextPaymentGrid"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-success" data-dismiss="modal">Cancel</button>
@@ -71,7 +96,6 @@
 @section DeleteConfirm{
 
     @{ Html.RenderPartial("_DeleteConfirmationModel"); }
-
 }
 
 @section Scripts {
@@ -94,7 +118,13 @@
 
             //
             var data = @Html.Raw(Json.Encode(Model));
-
+            var isAdmin =   @Html.Raw(Json.Encode(User.IsInRole("Admin")));
+            function getTemplate(paymentId) {
+                if (isAdmin) {
+                    return '<a href="javascript:confirmDelete('+paymentId+','+'\'paymentId\''+')" id='+paymentId+'> <i class="fa fa-times fa-2x" style="color: lightcoral"></i></a>';
+                }
+                return '';
+            }
             var grid =  $("#paymentList").kendoGrid({
                 resizable: true,
                 toolbar: [//"pdf",
@@ -147,6 +177,11 @@
                 {
                     field: "TotalDue",
                     title: "Final Amount"
+                },{
+                    field: "Id",
+                    title: "Delete",
+                    template: getTemplate('#=Id#'),
+                    hidden: !isAdmin
                 }],
                 dataSource: {
                     data: data
@@ -211,30 +246,32 @@
 
             var date2 = new Date(secondDate).toDateString();
             date2 = new Date(date2).getTime();
-            var payments=@Html.Raw(Json.Encode(Model));
+            var payments = @Html.Raw(Json.Encode(Model));
 
-            payments= payments.filter(function (entry) {
+            payments = payments.filter(function(entry) {
                 var paymentDate = new Date(entry.PaymentDateFormatted).toDateString();
 
-                return  (
-                        //date1 >= new Date(paymentDate).getTime() && date2<= new Date(paymentDate).getTime()
-                    (date1 === new Date(paymentDate).getTime() || date2=== new Date(paymentDate).getTime() )
-                    ||(date1 < new Date(paymentDate).getTime() && date2> new Date(paymentDate).getTime() )
-                        );
-            }).sort(function(a,b){
+                return (
+                    //date1 >= new Date(paymentDate).getTime() && date2<= new Date(paymentDate).getTime()
+                    (date1 === new Date(paymentDate).getTime() || date2 === new Date(paymentDate).getTime())
+                        || (date1 < new Date(paymentDate).getTime() && date2 > new Date(paymentDate).getTime())
+                );
+            }).sort(function(a, b) {
                 // Turn your strings into dates, and then subtract them
                 // to get a value that is either negative, positive, or zero.
                 return new Date(a.PaymentDateFormatted) - new Date(b.PaymentDateFormatted);
             });
-            var paymentGrid=  $("#paymentGrid").kendoGrid({
-                toolbar: [//"pdf",
-                        "excel"],
+            var paymentGrid = $("#paymentGrid").kendoGrid({
+                toolbar: [
+//"pdf",
+                    "excel"
+                ],
                 //pdf: {
                 //    fileName: firstDate+" "+secondDate+" payments.pdf"
                 //},
                 excel: {
-                    fileName: firstDate+" "+secondDate+" Payments.xlsx",
-                    allPages:true
+                    fileName: firstDate + " " + secondDate + " Payments.xlsx",
+                    allPages: true
                 },
                 pageable: {
                     pageSize: 10,
@@ -244,58 +281,164 @@
                     {
                         field: "PaymentDateFormatted",
                         title: "Payment Date"
-                    },{
+                    }, {
                         field: "PatientPhone",
                         title: "Patient Phone"
                     },
-                {
-                    field: "PatientCID",
-                    title: "P_CID"
-                },{
-                    field: "PaymentStartDateFormatted",
-                    title: "From",
-                    //template: "#= kendo.toString(kendo.parseDate(PaymentStartDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
-                },
-                {
-                    field: "PaymentEndDateFormatted",
-                    title: "To",
-                    // template: "#= kendo.toString(kendo.parseDate(PaymentEndDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
-                },{
-                    field: "TotalDue",
-                    title: "Amount"
-                }],
+                    {
+                        field: "PatientCID",
+                        title: "P_CID"
+                    }, {
+                        field: "PaymentStartDateFormatted",
+                        title: "From",
+                        //template: "#= kendo.toString(kendo.parseDate(PaymentStartDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
+                    },
+                    {
+                        field: "PaymentEndDateFormatted",
+                        title: "To",
+                        // template: "#= kendo.toString(kendo.parseDate(PaymentEndDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
+                    }, {
+                        field: "TotalDue",
+                        title: "Amount"
+                    }
+                ],
                 dataSource: {
                     data: payments
                 },
                 //
-                excelExport: function(e){
+                excelExport: function(e) {
                     var sheet = e.workbook.sheets[0];
                     var data = paymentGrid.dataSource.data();
                     var gridColumns = paymentGrid.columns;
-                    var columns = gridColumns.map(function(col){
+                    var columns = gridColumns.map(function(col) {
                         return {
                             value: col.title ? col.title : col.field,
-                            autoWidth:true,
+                            autoWidth: true,
                             background: "#7a7a7a",
                             color: "#fff"
                         };
                     });
 
-                    var rows = [{cells:columns, type: "header"}];
+                    var rows = [{ cells: columns, type: "header" }];
 
-                    for (var i = 0; i < data.length; i++){
+                    for (var i = 0; i < data.length; i++) {
                         var rowCells = [];
-                        for(var j=0;j < gridColumns.length;j++){
+                        for (var j = 0; j < gridColumns.length; j++) {
                             var cellValue = data[i][gridColumns[j].field];
-                            rowCells.push({value: cellValue});
+                            rowCells.push({ value: cellValue });
                         }
-                        rows.push({cells: rowCells, type: "data"});
+                        rows.push({ cells: rowCells, type: "data" });
                     }
                     sheet.rows = rows;
                 }
                 //
             }).data("kendoGrid");;
 
+        }
+
+        $(function() {
+            $("#deleteConfirmModal").on('click', "#deleteConfirm", function() {
+
+            });
+        });
+
+    </script>
+
+    @* new June 29, 2019 *@
+    <script type="text/javascript">
+
+
+        function showNextPatientPayments() {
+            var numberOfDays = $('#numberOfDays').val();
+
+            var payments=@Html.Raw(Json.Encode(Model));
+
+            var nextPaymentUrl = '/Payment/GetNextPayment';
+            if(numberOfDays)
+                $.ajax({
+                    type: "GET",
+                    url: nextPaymentUrl,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "numberOfDays": numberOfDays },
+                    dataType: 'json',
+                    success: function (result) {
+                        // console.log(result);
+                        var patientPaymentGrid = $("#patientDueForNextPaymentGrid").kendoGrid({
+                            toolbar: [
+                                "excel"
+                            ],
+                            excel: {
+                                fileName: " payments that are due in " + numberOfDays + " Day(s).xlsx",
+                                allPages: true
+                            },
+                            pageable: {
+                                pageSize: 10,
+                                alwaysVisible: false
+                            },
+                            columns: [
+                                {
+                                    field: "PatientCID",
+                                    title: "P_CID"
+                                },
+                                {
+                                    field: "PaymentDateFormatted",
+                                    title: "Payment Date"
+                                },
+                                {
+                                    field: "PaymentStartDateFormatted",
+                                    title: "Start Date"
+                                },
+                                 {
+                                     field: "PaymentEndDateFormatted",
+                                     title: "End Date",
+                                     //template: "#= kendo.toString(kendo.parseDate(PaymentStartDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
+                                 }, {
+                                     field: "TotalDue",
+                                     title: "Amount"
+                                 },
+                                //{
+                                //    field: "FinalAmountAfterCorrection",
+                                //    title: "Amount Paid",
+                                //    // template: "#= kendo.toString(kendo.parseDate(PaymentEndDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
+                                //}
+                            ],
+                            dataSource: {
+                                data: result
+                            },
+                            //
+                            excelExport: function(e) {
+                                var sheet = e.workbook.sheets[0];
+                                var data = patientPaymentGrid.dataSource.data();
+                                var gridColumns = patientPaymentGrid.columns;
+                                var columns = gridColumns.map(function(col) {
+                                    return {
+                                        value: col.title ? col.title : col.field,
+                                        autoWidth: true,
+                                        background: "#7a7a7a",
+                                        color: "#fff"
+                                    };
+                                });
+
+                                var rows = [{ cells: columns, type: "header" }];
+
+                                for (var i = 0; i < data.length; i++) {
+                                    var rowCells = [];
+                                    for (var j = 0; j < gridColumns.length; j++) {
+                                        var cellValue = data[i][gridColumns[j].field];
+                                        rowCells.push({ value: cellValue });
+                                    }
+                                    rows.push({ cells: rowCells, type: "data" });
+                                }
+                                sheet.rows = rows;
+                            }
+                            //
+                        }).data("kendoGrid");
+                        $('#patientDueForNextPayment').modal('show');
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                    }
+                });
         }
 
         $(function () {

@@ -22,6 +22,15 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
         
         /// <summary>
+        /// ReportTypes control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ReportTypes;
+        
+        /// <summary>
         /// StartDate control.
         /// </summary>
         /// <remarks>

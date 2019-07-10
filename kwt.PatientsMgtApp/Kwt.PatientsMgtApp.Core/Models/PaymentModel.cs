@@ -118,8 +118,19 @@ namespace Kwt.PatientsMgtApp.Core.Models
         [DisplayName("Total")]
         public Nullable<decimal> TotalDue { get; set; }
 
+        [DisplayName("Final Amount After Correction")]
+        public decimal? FinalAmountAfterCorrection { get; set; }
+
+        [DisplayName("Deducted Amount")]
+        public decimal? DeductedAmount { get; set; }
+
         [MaxLength(250, ErrorMessage = "Maximum characters allowed is 250 ")]
         public string Notes { get; set; }
+
+        public string DeductionNotes { get; set; }
+        //new
+        [DisplayName("Patient Notes")]
+        public string PatientNotes { get; set; }
 
         [DisplayName("Created By")]
         public string CreatedBy { get; set; }
@@ -138,6 +149,12 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public String ModifiedDateFormatted { get { return String.Format("{0:d}", ModifiedDate); } }
 
         public int? PayRateID { get; set; }
+
+        [DisplayName("Patient Deduction Rate")]
+        public decimal? PatientDeductionRate { get; set; }
+
+        [DisplayName("Comp Deduction Rate")]
+        public decimal? CompanionDeductionRate { get; set; }
         //================================
         public List<BeneficiaryModel> Beneficiaries { get; set; }
         public BeneficiaryModel Beneficiary { get; set; }
