@@ -317,6 +317,52 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             
             private global::System.Data.DataColumn columnTotalAmount;
             
+            private global::System.Data.DataColumn columnDeductionReason;
+            
+            private global::System.Data.DataColumn columnPatientDeductionStartDate;
+            
+            private global::System.Data.DataColumn columnPatientDeductionEndDate;
+            
+            private global::System.Data.DataColumn columnCompanionDeductionStartDate;
+            
+            private global::System.Data.DataColumn columnCompanionDeductionEndDate;
+            
+            private global::System.Data.DataColumn columnTotalDeduction;
+            
+            private global::System.Data.DataColumn columnDeductionNotes;
+            
+            private global::System.Data.DataColumn columnDeductionReasonText;
+            
+            private global::System.Data.DataColumn columnCompanionDeduction;
+            
+            private global::System.Data.DataColumn columnPatientDeduction;
+            
+            private global::System.Data.DataColumn columnAmountBeforeDeduction;
+            
+            private global::System.Data.DataColumn columnPaymentTypeId;
+            
+            private global::System.Data.DataColumn columnRejectedPaymentId;
+            
+            private global::System.Data.DataColumn columnIsPaymentRejected;
+            
+            private global::System.Data.DataColumn columnPaymentDate;
+            
+            private global::System.Data.DataColumn columnRejectionNotes;
+            
+            private global::System.Data.DataColumn columnRejectionReasonID;
+            
+            private global::System.Data.DataColumn columnRejectionDate;
+            
+            private global::System.Data.DataColumn columnRejectionReason;
+            
+            private global::System.Data.DataColumn columnAdjustmentReasonID;
+            
+            private global::System.Data.DataColumn columnAdjustmentReason;
+            
+            private global::System.Data.DataColumn columnRowNumber;
+            
+            private global::System.Data.DataColumn columnRejectionDateFormatted;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public GetPaymentListReport_SPDataTable() {
@@ -504,6 +550,190 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn DeductionReasonColumn {
+                get {
+                    return this.columnDeductionReason;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn PatientDeductionStartDateColumn {
+                get {
+                    return this.columnPatientDeductionStartDate;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn PatientDeductionEndDateColumn {
+                get {
+                    return this.columnPatientDeductionEndDate;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn CompanionDeductionStartDateColumn {
+                get {
+                    return this.columnCompanionDeductionStartDate;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn CompanionDeductionEndDateColumn {
+                get {
+                    return this.columnCompanionDeductionEndDate;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn TotalDeductionColumn {
+                get {
+                    return this.columnTotalDeduction;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn DeductionNotesColumn {
+                get {
+                    return this.columnDeductionNotes;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn DeductionReasonTextColumn {
+                get {
+                    return this.columnDeductionReasonText;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn CompanionDeductionColumn {
+                get {
+                    return this.columnCompanionDeduction;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn PatientDeductionColumn {
+                get {
+                    return this.columnPatientDeduction;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn AmountBeforeDeductionColumn {
+                get {
+                    return this.columnAmountBeforeDeduction;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn PaymentTypeIdColumn {
+                get {
+                    return this.columnPaymentTypeId;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn RejectedPaymentIdColumn {
+                get {
+                    return this.columnRejectedPaymentId;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn IsPaymentRejectedColumn {
+                get {
+                    return this.columnIsPaymentRejected;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn PaymentDateColumn {
+                get {
+                    return this.columnPaymentDate;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn RejectionNotesColumn {
+                get {
+                    return this.columnRejectionNotes;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn RejectionReasonIDColumn {
+                get {
+                    return this.columnRejectionReasonID;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn RejectionDateColumn {
+                get {
+                    return this.columnRejectionDate;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn RejectionReasonColumn {
+                get {
+                    return this.columnRejectionReason;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn AdjustmentReasonIDColumn {
+                get {
+                    return this.columnAdjustmentReasonID;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn AdjustmentReasonColumn {
+                get {
+                    return this.columnAdjustmentReason;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn RowNumberColumn {
+                get {
+                    return this.columnRowNumber;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn RejectionDateFormattedColumn {
+                get {
+                    return this.columnRejectionDateFormatted;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -557,7 +787,30 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
                         string Code, 
                         int TotalPayments, 
                         int TotalPatients, 
-                        decimal TotalAmount) {
+                        decimal TotalAmount, 
+                        int DeductionReason, 
+                        System.DateTime PatientDeductionStartDate, 
+                        System.DateTime PatientDeductionEndDate, 
+                        System.DateTime CompanionDeductionStartDate, 
+                        System.DateTime CompanionDeductionEndDate, 
+                        decimal TotalDeduction, 
+                        string DeductionNotes, 
+                        string DeductionReasonText, 
+                        decimal CompanionDeduction, 
+                        decimal PatientDeduction, 
+                        decimal AmountBeforeDeduction, 
+                        int PaymentTypeId, 
+                        int RejectedPaymentId, 
+                        bool IsPaymentRejected, 
+                        System.DateTime PaymentDate, 
+                        string RejectionNotes, 
+                        int RejectionReasonID, 
+                        System.DateTime RejectionDate, 
+                        string RejectionReason, 
+                        int AdjustmentReasonID, 
+                        string AdjustmentReason, 
+                        long RowNumber, 
+                        string RejectionDateFormatted) {
                 GetPaymentListReport_SPRow rowGetPaymentListReport_SPRow = ((GetPaymentListReport_SPRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
@@ -578,7 +831,30 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
                         Code,
                         TotalPayments,
                         TotalPatients,
-                        TotalAmount};
+                        TotalAmount,
+                        DeductionReason,
+                        PatientDeductionStartDate,
+                        PatientDeductionEndDate,
+                        CompanionDeductionStartDate,
+                        CompanionDeductionEndDate,
+                        TotalDeduction,
+                        DeductionNotes,
+                        DeductionReasonText,
+                        CompanionDeduction,
+                        PatientDeduction,
+                        AmountBeforeDeduction,
+                        PaymentTypeId,
+                        RejectedPaymentId,
+                        IsPaymentRejected,
+                        PaymentDate,
+                        RejectionNotes,
+                        RejectionReasonID,
+                        RejectionDate,
+                        RejectionReason,
+                        AdjustmentReasonID,
+                        AdjustmentReason,
+                        RowNumber,
+                        RejectionDateFormatted};
                 rowGetPaymentListReport_SPRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowGetPaymentListReport_SPRow);
                 return rowGetPaymentListReport_SPRow;
@@ -627,6 +903,29 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
                 this.columnTotalPayments = base.Columns["TotalPayments"];
                 this.columnTotalPatients = base.Columns["TotalPatients"];
                 this.columnTotalAmount = base.Columns["TotalAmount"];
+                this.columnDeductionReason = base.Columns["DeductionReason"];
+                this.columnPatientDeductionStartDate = base.Columns["PatientDeductionStartDate"];
+                this.columnPatientDeductionEndDate = base.Columns["PatientDeductionEndDate"];
+                this.columnCompanionDeductionStartDate = base.Columns["CompanionDeductionStartDate"];
+                this.columnCompanionDeductionEndDate = base.Columns["CompanionDeductionEndDate"];
+                this.columnTotalDeduction = base.Columns["TotalDeduction"];
+                this.columnDeductionNotes = base.Columns["DeductionNotes"];
+                this.columnDeductionReasonText = base.Columns["DeductionReasonText"];
+                this.columnCompanionDeduction = base.Columns["CompanionDeduction"];
+                this.columnPatientDeduction = base.Columns["PatientDeduction"];
+                this.columnAmountBeforeDeduction = base.Columns["AmountBeforeDeduction"];
+                this.columnPaymentTypeId = base.Columns["PaymentTypeId"];
+                this.columnRejectedPaymentId = base.Columns["RejectedPaymentId"];
+                this.columnIsPaymentRejected = base.Columns["IsPaymentRejected"];
+                this.columnPaymentDate = base.Columns["PaymentDate"];
+                this.columnRejectionNotes = base.Columns["RejectionNotes"];
+                this.columnRejectionReasonID = base.Columns["RejectionReasonID"];
+                this.columnRejectionDate = base.Columns["RejectionDate"];
+                this.columnRejectionReason = base.Columns["RejectionReason"];
+                this.columnAdjustmentReasonID = base.Columns["AdjustmentReasonID"];
+                this.columnAdjustmentReason = base.Columns["AdjustmentReason"];
+                this.columnRowNumber = base.Columns["RowNumber"];
+                this.columnRejectionDateFormatted = base.Columns["RejectionDateFormatted"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -670,6 +969,52 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
                 base.Columns.Add(this.columnTotalPatients);
                 this.columnTotalAmount = new global::System.Data.DataColumn("TotalAmount", typeof(decimal), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnTotalAmount);
+                this.columnDeductionReason = new global::System.Data.DataColumn("DeductionReason", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnDeductionReason);
+                this.columnPatientDeductionStartDate = new global::System.Data.DataColumn("PatientDeductionStartDate", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPatientDeductionStartDate);
+                this.columnPatientDeductionEndDate = new global::System.Data.DataColumn("PatientDeductionEndDate", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPatientDeductionEndDate);
+                this.columnCompanionDeductionStartDate = new global::System.Data.DataColumn("CompanionDeductionStartDate", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnCompanionDeductionStartDate);
+                this.columnCompanionDeductionEndDate = new global::System.Data.DataColumn("CompanionDeductionEndDate", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnCompanionDeductionEndDate);
+                this.columnTotalDeduction = new global::System.Data.DataColumn("TotalDeduction", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnTotalDeduction);
+                this.columnDeductionNotes = new global::System.Data.DataColumn("DeductionNotes", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnDeductionNotes);
+                this.columnDeductionReasonText = new global::System.Data.DataColumn("DeductionReasonText", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnDeductionReasonText);
+                this.columnCompanionDeduction = new global::System.Data.DataColumn("CompanionDeduction", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnCompanionDeduction);
+                this.columnPatientDeduction = new global::System.Data.DataColumn("PatientDeduction", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPatientDeduction);
+                this.columnAmountBeforeDeduction = new global::System.Data.DataColumn("AmountBeforeDeduction", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnAmountBeforeDeduction);
+                this.columnPaymentTypeId = new global::System.Data.DataColumn("PaymentTypeId", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPaymentTypeId);
+                this.columnRejectedPaymentId = new global::System.Data.DataColumn("RejectedPaymentId", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnRejectedPaymentId);
+                this.columnIsPaymentRejected = new global::System.Data.DataColumn("IsPaymentRejected", typeof(bool), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnIsPaymentRejected);
+                this.columnPaymentDate = new global::System.Data.DataColumn("PaymentDate", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPaymentDate);
+                this.columnRejectionNotes = new global::System.Data.DataColumn("RejectionNotes", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnRejectionNotes);
+                this.columnRejectionReasonID = new global::System.Data.DataColumn("RejectionReasonID", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnRejectionReasonID);
+                this.columnRejectionDate = new global::System.Data.DataColumn("RejectionDate", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnRejectionDate);
+                this.columnRejectionReason = new global::System.Data.DataColumn("RejectionReason", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnRejectionReason);
+                this.columnAdjustmentReasonID = new global::System.Data.DataColumn("AdjustmentReasonID", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnAdjustmentReasonID);
+                this.columnAdjustmentReason = new global::System.Data.DataColumn("AdjustmentReason", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnAdjustmentReason);
+                this.columnRowNumber = new global::System.Data.DataColumn("RowNumber", typeof(long), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnRowNumber);
+                this.columnRejectionDateFormatted = new global::System.Data.DataColumn("RejectionDateFormatted", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnRejectionDateFormatted);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnPaymentID}, true));
                 this.columnPaymentID.AutoIncrement = true;
@@ -691,6 +1036,13 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
                 this.columnBank.MaxLength = 50;
                 this.columnCode.ReadOnly = true;
                 this.columnCode.MaxLength = 3;
+                this.columnDeductionNotes.MaxLength = 250;
+                this.columnRejectionNotes.MaxLength = 250;
+                this.columnRejectionReason.ReadOnly = true;
+                this.columnRejectionReason.MaxLength = 250;
+                this.columnAdjustmentReason.ReadOnly = true;
+                this.columnAdjustmentReason.MaxLength = 250;
+                this.columnRowNumber.ReadOnly = true;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1133,6 +1485,394 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int DeductionReason {
+                get {
+                    try {
+                        return ((int)(this[this.tableGetPaymentListReport_SP.DeductionReasonColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'DeductionReason\' in table \'GetPaymentListReport_SP\' is DBNu" +
+                                "ll.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.DeductionReasonColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public System.DateTime PatientDeductionStartDate {
+                get {
+                    try {
+                        return ((global::System.DateTime)(this[this.tableGetPaymentListReport_SP.PatientDeductionStartDateColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'PatientDeductionStartDate\' in table \'GetPaymentListReport_S" +
+                                "P\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.PatientDeductionStartDateColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public System.DateTime PatientDeductionEndDate {
+                get {
+                    try {
+                        return ((global::System.DateTime)(this[this.tableGetPaymentListReport_SP.PatientDeductionEndDateColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'PatientDeductionEndDate\' in table \'GetPaymentListReport_SP\'" +
+                                " is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.PatientDeductionEndDateColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public System.DateTime CompanionDeductionStartDate {
+                get {
+                    try {
+                        return ((global::System.DateTime)(this[this.tableGetPaymentListReport_SP.CompanionDeductionStartDateColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'CompanionDeductionStartDate\' in table \'GetPaymentListReport" +
+                                "_SP\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.CompanionDeductionStartDateColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public System.DateTime CompanionDeductionEndDate {
+                get {
+                    try {
+                        return ((global::System.DateTime)(this[this.tableGetPaymentListReport_SP.CompanionDeductionEndDateColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'CompanionDeductionEndDate\' in table \'GetPaymentListReport_S" +
+                                "P\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.CompanionDeductionEndDateColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public decimal TotalDeduction {
+                get {
+                    try {
+                        return ((decimal)(this[this.tableGetPaymentListReport_SP.TotalDeductionColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'TotalDeduction\' in table \'GetPaymentListReport_SP\' is DBNul" +
+                                "l.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.TotalDeductionColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string DeductionNotes {
+                get {
+                    try {
+                        return ((string)(this[this.tableGetPaymentListReport_SP.DeductionNotesColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'DeductionNotes\' in table \'GetPaymentListReport_SP\' is DBNul" +
+                                "l.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.DeductionNotesColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string DeductionReasonText {
+                get {
+                    if (this.IsDeductionReasonTextNull()) {
+                        return null;
+                    }
+                    else {
+                        return ((string)(this[this.tableGetPaymentListReport_SP.DeductionReasonTextColumn]));
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.DeductionReasonTextColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public decimal CompanionDeduction {
+                get {
+                    try {
+                        return ((decimal)(this[this.tableGetPaymentListReport_SP.CompanionDeductionColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'CompanionDeduction\' in table \'GetPaymentListReport_SP\' is D" +
+                                "BNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.CompanionDeductionColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public decimal PatientDeduction {
+                get {
+                    try {
+                        return ((decimal)(this[this.tableGetPaymentListReport_SP.PatientDeductionColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'PatientDeduction\' in table \'GetPaymentListReport_SP\' is DBN" +
+                                "ull.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.PatientDeductionColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public decimal AmountBeforeDeduction {
+                get {
+                    try {
+                        return ((decimal)(this[this.tableGetPaymentListReport_SP.AmountBeforeDeductionColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'AmountBeforeDeduction\' in table \'GetPaymentListReport_SP\' i" +
+                                "s DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.AmountBeforeDeductionColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int PaymentTypeId {
+                get {
+                    try {
+                        return ((int)(this[this.tableGetPaymentListReport_SP.PaymentTypeIdColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'PaymentTypeId\' in table \'GetPaymentListReport_SP\' is DBNull" +
+                                ".", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.PaymentTypeIdColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int RejectedPaymentId {
+                get {
+                    try {
+                        return ((int)(this[this.tableGetPaymentListReport_SP.RejectedPaymentIdColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RejectedPaymentId\' in table \'GetPaymentListReport_SP\' is DB" +
+                                "Null.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.RejectedPaymentIdColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsPaymentRejected {
+                get {
+                    try {
+                        return ((bool)(this[this.tableGetPaymentListReport_SP.IsPaymentRejectedColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'IsPaymentRejected\' in table \'GetPaymentListReport_SP\' is DB" +
+                                "Null.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.IsPaymentRejectedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public System.DateTime PaymentDate {
+                get {
+                    try {
+                        return ((global::System.DateTime)(this[this.tableGetPaymentListReport_SP.PaymentDateColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'PaymentDate\' in table \'GetPaymentListReport_SP\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.PaymentDateColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string RejectionNotes {
+                get {
+                    try {
+                        return ((string)(this[this.tableGetPaymentListReport_SP.RejectionNotesColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RejectionNotes\' in table \'GetPaymentListReport_SP\' is DBNul" +
+                                "l.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.RejectionNotesColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int RejectionReasonID {
+                get {
+                    try {
+                        return ((int)(this[this.tableGetPaymentListReport_SP.RejectionReasonIDColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RejectionReasonID\' in table \'GetPaymentListReport_SP\' is DB" +
+                                "Null.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.RejectionReasonIDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public System.DateTime RejectionDate {
+                get {
+                    try {
+                        return ((global::System.DateTime)(this[this.tableGetPaymentListReport_SP.RejectionDateColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RejectionDate\' in table \'GetPaymentListReport_SP\' is DBNull" +
+                                ".", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.RejectionDateColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string RejectionReason {
+                get {
+                    try {
+                        return ((string)(this[this.tableGetPaymentListReport_SP.RejectionReasonColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RejectionReason\' in table \'GetPaymentListReport_SP\' is DBNu" +
+                                "ll.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.RejectionReasonColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int AdjustmentReasonID {
+                get {
+                    try {
+                        return ((int)(this[this.tableGetPaymentListReport_SP.AdjustmentReasonIDColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'AdjustmentReasonID\' in table \'GetPaymentListReport_SP\' is D" +
+                                "BNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.AdjustmentReasonIDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string AdjustmentReason {
+                get {
+                    try {
+                        return ((string)(this[this.tableGetPaymentListReport_SP.AdjustmentReasonColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'AdjustmentReason\' in table \'GetPaymentListReport_SP\' is DBN" +
+                                "ull.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.AdjustmentReasonColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public long RowNumber {
+                get {
+                    try {
+                        return ((long)(this[this.tableGetPaymentListReport_SP.RowNumberColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RowNumber\' in table \'GetPaymentListReport_SP\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.RowNumberColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string RejectionDateFormatted {
+                get {
+                    try {
+                        return ((string)(this[this.tableGetPaymentListReport_SP.RejectionDateFormattedColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'RejectionDateFormatted\' in table \'GetPaymentListReport_SP\' " +
+                                "is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.RejectionDateFormattedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsPatientCIDNull() {
                 return this.IsNull(this.tableGetPaymentListReport_SP.PatientCIDColumn);
             }
@@ -1334,6 +2074,282 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             public void SetTotalAmountNull() {
                 this[this.tableGetPaymentListReport_SP.TotalAmountColumn] = global::System.Convert.DBNull;
             }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsDeductionReasonNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.DeductionReasonColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetDeductionReasonNull() {
+                this[this.tableGetPaymentListReport_SP.DeductionReasonColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsPatientDeductionStartDateNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.PatientDeductionStartDateColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetPatientDeductionStartDateNull() {
+                this[this.tableGetPaymentListReport_SP.PatientDeductionStartDateColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsPatientDeductionEndDateNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.PatientDeductionEndDateColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetPatientDeductionEndDateNull() {
+                this[this.tableGetPaymentListReport_SP.PatientDeductionEndDateColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsCompanionDeductionStartDateNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.CompanionDeductionStartDateColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetCompanionDeductionStartDateNull() {
+                this[this.tableGetPaymentListReport_SP.CompanionDeductionStartDateColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsCompanionDeductionEndDateNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.CompanionDeductionEndDateColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetCompanionDeductionEndDateNull() {
+                this[this.tableGetPaymentListReport_SP.CompanionDeductionEndDateColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsTotalDeductionNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.TotalDeductionColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetTotalDeductionNull() {
+                this[this.tableGetPaymentListReport_SP.TotalDeductionColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsDeductionNotesNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.DeductionNotesColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetDeductionNotesNull() {
+                this[this.tableGetPaymentListReport_SP.DeductionNotesColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsDeductionReasonTextNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.DeductionReasonTextColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetDeductionReasonTextNull() {
+                this[this.tableGetPaymentListReport_SP.DeductionReasonTextColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsCompanionDeductionNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.CompanionDeductionColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetCompanionDeductionNull() {
+                this[this.tableGetPaymentListReport_SP.CompanionDeductionColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsPatientDeductionNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.PatientDeductionColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetPatientDeductionNull() {
+                this[this.tableGetPaymentListReport_SP.PatientDeductionColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsAmountBeforeDeductionNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.AmountBeforeDeductionColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetAmountBeforeDeductionNull() {
+                this[this.tableGetPaymentListReport_SP.AmountBeforeDeductionColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsPaymentTypeIdNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.PaymentTypeIdColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetPaymentTypeIdNull() {
+                this[this.tableGetPaymentListReport_SP.PaymentTypeIdColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsRejectedPaymentIdNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.RejectedPaymentIdColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetRejectedPaymentIdNull() {
+                this[this.tableGetPaymentListReport_SP.RejectedPaymentIdColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsIsPaymentRejectedNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.IsPaymentRejectedColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetIsPaymentRejectedNull() {
+                this[this.tableGetPaymentListReport_SP.IsPaymentRejectedColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsPaymentDateNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.PaymentDateColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetPaymentDateNull() {
+                this[this.tableGetPaymentListReport_SP.PaymentDateColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsRejectionNotesNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.RejectionNotesColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetRejectionNotesNull() {
+                this[this.tableGetPaymentListReport_SP.RejectionNotesColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsRejectionReasonIDNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.RejectionReasonIDColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetRejectionReasonIDNull() {
+                this[this.tableGetPaymentListReport_SP.RejectionReasonIDColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsRejectionDateNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.RejectionDateColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetRejectionDateNull() {
+                this[this.tableGetPaymentListReport_SP.RejectionDateColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsRejectionReasonNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.RejectionReasonColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetRejectionReasonNull() {
+                this[this.tableGetPaymentListReport_SP.RejectionReasonColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsAdjustmentReasonIDNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.AdjustmentReasonIDColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetAdjustmentReasonIDNull() {
+                this[this.tableGetPaymentListReport_SP.AdjustmentReasonIDColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsAdjustmentReasonNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.AdjustmentReasonColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetAdjustmentReasonNull() {
+                this[this.tableGetPaymentListReport_SP.AdjustmentReasonColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsRowNumberNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.RowNumberColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetRowNumberNull() {
+                this[this.tableGetPaymentListReport_SP.RowNumberColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsRejectionDateFormattedNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.RejectionDateFormattedColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetRejectionDateFormattedNull() {
+                this[this.tableGetPaymentListReport_SP.RejectionDateFormattedColumn] = global::System.Convert.DBNull;
+            }
         }
         
         /// <summary>
@@ -1511,6 +2527,27 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports.PaymentDataSetTableAdapters {
             tableMapping.ColumnMappings.Add("IBan", "IBan");
             tableMapping.ColumnMappings.Add("Bank", "Bank");
             tableMapping.ColumnMappings.Add("Code", "Code");
+            tableMapping.ColumnMappings.Add("DeductionReason", "DeductionReason");
+            tableMapping.ColumnMappings.Add("PatientDeductionStartDate", "PatientDeductionStartDate");
+            tableMapping.ColumnMappings.Add("PatientDeductionEndDate", "PatientDeductionEndDate");
+            tableMapping.ColumnMappings.Add("CompanionDeductionStartDate", "CompanionDeductionStartDate");
+            tableMapping.ColumnMappings.Add("CompanionDeductionEndDate", "CompanionDeductionEndDate");
+            tableMapping.ColumnMappings.Add("TotalDeduction", "TotalDeduction");
+            tableMapping.ColumnMappings.Add("DeductionNotes", "DeductionNotes");
+            tableMapping.ColumnMappings.Add("CompanionDeduction", "CompanionDeduction");
+            tableMapping.ColumnMappings.Add("PatientDeduction", "PatientDeduction");
+            tableMapping.ColumnMappings.Add("AmountBeforeDeduction", "AmountBeforeDeduction");
+            tableMapping.ColumnMappings.Add("PaymentTypeId", "PaymentTypeId");
+            tableMapping.ColumnMappings.Add("RejectedPaymentId", "RejectedPaymentId");
+            tableMapping.ColumnMappings.Add("IsPaymentRejected", "IsPaymentRejected");
+            tableMapping.ColumnMappings.Add("PaymentDate", "PaymentDate");
+            tableMapping.ColumnMappings.Add("RejectionNotes", "RejectionNotes");
+            tableMapping.ColumnMappings.Add("RejectionReasonID", "RejectionReasonID");
+            tableMapping.ColumnMappings.Add("RejectionDate", "RejectionDate");
+            tableMapping.ColumnMappings.Add("RejectionReason", "RejectionReason");
+            tableMapping.ColumnMappings.Add("AdjustmentReasonID", "AdjustmentReasonID");
+            tableMapping.ColumnMappings.Add("AdjustmentReason", "AdjustmentReason");
+            tableMapping.ColumnMappings.Add("RowNumber", "RowNumber");
             this._adapter.TableMappings.Add(tableMapping);
         }
         

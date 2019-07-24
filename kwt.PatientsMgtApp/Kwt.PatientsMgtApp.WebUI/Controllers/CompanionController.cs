@@ -267,11 +267,18 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             {
                 ValidatePatient(companion, primaryCompanionType, isEdit);
             }
-            if (ModelState.IsValidField("IsBeneficiary")
-               && companion.IsBeneficiary == true
-               && companion.IBan == null)
+            if (ModelState.IsValidField("CompanionCID")
+                && companion.CompanionCID?.Trim().Length < 12)
             {
-                ModelState.AddModelError("IBan", "Since the companion is Beneficiary, you need to enter the Bank Account field");
+                ModelState.AddModelError("CompanionCID", "The Companion CID should be 12 characters long");
+            }
+            if (ModelState.IsValidField("IsBeneficiary")
+               && companion.IsBeneficiary == true)
+            {
+                if (companion.IBan == null)
+                    ModelState.AddModelError("Iban", "The companion is Beneficiary, so you need to enter the Iban field");
+                if (companion.IBan?.Trim().Length < 30)
+                    ModelState.AddModelError("Iban", "The Iban should be 30 characters long");
             }
             if (ModelState.IsValidField("IsBeneficiary")
                 && companion.IsBeneficiary == true

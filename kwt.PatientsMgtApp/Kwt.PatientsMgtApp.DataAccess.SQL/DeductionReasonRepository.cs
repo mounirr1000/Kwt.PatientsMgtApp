@@ -26,8 +26,16 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             }).ToList();
         }
 
-        public DeductionReasonModel GetDeductionReason(int reasonId)
+        public DeductionReasonModel GetDeductionReason(int? reasonId)
         {
+            var deductionReason= _domainObjectRepository.Get<DeductionReason>(dr => dr.ReasonId == (reasonId ?? 7));// Other reasons since not specified
+
+            if(deductionReason!=null)
+            return new DeductionReasonModel()
+            {
+                Reason = deductionReason.Reason,
+                ReasonId = deductionReason.ReasonId
+            };
             return null;
         }
 

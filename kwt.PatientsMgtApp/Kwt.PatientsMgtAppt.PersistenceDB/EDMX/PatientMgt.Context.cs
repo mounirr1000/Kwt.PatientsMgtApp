@@ -46,6 +46,10 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<PaymentDeduction> PaymentDeductions { get; set; }
         public virtual DbSet<DeductionReason> DeductionReasons { get; set; }
+        public virtual DbSet<PaymentType> PaymentTypes { get; set; }
+        public virtual DbSet<RejectedPayment> RejectedPayments { get; set; }
+        public virtual DbSet<RejectionReason> RejectionReasons { get; set; }
+        public virtual DbSet<AdjustmentReason> AdjustmentReasons { get; set; }
     
         public virtual ObjectResult<GetPatientListReport_SP_Result> GetPatientListReport_SP(string pCid, string hospital, string doctor, Nullable<bool> status, string speciality)
         {

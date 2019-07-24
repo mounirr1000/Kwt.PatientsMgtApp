@@ -150,6 +150,7 @@
 
 
 @section Scripts{
+@Scripts.Render("~/bundles/jqueryval")
     <script type="text/javascript">
 
         $('document').ready(function () {
@@ -178,14 +179,17 @@
                 min: new Date()
             });
             $("#IBan").kendoMaskedTextBox({
-                mask: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                mask: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                promptChar: ""
                 //
             });
             $("#CompanionCID").kendoMaskedTextBox({
-                mask: "AAAAAAAAAAAA"
+                mask: "AAAAAAAAAAAA",
+                promptChar: ""
             });
             $("#PatientCID").kendoMaskedTextBox({
-                mask: "AAAAAAAAAAAA"
+                mask: "AAAAAAAAAAAA",
+                promptChar: ""
             });
 
             var isBen = $('#IsBeneficiary');

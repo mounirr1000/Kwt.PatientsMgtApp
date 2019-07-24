@@ -13,7 +13,7 @@ using kwt.PatientsMgtApp.Utilities.Errors;
 using Kwt.PatientsMgtApp.Core;
 using Kwt.PatientsMgtApp.Core.Models;
 using Kwt.PatientsMgtApp.PersistenceDB.EDMX;
-
+using System.Web;
 namespace Kwt.PatientsMgtApp.DataAccess.SQL
 {
     public class PaymentRepository : IPaymentRepository
@@ -24,7 +24,9 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         private readonly ICompanionRepository _companionRepository;
         private readonly IPayRateRepository _payRateRepository;
         private readonly IDeductionReasonRepository _deductionReasonRepository;
-
+        private readonly IRejectionReasonRepository _rejectionReasonRepository;
+        private readonly IPaymentTypeRepository _paymentTypeRepository;
+        private readonly IAdjustmentReasonRepository _adjustmentReasonRepository;
         public PaymentRepository()
         {
             _domainObjectRepository = new DomainObjectRepository();
@@ -33,6 +35,9 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             _companionRepository = new CompanionRepository();
             _payRateRepository = new PayRateRepository();
             _deductionReasonRepository = new DeductionReasonRepository();
+            _rejectionReasonRepository = new RejectionReasonRepository();
+            _paymentTypeRepository= new PaymentTypeRepository();
+            _adjustmentReasonRepository= new AdjustmentReasonRepository();
         }
 
 
@@ -66,9 +71,23 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             var report = _domainObjectRepository.ExecuteProcedure<PaymentReportModel>("GetPaymentListReport_SP", parms, false);
             return report;
         }
+        //
+        public List<PaymentReportModel> GetPaymentsReportWithoutParms()
+        {
+            Dictionary<string, object> parms = new Dictionary<string, object>();
+            parms.Add("pCid", null);
+            parms.Add("startDate", null);
+            parms.Add("endDate", null);
+
+            //pCidParameter, hospitalParameter, doctorParameter, statusParameter, specialityParameter
+            var report = _domainObjectRepository.ExecuteProcedure<PaymentReportModel>("GetPaymentListReport_SP", parms, false);
+            return report;
+
+
+        }
         public List<PaymentModel> GetPayments()
         {
-            var payments = _domainObjectRepository.All<Payment>(new[] { "Beneficiary", "Patient", "PayRate", "Companion" });
+            var payments = _domainObjectRepository.All<Payment>(new[] { "Beneficiary", "Patient", "PayRate", "Companion", "PaymentDeductions", "RejectedPayments", "PaymentType" });
 
             return payments.Select(p => p.Beneficiary != null ? new PaymentModel()
             {
@@ -105,9 +124,55 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 BeneficiaryCID = p.Beneficiary.BeneficiaryCID,
                 PayRateID = p.PayRateID,
                 PatientPhone = p.Patient.USphone ?? p.Patient.KWTphone,
-                PaymentID = p.PaymentID
+                PaymentID = p.PaymentID,
+                //new 
+                PaymentTypeId = p.PaymentTypeId,
+                IsRejected = p.IsRejected,
+                RejectedPaymentId = p.RejectedPaymentId,
+                PaymentType = p.PaymentTypeId!=null ? new PaymentTypeModel()
+                {
+                    PaymentType1 = p.PaymentType.PaymentType1,
+                    PaymentTypeId = p.PaymentType.PaymentTypeId
+                }:null,
 
-            } : null).OrderBy(p => p.CreatedDate).ToList();// returns null when the beneficiary is not set and the second null is returned when the companion is not set
+                //end new
+                // new 
+                PaymentDeductionObject = p.PaymentDeductions.Select(pd => new PaymentDeductionModel()
+                {
+                    PatientDeduction = pd.PDeduction,
+                    CompanionAmount = p.CAmount,
+                    PatientAmount = p.PAmount,
+                    PatientCID = pd.PatientCID,
+                    ModifiedDate = pd.ModifiedDate,
+                    Notes = pd.Notes,
+                    FinalAmount = pd.FinalAmount,
+                    CompanionDeduction = pd.CDeduction,
+                    PayRateID = pd.PayRateID,
+                    ModifiedBy = pd.ModifiedBy,
+                    PaymentID = pd.PaymentID,
+                    DeductionID = pd.DeductionID,
+                    DeductionDate = pd.DeductionDate,
+                    TotalDeduction = pd.TotalDeduction,
+                    CreatedBy = pd.CreatedBy,
+                    DeductionEndDate = pd.EndDate,
+                    DeductionStartDate = pd.StartDate,
+                    CreatedDate = pd.CreatedDate,
+                    AmountPaid = p.TotalDue,
+                    CompanionCID = pd.CompanionCID,
+                    CompanionEndDate = pd.CompanionEndDate,
+                    CompanionStartDate = pd.CompanionStartDate,
+                    PatientEndDate = pd.PatientEndDate,
+                    PatientStartDate = pd.PatientStartDate,
+                    //new 
+                    PatientDeductionRate = pd.PatientDeductionRate,
+                    CompanionDeductionRate = pd.CompanionDeductionRate,
+                    //new
+                    //DeductionReasons = _deductionReasonRepository.GetDeductionReasons(),
+                     DeductionReasonId = pd.ReasonId
+
+                }).OrderBy(t => t.DeductionDate).FirstOrDefault(),
+
+        } : null).OrderBy(p => p.CreatedDate).ToList();// returns null when the beneficiary is not set and the second null is returned when the companion is not set
 
         }
 
@@ -116,8 +181,9 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             IPaymentRepository paymentRepository = new PaymentRepository();
 
             var lastPayment = paymentRepository.
-                            GetPaymentsByPatientCid(patientCid)?
-                            .OrderByDescending(p => p.CreatedDate).ThenByDescending(p => p.PaymentID).FirstOrDefault();
+                                GetPaymentsByPatientCid(patientCid)?
+                               .OrderByDescending(p => p.CreatedDate).ThenByDescending(p => p.PaymentID)
+                               .FirstOrDefault(p=>p.PaymentTypeId   !=(int)Enums.PaymentType.Adjustment);
 
             PaymentModel payment = new PaymentModel();
             var ben = _beneficiaryRepository.GetBeneficiary(patientCid);
@@ -181,6 +247,20 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 //new 
                 payment.PatientDeductionRate = payment.PaymentDeductionObject?.PatientDeductionRate ?? (int)Enums.PayRates.PatientRate;
                 payment.CompanionDeductionRate = payment.PaymentDeductionObject?.CompanionDeductionRate ?? (int)Enums.PayRates.CompanionRate;
+
+                // new 07/13/2019
+                payment.IsRejected = payment.IsRejected;
+                payment.PaymentTypeId = payment.PaymentTypeId;
+                payment.RejectedPaymentId = payment.RejectedPaymentId;
+                payment.PaymentTypes = _paymentTypeRepository.GetPaymentTypeList();
+                payment.AdjustmentReasonID = payment.AdjustmentReasonID;
+                payment.AdjustmentReasons = _adjustmentReasonRepository.GetAdjustmentReasonList();
+                // get the list of all payment where payments are rejected
+                //select * from payments where PaymentID not in 
+                //(select rejectedPaymentId from Payments where rejectedPaymentId is not null)
+                var rejectedPayments = payment.Payments?.Where(p => !payment.Payments.Select(py=>py.RejectedPaymentId).Contains(p.PaymentID)).Where(p => p.IsRejected == true).ToList();
+                payment.RejectedPaymentList = rejectedPayments;//payment.Payments?.Where(p=>p.IsRejected==true).ToList();
+                // end new 07/13/2019
             }
             return payment;
         }
@@ -197,7 +277,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         public PaymentModel GetPaymentById(int paymentid)
         {
             var payment = _domainObjectRepository.Get<Payment>(p => p.PaymentID == paymentid,
-                new[] { "Beneficiary", "Patient", "PayRate", "Companion", "PaymentDeductions" });
+                new[] { "Beneficiary", "Patient", "PayRate", "Companion", "PaymentDeductions","RejectedPayments", "PaymentType" });
             PaymentModel pay = new PaymentModel();
             if (payment != null)
             {
@@ -363,6 +443,51 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 }).ToList();
 
                 //
+                // new 07/13/2019
+                pay.IsRejected = payment.IsRejected;
+                pay.PaymentTypeId = payment.PaymentTypeId;
+                pay.RejectedPaymentId = payment.RejectedPaymentId;
+                
+                pay.RejectedPayment = payment.RejectedPayments?.Select(r => new RejectedPaymentModel()
+                {
+                    PaymentID=r.PaymentID,
+                    CreatedBy =r.CreatedBy,
+                    CreatedDate=r.CreatedDate,
+                    ModifiedBy = r.ModifiedBy,
+                    ModifiedDate=r.ModifiedDate,
+                    RejectedDate = r.RejectedDate,
+                    RejectionID = r.RejectionID,
+                    RejectionNotes= r.RejectionNotes,
+                    RejectionReasonID= r.RejectionReasonID
+                }).SingleOrDefault();
+                pay.RejectionReasons = _rejectionReasonRepository.GetRejectionReasonList();
+                pay.RejectedPayments = payment.RejectedPayments?.Select(rj => new RejectedPaymentModel()
+                {
+                    PaymentID = rj.PaymentID,
+                    CreatedDate = rj.CreatedDate,
+                    CreatedBy = rj.CreatedBy,
+                    ModifiedBy = rj.ModifiedBy,
+                    ModifiedDate = rj.ModifiedDate,
+                    RejectedDate = rj.RejectedDate,
+                    RejectionID = rj.RejectionID,
+                    RejectionNotes = rj.RejectionNotes,
+                    RejectionReasonID = rj.RejectionReasonID,
+                }).ToList();
+                if (pay.RejectedPayment == null)
+                {
+                    pay.RejectedPayment = new RejectedPaymentModel();
+                }
+                // once the payment is corrected we cannot update it back to be not rejected
+                var payments = GetPaymentsByPatientCid(pay.PatientCID);
+                if (payments != null)
+                {
+                    var correctedPayment = payments.SingleOrDefault(p => p.RejectedPaymentId == pay.PaymentID);
+                    if (correctedPayment != null)
+                    {
+                        pay.IsThisPaymentCorrected = true;
+                        pay.CorrectedPaymentId = correctedPayment.PaymentID;
+                    }
+                }
                 //};
                 return pay;
             }
@@ -372,8 +497,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
 
         public List<PaymentModel> GetPaymentsByPatientCid(string pacientcid)
         {
-            IPaymentRepository paymentRepo = new PaymentRepository();
-            var paymentList = paymentRepo.GetPayments();
+            //IPaymentRepository paymentRepo = new PaymentRepository();
+            var paymentList = GetPayments();
             List<PaymentModel> payments = new List<PaymentModel>();
             if (paymentList.Count > 0)
                 payments = paymentList.Where(p => p?.PatientCID == pacientcid).OrderBy(p => p?.CreatedDate)?.ToList();//_domainObjectRepository.Get<Payment>(p => p.PatientCID == pacientcid, new[] { "Beneficiary", "Patient", "PayRate" });
@@ -404,7 +529,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 //{
                 //    throw new PatientsMgtException(1, "error", "Add new Payment", "The payment end date " + currentEndDate + " and the payment start date " + currentStartDate+" should be in the future");
                 //}
-                if ((currentEndDate - currentStartDate).Days <= 0)
+                if ((currentEndDate - currentStartDate).Days < 0)
                 {
                     throw new PatientsMgtException(1, "error", "Add new Payment", "The payment end date " + currentEndDate + " Should be greater than payment start date " + currentStartDate);
                 }
@@ -418,9 +543,9 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 //}
             }
             //check last payment for the same patient if there is one
-            IPaymentRepository paymentRepository = new PaymentRepository();
+            //IPaymentRepository paymentRepository = new PaymentRepository();
 
-            var lastPayment = paymentRepository.
+            var lastPayment =// paymentRepository.
                             GetPaymentsByPatientCid(payment?.PatientCID)?
                             .OrderByDescending(p => p.PaymentDate).FirstOrDefault();
             // payment should be only in 15 days period
@@ -432,11 +557,14 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     var currentStartDate = (DateTime)payment?.PaymentStartDate?.Date;
                     TimeSpan dateDiff = currentStartDate - lastEndDate;
                     //the current start date should not be less than the last payment end date
-                    if (dateDiff.Days <= 0
+                    if (dateDiff.Days <= 0 && !HttpContext.Current.User.IsInRole(Roles.SuperAdmin)
                         //Check if the last payemt total that was made on same date is different
-                        && lastPayment.TotalDue == payment.TotalDue
+                       // && lastPayment.TotalDue == payment.TotalDue
                         )
-                    {
+                    { 
+                        // new 07-17-2019
+                        // sometimes they need to make payment adjustment for some repeated dates old payments
+                        if(payment.PaymentTypeId ==(int)Enums.PaymentType.Regular)
                         throw new PatientsMgtException(1, "error", "Add new Payment", "Last Payment end date was on " + lastEndDate + " So payment start date should be after " + lastEndDate);
                     }
 
@@ -465,7 +593,12 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 Period = payment?.PaymentLengthPeriod,
                 StartDate = payment?.PaymentStartDate,
                 TotalDue = payment?.TotalDue,
-
+                //new 07-17-2019
+                PaymentTypeId = payment?.PaymentTypeId,
+                RejectedPaymentId = payment?.RejectedPaymentId,
+                IsRejected = payment?.IsRejected,
+                AdjustmentReasonID = payment?.AdjustmentReasonID,
+                
             };
             using (TransactionScope scope = new TransactionScope())
             {
@@ -512,13 +645,11 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
 
             }
 
-
-
         }
 
         public PaymentModel UpdatePayment(PaymentModel payment)
         {
-            var paymentToUpdate = _domainObjectRepository.Get<Payment>(p => p.PaymentID == payment.Id, new[] { "PaymentDeductions" });
+            var paymentToUpdate = _domainObjectRepository.Get<Payment>(p => p.PaymentID == payment.Id, new[] { "PaymentDeductions", "RejectedPayments" });
             if (paymentToUpdate != null)
             {
                 int? payrate;
@@ -565,8 +696,28 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     // if there is a deduction we get the final amount after deduction otherwise null
                     FinalAmountAfterCorrection = payment.PaymentDeductionObject.FinalAmount > 0 ? payment.PaymentDeductionObject.FinalAmount : null,
                     TotalCorrection = payment.PaymentDeductionObject.TotalDeduction > 0 ? payment.PaymentDeductionObject.TotalDeduction : null,
-                };
+                    //new 07-13-2019
+                    IsRejected = payment.IsRejected,
+                    RejectedPaymentId = payment.RejectedPaymentId,
+                    PaymentTypeId=payment.PaymentTypeId,
+                    RejectedPayments = paymentToUpdate.RejectedPayments,
+                    AdjustmentReasonID = payment?.AdjustmentReasonID,
+                    //RejectedPayments =  new List<RejectedPayment>().Add(new RejectedPayment()
+                    //{
+                    //    CreatedBy = payment.RejectedPayment.CreatedBy,
+                    //    RejectionID = payment.RejectedPayment.RejectionID,
+                    //    PaymentID = payment.RejectedPayment.PaymentID,
+                    //    RejectedDate = payment.RejectedPayment.RejectedDate,
+                    //    RejectionNotes = payment.RejectedPayment.RejectionNotes,
+                    //    RejectionReasonID = payment.RejectedPayment.RejectionReasonID,
+                    //})
+                    //new 07-17-2019
 
+                };
+                //new 07-13-2019
+
+                AddOrUpdateRejectedPayment(updatedPayment, payment);
+                //end new
                 paymentToUpdate = updatedPayment;
                 //Todo This is a temp fix for updating the Payment
                 PatientsMgtEntities dbContext = new PatientsMgtEntities();
@@ -574,16 +725,84 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 var deduc = paymentToUpdate.PaymentDeductions.SingleOrDefault();
                 if (deduc != null)
                     deduc.Payment = null;
+                //new
+                var reject = paymentToUpdate.RejectedPayments.SingleOrDefault();
+                if (reject != null)
+                    reject.Payment = null;
+                //end new
                 dbContext.Set<Payment>().Attach(paymentToUpdate);
                 entry.State = EntityState.Modified;
                 dbContext.SaveChanges();
                 AddOrUpdatePaymentDeduction(payment, paymentToUpdate.PaymentDeductions.Count > 0);
-                //
-                //_domainObjectRepository.Update<Payment>(paymentToUpdate);
-
+              
+                
 
             }
             return payment;
+        }
+        // new 
+        public void AddOrUpdateRejectedPayment(Payment updatedPayment, PaymentModel payment)
+        {
+            if (updatedPayment.IsRejected == true)
+            {
+                if (updatedPayment.RejectedPayments?.Count == 0)
+                {
+                    CreateRejectedPayment(payment);
+                }
+                else // means there is already a record with this payment in rejectedpayment table
+                {
+                    var rejctedPayment = new RejectedPayment()
+                    {
+                        RejectionNotes = payment.RejectedPayment.RejectionNotes,
+                        RejectionReasonID = payment.RejectedPayment.RejectionReasonID,
+                        ModifiedBy = payment.ModifiedBy,
+                        ModifiedDate = DateTime.Now,
+                        CreatedDate = payment.RejectedPayment.CreatedDate,
+                        PaymentID = payment.RejectedPayment.PaymentID,
+                        RejectionID = payment.RejectedPayment.RejectionID,
+                        CreatedBy = payment.RejectedPayment.CreatedBy,
+                        RejectedDate = payment.RejectedPayment.RejectedDate
+
+                    };
+                    //_domainObjectRepository.Update<RejectedPayment>(rejctedPayment);
+                    PatientsMgtEntities dbContext = new PatientsMgtEntities();
+                    var entry = dbContext.Entry(rejctedPayment);
+                    dbContext.Set<RejectedPayment>().Attach(rejctedPayment);
+                    entry.State = EntityState.Modified;
+                    dbContext.SaveChanges();
+
+                }
+
+
+            }
+            else // since the payment is no longer rejected we remove old one if there is on DB
+            {
+                if (updatedPayment.RejectedPayments?.Count > 0)
+                {
+                    // this means we have a record in rejectedPayment table that need to be removed
+                    _domainObjectRepository.Delete<RejectedPayment>(updatedPayment.RejectedPayments.SingleOrDefault());
+                }
+            }
+            //end new
+        }
+
+        private void CreateRejectedPayment(PaymentModel payment)
+        {
+            payment.RejectedPayment.PaymentID = payment.PaymentID;
+            // this means the payment was never rejected, then we do an insert into rejctedpayment table
+            var rejctedPayment = new RejectedPayment()
+            {
+                CreatedBy = payment.CreatedBy,
+                CreatedDate = DateTime.Now,
+                PaymentID = payment.PaymentID,
+                RejectedDate = DateTime.Now,
+                RejectionNotes = payment.RejectedPayment.RejectionNotes,
+                RejectionReasonID = payment.RejectedPayment.RejectionReasonID,
+                Id = payment.PaymentID
+            };
+            //
+            rejctedPayment.Payment = null;
+            _domainObjectRepository.Create<RejectedPayment>(rejctedPayment);
         }
 
         private void AddOrUpdatePaymentDeduction(PaymentModel paymentModel, bool? isDeductionExist = false)
@@ -687,10 +906,14 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             var index = 0;
             if (pay != null)
             {
+                
                 // delete deduction first from paymentDeduction
                 var deduction = _domainObjectRepository.Get<PaymentDeduction>(p => p.PaymentID == payment.PaymentID);
+                var rejection = _domainObjectRepository.Get<RejectedPayment>(p => p.PaymentID == payment.PaymentID);
                 if (deduction != null)
                     _domainObjectRepository.Delete<PaymentDeduction>(deduction);
+                if (rejection != null)
+                    _domainObjectRepository.Delete<RejectedPayment>(rejection);
                 index = _domainObjectRepository.Delete<Payment>(pay);
             }
             return index;

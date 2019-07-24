@@ -27,5 +27,28 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public string IBan { get; set; }
         public string Bank { get; set; }
         public string Code { get; set; }
+        public Nullable<decimal> FinalAmount { get; set; }
+        public Nullable<decimal> DeductedAmount { get; set; }
+        public Nullable<int> DeductionReason { get; set; }
+        public Nullable<System.DateTime> CompanionDeductionStartDate { get; set; }
+        public Nullable<System.DateTime> CompanionDeductionEndDate { get; set; }
+        public Nullable<decimal> TotalDeduction { get; set; }
+        public string DeductionNotes { get; set; }
+        public Nullable<System.DateTime> PatientDeductionStartDate { get; set; }
+        public Nullable<System.DateTime> PatientDeductionEndDate { get; set; }
+        public Nullable<decimal> CompanionDeduction { get; set; }
+        public Nullable<decimal> PatientDeduction { get; set; }
+        public Nullable<decimal> AmountBeforeDeduction { get; set; }
+        public Nullable<int> PaymentTypeId { get; set; }
+        public Nullable<int> RejectedPaymentId { get; set; }
+        public Nullable<bool> IsPaymentRejected { get; set; }
+        public Nullable<System.DateTime> PaymentDate { get; set; }
+        public string RejectionNotes { get; set; }
+        public Nullable<int> RejectionReasonID { get; set; }
+        public Nullable<System.DateTime> RejectionDate { get; set; }
+        public string RejectionReason { get; set; }
+        public Nullable<int> AdjustmentReasonID { get; set; }
+        public string AdjustmentReason { get; set; }
+        public Nullable<long> RowNumber { get; set; }
     }
 }

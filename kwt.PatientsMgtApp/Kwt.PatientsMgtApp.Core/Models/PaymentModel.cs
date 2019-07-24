@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Kwt.PatientsMgtApp.Core.Models
@@ -16,6 +17,7 @@ namespace Kwt.PatientsMgtApp.Core.Models
         [DisplayName("Payment Date")]
         public Nullable<System.DateTime> PaymentDate { get; set; }
         public String PaymentDateFormatted { get { return String.Format("{0:d}", PaymentDate); } }
+        public String PaymentDateLongFormatted { get { return String.Format("{0:d-MMMM-yyyy}", PaymentDate); } }
 
         public bool IsActive { get; set; }
 
@@ -99,12 +101,13 @@ namespace Kwt.PatientsMgtApp.Core.Models
         [DataType(DataType.Date)]
         public Nullable<System.DateTime> PaymentStartDate { get; set; }
         public String PaymentStartDateFormatted { get { return String.Format("{0:d}", PaymentStartDate); } }
-
+        public String PaymentStartDateLongFormatted { get { return String.Format("{0: d-MMMM-yyyy}", PaymentStartDate); } }
         [DisplayName("Payment End Date")]
         [DataType(DataType.Date)]
         [Required]
         public Nullable<System.DateTime> PaymentEndDate { get; set; }
         public String PaymentEndDateFormatted { get { return String.Format("{0:d}", PaymentEndDate); } }
+        public String PaymentEndDateLongFormatted { get { return String.Format("{0:d-MMMM-yyyy}", PaymentEndDate); } }
 
         [DisplayName("Payment Period")]
         public Nullable<int> PaymentLengthPeriod { get; set; }
@@ -172,5 +175,60 @@ namespace Kwt.PatientsMgtApp.Core.Models
 
         public IList<string> ActivePatientCidList { get; set; }
 
+        // new 07/13/2019
+        [DisplayName("Is Payment Rejected?")]
+        public Nullable<bool> IsRejected { get; set; }
+
+        public string IsRejectedText { get { return IsRejected == true ? "Yes" : "No"; } }
+        [DisplayName("Select Payment Type to Make")]
+        public Nullable<int> PaymentTypeId { get; set; }
+        [DisplayName("Select The Rejected Payment to Correct")]
+        public Nullable<int> RejectedPaymentId { get; set; }
+        public RejectedPaymentModel RejectedPayment { get; set; }
+
+        public bool? IsThisPaymentCorrected { get; set; }
+
+        public int? CorrectedPaymentId { get; set; }
+        public List<RejectionReasonModel> RejectionReasons { get; set; }
+        public PaymentTypeModel PaymentType { get; set; }
+        public List<RejectedPaymentModel> RejectedPayments { get; set; }
+
+        public List<PaymentTypeModel> PaymentTypes { get; set; }
+        public List<PaymentModel> RejectedPaymentList { get; set; }
+
+        [DisplayName("Select Reason For The Adjsutment")]
+        public Nullable<int> AdjustmentReasonID { get; set; }
+        public AdjustmentReasonModel AdjustmentReason { get; set; }
+        public List<AdjustmentReasonModel> AdjustmentReasons { get; set; }
+
+
+        public string PatientFormatedPhone { get { return FormatPhoneNumber(PatientPhone, ""); } }
+
+        public string FormatPhoneNumber(string phoneNum, string phoneFormat)
+        {
+
+            if (phoneFormat == "")
+            {
+                // If phone format is empty, code will use default format (###) ###-####
+                phoneFormat = "##########";
+            }
+            if (!string.IsNullOrEmpty(phoneNum))
+            {
+                phoneNum = phoneNum.Replace("+1", "");
+                // First, remove everything except of numbers
+                Regex regexObj = new Regex(@"[^\d]");
+                phoneNum = regexObj.Replace(phoneNum, "");
+                // Second, format numbers to phone string 
+                if (phoneNum.Length > 0)
+                {
+                    phoneNum = Convert.ToInt64(phoneNum).ToString(phoneFormat);
+                }
+            }
+                
+
+            
+
+            return phoneNum;
+        }
     }
 }

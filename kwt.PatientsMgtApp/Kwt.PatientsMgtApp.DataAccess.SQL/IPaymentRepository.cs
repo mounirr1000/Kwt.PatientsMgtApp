@@ -13,7 +13,9 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         //new February 28, 2019
         List<PaymentModel> GetPaymentsWithPhone(DateTime? date);
         //
-
+        //new 07/12/2019
+        List<PaymentReportModel> GetPaymentsReportWithoutParms();
+            //
         List<PaymentModel> GetPayments();
 
         PaymentModel GetPaymentById(int paymentid);

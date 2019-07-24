@@ -52,6 +52,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DomainObjectClass.cs" />
+    <Compile Include="EDMX\AdjustmentReason.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
     <Compile Include="EDMX\Agency.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
@@ -118,7 +121,16 @@
     <Compile Include="EDMX\PaymentDeduction.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
+    <Compile Include="EDMX\PaymentType.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
     <Compile Include="EDMX\PayRate.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\RejectedPayment.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\RejectionReason.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
     <Compile Include="EDMX\Role.cs">

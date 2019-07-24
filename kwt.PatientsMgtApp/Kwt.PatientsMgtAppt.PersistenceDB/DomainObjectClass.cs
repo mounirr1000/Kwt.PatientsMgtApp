@@ -87,6 +87,35 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
             set { this.ReasonId = value; }
         }
     }
+    //new
+    public partial class RejectionReason : IDomainObject
+    {
+        public int Id
+        {
+            get { return this.RejectionReasonID; }
+
+            set { this.RejectionReasonID = value; }
+        }
+    }
+    //new
+    public partial class AdjustmentReason : IDomainObject
+    {
+        public int Id
+        {
+            get { return this.AdjustmentReasonID; }
+
+            set { this.AdjustmentReasonID = value; }
+        }
+    }
+    public partial class RejectedPayment : IDomainObject, IAuditObject
+    {
+        public int Id
+        {
+            get { return this.RejectionID; }
+
+            set { this.RejectionID = value; }
+        }
+    }
     public partial class Doctor : IDomainObject
     {
         public int Id
@@ -133,7 +162,16 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         }
     }
 
-    //
+    //new
+    public partial class PaymentType : IDomainObject
+    {
+        public int Id
+        {
+            get { return this.PaymentTypeId; }
+
+            set { this.PaymentTypeId = value; }
+        }
+    }
     public partial class PayRate : IDomainObject
     {
         public int Id

@@ -45,6 +45,14 @@
         <AssociationConnector Association="PatientsMgtModel.FK_PaymentDeductions_PayRates" />
         <EntityTypeShape EntityType="PatientsMgtModel.DeductionReason" Width="1.5" PointX="14.375" PointY="0.75" />
         <AssociationConnector Association="PatientsMgtModel.FK_PaymentDeductions_DeductionReasons" />
+        <EntityTypeShape EntityType="PatientsMgtModel.PaymentType" Width="1.5" PointX="9" PointY="16.75" />
+        <EntityTypeShape EntityType="PatientsMgtModel.RejectedPayment" Width="1.5" PointX="16.5" PointY="9.875" />
+        <EntityTypeShape EntityType="PatientsMgtModel.RejectionReason" Width="1.5" PointX="14.25" PointY="15.75" />
+        <AssociationConnector Association="PatientsMgtModel.FK_Payments_PaymentTypes" />
+        <AssociationConnector Association="PatientsMgtModel.FK_RejectedPayments_Payments" />
+        <AssociationConnector Association="PatientsMgtModel.FK_RejectedPayments_RejectionReasons" />
+        <EntityTypeShape EntityType="PatientsMgtModel.AdjustmentReason" Width="1.5" PointX="0.75" PointY="14.875" />
+        <AssociationConnector Association="PatientsMgtModel.FK_Payments_AdjustmentReasons" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

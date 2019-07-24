@@ -5,6 +5,13 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="PatientsMgtModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AdjustmentReasons">
+          <Key>
+            <PropertyRef Name="AdjustmentReasonID" />
+          </Key>
+          <Property Name="AdjustmentReasonID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AdjustmentReason" Type="nvarchar" MaxLength="250" />
+        </EntityType>
         <EntityType Name="Agencies">
           <Key>
             <PropertyRef Name="AgencyID" />
@@ -224,6 +231,17 @@
           <Property Name="ModifiedDate" Type="datetime" />
           <Property Name="FinalAmountAfterCorrection" Type="decimal" Precision="18" Scale="0" />
           <Property Name="TotalCorrection" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="IsRejected" Type="bit" />
+          <Property Name="PaymentTypeId" Type="int" />
+          <Property Name="RejectedPaymentId" Type="int" />
+          <Property Name="AdjustmentReasonID" Type="int" />
+        </EntityType>
+        <EntityType Name="PaymentTypes">
+          <Key>
+            <PropertyRef Name="PaymentTypeId" />
+          </Key>
+          <Property Name="PaymentTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PaymentType" Type="nvarchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="PayRates">
           <Key>
@@ -232,6 +250,27 @@
           <Property Name="PayRateID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CompanionRate" Type="decimal" Precision="18" Scale="0" />
           <Property Name="PatientRate" Type="decimal" Precision="18" Scale="0" />
+        </EntityType>
+        <EntityType Name="RejectedPayments">
+          <Key>
+            <PropertyRef Name="RejectionID" />
+          </Key>
+          <Property Name="RejectionID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PaymentID" Type="int" Nullable="false" />
+          <Property Name="RejectionReasonID" Type="int" Nullable="false" />
+          <Property Name="RejectedDate" Type="date" />
+          <Property Name="RejectionNotes" Type="nvarchar" MaxLength="250" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="50" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="nvarchar" MaxLength="50" />
+          <Property Name="ModifiedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="RejectionReasons">
+          <Key>
+            <PropertyRef Name="RejectionReasonID" />
+          </Key>
+          <Property Name="RejectionReasonID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RejectionReason" Type="nvarchar" MaxLength="250" />
         </EntityType>
         <EntityType Name="Roles">
           <Key>
@@ -481,6 +520,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Payments_AdjustmentReasons">
+          <End Role="AdjustmentReasons" Type="Self.AdjustmentReasons" Multiplicity="0..1" />
+          <End Role="Payments" Type="Self.Payments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AdjustmentReasons">
+              <PropertyRef Name="AdjustmentReasonID" />
+            </Principal>
+            <Dependent Role="Payments">
+              <PropertyRef Name="AdjustmentReasonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Payments_Beneficiaries">
           <End Role="Beneficiaries" Type="Self.Beneficiaries" Multiplicity="0..1" />
           <End Role="Payments" Type="Self.Payments" Multiplicity="*" />
@@ -519,6 +570,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Payments_PaymentTypes">
+          <End Role="PaymentTypes" Type="Self.PaymentTypes" Multiplicity="0..1" />
+          <End Role="Payments" Type="Self.Payments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentTypes">
+              <PropertyRef Name="PaymentTypeId" />
+            </Principal>
+            <Dependent Role="Payments">
+              <PropertyRef Name="PaymentTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Payments_PayRates">
           <End Role="PayRates" Type="Self.PayRates" Multiplicity="0..1" />
           <End Role="Payments" Type="Self.Payments" Multiplicity="*" />
@@ -528,6 +591,30 @@
             </Principal>
             <Dependent Role="Payments">
               <PropertyRef Name="PayRateID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RejectedPayments_Payments">
+          <End Role="Payments" Type="Self.Payments" Multiplicity="1" />
+          <End Role="RejectedPayments" Type="Self.RejectedPayments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Payments">
+              <PropertyRef Name="PaymentID" />
+            </Principal>
+            <Dependent Role="RejectedPayments">
+              <PropertyRef Name="PaymentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RejectedPayments_RejectionReasons">
+          <End Role="RejectionReasons" Type="Self.RejectionReasons" Multiplicity="1" />
+          <End Role="RejectedPayments" Type="Self.RejectedPayments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RejectionReasons">
+              <PropertyRef Name="RejectionReasonID" />
+            </Principal>
+            <Dependent Role="RejectedPayments">
+              <PropertyRef Name="RejectionReasonID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -547,6 +634,7 @@
           <Parameter Name="endDate" Type="date" Mode="In" />
         </Function>
         <EntityContainer Name="PatientsMgtModelStoreContainer">
+          <EntitySet Name="AdjustmentReasons" EntityType="Self.AdjustmentReasons" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Agencies" EntityType="Self.Agencies" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Banks" EntityType="Self.Banks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Beneficiaries" EntityType="Self.Beneficiaries" Schema="dbo" store:Type="Tables" />
@@ -561,7 +649,10 @@
           <EntitySet Name="Patients" EntityType="Self.Patients" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PaymentDeductions" EntityType="Self.PaymentDeductions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Payments" EntityType="Self.Payments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PaymentTypes" EntityType="Self.PaymentTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PayRates" EntityType="Self.PayRates" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RejectedPayments" EntityType="Self.RejectedPayments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RejectionReasons" EntityType="Self.RejectionReasons" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Specialties" EntityType="Self.Specialties" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRoles" EntityType="Self.UserRoles" Schema="dbo" store:Type="Tables" />
@@ -634,6 +725,10 @@
             <End Role="PayRates" EntitySet="PayRates" />
             <End Role="PaymentDeductions" EntitySet="PaymentDeductions" />
           </AssociationSet>
+          <AssociationSet Name="FK_Payments_AdjustmentReasons" Association="Self.FK_Payments_AdjustmentReasons">
+            <End Role="AdjustmentReasons" EntitySet="AdjustmentReasons" />
+            <End Role="Payments" EntitySet="Payments" />
+          </AssociationSet>
           <AssociationSet Name="FK_Payments_Beneficiaries" Association="Self.FK_Payments_Beneficiaries">
             <End Role="Beneficiaries" EntitySet="Beneficiaries" />
             <End Role="Payments" EntitySet="Payments" />
@@ -646,9 +741,21 @@
             <End Role="Patients" EntitySet="Patients" />
             <End Role="Payments" EntitySet="Payments" />
           </AssociationSet>
+          <AssociationSet Name="FK_Payments_PaymentTypes" Association="Self.FK_Payments_PaymentTypes">
+            <End Role="PaymentTypes" EntitySet="PaymentTypes" />
+            <End Role="Payments" EntitySet="Payments" />
+          </AssociationSet>
           <AssociationSet Name="FK_Payments_PayRates" Association="Self.FK_Payments_PayRates">
             <End Role="PayRates" EntitySet="PayRates" />
             <End Role="Payments" EntitySet="Payments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RejectedPayments_Payments" Association="Self.FK_RejectedPayments_Payments">
+            <End Role="Payments" EntitySet="Payments" />
+            <End Role="RejectedPayments" EntitySet="RejectedPayments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RejectedPayments_RejectionReasons" Association="Self.FK_RejectedPayments_RejectionReasons">
+            <End Role="RejectionReasons" EntitySet="RejectionReasons" />
+            <End Role="RejectedPayments" EntitySet="RejectedPayments" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -868,6 +975,13 @@
           <NavigationProperty Name="PaymentDeductions" Relationship="PatientsMgtModel.FK_PaymentDeductions_Payments" FromRole="Payment" ToRole="PaymentDeduction" />
           <Property Name="FinalAmountAfterCorrection" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="TotalCorrection" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="IsRejected" Type="Boolean" />
+          <Property Name="PaymentTypeId" Type="Int32" />
+          <Property Name="RejectedPaymentId" Type="Int32" />
+          <NavigationProperty Name="PaymentType" Relationship="PatientsMgtModel.FK_Payments_PaymentTypes" FromRole="Payment" ToRole="PaymentType" />
+          <NavigationProperty Name="RejectedPayments" Relationship="PatientsMgtModel.FK_RejectedPayments_Payments" FromRole="Payment" ToRole="RejectedPayment" />
+          <Property Name="AdjustmentReasonID" Type="Int32" />
+          <NavigationProperty Name="AdjustmentReason" Relationship="PatientsMgtModel.FK_Payments_AdjustmentReasons" FromRole="Payment" ToRole="AdjustmentReason" />
         </EntityType>
         <EntityType Name="PayRate">
           <Key>
@@ -1211,6 +1325,26 @@
             <End Role="DeductionReason" EntitySet="DeductionReasons" />
             <End Role="PaymentDeduction" EntitySet="PaymentDeductions" />
           </AssociationSet>
+          <EntitySet Name="PaymentTypes" EntityType="PatientsMgtModel.PaymentType" />
+          <EntitySet Name="RejectedPayments" EntityType="PatientsMgtModel.RejectedPayment" />
+          <EntitySet Name="RejectionReasons" EntityType="PatientsMgtModel.RejectionReason" />
+          <AssociationSet Name="FK_Payments_PaymentTypes" Association="PatientsMgtModel.FK_Payments_PaymentTypes">
+            <End Role="PaymentType" EntitySet="PaymentTypes" />
+            <End Role="Payment" EntitySet="Payments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RejectedPayments_Payments" Association="PatientsMgtModel.FK_RejectedPayments_Payments">
+            <End Role="Payment" EntitySet="Payments" />
+            <End Role="RejectedPayment" EntitySet="RejectedPayments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RejectedPayments_RejectionReasons" Association="PatientsMgtModel.FK_RejectedPayments_RejectionReasons">
+            <End Role="RejectionReason" EntitySet="RejectionReasons" />
+            <End Role="RejectedPayment" EntitySet="RejectedPayments" />
+          </AssociationSet>
+          <EntitySet Name="AdjustmentReasons" EntityType="PatientsMgtModel.AdjustmentReason" />
+          <AssociationSet Name="FK_Payments_AdjustmentReasons" Association="PatientsMgtModel.FK_Payments_AdjustmentReasons">
+            <End Role="AdjustmentReason" EntitySet="AdjustmentReasons" />
+            <End Role="Payment" EntitySet="Payments" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="GetPatientListReport_SP_Result">
           <Property Type="Int32" Name="id" Nullable="false" />
@@ -1251,7 +1385,30 @@
           <Property Type="String" Name="IBan" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="Bank" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="Code" Nullable="true" MaxLength="3" />
-        </ComplexType>
+          <Property Type="Decimal" Name="FinalAmount" Nullable="true" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="DeductedAmount" Nullable="true" Precision="18" Scale="0" />
+          <Property Type="Int32" Name="DeductionReason" Nullable="true" />
+          <Property Type="DateTime" Name="CompanionDeductionStartDate" Nullable="true" />
+          <Property Type="DateTime" Name="CompanionDeductionEndDate" Nullable="true" />
+          <Property Type="Decimal" Name="TotalDeduction" Nullable="true" Precision="18" Scale="0" />
+          <Property Type="String" Name="DeductionNotes" Nullable="true" MaxLength="250" />
+          <Property Type="DateTime" Name="PatientDeductionStartDate" Nullable="true" />
+          <Property Type="DateTime" Name="PatientDeductionEndDate" Nullable="true" />
+          <Property Type="Decimal" Name="CompanionDeduction" Nullable="true" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="PatientDeduction" Nullable="true" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="AmountBeforeDeduction" Nullable="true" Precision="18" Scale="0" />
+          <Property Type="Int32" Name="PaymentTypeId" Nullable="true" />
+          <Property Type="Int32" Name="RejectedPaymentId" Nullable="true" />
+          <Property Type="Boolean" Name="IsPaymentRejected" Nullable="true" />
+          <Property Type="DateTime" Name="PaymentDate" Nullable="true" />
+          <Property Type="String" Name="RejectionNotes" Nullable="true" MaxLength="250" />
+          <Property Type="Int32" Name="RejectionReasonID" Nullable="true" />
+          <Property Type="DateTime" Name="RejectionDate" Nullable="true" />
+          <Property Type="String" Name="RejectionReason" Nullable="true" MaxLength="250" />
+          <Property Type="Int32" Name="AdjustmentReasonID" Nullable="true" />
+          <Property Type="String" Name="AdjustmentReason" Nullable="true" MaxLength="250" />
+          <Property Type="Int64" Name="RowNumber" Nullable="true" />
+          </ComplexType>
         <Association Name="FK_PatientHistories_Patients">
           <End Type="PatientsMgtModel.Patient" Role="Patient" Multiplicity="1" />
           <End Type="PatientsMgtModel.PatientHistory" Role="PatientHistory" Multiplicity="*" />
@@ -1385,6 +1542,94 @@
             </Principal>
             <Dependent Role="PaymentDeduction">
               <PropertyRef Name="ReasonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="PaymentType">
+          <Key>
+            <PropertyRef Name="PaymentTypeId" />
+          </Key>
+          <Property Name="PaymentTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PaymentType1" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Payments" Relationship="PatientsMgtModel.FK_Payments_PaymentTypes" FromRole="PaymentType" ToRole="Payment" />
+        </EntityType>
+        <EntityType Name="RejectedPayment">
+          <Key>
+            <PropertyRef Name="RejectionID" />
+          </Key>
+          <Property Name="RejectionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PaymentID" Type="Int32" Nullable="false" />
+          <Property Name="RejectionReasonID" Type="Int32" Nullable="false" />
+          <Property Name="RejectedDate" Type="DateTime" Precision="0" />
+          <Property Name="RejectionNotes" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Payment" Relationship="PatientsMgtModel.FK_RejectedPayments_Payments" FromRole="RejectedPayment" ToRole="Payment" />
+          <NavigationProperty Name="RejectionReason" Relationship="PatientsMgtModel.FK_RejectedPayments_RejectionReasons" FromRole="RejectedPayment" ToRole="RejectionReason" />
+        </EntityType>
+        <EntityType Name="RejectionReason">
+          <Key>
+            <PropertyRef Name="RejectionReasonID" />
+          </Key>
+          <Property Name="RejectionReasonID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RejectionReason1" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="RejectedPayments" Relationship="PatientsMgtModel.FK_RejectedPayments_RejectionReasons" FromRole="RejectionReason" ToRole="RejectedPayment" />
+        </EntityType>
+        <Association Name="FK_Payments_PaymentTypes">
+          <End Type="PatientsMgtModel.PaymentType" Role="PaymentType" Multiplicity="0..1" />
+          <End Type="PatientsMgtModel.Payment" Role="Payment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentType">
+              <PropertyRef Name="PaymentTypeId" />
+            </Principal>
+            <Dependent Role="Payment">
+              <PropertyRef Name="PaymentTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RejectedPayments_Payments">
+          <End Type="PatientsMgtModel.Payment" Role="Payment" Multiplicity="1" />
+          <End Type="PatientsMgtModel.RejectedPayment" Role="RejectedPayment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Payment">
+              <PropertyRef Name="PaymentID" />
+            </Principal>
+            <Dependent Role="RejectedPayment">
+              <PropertyRef Name="PaymentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RejectedPayments_RejectionReasons">
+          <End Type="PatientsMgtModel.RejectionReason" Role="RejectionReason" Multiplicity="1" />
+          <End Type="PatientsMgtModel.RejectedPayment" Role="RejectedPayment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RejectionReason">
+              <PropertyRef Name="RejectionReasonID" />
+            </Principal>
+            <Dependent Role="RejectedPayment">
+              <PropertyRef Name="RejectionReasonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="AdjustmentReason">
+          <Key>
+            <PropertyRef Name="AdjustmentReasonID" />
+          </Key>
+          <Property Name="AdjustmentReasonID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AdjustmentReason1" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Payments" Relationship="PatientsMgtModel.FK_Payments_AdjustmentReasons" FromRole="AdjustmentReason" ToRole="Payment" />
+        </EntityType>
+        <Association Name="FK_Payments_AdjustmentReasons">
+          <End Type="PatientsMgtModel.AdjustmentReason" Role="AdjustmentReason" Multiplicity="0..1" />
+          <End Type="PatientsMgtModel.Payment" Role="Payment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AdjustmentReason">
+              <PropertyRef Name="AdjustmentReasonID" />
+            </Principal>
+            <Dependent Role="Payment">
+              <PropertyRef Name="AdjustmentReasonID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1563,6 +1808,10 @@
           <EntitySetMapping Name="Payments">
             <EntityTypeMapping TypeName="PatientsMgtModel.Payment">
               <MappingFragment StoreEntitySet="Payments">
+                <ScalarProperty Name="AdjustmentReasonID" ColumnName="AdjustmentReasonID" />
+                <ScalarProperty Name="RejectedPaymentId" ColumnName="RejectedPaymentId" />
+                <ScalarProperty Name="PaymentTypeId" ColumnName="PaymentTypeId" />
+                <ScalarProperty Name="IsRejected" ColumnName="IsRejected" />
                 <ScalarProperty Name="TotalCorrection" ColumnName="TotalCorrection" />
                 <ScalarProperty Name="FinalAmountAfterCorrection" ColumnName="FinalAmountAfterCorrection" />
                 <ScalarProperty Name="PaymentID" ColumnName="PaymentID" />
@@ -1684,7 +1933,30 @@
                 <ScalarProperty Name="IBan" ColumnName="IBan" />
                 <ScalarProperty Name="Bank" ColumnName="Bank" />
                 <ScalarProperty Name="Code" ColumnName="Code" />
-              </ComplexTypeMapping>
+                <ScalarProperty Name="FinalAmount" ColumnName="FinalAmount" />
+                <ScalarProperty Name="DeductedAmount" ColumnName="DeductedAmount" />
+                <ScalarProperty Name="DeductionReason" ColumnName="DeductionReason" />
+                <ScalarProperty Name="CompanionDeductionStartDate" ColumnName="CompanionDeductionStartDate" />
+                <ScalarProperty Name="CompanionDeductionEndDate" ColumnName="CompanionDeductionEndDate" />
+                <ScalarProperty Name="TotalDeduction" ColumnName="TotalDeduction" />
+                <ScalarProperty Name="DeductionNotes" ColumnName="DeductionNotes" />
+                <ScalarProperty Name="PatientDeductionStartDate" ColumnName="PatientDeductionStartDate" />
+                <ScalarProperty Name="PatientDeductionEndDate" ColumnName="PatientDeductionEndDate" />
+                <ScalarProperty Name="CompanionDeduction" ColumnName="CompanionDeduction" />
+                <ScalarProperty Name="PatientDeduction" ColumnName="PatientDeduction" />
+                <ScalarProperty Name="AmountBeforeDeduction" ColumnName="AmountBeforeDeduction" />
+                <ScalarProperty Name="PaymentTypeId" ColumnName="PaymentTypeId" />
+                <ScalarProperty Name="RejectedPaymentId" ColumnName="RejectedPaymentId" />
+                <ScalarProperty Name="IsPaymentRejected" ColumnName="IsPaymentRejected" />
+                <ScalarProperty Name="PaymentDate" ColumnName="PaymentDate" />
+                <ScalarProperty Name="RejectionNotes" ColumnName="RejectionNotes" />
+                <ScalarProperty Name="RejectionReasonID" ColumnName="RejectionReasonID" />
+                <ScalarProperty Name="RejectionDate" ColumnName="RejectionDate" />
+                <ScalarProperty Name="RejectionReason" ColumnName="RejectionReason" />
+                <ScalarProperty Name="AdjustmentReasonID" ColumnName="AdjustmentReasonID" />
+                <ScalarProperty Name="AdjustmentReason" ColumnName="AdjustmentReason" />
+                <ScalarProperty Name="RowNumber" ColumnName="RowNumber" />
+                </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
           <EntitySetMapping Name="PaymentDeductions">
@@ -1733,6 +2005,45 @@
               <MappingFragment StoreEntitySet="DeductionReasons">
                 <ScalarProperty Name="Reason" ColumnName="Reason" />
                 <ScalarProperty Name="ReasonId" ColumnName="ReasonId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PaymentTypes">
+            <EntityTypeMapping TypeName="PatientsMgtModel.PaymentType">
+              <MappingFragment StoreEntitySet="PaymentTypes">
+                <ScalarProperty Name="PaymentType1" ColumnName="PaymentType" />
+                <ScalarProperty Name="PaymentTypeId" ColumnName="PaymentTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RejectedPayments">
+            <EntityTypeMapping TypeName="PatientsMgtModel.RejectedPayment">
+              <MappingFragment StoreEntitySet="RejectedPayments">
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="RejectionNotes" ColumnName="RejectionNotes" />
+                <ScalarProperty Name="RejectedDate" ColumnName="RejectedDate" />
+                <ScalarProperty Name="RejectionReasonID" ColumnName="RejectionReasonID" />
+                <ScalarProperty Name="PaymentID" ColumnName="PaymentID" />
+                <ScalarProperty Name="RejectionID" ColumnName="RejectionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RejectionReasons">
+            <EntityTypeMapping TypeName="PatientsMgtModel.RejectionReason">
+              <MappingFragment StoreEntitySet="RejectionReasons">
+                <ScalarProperty Name="RejectionReason1" ColumnName="RejectionReason" />
+                <ScalarProperty Name="RejectionReasonID" ColumnName="RejectionReasonID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AdjustmentReasons">
+            <EntityTypeMapping TypeName="PatientsMgtModel.AdjustmentReason">
+              <MappingFragment StoreEntitySet="AdjustmentReasons">
+                <ScalarProperty Name="AdjustmentReason1" ColumnName="AdjustmentReason" />
+                <ScalarProperty Name="AdjustmentReasonID" ColumnName="AdjustmentReasonID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

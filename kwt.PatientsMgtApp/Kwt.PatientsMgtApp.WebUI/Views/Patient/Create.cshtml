@@ -257,13 +257,16 @@
                 mask: "96500000000"
             });
             $("#PatientCID").kendoMaskedTextBox({
-                mask: "AAAAAAAAAAAA"
+                mask: "AAAAAAAAAAAA",
+                promptChar: "",
+                //clearPromptChar: true
             });
             $("#USPhone").kendoMaskedTextBox({
-                mask: "+10000000000"
+                mask: "0000000000"
             });
             $("#Iban").kendoMaskedTextBox({
-                mask: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+                mask: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                promptChar: ""
             });
 
             $("#newPatient").css("visibility", "visible");

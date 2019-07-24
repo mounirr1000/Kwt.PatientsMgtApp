@@ -329,6 +329,7 @@
     <Content Include="Content\Images\businessman.png" />
     <Content Include="Content\Images\img_trans.gif" />
     <Content Include="Content\Images\Kuwait_embassyLogo.png" />
+    <Content Include="Content\Images\loader.gif" />
     <Content Include="Content\Images\money-bag.png" />
     <Content Include="Content\Images\patient.png" />
     <Content Include="Content\Images\planning.png" />

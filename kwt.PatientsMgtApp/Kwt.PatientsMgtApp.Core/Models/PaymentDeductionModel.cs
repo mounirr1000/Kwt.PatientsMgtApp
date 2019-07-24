@@ -96,14 +96,18 @@ namespace Kwt.PatientsMgtApp.Core.Models
         //================================
         [DisplayName("Patient Start Date")]
         public Nullable<System.DateTime> PatientStartDate { get; set; }
+        public String PatientStartDateFormatted { get { return String.Format("{0:d}", PatientStartDate); } }
         [DisplayName("Patient End Date")]
         public Nullable<System.DateTime> PatientEndDate { get; set; }
+        public String PatientEndDateFormatted { get { return String.Format("{0:d}", PatientEndDate); } }
         [DisplayName("Companion Start Date")]
         public Nullable<System.DateTime> CompanionStartDate { get; set; }
+        public String CompanionStartDateFormatted { get { return String.Format("{0:d}", CompanionStartDate); } }
         [DisplayName("Companion End Date")]
         public Nullable<System.DateTime> CompanionEndDate { get; set; }
+        public String CompanionEndDateFormatted { get { return String.Format("{0:d}", CompanionEndDate); } }
 
-        
+
         [DisplayName("Last Payment Start Date")]
         [DataType(DataType.Date)]
         public Nullable<System.DateTime> LastPaymentStartDate { get; set; }

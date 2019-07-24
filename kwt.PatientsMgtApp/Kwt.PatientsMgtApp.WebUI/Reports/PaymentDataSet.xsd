@@ -9,7 +9,7 @@
         <Tables>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="GetPaymentListReport_SPTableAdapter" GeneratorDataComponentClassName="GetPaymentListReport_SPTableAdapter" Name="GetPaymentListReport_SP" UserDataComponentName="GetPaymentListReport_SPTableAdapter">
             <MainSource>
-              <DbSource ConnectionRef="PatientsMgtConnectionString (Web.config)" DbObjectName="PatientsMgt.dbo.GetPaymentListReport_SP" DbObjectType="StoredProcedure" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+              <DbSource ConnectionRef="PatientsMgtConnectionString (Web.config)" DbObjectName="PatientsMgt.dbo.GetPaymentListReport_SP" DbObjectType="StoredProcedure" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="Fill">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.GetPaymentListReport_SP</CommandText>
@@ -40,6 +40,27 @@
               <Mapping SourceColumn="IBan" DataSetColumn="IBan" />
               <Mapping SourceColumn="Bank" DataSetColumn="Bank" />
               <Mapping SourceColumn="Code" DataSetColumn="Code" />
+              <Mapping SourceColumn="DeductionReason" DataSetColumn="DeductionReason" />
+              <Mapping SourceColumn="PatientDeductionStartDate" DataSetColumn="PatientDeductionStartDate" />
+              <Mapping SourceColumn="PatientDeductionEndDate" DataSetColumn="PatientDeductionEndDate" />
+              <Mapping SourceColumn="CompanionDeductionStartDate" DataSetColumn="CompanionDeductionStartDate" />
+              <Mapping SourceColumn="CompanionDeductionEndDate" DataSetColumn="CompanionDeductionEndDate" />
+              <Mapping SourceColumn="TotalDeduction" DataSetColumn="TotalDeduction" />
+              <Mapping SourceColumn="DeductionNotes" DataSetColumn="DeductionNotes" />
+              <Mapping SourceColumn="CompanionDeduction" DataSetColumn="CompanionDeduction" />
+              <Mapping SourceColumn="PatientDeduction" DataSetColumn="PatientDeduction" />
+              <Mapping SourceColumn="AmountBeforeDeduction" DataSetColumn="AmountBeforeDeduction" />
+              <Mapping SourceColumn="PaymentTypeId" DataSetColumn="PaymentTypeId" />
+              <Mapping SourceColumn="RejectedPaymentId" DataSetColumn="RejectedPaymentId" />
+              <Mapping SourceColumn="IsPaymentRejected" DataSetColumn="IsPaymentRejected" />
+              <Mapping SourceColumn="PaymentDate" DataSetColumn="PaymentDate" />
+              <Mapping SourceColumn="RejectionNotes" DataSetColumn="RejectionNotes" />
+              <Mapping SourceColumn="RejectionReasonID" DataSetColumn="RejectionReasonID" />
+              <Mapping SourceColumn="RejectionDate" DataSetColumn="RejectionDate" />
+              <Mapping SourceColumn="RejectionReason" DataSetColumn="RejectionReason" />
+              <Mapping SourceColumn="AdjustmentReasonID" DataSetColumn="AdjustmentReasonID" />
+              <Mapping SourceColumn="AdjustmentReason" DataSetColumn="AdjustmentReason" />
+              <Mapping SourceColumn="RowNumber" DataSetColumn="RowNumber" />
             </Mappings>
             <Sources />
           </TableAdapter>
@@ -127,6 +148,53 @@
               <xs:element name="TotalPayments" msprop:Generator_ColumnVarNameInTable="columnTotalPayments" msprop:Generator_ColumnPropNameInRow="TotalPayments" msprop:Generator_ColumnPropNameInTable="TotalPaymentsColumn" msprop:Generator_UserColumnName="TotalPayments" type="xs:int" minOccurs="0" />
               <xs:element name="TotalPatients" msprop:Generator_ColumnVarNameInTable="columnTotalPatients" msprop:Generator_ColumnPropNameInRow="TotalPatients" msprop:Generator_ColumnPropNameInTable="TotalPatientsColumn" msprop:Generator_UserColumnName="TotalPatients" type="xs:int" minOccurs="0" />
               <xs:element name="TotalAmount" msprop:Generator_ColumnVarNameInTable="columnTotalAmount" msprop:Generator_ColumnPropNameInRow="TotalAmount" msprop:Generator_ColumnPropNameInTable="TotalAmountColumn" msprop:Generator_UserColumnName="TotalAmount" type="xs:decimal" minOccurs="0" />
+              <xs:element name="DeductionReason" msprop:Generator_ColumnVarNameInTable="columnDeductionReason" msprop:Generator_ColumnPropNameInRow="DeductionReason" msprop:Generator_ColumnPropNameInTable="DeductionReasonColumn" msprop:Generator_UserColumnName="DeductionReason" type="xs:int" minOccurs="0" />
+              <xs:element name="PatientDeductionStartDate" msprop:Generator_ColumnVarNameInTable="columnPatientDeductionStartDate" msprop:Generator_ColumnPropNameInRow="PatientDeductionStartDate" msprop:Generator_ColumnPropNameInTable="PatientDeductionStartDateColumn" msprop:Generator_UserColumnName="PatientDeductionStartDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="PatientDeductionEndDate" msprop:Generator_ColumnVarNameInTable="columnPatientDeductionEndDate" msprop:Generator_ColumnPropNameInRow="PatientDeductionEndDate" msprop:Generator_ColumnPropNameInTable="PatientDeductionEndDateColumn" msprop:Generator_UserColumnName="PatientDeductionEndDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="CompanionDeductionStartDate" msprop:Generator_ColumnVarNameInTable="columnCompanionDeductionStartDate" msprop:Generator_ColumnPropNameInRow="CompanionDeductionStartDate" msprop:Generator_ColumnPropNameInTable="CompanionDeductionStartDateColumn" msprop:Generator_UserColumnName="CompanionDeductionStartDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="CompanionDeductionEndDate" msprop:Generator_ColumnVarNameInTable="columnCompanionDeductionEndDate" msprop:Generator_ColumnPropNameInRow="CompanionDeductionEndDate" msprop:Generator_ColumnPropNameInTable="CompanionDeductionEndDateColumn" msprop:Generator_UserColumnName="CompanionDeductionEndDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="TotalDeduction" msprop:Generator_ColumnVarNameInTable="columnTotalDeduction" msprop:Generator_ColumnPropNameInRow="TotalDeduction" msprop:Generator_ColumnPropNameInTable="TotalDeductionColumn" msprop:Generator_UserColumnName="TotalDeduction" type="xs:decimal" minOccurs="0" />
+              <xs:element name="DeductionNotes" msprop:Generator_ColumnVarNameInTable="columnDeductionNotes" msprop:Generator_ColumnPropNameInRow="DeductionNotes" msprop:Generator_ColumnPropNameInTable="DeductionNotesColumn" msprop:Generator_UserColumnName="DeductionNotes" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="250" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="DeductionReasonText" msprop:nullValue="_null" msprop:Generator_ColumnPropNameInRow="DeductionReasonText" msprop:Generator_ColumnVarNameInTable="columnDeductionReasonText" msprop:Generator_ColumnPropNameInTable="DeductionReasonTextColumn" msprop:Generator_UserColumnName="DeductionReasonText" type="xs:string" minOccurs="0" />
+              <xs:element name="CompanionDeduction" msprop:Generator_ColumnVarNameInTable="columnCompanionDeduction" msprop:Generator_ColumnPropNameInRow="CompanionDeduction" msprop:Generator_ColumnPropNameInTable="CompanionDeductionColumn" msprop:Generator_UserColumnName="CompanionDeduction" type="xs:decimal" minOccurs="0" />
+              <xs:element name="PatientDeduction" msprop:Generator_ColumnVarNameInTable="columnPatientDeduction" msprop:Generator_ColumnPropNameInRow="PatientDeduction" msprop:Generator_ColumnPropNameInTable="PatientDeductionColumn" msprop:Generator_UserColumnName="PatientDeduction" type="xs:decimal" minOccurs="0" />
+              <xs:element name="AmountBeforeDeduction" msprop:Generator_ColumnVarNameInTable="columnAmountBeforeDeduction" msprop:Generator_ColumnPropNameInRow="AmountBeforeDeduction" msprop:Generator_ColumnPropNameInTable="AmountBeforeDeductionColumn" msprop:Generator_UserColumnName="AmountBeforeDeduction" type="xs:decimal" minOccurs="0" />
+              <xs:element name="PaymentTypeId" msprop:Generator_ColumnVarNameInTable="columnPaymentTypeId" msprop:Generator_ColumnPropNameInRow="PaymentTypeId" msprop:Generator_ColumnPropNameInTable="PaymentTypeIdColumn" msprop:Generator_UserColumnName="PaymentTypeId" type="xs:int" minOccurs="0" />
+              <xs:element name="RejectedPaymentId" msprop:Generator_ColumnVarNameInTable="columnRejectedPaymentId" msprop:Generator_ColumnPropNameInRow="RejectedPaymentId" msprop:Generator_ColumnPropNameInTable="RejectedPaymentIdColumn" msprop:Generator_UserColumnName="RejectedPaymentId" type="xs:int" minOccurs="0" />
+              <xs:element name="IsPaymentRejected" msprop:Generator_ColumnVarNameInTable="columnIsPaymentRejected" msprop:Generator_ColumnPropNameInRow="IsPaymentRejected" msprop:Generator_ColumnPropNameInTable="IsPaymentRejectedColumn" msprop:Generator_UserColumnName="IsPaymentRejected" type="xs:boolean" minOccurs="0" />
+              <xs:element name="PaymentDate" msprop:Generator_ColumnVarNameInTable="columnPaymentDate" msprop:Generator_ColumnPropNameInRow="PaymentDate" msprop:Generator_ColumnPropNameInTable="PaymentDateColumn" msprop:Generator_UserColumnName="PaymentDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="RejectionNotes" msprop:Generator_ColumnVarNameInTable="columnRejectionNotes" msprop:Generator_ColumnPropNameInRow="RejectionNotes" msprop:Generator_ColumnPropNameInTable="RejectionNotesColumn" msprop:Generator_UserColumnName="RejectionNotes" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="250" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="RejectionReasonID" msprop:Generator_ColumnVarNameInTable="columnRejectionReasonID" msprop:Generator_ColumnPropNameInRow="RejectionReasonID" msprop:Generator_ColumnPropNameInTable="RejectionReasonIDColumn" msprop:Generator_UserColumnName="RejectionReasonID" type="xs:int" minOccurs="0" />
+              <xs:element name="RejectionDate" msprop:Generator_ColumnVarNameInTable="columnRejectionDate" msprop:Generator_ColumnPropNameInRow="RejectionDate" msprop:Generator_ColumnPropNameInTable="RejectionDateColumn" msprop:Generator_UserColumnName="RejectionDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="RejectionReason" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnRejectionReason" msprop:Generator_ColumnPropNameInRow="RejectionReason" msprop:Generator_ColumnPropNameInTable="RejectionReasonColumn" msprop:Generator_UserColumnName="RejectionReason" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="250" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="AdjustmentReasonID" msprop:Generator_ColumnVarNameInTable="columnAdjustmentReasonID" msprop:Generator_ColumnPropNameInRow="AdjustmentReasonID" msprop:Generator_ColumnPropNameInTable="AdjustmentReasonIDColumn" msprop:Generator_UserColumnName="AdjustmentReasonID" type="xs:int" minOccurs="0" />
+              <xs:element name="AdjustmentReason" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnAdjustmentReason" msprop:Generator_ColumnPropNameInRow="AdjustmentReason" msprop:Generator_ColumnPropNameInTable="AdjustmentReasonColumn" msprop:Generator_UserColumnName="AdjustmentReason" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="250" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="RowNumber" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnRowNumber" msprop:Generator_ColumnPropNameInRow="RowNumber" msprop:Generator_ColumnPropNameInTable="RowNumberColumn" msprop:Generator_UserColumnName="RowNumber" type="xs:long" minOccurs="0" />
+              <xs:element name="RejectionDateFormatted" msprop:Generator_ColumnVarNameInTable="columnRejectionDateFormatted" msprop:Generator_ColumnPropNameInRow="RejectionDateFormatted" msprop:Generator_ColumnPropNameInTable="RejectionDateFormattedColumn" msprop:Generator_UserColumnName="RejectionDateFormatted" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

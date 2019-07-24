@@ -4,6 +4,11 @@
     ViewBag.Title = "Companions List";
 
 }
+@{
+    var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+    serializer.MaxJsonLength = Int32.MaxValue;
+    var jsonModel = serializer.Serialize(Model);
+}
 <div class="pt-3 pb-3">
     <a href="@Url.Action("Create", "Companion")" class="k-button"><i class="fa fa-plus" style="color:yellowgreen"></i> New Companion</a>
 </div>
@@ -50,7 +55,7 @@
         });
     </script>
     <script type="text/javascript">
-        var companions = @Html.Raw(Json.Encode(Model));
+        var companions = @Html.Raw(jsonModel);
         var isAdmin =   @Html.Raw(Json.Encode(User.IsInRole("Admin, Manager, Super Admin")));
         function getTemplate(companionCid) {
              if (isAdmin) {

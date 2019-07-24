@@ -16,4 +16,16 @@ namespace Kwt.PatientsMgtApp.Core
         public const string PUBLISHED_REPORTS_LIB_NAME = "Published Reports";
         public const string OTHER_DOCS_LIB_NAME = "Other Documents";
     }
+    public class Roles
+    {
+        public const string Admin = "Admin";
+        public const string Accountant = "Accountant";
+        public const string User = "User";
+        public const string SuperAdmin = "Super Admin";
+        public const string Auditor = "Auditor";
+        //public const string Other = "Other";
+        //public const string Other = "Other";
+        //public const string Other = "Other";
+        
+    }
 }

@@ -11,7 +11,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
     {
 
         List<DeductionReasonModel> GetDeductionReasons();
-        DeductionReasonModel GetDeductionReason(int reasonId);
+        DeductionReasonModel GetDeductionReason(int? reasonId);
 
         void AddDeductionReason(DeductionReasonModel deductionReason);
     }

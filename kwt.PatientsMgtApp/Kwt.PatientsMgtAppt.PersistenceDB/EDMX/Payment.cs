@@ -18,6 +18,7 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public Payment()
         {
             this.PaymentDeductions = new HashSet<PaymentDeduction>();
+            this.RejectedPayments = new HashSet<RejectedPayment>();
         }
     
         public int PaymentID { get; set; }
@@ -41,6 +42,10 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public Nullable<System.DateTime> ModifiedDate { get; set; }
         public Nullable<decimal> FinalAmountAfterCorrection { get; set; }
         public Nullable<decimal> TotalCorrection { get; set; }
+        public Nullable<bool> IsRejected { get; set; }
+        public Nullable<int> PaymentTypeId { get; set; }
+        public Nullable<int> RejectedPaymentId { get; set; }
+        public Nullable<int> AdjustmentReasonID { get; set; }
     
         public virtual Beneficiary Beneficiary { get; set; }
         public virtual Companion Companion { get; set; }
@@ -48,5 +53,9 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public virtual PayRate PayRate { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PaymentDeduction> PaymentDeductions { get; set; }
+        public virtual PaymentType PaymentType { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<RejectedPayment> RejectedPayments { get; set; }
+        public virtual AdjustmentReason AdjustmentReason { get; set; }
     }
 }

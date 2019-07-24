@@ -6,6 +6,11 @@
 @{
     ViewBag.Title = "Payment List";
 }
+@{
+    var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+    serializer.MaxJsonLength = Int32.MaxValue;
+    var jsonModel = serializer.Serialize(Model);
+}
 <div class="pt-3 pb-3">
     <a href="@Url.Action("Create", "Payment")" class="k-button"><i class="fa fa-plus" style="color: yellowgreen"></i> New Payment</a>
     <a href="javascript:window.print()" class="k-button"><i class="fa fa-print" style="color: blueviolet"></i> Print This Page</a>
@@ -117,13 +122,23 @@
             $('#paymentDt1, #paymentDt2').datepicker();
 
             //
-            var data = @Html.Raw(Json.Encode(Model));
+            var data = @Html.Raw(jsonModel);
+            console.log(data);
             var isAdmin =   @Html.Raw(Json.Encode(User.IsInRole("Admin")));
             function getTemplate(paymentId) {
                 if (isAdmin) {
                     return '<a href="javascript:confirmDelete('+paymentId+','+'\'paymentId\''+')" id='+paymentId+'> <i class="fa fa-times fa-2x" style="color: lightcoral"></i></a>';
                 }
                 return '';
+            }
+            function getRejectedTemplate(isRejected) {
+               // console.log(JSON.parse(isRejected));
+              
+                if (isRejected==='null') {
+                    return '<i class="fa fa-ban fa-2x" style="color:red;"></i> '+isRejected+' ';
+                    //return '<a href="javascript:confirmDelete('+paymentId+','+'\'paymentId\''+')" id='+paymentId+'> <i class="fa fa-times fa-2x" style="color: lightcoral"></i></a>';
+                }
+                return '<i class="fa fa-check fa-2x" style="color:green;"></i> '+isRejected+' ';
             }
             var grid =  $("#paymentList").kendoGrid({
                 resizable: true,
@@ -153,6 +168,11 @@
                     title: "Payment Date"
                 },
                 {
+                    field: "PaymentType.PaymentType1",
+                    title: "Payment Type",
+                    template: "#= (PaymentType == null) ? 'Regular ' : PaymentType.PaymentType1 #"
+                },
+                {
                     field: "PatientCID",
                     title: "P_CID"
                 },
@@ -177,7 +197,13 @@
                 {
                     field: "TotalDue",
                     title: "Final Amount"
-                },{
+                },
+                //{
+                //    field: "IsRejected",
+                //    title: "Valid?",
+                //    template: getRejectedTemplate('#=IsRejected#')
+                //},
+                {
                     field: "Id",
                     title: "Delete",
                     template: getTemplate('#=Id#'),
@@ -246,7 +272,7 @@
 
             var date2 = new Date(secondDate).toDateString();
             date2 = new Date(date2).getTime();
-            var payments = @Html.Raw(Json.Encode(Model));
+            var payments = @Html.Raw(jsonModel);
 
             payments = payments.filter(function(entry) {
                 var paymentDate = new Date(entry.PaymentDateFormatted).toDateString();
@@ -279,28 +305,35 @@
                 },
                 columns: [
                     {
-                        field: "PaymentDateFormatted",
+                        field: "PaymentDateLongFormatted",
                         title: "Payment Date"
                     }, {
-                        field: "PatientPhone",
+                        field: "PatientFormatedPhone",
                         title: "Patient Phone"
                     },
                     {
                         field: "PatientCID",
                         title: "P_CID"
                     }, {
-                        field: "PaymentStartDateFormatted",
+                        field: "PaymentStartDateLongFormatted",
                         title: "From",
-                        //template: "#= kendo.toString(kendo.parseDate(PaymentStartDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
+                        //format: "{0: dddd, MMMM dd, yyyy}",
+                        //template: "#= kendo.toString(kendo.parseDate(PaymentStartDateFormatted, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
+                      //  template: "#= kendo.toString(kendo.parseDate(PaymentStartDate, 'MMMM dd, yyyy'), 'MMMM dd, yyyy') #"
                     },
                     {
-                        field: "PaymentEndDateFormatted",
+                        field: "PaymentEndDateLongFormatted",
                         title: "To",
                         // template: "#= kendo.toString(kendo.parseDate(PaymentEndDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
+                       // template: "#= kendo.toString(kendo.parseDate(PaymentEndDate, 'MMMM dd, yyyy'), 'MMMM dd, yyyy') #"
                     }, {
                         field: "TotalDue",
-                        title: "Amount"
+                        title: "Final Amount"
                     }
+                    //, {
+                    //    field: "PaymentDeductionObject.Notes",
+                    //    title: "Deduct Notes"
+                    //}
                 ],
                 dataSource: {
                     data: payments
@@ -330,8 +363,31 @@
                         rows.push({ cells: rowCells, type: "data" });
                     }
                     sheet.rows = rows;
-                }
-                //
+                    // new for formating date
+                    
+                    //for (var rowIndex = 1; rowIndex < sheet.rows.length; rowIndex++) {
+                    //    var row = sheet.rows[rowIndex];
+                    //    for (var cellIndex = 0; cellIndex < row.cells.length; cellIndex ++) {
+                    //        debugger;
+                    //        row.cells[cellIndex].format = "yy-MM-dd hh:mm:ss";
+                    //    }
+                    //}
+                    //
+                },
+                //new
+                //schema: {
+                //    model : {
+                //        fields: {
+                //            PaymentStartDate: { type: "date" },
+                //            PaymentDateFormatted: { type: "string" },
+                //            PaymentEndDate: { type: "date" },
+                //            PatientCID: { type: "string" },
+                //            PatientPhone: { type: "string" },
+                //            TotalDue: { type: "number" }
+                //        }
+                //    }
+                //}
+                //end new
             }).data("kendoGrid");;
 
         }
@@ -351,7 +407,7 @@
         function showNextPatientPayments() {
             var numberOfDays = $('#numberOfDays').val();
 
-            var payments=@Html.Raw(Json.Encode(Model));
+            var payments=@Html.Raw(jsonModel);
 
             var nextPaymentUrl = '/Payment/GetNextPayment';
             if(numberOfDays)
@@ -361,6 +417,7 @@
                     contentType: "application/json; charset=utf-8",
                     data: { "numberOfDays": numberOfDays },
                     dataType: 'json',
+                    //maxJsonLength:
                     success: function (result) {
                         // console.log(result);
                         var patientPaymentGrid = $("#patientDueForNextPaymentGrid").kendoGrid({

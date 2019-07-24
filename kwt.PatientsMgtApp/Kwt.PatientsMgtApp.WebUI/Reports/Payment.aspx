@@ -14,57 +14,14 @@
     <%--<link href="../Content/fontawesome/font-awesome.min.css" rel="stylesheet" />--%>
 </head>
 <body>
+
     <form id="form1" runat="server">
-        <%--<div class="row">
 
-            <div class="col-md-4">
-                <label>Serch By:</label>
-                <asp:Label ID="Label1" runat="server" Text="Start Date:"></asp:Label>
-                <asp:TextBox ID="StartDate" runat="server" CssClass="form-control"></asp:TextBox>
-            </div>
-            <div class="col-md-4">
-                <asp:Label ID="Label3" runat="server" Text="End Date:"></asp:Label>
-                <asp:TextBox ID="EndDate" runat="server" CssClass="form-control"></asp:TextBox>
-            </div>
-            <div class="col-md-4">
-                <asp:Label ID="Label4" runat="server" Text="Patient Cid:"></asp:Label>
-                <asp:TextBox ID="PatientCid" runat="server" CssClass="form-control"></asp:TextBox>
-            </div>
-
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <asp:Button ID="Search" runat="server" Text="Search" OnClick="Search_Click" />
-            </div>
-            <div class="col-md-4">
-                <asp:Button ID="All" runat="server" Text="Clear" OnClick="Clear_Click" />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-8">
-                <div class="alert-success">
-                    <asp:Label ID="ResultMessage" runat="server"></asp:Label>
-                </div>
-            </div>
-        </div>--%>
-        <%--<div class="row">
-            <asp:ImageButton ID="btnPrint" AlternateText="Print Report" runat="server" OnClick="btnPrint_Click"  />
-        </div>--%>
-        <%--   Format:
-    <asp:RadioButtonList ID="rbFormat" runat="server" RepeatDirection="Horizontal">
-        <asp:ListItem Text="Word" Value="WORD" Selected="True" />
-        <asp:ListItem Text="Excel" Value="EXCEL" />
-        <asp:ListItem Text="PDF" Value="PDF" />
-        <asp:ListItem Text="Image" Value="IMAGE" />
-    </asp:RadioButtonList>
-    <br />
-    <asp:Button ID="btnExport" Text="Export" runat="server" OnClick="Export" />--%>
         <div class="panel-group">
             <div id="panelbar" class="panel">
                 <div class="panel-success">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" href="#collapse1"><span class="p-2" style="text-decoration: underline">
-                            Filter Payment Report
+                        <a data-toggle="collapse" href="#collapse1"><span class="p-2" style="text-decoration: underline">Filter Payment Report
                         </span><i class="fa fa-angle-down"></i></a>
                     </h4>
 
@@ -78,6 +35,7 @@
                                     <asp:ListItem Text="BANK REPORT" Value="1"></asp:ListItem>
                                     <asp:ListItem Text="ARCHIVE REPORT" Value="2"></asp:ListItem>
                                     <asp:ListItem Text="DETAILS REPORT" Value="3" Selected="True"></asp:ListItem>
+                                    <asp:ListItem Text="MINISTRY REPORT" Value="4"></asp:ListItem>
                                 </asp:DropDownList>
                             </li>
                         </ul>
@@ -121,8 +79,8 @@
             </div>
         </div>
         <asp:PlaceHolder ID="ErrorMessage" runat="server" Visible="False">
-            <div class="mt-3 mb-3">
-                <asp:Label ID="Message" runat="server" Class="alert alert-danger"></asp:Label>
+            <div class="mt-3 mb-3 col-md-10">
+                <asp:Label ID="Message" runat="server" Class="alert alert-info" Style="display: block;"></asp:Label>
             </div>
         </asp:PlaceHolder>
         <div>
@@ -133,7 +91,7 @@
                 PageCountMode="Actual"
                 ShowPageNavigationControls="True"
                 ShowPrintButton="True"
-                SizeToReportContent="true">
+                SizeToReportContent="true" >
             </rsweb:ReportViewer>
         </div>
         <div>

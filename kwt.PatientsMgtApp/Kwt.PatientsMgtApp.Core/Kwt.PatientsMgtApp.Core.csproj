@@ -47,6 +47,7 @@
     <Compile Include="ExceptionLoggerObject.cs" />
     <Compile Include="Infrastructure\RequiredIfAttribute.cs" />
     <Compile Include="Interfaces\IDomainObject.cs" />
+    <Compile Include="Models\AdjustmentReasonModel.cs" />
     <Compile Include="Models\AgencyModel.cs" />
     <Compile Include="Models\BankModel.cs" />
     <Compile Include="Models\BaseEntity.cs" />
@@ -63,7 +64,10 @@
     <Compile Include="Models\PaymentDeductionModel.cs" />
     <Compile Include="Models\PaymentModel.cs" />
     <Compile Include="Models\PaymentReportModel.cs" />
+    <Compile Include="Models\PaymentTypeModel.cs" />
     <Compile Include="Models\PayRateModel.cs" />
+    <Compile Include="Models\RejectedPaymentModel.cs" />
+    <Compile Include="Models\RejectionReasonModel.cs" />
     <Compile Include="Models\RoleModel.cs" />
     <Compile Include="Models\SpecialtyModel.cs" />
     <Compile Include="Models\UserModel.cs" />

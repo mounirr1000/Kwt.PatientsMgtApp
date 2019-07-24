@@ -98,7 +98,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                                || p.Name.ToLower().Trim().Contains(term.Trim())
                             ).ToList();
                     }
-                    
+
                     if (result?.Count > 0)
                     {
                         Success(string.Format("We have <b>{0}</b> returned results from the searched criteria", result.Count),
@@ -114,7 +114,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                                     "There is no patient in our records with the selected search criteria <b>{0}</b>",
                                     searchPatientText), true);
                     }
-                    
+
                 }
             }
 
@@ -162,12 +162,13 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             ViewBag.IsValid = ModelState.IsValid;
             if (ModelState.IsValid)
             {
+
                 patient.CreatedBy = User.Identity.Name;
                 _patientRepository.AddPatient(patient);
                 Success(string.Format("Patient with Civil ID <b>{0}</b> was successfully added.", patient.PatientCID), true);
                 if (patient.HasCompanion)
                 {
-                    return RedirectToAction("Create","Companion",new {patientcid=patient.PatientCID});
+                    return RedirectToAction("Create", "Companion", new { patientcid = patient.PatientCID });
                 }
                 else
                     return RedirectToAction("Index");
@@ -187,11 +188,18 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
 
         private void ValidatePatientModel(PatientModel patient)
         {
-            if (ModelState.IsValidField("IsBeneficiary")
-               && patient.IsBeneficiary == true
-               && patient.Iban == null)
+            if (ModelState.IsValidField("PatientCID")
+                && patient.PatientCID?.Trim().Length < 12)
             {
-                ModelState.AddModelError("Iban", "The patient is Beneficiary, so you need to enter the Iban field");
+                ModelState.AddModelError("PatientCID", "The patient CID should be 12 characters long");
+            }
+            if (ModelState.IsValidField("IsBeneficiary")
+               && patient.IsBeneficiary == true)
+            {
+                if (patient.Iban == null)
+                    ModelState.AddModelError("Iban", "The patient is Beneficiary, so you need to enter the Iban field");
+                if (patient.Iban?.Trim().Length < 30)
+                    ModelState.AddModelError("Iban", "The Iban should be 30 characters long");
             }
             if (ModelState.IsValidField("IsBeneficiary")
                 && patient.IsBeneficiary == true

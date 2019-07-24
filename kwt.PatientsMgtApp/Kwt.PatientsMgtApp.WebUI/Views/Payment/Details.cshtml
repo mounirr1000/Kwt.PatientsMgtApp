@@ -22,7 +22,12 @@
     <fieldset id="paymentDetail" class="collapse show">
         <legend>Payment Details</legend>
         <ul class="fieldlist form-row">
-
+            @* new 07-13-2019*@
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.IsRejected, new { @class = "" })
+                @Html.TextBoxFor(model => model.IsRejectedText, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            @*end new *@
             <li class="col-md-3">
                 @Html.LabelFor(model => model.PaymentDate, new { @class = "" })
                 @Html.TextBoxFor(model => model.PaymentDateFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })

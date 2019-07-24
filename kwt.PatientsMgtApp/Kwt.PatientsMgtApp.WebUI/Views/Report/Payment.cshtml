@@ -12,7 +12,30 @@
     <legend>Payment Report</legend>
     <iframe runat="server" id="Reports" src="~/Reports/Payment.aspx"
             scrolling="no"
-            style="border: none"
+            style="border: none; width: 1000px; height: 1000px;"
             onload="this.style.height = this.contentDocument.body.scrollHeight + 'px';
-        this.style.width = this.contentDocument.body.scrollWidth + 'px';"></iframe>
+this.style.width = this.contentDocument.body.scrollWidth + 'px';"></iframe>
 </fieldset>
+
+
+@section scripts
+{
+    <script type="text/javascript">
+        function autoResize() {
+            debugger;
+            var height = $('#Reports').contentDocument.body.scrollHeight;
+            var width = $('#Reports').contentDocument.body.scrollWidth;
+            if (height)
+                $('#Reports').height(height);
+            else $('#Reports').height("1000px;");
+            if (width)
+                $('#Reports').width(width);
+            else $('#Reports').width("1100px;");
+        }
+        $('#Reports').load(function () {
+            $(this).height($(this).contents().height());
+            $(this).width($(this).contents().width());
+        });
+    </script>
+
+}
