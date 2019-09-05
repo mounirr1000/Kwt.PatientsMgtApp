@@ -52,6 +52,7 @@
     <Compile Include="Models\BankModel.cs" />
     <Compile Include="Models\BaseEntity.cs" />
     <Compile Include="Models\BeneficiaryModel.cs" />
+    <Compile Include="Models\BookTypeModel.cs" />
     <Compile Include="Models\CompanionHistoryModel.cs" />
     <Compile Include="Models\CompanionModel.cs" />
     <Compile Include="Models\CompanionTypeModel.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Models\PatientModel.cs" />
     <Compile Include="Models\PatientReportModel.cs" />
     <Compile Include="Models\PaymentDeductionModel.cs" />
+    <Compile Include="Models\PaymentHistoryModel.cs" />
     <Compile Include="Models\PaymentModel.cs" />
     <Compile Include="Models\PaymentReportModel.cs" />
     <Compile Include="Models\PaymentTypeModel.cs" />

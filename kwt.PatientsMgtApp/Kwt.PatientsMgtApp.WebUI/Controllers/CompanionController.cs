@@ -12,11 +12,14 @@ using Kwt.PatientsMgtApp.WebUI.Utilities;
 using Kwt.PatientsMgtApp.WebUI.CustomFilter;
 using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity.Owin;
+using System.Text.RegularExpressions;
+using Kwt.PatientsMgtApp.WebUI.Infrastructure;
 using PagedList;
 namespace Kwt.PatientsMgtApp.WebUI.Controllers
 {
     [HandleError(ExceptionType = typeof(PatientsMgtException), View = "ExceptionHandler")]
-    [Authorize(Roles = "Admin, Manager, Super Admin, Auditor, Editor, User")]
+    //[Authorize(Roles = "Admin, Manager, Super Admin, Auditor, Editor, User")]
+    [CustomAuthorize(Roles = CrudRoles.CompanionCrudRolesForAutorizeAttribute)]
     public class CompanionController : BaseController
     {
         private const int PageSize = 5;
@@ -67,24 +70,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             if (companions != null)
             {
                 companions = companions.OrderByDescending(c => c.CreatedDate).ThenBy(co => co.IsActive).ToList();
-                //switch (sortOrder)
-                //{
-                //    case "name_desc":
-                //        companions = companions.OrderBy(c => c.CompanionFName).ThenBy(c => c.CompanionLName).ToList();
-                //        break;
-                //    case "cid":
-                //        companions = companions.OrderBy(c => c.CompanionCID).ToList();
-                //        break;
-                //    case "date_desc":
-                //        companions = companions.OrderBy(c => c.DateIn).ToList();
-                //        break;
-                //    case "Beneficiary":
-                //        companions = companions.OrderBy(c => c.IsBeneficiary).ToList();
-                //        break;
-                //    default: // created date ascending 
-                //        companions = companions.OrderByDescending(c => c.CreatedDate).ToList();
-                //        break;
-                //}
+
                 if (clearSearch != true)
                 {
                     if (searchCompanionText != null)
@@ -111,7 +97,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                                 || p.Name.Trim().ToLower().Contains(term)
                             ).ToList();
                     }
-                   
+
                     if (result?.Count > 0)
                     {
                         Success(string.Format("We have <b>{0}</b> returned results from the searched criteria", result.Count),
@@ -123,11 +109,6 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                     {
                         if (result?.Count == 0)
                         {
-
-                            //if (isBeneficiary != null)
-                            //{
-                            //    benMessage = isBeneficiary == true ? "& is Beneficiary" : "& is Not Beneficiary";
-                            //}
                             Information(
                                 string.Format(
                                     "There is no patient in our records with the selected search criteria <b>{0}</b>",
@@ -142,10 +123,12 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         }
 
         [ExceptionHandler]
-        public ActionResult Details(string companionCid)
+        //public ActionResult Details(string companionCid)
+        public ActionResult Details(string companionCid, string patientCid)
         {
 
-            var companion = _companionRepository.GetCompanion(companionCid);
+            //CompanionModel companion = new CompanionModel();
+            var companion = patientCid != null ? _companionRepository.GetCompanion(companionCid, patientCid) : _companionRepository.GetCompanion(companionCid);
 
             if (companion != null)
             {
@@ -160,6 +143,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
 
         [ExceptionHandler]
         [HttpGet]
+        [CustomAuthorize(Roles = CrudRoles.CompanionCreateRolesForAutorizeAttribute)]
         public ActionResult Create(string patientcid)
         {
             CompanionModel companion = new CompanionModel();
@@ -174,6 +158,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
 
         [ExceptionHandler]
         [HttpPost]
+        [CustomAuthorize(Roles = CrudRoles.CompanionCreateRolesForAutorizeAttribute)]
         public ActionResult Create(CompanionModel companion)
         {
             ////
@@ -202,15 +187,20 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         }
 
         [ExceptionHandler]
-        public ActionResult Edit(string companionCid)
+        //public ActionResult Edit(string companionCid)
+        [CustomAuthorize(Roles = CrudRoles.CompanionUpdateRolesForAutorizeAttribute)]
+        public ActionResult Edit(string companionCid, string patientCid)
         {
-            var companion = _companionRepository.GetCompanion(companionCid);
+            //var companion = _companionRepository.GetCompanion(companionCid);
+            //var companion = _companionRepository.GetCompanion(companionCid, patientCid);
+            var companion = patientCid != null ? _companionRepository.GetCompanion(companionCid, patientCid) : _companionRepository.GetCompanion(companionCid);
             companion.CompanionTypes = _companionManagmentRepository.GetCompanionTypes();
             companion.Banks = _patientManagmentRepository.GetBanks();
             return View(companion);
         }
         [HttpPost]
         [ExceptionHandler]
+        [CustomAuthorize(Roles = CrudRoles.CompanionUpdateRolesForAutorizeAttribute)]
         public ActionResult Edit(CompanionModel companion)
         {
             ValidateCompanion(companion, true);
@@ -233,10 +223,12 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
 
 
         [ExceptionHandler]
-        [Authorize(Roles = "Admin, Manager")]
-        public ActionResult Delete(string companionCid)
+        //[Authorize(Roles = "Admin, Manager, Super Admin")]
+        [CustomAuthorize(Roles = CrudRoles.CompanionDeleteRolesForAutorizeAttribute)]
+        public ActionResult Delete(int id)
         {
-            var companion = _companionRepository.GetCompanion(companionCid);
+            //var companion = _companionRepository.GetCompanion(companionCid);
+            var companion = _companionRepository.GetCompanion(id);
 
             if (companion != null)
             {
@@ -251,14 +243,16 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             }
             else
             {
-                if (!string.IsNullOrEmpty(companionCid))
-                    Information(string.Format("Companion with Civil ID <b>{0}</b> was Not Deleted.", companionCid), true);
+                if (id != 0)
+                    Information(string.Format("This Companion could not be removed", id), true);
             }
             return RedirectToAction("List");
         }
 
         private void ValidateCompanion(CompanionModel companion, bool isEdit = false)
         {
+            string pattern = "^[a-zA-Z0-9]+$";// only allow alphanumeric values ^[a-zA-Z0-9]+$
+            Regex rgx = new Regex(pattern);
             var primaryCompanionType = _companionManagmentRepository.GetCompanionTypes()
                                          .Where(c => c.Id == (int)Enums.CompanionType.Primary)
                                          .Select(ct => ct.CompanionType).FirstOrDefault();
@@ -271,6 +265,12 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                 && companion.CompanionCID?.Trim().Length < 12)
             {
                 ModelState.AddModelError("CompanionCID", "The Companion CID should be 12 characters long");
+            }
+            if (ModelState.IsValidField("CompanionCID")
+                && companion.CompanionCID != null
+                && !rgx.IsMatch(companion.CompanionCID))
+            {
+                ModelState.AddModelError("CompanionCID", "The Companion CID should contains only alphanumeric(a-z/0-9) values");
             }
             if (ModelState.IsValidField("IsBeneficiary")
                && companion.IsBeneficiary == true)
@@ -332,9 +332,10 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             {
                 ModelState.AddModelError("PatientCID", "There is no patient in our record with this CID");
             }
+           
             if (patient != null && ModelState.IsValidField("PatientCID"))
             {
-                if (patient.IsActive && companion.CompanionType== primaryCompanionType)
+                if (patient.IsActive && companion.CompanionType == primaryCompanionType)
                 {
                     if (patient.IsBeneficiary && companion.IsBeneficiary)
                         ModelState.AddModelError("IsBeneficiary", "The patient with " + companion.PatientCID + " CID associated with this companion is already Beneficiary, You can't have the companion as beneficiary");
@@ -343,8 +344,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                         // new 
                         if ((existingCompanions != null &&
                             !existingCompanions.Exists(
-                                c => c.IsActive && c.IsBeneficiary && c.CompanionType == primaryCompanionType)) 
-                                || existingCompanions==null)
+                                c => c.IsActive && c.IsBeneficiary && c.CompanionType == primaryCompanionType))
+                                || existingCompanions == null)
                         {
                             // means no primary active beneficiary companion with this patient
                             if (ModelState.IsValidField("CompanionType") && companion.CompanionType == primaryCompanionType)
@@ -353,16 +354,16 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                                               " and no companion with this patient is set as Beneficiary," +
                                              " So you need to set this companion as Beneficiary since is primary");
                         }
-                            
-                        
+
+
                     }
-                        
+
                 }
 
             }
             if (patient != null)
             {
-               
+
                 //if (ModelState.IsValidField("CompanionType") && companion.CompanionType == primaryCompanionType)//primary companion
                 //{
 
@@ -380,16 +381,20 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                         // this means we have already an active companion who is primary with the same patient, so we can't have two primary companion to the same patient
                         if (existingCompanions.Exists(c => c.CompanionType == primaryCompanionType && c.IsActive))
                         {
-                            ModelState.AddModelError("CompanionType",
-                                "There is already a primary companion with this patient, you need to make this companion non primary");
-                            return;
+                            if (companion.CompanionType == primaryCompanionType)
+                            {
+                                ModelState.AddModelError("CompanionType",
+                                   "There is already a primary companion with this patient, you need to make this companion non primary");
+                                return;
+                            }
+
                         }
                     }
                     else
                     { // list of companion with the same patient ( 2 primary  1 active 1 nonactive)
-                        if (existingCompanions.Exists(c => c.CompanionType == primaryCompanionType 
-                            && c.IsActive 
-                            && c.CompanionCID!=companion.CompanionCID
+                        if (existingCompanions.Exists(c => c.CompanionType == primaryCompanionType
+                            && c.IsActive
+                            && c.CompanionCID != companion.CompanionCID
                             // new 
                             && companion.CompanionType == primaryCompanionType
                             ))

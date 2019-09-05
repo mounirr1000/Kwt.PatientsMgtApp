@@ -54,6 +54,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Utilities
         private void IntialiseMenu()
         {
             string[] items = new[] { "Home", "Patient", "Companion", "Payment", "Report", "Admin" };
+            string[] subitems = new[] { "Patient", "Folder2", "Folder3", "Folder4", "Folder5", "Folder6" };
+            string[] subitemsActionName = new[] { "Index", "Folder2", "Folder3", "Folder4", "Folder5", "Folder6" };
             //string[] icons = new[] { "home", "address-book", "user-friends", "dollar", "file-text", "cogs" };
             string[] icons = new[] { "houseMenu", "patientMenu", "support", "cashMenu", "planningMenu", "adminMenu" };
             string[] colors = new[] { "coral", "", "", "yellowgreen", "deeppink", "grey" };
@@ -75,6 +77,28 @@ namespace Kwt.PatientsMgtApp.WebUI.Utilities
                     menuItem.MenuName = items[i] + "s";
                     menuItem.ActionName = "List";
                 }
+                //new 
+                if (items[i] == "Patient")
+                {
+                    
+                    SubMenu  subMenu = new SubMenu();
+                    subMenu.MenuItem = new List<MenuItems>(subitems.Length);
+                    for (int j = 0; j < subitems.Length; j++)
+                    {
+                        var subMenuItem = new MenuItems();
+                        subMenuItem.MenuId = (j + 1);
+                        subMenuItem.IconName = icons[j];
+                        subMenuItem.Color = colors[j];
+                        subMenuItem.ControllerName = subitems[0];
+                        subMenuItem.MenuName = subitems[j] + "s";
+                        subMenuItem.ActionName = subitemsActionName[j];
+                        subMenu.MenuItem.Add(subMenuItem);
+                       
+                    }
+
+                    menuItem.SubMenu = subMenu;
+                }
+                //
                 menuItem.ControllerName = items[i];
                 menu.MenuItem.Add(menuItem);
             }

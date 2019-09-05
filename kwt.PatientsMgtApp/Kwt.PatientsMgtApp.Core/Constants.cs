@@ -23,9 +23,23 @@ namespace Kwt.PatientsMgtApp.Core
         public const string User = "User";
         public const string SuperAdmin = "Super Admin";
         public const string Auditor = "Auditor";
-        //public const string Other = "Other";
-        //public const string Other = "Other";
-        //public const string Other = "Other";
+        public const string Editor = "Editor";
+        public const string Medical = "Medical";
+        public const string Other = "Other";
+    }
+    public class PatientFolders
+    {
         
+        public const string Allowances = "ALLOWANCES";
+        public const string Appointments = "APPOINTMENTS";
+        public const string CompanionInfo = "COMPANION INFO";
+        public const string FuneralArrangement = "FUNERAL ARRANGEMENT";
+        public const string GuaranteeLetters = "GUARANTEE LETTERS";
+        public const string IncomingMph = "INCOMING MPH";
+        public const string MedicalReports = "MEDICAL REPORTS";
+        public const string OutgoingMph = "OUTGOING MPH";
+        public const string PatientInfo = "PATIENT INFO";
+        public const string ProgressReports = "PROGRESS REPORTS";
+        public const string TicketingTransportation = "TICKETING & TRANSPORTATION";
     }
 }

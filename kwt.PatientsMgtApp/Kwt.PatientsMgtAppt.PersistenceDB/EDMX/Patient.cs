@@ -47,6 +47,8 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public System.DateTime CreatedDate { get; set; }
         public string ModifiedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
+        public Nullable<System.DateTime> AuthorizedDate { get; set; }
+        public Nullable<bool> IsBlocked { get; set; }
     
         public virtual Agency Agency { get; set; }
         public virtual Bank Bank { get; set; }

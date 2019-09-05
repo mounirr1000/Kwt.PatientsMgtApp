@@ -33,7 +33,8 @@ namespace Kwt.PatientsMgtApp.Core
             Kuwait = 1,
             Archive = 2,
             Details = 3,
-            Ministry = 4
+            Ministry = 4,
+            Statistical = 5,
         }
         public enum PaymentType
         {

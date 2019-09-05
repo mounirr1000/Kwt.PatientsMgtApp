@@ -27,7 +27,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
 
         int DeletePatient(PatientModel patient);
 
-        List<PatientReportModel> GetPatientsReport(string patientCid = null, string hospital = null, string doctor = null, Nullable<bool> status = null, string speciality = null);
+        List<PatientReportModel> GetPatientsReport(string patientCid = null, string hospital = null, string doctor = null, Nullable<bool> status = null, string speciality = null, DateTime? startDate = null, DateTime? endDate = null);
 
 
     }

@@ -1,0 +1,42 @@
+﻿@using Kwt.PatientsMgtApp.WebUI.Models
+@model FileViewModel
+@{
+    ViewBag.Title = "Patient Folders";
+}
+
+<div class="mt-3">
+    <p>
+        <a href="@Url.Action("Details", "Patient", new {patientCid = @Model.PatientCid})" class="k-button"><i class="fa fa-arrow-circle-left" aria-hidden="true" style="color: orange"></i> Patient Details</a>
+    </p>
+</div>
+<div class="m-3">
+    <div class="badge-light p-2" style="text-transform: capitalize;"><i class="fa fa-folder-o"></i> <span><em>@Model.PatientCid | @Model.PatientName</em> Folders</span></div>
+</div>
+
+@if (@Model.FoldersPath != null)
+{
+    for (int x = 0; x < @Model.FoldersPath.Length; x++)
+    {
+        if (Model.IsFolderEmpty[x] == false)
+        {
+            <div>
+                <a href="@Url.Action("GetPatientFiles", "Patient", new {patientFolderPath = @Model.FoldersPath[x], folderName = @Model.FoldersName[x], patientCid = @Model.PatientCid, patientName = @Model.PatientName})"><i class="fa fa-folder-open" aria-hidden="true" style="color: orange"></i> @Model.FoldersName[x]</a>
+            </div>
+        }
+        else
+        {
+            <div>
+                <a href="@Url.Action("GetPatientFiles", "Patient", new {patientFolderPath = @Model.FoldersPath[x], folderName = @Model.FoldersName[x], patientCid = @Model.PatientCid, patientName = @Model.PatientName})"><i class="fa fa-folder" aria-hidden="true" style="color: orange"></i> @Model.FoldersName[x]</a>
+            </div>
+        }
+
+
+    }
+}
+else
+{
+    <div class="row">
+        @*<div class="alert-info">No Folder Found For This Patient, Please make sure the shared folder is created for this patient</div>*@
+        <div class="alert-info">Under Construction!</div>
+    </div>
+}

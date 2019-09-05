@@ -1,4 +1,5 @@
-﻿@model List<Kwt.PatientsMgtApp.Core.Models.CompanionModel>
+﻿@using Kwt.PatientsMgtApp.WebUI.Infrastructure
+@model List<Kwt.PatientsMgtApp.Core.Models.CompanionModel>
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 @{
     ViewBag.Title = "Companions List";
@@ -10,7 +11,10 @@
     var jsonModel = serializer.Serialize(Model);
 }
 <div class="pt-3 pb-3">
+@if (User.IsInAnyRoles(CrudRoles.CompanionCreateRoles))
+{
     <a href="@Url.Action("Create", "Companion")" class="k-button"><i class="fa fa-plus" style="color:yellowgreen"></i> New Companion</a>
+}
 </div>
 
 <div id="companion-data" class="pb-5 pt-5">
@@ -51,16 +55,20 @@
         $("#clear").click(function (e) {
             $("#searchCompanion").val("");
             $("#clearSearch").val(true);
-            
+
         });
     </script>
     <script type="text/javascript">
         var companions = @Html.Raw(jsonModel);
-        var isAdmin =   @Html.Raw(Json.Encode(User.IsInRole("Admin, Manager, Super Admin")));
-        function getTemplate(companionCid) {
-             if (isAdmin) {
-            return '<a href="javascript:confirmDelete('+companionCid+','+'\'companionCid\''+')" id='+companionCid+'> <i class="fa fa-times fa-2x" style="color: lightcoral"></i></a>';
+        console.log("companions",companions);
+        var isAdmin =   @Html.Raw(Json.Encode(User.IsInAnyRoles(new [] { "Admin", "Manager", "Super Admin" })));
+        
+        function getTemplate(id) {
+            
+            if (isAdmin) {
+                return '<a href="javascript:confirmDelete('+id+','+'\'id\''+')" id='+id+'> <i class="fa fa-times fa-2x" style="color: lightcoral"></i></a>';
             }
+            
         }
         $('document').ready(function () {
             $("#content").css("visibility", "visible");
@@ -70,6 +78,7 @@
                 height: 750,
                 groupable: true,
                 sortable: true,
+                resizable: true,
                 pageable: {
                     pageSize: 11,
                     alwaysVisible: false
@@ -77,8 +86,12 @@
                 columns:[
                     {
                         field: "CompanionCID",
-                        title: "CID",
-                        template: "<a href='@Url.Action("Details", "Companion")?CompanionCID=#= CompanionCID#'>#= CompanionCID #</a>"
+                        title: "Companion CID",
+                        template: "<a href='@Url.Action("Details", "Companion")?CompanionCID=#= CompanionCID#&patientCid=#=PatientCID#'>#= CompanionCID #</a>"
+                    },
+                    {
+                        field: "PatientCID",
+                        title: "Patient CID"
                     },
                 {
                     field: "Name",
@@ -102,11 +115,18 @@
                     template: "#if(IsActive==true){#<i class='badge badge-success'>Active</i>#}" +
                            "else{#<i class='badge badge-info'>Not Active</i>#}#"
                 },
+                {
+                    field: "JustBeneficiary",
+                    title: "Just Beneficiary?",
+                    template: "#if(JustBeneficiary==true){#<i class='badge badge-info'>Yes</i>#}" +
+                           "else{#<i class='badge badge-success'>No</i>#}#"
+                },
                {
-                   field: "CompanionCID",
-                   title: "Delete",
-                   template: getTemplate('#=CompanionCID#'),
-                   hidden: !isAdmin
+                   field: "Id",
+                   title: "X",
+                   template: getTemplate('#= Id #'),
+                   hidden: !isAdmin,
+                   width:"50px"
                }],
                 dataSource: {
                     data: companions

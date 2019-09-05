@@ -11,6 +11,10 @@ namespace Kwt.PatientsMgtApp.WebUI.Models
 
         public int? TotalPayments { get; set; }
 
+        public int? TotalTodaysPayments { get; set; }
+
+        public int? TodaysPatients { get; set; }
+
         public DateTime TodayDateTime { get; set; }
 
     }

@@ -11,7 +11,7 @@
     <link href="../Content/kendo.common.min.css" rel="stylesheet" />
     <link href="../Content/kendo.metro.min.css" rel="stylesheet" />
     <link href="../Content/Site.css" rel="stylesheet" />
-    <link href="../Content/fontawesome/font-awesome.min.css" rel="stylesheet" />
+    <link href="../Content/font-awesome.min.css" rel="stylesheet" />
 </head>
 <body>
     <form id="form1" runat="server">
@@ -19,13 +19,28 @@
             <div id="panelbar" class="panel">
                 <div class="panel-success">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" href="#collapse1"><span class="p-2"><i class="fa fa-search"></i> Filter Patient Report</span> <i class="fa fa-angle-down"></i></a>
+                        <a data-toggle="collapse" href="#collapse1" style="display: block;">
+                            <i class="fa fa-search"></i>&nbsp;<span class="p-2" style="text-decoration: underline"> Filter Patient Report</span> <i class="fa fa-angle-down"></i>
+                        </a>
                     </h4>
 
                 </div>
                 <div id="collapse1" class="panel-collapse collapse">
                     <div class="panel-body" >
                         <ul class="fieldlistReport" style="margin: 0">
+                            <li class="editor-field">
+
+                                <label class="" for="StartDate">Created Date</label>
+
+                                <asp:TextBox ID="StartDate" runat="server"></asp:TextBox>
+                            </li>
+                            <li class="editor-field">
+
+                                <label class="" for="EndDate">Created Date</label>
+
+                                <asp:TextBox ID="EndDate" runat="server"></asp:TextBox>
+                            </li>
+
                             <li class="editor-field">
 
                                 <label class="" for="IsActiveList">Active</label>
@@ -68,8 +83,8 @@
             </div>
         </div>
         <asp:PlaceHolder ID="ErrorMessage" runat="server" Visible="False">
-           <div class="mt-3 mb-3" >
-            <asp:Label ID="Message" runat="server"  Class="alert alert-danger"></asp:Label>
+           <div class="col-md-12" >
+            <asp:Label ID="Message" runat="server"  Class="alert alert-info" Style="display: block;"></asp:Label>
         </div> 
         </asp:PlaceHolder>
         
@@ -91,11 +106,13 @@
     <script src="../Scripts/jquery-ui-1.12.1.min.js"></script>
     <script src="../Scripts/bootstrap.min.js"></script>
     <script src="../Scripts/kendo.all.min.js"></script>
+    <script src="../Scripts/jquery-migrate-3.0.0.min.js"></script>
     <script type="text/javascript">
         $(function () {
             $("#PatientCid").kendoMaskedTextBox({
                 mask: "AAAAAAAAAAAA"
             });
+            $("#StartDate, #EndDate").kendoDatePicker();
             //$("#DoctorList, #HospitalList, #SpecialityList").kendoDropDownList({
 
             //});

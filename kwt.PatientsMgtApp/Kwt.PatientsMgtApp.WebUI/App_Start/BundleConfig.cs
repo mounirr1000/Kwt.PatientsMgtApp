@@ -12,7 +12,9 @@ namespace Kwt.PatientsMgtApp.WebUI
                         "~/Scripts/jquery-{version}.js",
                         //Included for kendoui to migrate with the new Jquery V3
                         "~/Scripts/jquery-migrate-3.0.0.min.js",
-                        "~/Scripts/jquery.unobtrusive-ajax.min.js"));
+                        "~/Scripts/jquery.unobtrusive-ajax.min.js",
+                        //new for printing specific div and conserving styles
+                        "~/Scripts/printThis.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
                 "~/Scripts/jquery-ui-{version}.js"));

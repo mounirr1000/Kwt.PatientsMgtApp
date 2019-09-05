@@ -8,8 +8,10 @@
 <div class="mt-3">
     <p>
         <a href="@Url.Action("List")" class="k-button"><i class="fa fa-arrow-left" style="color: lightblue"></i> Back to List</a>
-        <a href="@Url.Action("Edit", new {paymentId = Model.Id})" class="k-button"><i class="fa fa-pencil" style="color: blueviolet"></i> Edit</a>
+        <a href="@Url.Action("Edit", new {paymentId=Model.Id})" class="k-button"><i class="fa fa-pencil" style="color: blueviolet"></i> Edit</a>
         <a href="javascript:window.print()" class="k-button"><i class="fa fa-print" style="color: blueviolet"></i> Print This Page</a>
+        <a href="javascript:showTodayPayments()" class="k-button"><i class="fa fa-eye" style="color: blueviolet"></i> Show Voucher</a>
+        @*<a href="javascript:printPaymentVoucher()" class="k-button"><i class="fa fa-print" style="color: blueviolet"></i> Print Voucher</a>*@
     </p>
 </div>
 <div class="loader"></div>
@@ -81,11 +83,16 @@
         </ul>
     </fieldset>
 
-@if (Model.PaymentDeductions!=null&&Model.PaymentDeductions.Count>0)
-{
+    @if (Model.PaymentDeductions != null && Model.PaymentDeductions.Count > 0)
+    {
     <button data-toggle="collapse" data-target="#paymentDeduction"><i></i> Deduction Info</button>
     <div id="paymentDeduction" class="collapse show"></div>
-}
+    }
+    @if (Model.Payments != null && Model.Payments.Count > 0)
+    {
+    <button data-toggle="collapse" data-target="#paymentList"><i></i> Payments History</button>
+    <div id="paymentList" class="collapse show"></div>
+    }
     <button data-toggle="collapse" data-target="#BenfeciaryInfo"> <i></i> Beneficiary Info</button>
     <fieldset id="BenfeciaryInfo" class="collapse">
         <legend>Beneficiary Information</legend>
@@ -158,30 +165,30 @@
         <legend>Companion Information</legend>
         @if (Model.CompanionCID != null)
         {
-            <ul class="fieldlist form-row">
-                <li class="col-md-3">
-                    @Html.LabelFor(model => model.CompanionCID, new { @class = "" })
-                    @Html.TextBoxFor(model => model.CompanionCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-                </li>
-                <li class="col-md-3">
-                    @Html.LabelFor(model => model.CompanionFName, new { @class = "" })
-                    @Html.TextBoxFor(model => model.CompanionFName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-                </li>
-                <li class="col-md-3">
-                    @Html.LabelFor(model => model.CompanionMName, new { @class = "" })
-                    @Html.TextBoxFor(model => model.CompanionMName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-                </li>
-                <li class="col-md-3">
-                    @Html.LabelFor(model => model.CompanionLName, new { @class = "" })
-                    @Html.TextBoxFor(model => model.CompanionLName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-                </li>
+        <ul class="fieldlist form-row">
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.CompanionCID, new { @class = "" })
+                @Html.TextBoxFor(model => model.CompanionCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.CompanionFName, new { @class = "" })
+                @Html.TextBoxFor(model => model.CompanionFName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.CompanionMName, new { @class = "" })
+                @Html.TextBoxFor(model => model.CompanionMName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.CompanionLName, new { @class = "" })
+                @Html.TextBoxFor(model => model.CompanionLName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
 
-            </ul>
+        </ul>
         }
         else
         {
 
-            <span>No active companion found in our records for this patient</span>
+        <span>No active companion found in our records for this patient</span>
 
 
         }
@@ -211,12 +218,160 @@
     </fieldset>
 
 </div>
+@* new 8/5/2019 print voucher *@
+<div class="modal fade bd-example-modal-lg" id="voucherPrint" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                @*<h4 class="modal-title" id="deleteLabel">
+                    Voucher @Model.PaymentID
+                </h4>*@
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="printVoucher"><i class="fa fa-print" style="color: blueviolet"></i> Print Voucher</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="voucherPrintBody" style="font-size: 22px;">
+                <fieldset>
+                    <legend>Voucher Info</legend>
+                    <ul class="fieldlist form-row">
+                        <li>
+                            <label>Printed By</label>
+                            @User.Identity.Name
+                        </li>
+                        <li>
+                            <label>Printed Date</label>
+                            @DateTime.Now
+                        </li>
+                    </ul>
+                </fieldset>
+                <fieldset>
+                    <legend>Patient Info</legend>
+                    <ul class="fieldlist form-row">
+                        <li class="col-md-6">
+                            <label>Patient CID</label>
+                            @Model.PatientCID
+                        </li>
+                        <li class="col-md-6">
+                            <label>Patient Name</label>
+                            @Model.PatientFullName
+                        </li>
+                    </ul>
+                </fieldset>
 
+                <fieldset>
+                    <legend>Companion Info</legend>
+                    @if (Model.HasCompanion == true)
+                    {
+                        <ul class="fieldlist form-row">
+                            <li class="col-md-6">
+                                <label>Companion CID</label>
+                                @Model.CompanionCID
+                            </li>
+                            <li class="col-md-6">
+                                <label>Companion Name</label>
+                                @Model.CompanionFullName
+                            </li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <ul class="fieldlist form-row">
+                            <li class="col-md-6">
+                                <label>No Primary Companion with this patient</label>
+                            </li>
+                        </ul>
+                    }
+                </fieldset>
+
+
+                <fieldset>
+                    <legend>Payment Info</legend>
+                    <div class="fieldlist">
+                        <div class="row">
+                            <div class="col-md-4"><label>Payment Date</label> @Model.PaymentDateFormatted</div>
+                            <div class="col-md-4"><label>Start Date</label> @Model.PaymentStartDateFormatted</div>
+                            <div class="col-md-4"><label>End Date</label> @Model.PaymentEndDateFormatted</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4"><label>Payment Period</label> @Model.PaymentLengthPeriod Day(s)</div>
+                            <div class="col-md-4"><label>Patient Amount</label> @Model.PatientAmount KWD</div>
+                            <div class="col-md-4"><label>Companion Amount</label> @Model.CompanionAmount KWD</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4"><label>Initial Amount</label> @Model.TotalDue KWD</div>
+                            @if (Model.PaymentDeductionObject != null)
+                            {
+                                <div class="col-md-4">
+                                    <label>Total Deduction</label>
+                                    @if (@Model.PaymentDeductionObject.TotalDeduction != null)
+                                    {
+                                        @Model.PaymentDeductionObject.TotalDeduction
+                                        <text> KWD</text>
+                                    }
+                                    else
+                                    {
+                                        <text>0 KWD</text>
+                                    }
+                                </div>
+                            }
+                            <div class="col-md-4">
+                                <label>Final Amount</label>
+                                @if (@Model.FinalAmount != null)
+                                {
+                                    @Model.FinalAmount
+                                    <text> KWD</text>
+                                }
+                                else
+                                {
+                                    @Model.TotalDue<text> KWD</text>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Beneficiary Info</legend>
+                    <ul class="fieldlist form-row">
+                        <li class="col-md-6"><label>Beneficiary Cid</label> @Model.BeneficiaryCID</li>
+                        <li class="col-md-6"><label>Beneficiary Name</label> @Model.PatientFullName</li>
+                        <li class="col-md-6"><label>Bank Name</label> @Model.BeneficiaryBank</li>
+                        <li class="col-md-6"><label>IBan</label> @Model.BeneficiaryIBan</li>
+                    </ul>
+                </fieldset>
+                <fieldset>
+                    <legend> Payment History</legend>
+
+                    <div id="paymentListVoucherModel"></div>
+                </fieldset>
+                @*<div class="pb-3">
+                    <div style="text-align: right;padding-right:20px;">
+                        <div class="pull-right" style="width: 230px; text-align: center;"><i>المحاسب</i></div>
+                        <div class="pull-right" style="width: 286px; text-align: center;"><i>المدقق</i></div>
+                        <div class="pull-left" style="width: 230px; text-align: center;"><i>الملحق المالي</i></div>
+                        <div class="pull-left" style="width: 100px;"><i>رئيس المكتب</i></div>
+                    </div>
+                </div>*@
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="printVoucher1"> <i class="fa fa-print" style="color: blueviolet"></i> Print Voucher</button>
+            </div>
+        </div>
+    </div>
+</div>
+@* end new 8/5/2019 print voucher *@
 @section Scripts{
     <script type="text/javascript">
-        var data = @Html.Raw(Json.Encode(Model.PaymentDeductions));
-        console.log(data);
-        $('document').ready(function () {
+        var paymentDeductions = @Html.Raw(Json.Encode(Model.PaymentDeductions));
+        var payments = @Html.Raw(Json.Encode(Model.Payments));
+        var voucherId = @Html.Raw(Json.Encode(Model.PaymentID));
+        var paymentVoucherHistory= payments.filter(function(payment) {
+            return payment.PaymentID != voucherId;
+        });
+        console.log(payments);
+        $('document').ready(function() {
             //class="btn btn-block mb-2 text-uppercase text-info"
             $('#contentPaymentDetail button').addClass('btn btn-block mb-2 text-uppercase text-white bg-info');
             //fa fa-angle-double-down pull-left
@@ -224,10 +379,10 @@
             $("#contentPaymentDetail").css("visibility", "visible");
             $(".loader").css("display", "none");
 
-            $('#contentPaymentDetail button').click(function () {
+            $('#contentPaymentDetail button').click(function() {
 
                 var $this = this;
-                var caret =$($this).find('i');
+                var caret = $($this).find('i');
                 if ($(caret).hasClass('fa-angle-double-down'))
                     $(caret).removeClass('fa-angle-double-down').addClass("fa-angle-double-up");
                 else
@@ -240,54 +395,233 @@
             //pdf: {
             //    fileName: "Deduction List.pdf"
             //},
-
+            resizable: true,
+            noRecords: true,
+            messages: {
+                noRecords: "There is no payments deduction to display"
+            },
             columns: [
-            @*{
+                @*{
                 field: "DeductionID",
                 title: "Payment Num",
 
                 template: "<a href='@Url.Action("Details", "Payment")?paymentId=#= DeductionID#'>#= DeductionID #</a>",
-               
+
             },*@
 
-            {
-                field: "PatientCID",
-                title: "P_CID"
-            },
-            {
-                field: "CompanionCID",
-                title: "C_CID"
-            },
-            //{
-            //    field: "PaymentStartDate",
-            //    title: "start Date",
-            //    template: "#= kendo.toString(kendo.parseDate(PaymentStartDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
-            //},
-            //{
-            //    field: "PaymentEndDate",
-            //    title: "End Date",
-            //    template: "#= kendo.toString(kendo.parseDate(PaymentEndDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
-            //},
-            {
-                field: "PatientDeduction",
-                title: "Patient Deduction"
+                {
+                    field: "PatientCID",
+                    title: "P_CID"
+                },
+                {
+                    field: "CompanionCID",
+                    title: "C_CID"
+                },
+                {
+                    field: "PatientStartDateFormatted",
+                    title: "Patient Dates",
+                    template: "#= PatientStartDateFormatted # | #= PatientEndDateFormatted#"
+                },
+                {
+                    field: "CompanionStartDateFormatted",
+                    title: "Companion Dates",
+                    template: "#= CompanionStartDateFormatted # | #= CompanionEndDateFormatted#"
+                },
+                {
+                    field: "PatientDeduction",
+                    title: "Patient Deduction"
 
-            },
-            {
-                field: "CompanionDeduction",
-                title: "Companion Deduction"
-            },
-            {
-                field: "TotalDeduction",
-                title: "Total Deduction"
-            },
-            {
-                field: "FinalAmount",
-                title: "Final Amount"
-            }],
+                },
+                {
+                    field: "CompanionDeduction",
+                    title: "Companion Deduction"
+                },
+                {
+                    field: "AmountPaid",
+                    title: "Amount"
+                },
+                {
+                    field: "TotalDeduction",
+                    title: "Total Deduction"
+                },
+                {
+                    field: "FinalAmount",
+                    title: "Final Amount"
+                }
+            ],
             dataSource: {
-                data: data
+                data: paymentDeductions
             }
         });
+
+        $("#paymentList").kendoGrid({
+            resizable: true,
+            noRecords: true,
+            messages: {
+                noRecords: "There is no payments to display"
+            },
+            sortable: {
+                mode: "single",
+                allowUnsort: false
+            },
+            autoFitColumn: true,
+            dataBound: function() {
+                for (var i = 0; i < this.columns.length; i++) {
+                    this.autoFitColumn(i);
+                }
+            },
+            columns: [
+                {
+                    field: "PaymentID",
+                    title: "Voucher#"
+                }, {
+                    field: "PatientCID",
+                    title: "P_CID"
+                },
+                {
+                    field: "CompanionCID",
+                    title: "C_CID"
+                },
+                {
+                    field: "BeneficiaryCID",
+                    title: "Beneficiary CID",
+                },
+                {
+                    field: "PaymentDateFormatted",
+                    title: "Payment Date",
+                },
+                {
+                    field: "PaymentStartDateFormatted",
+                    title: "Start Date",
+                },
+                {
+                    field: "PaymentEndDateFormatted",
+                    title: "End Date",
+                },
+                {
+                    field: "BeneficiaryIBan",
+                    title: "IBan"
+
+                },
+                {
+                    field: "TotalDeduction",
+                    title: "Total Deduction"
+                },
+                {
+                    field: "FinalAmount",
+                    title: "Final Amount"
+                },
+                {
+                    field: "Notes",
+                    title: "Payment Notes"
+                },
+                {
+                    field: "PaymentDeductionNotes",
+                    title: "Deduction Notes"
+                }
+            ],
+            dataSource: {
+                data: paymentVoucherHistory
+            }
+        });
+
+    </script>
+
+
+    @* new 8/5/2019 print Voucher scrip *@
+    <script type="text/javascript">
+
+        //function printPayment() {
+        //    var grid = $("#paymentGrid").data("kendoGrid");
+        //    grid.saveAsExcel();
+        //    console.log("Print excel payment");
+        //}
+        var voucherId = @Html.Raw(Json.Encode(Model.PaymentID));
+        @*var paymentVoucherHistory= payments.filter(function(payment) {
+            return payment.PaymentID != voucherId;
+        });*@
+        function printPaymentVoucher(voucherId) {
+            var divContents = $("#voucherPrintBody").html();
+            //console.log("$('#voucherPrintBody').html() ",divContents);
+            $('#voucherPrintBody').printThis({
+                //importCSS: false,
+                //loadCSS: "./Content/VoucherPrintStyle.css",
+                header: "<h1>KWT Voucher "+voucherId+" Details</h1>",
+                footer:'<div style="text-align: right; padding-right:90px;">' +
+                       '<div class="pull-right" style="width: 230px;"><i>المحاسب</i></div>'
+                      +'<div class="pull-right" style="width: 286px; text-align: center;"><i>المدقق</i></div>'
+                      +'<div class="pull-left" style="width: 230px; text-align: center;"><i>الملحق المالي</i></div>'
+                      //+'<div class="pull-right" style="width: 100px;"><i>رئيس المكتب</i></div></div>'
+                // debug: true,
+            });
+        }
+        function showTodayPayments() {
+            $('#voucherPrint').modal('show');
+            $('#printVoucher, #printVoucher1').click(function() {
+                printPaymentVoucher(voucherId);
+            });
+        }
+
+        $("#paymentListVoucherModel").kendoGrid({
+            resizable: true,
+            noRecords: true,
+            messages: {
+                noRecords: "There is no payments to display"
+            },
+            columns: [
+            {
+                field: "Id",
+                title: "Voucher#",
+                width: "50px"
+            },
+                {
+                    field: "PaymentDateFormatted",
+                    title: "Pay Date",
+                    width: "50px"
+                },
+                {
+                    field: "PaymentStartDateFormatted",
+                    title: "Start Date",
+                    width: "50px"
+                },
+                {
+                    field: "PaymentEndDateFormatted",
+                    title: "End Date",
+                    width: "50px"
+                },
+                {
+                    field: "BeneficiaryIBan",
+                    title: "IBan",
+                    width: "160px"
+                },
+                {
+                    field: "TotalDeduction",
+                    title: "Deduction",
+                    width: "50px"
+                },
+                {
+                    field: "FinalAmount",
+                    title: "Amount",
+                    width: "50px",
+                    template: "#if (IsRejected==true){#R: <i style='color:red;'>(-#:FinalAmount# )</i>#}else {# #: FinalAmount # #}#"
+                },
+                //{
+                //    field: "Notes",
+                //    title: "Notes",
+                //    width: "150px",
+                //    template: "#if = CompanionStartDateFormatted # | #= CompanionEndDateFormatted#"
+                //},
+                {
+                    field: "PaymentDeductionNotes",
+                    title: "Notes",
+                    width: "140px",
+                    template: "#if (PaymentDeductionNotes){# #: PaymentDeductionNotes # #}else if (Notes) {# #: Notes # #}#"
+                }
+            ],
+            dataSource: {
+                data: paymentVoucherHistory.slice(0, 3)
+            }
+        });
+
     </script>
 }

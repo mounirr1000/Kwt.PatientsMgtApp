@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using Kwt.PatientsMgtApp.WebUI.Models;
 using Microsoft.AspNet.Identity.Owin;
 
 namespace Kwt.PatientsMgtApp.WebUI.Infrastructure
@@ -17,12 +18,13 @@ namespace Kwt.PatientsMgtApp.WebUI.Infrastructure
             return new MvcHtmlString(mgr.FindByIdAsync(id).Result.UserName);
         }
 
-        public static MvcHtmlString ListItemAction(this HtmlHelper helper, string name, string actionName, string controllerName, string iconName, string color)
+        //public static MvcHtmlString ListItemAction(this HtmlHelper helper, string name, string actionName, string controllerName, string iconName, string color)
+        public static MvcHtmlString ListItemAction(this HtmlHelper helper, string name, string actionName, string controllerName, string iconName, string color, SubMenu subMenu = null)
         {
             var currentControllerName = (string)helper.ViewContext.RouteData.Values["controller"];
             var currentActionName = (string)helper.ViewContext.RouteData.Values["action"];
             var sb = new StringBuilder();
-            sb.AppendFormat("<li {0} ", (" class=\"h-item k-item k-state-default k-first\">"));
+            sb.AppendFormat("<li {0} ", (" class=\"h-item k-item k-state-default k-first dropdown\">"));
             var url = new UrlHelper(HttpContext.Current.Request.RequestContext);
 
             //sb.AppendFormat("<a {0} href=\"{1}\"><i class=\"fa fa-{3}\" style=\"color:{4}\"></i> {2}</a>", (currentControllerName.Equals(controllerName, StringComparison.CurrentCultureIgnoreCase)
@@ -32,6 +34,30 @@ namespace Kwt.PatientsMgtApp.WebUI.Infrastructure
                                                     ? " class=\"k-link k-state-active\"" :
                                                       " class=\"k-link\""),
                                                       url.Action(actionName, controllerName), name, iconName);
+
+            //new 8-3-2019
+
+            //if (name == "Patients" && subMenu != null)
+            //{
+            //    sb.AppendFormat("<div   class=\"dropdown\">");
+            //    sb.AppendFormat("<div {0} ", ("class=\"dropdown-content\">"));
+            //    foreach (var menu in subMenu.MenuItem)
+            //    {
+
+
+            //        sb.AppendFormat("<a {0} href=\"{1}\">&nbsp {2}</a>", (currentControllerName.Equals(menu.ControllerName, StringComparison.CurrentCultureIgnoreCase)
+            //                                            //&&
+            //                                            //currentActionName.Equals(actionName, StringComparison.CurrentCultureIgnoreCase)
+            //                                            ? " class=\"k-link k-state-active\"" :
+            //                                              " class=\"k-link\""),
+            //                                              url.Action(menu.ActionName, menu.ControllerName), menu.MenuName, menu.IconName);
+
+            //    }
+            //    sb.Append("</div>");
+            //    sb.AppendFormat("</div>");
+            //}
+
+            // end new
             sb.Append("</li>");
             return new MvcHtmlString(sb.ToString());
         }

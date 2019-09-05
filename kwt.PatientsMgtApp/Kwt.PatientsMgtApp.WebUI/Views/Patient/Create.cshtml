@@ -27,13 +27,15 @@
                 <legend></legend>
                 <ul class="fieldlist row">
                     <li class="editor-field col-md-4">
+                        <small class="text-sm-left text-info">Please Type CID, You can't copy paste</small>
                         @Html.LabelFor(model => model.PatientCID, new { @class = "" })
-                        @Html.TextBoxFor(model => model.PatientCID, new { @class = "k-textbox", style = "width: 100%;" })
+                        @Html.TextBoxFor(model => model.PatientCID, new { @class = "k-textbox", style = "width: 100%;", maxlength = "12" })
                         <div>
                             @Html.ValidationMessageFor(model => model.PatientCID, "", new { @class = "k-error-colored" })
                         </div>
                     </li>
                     <li class="col-md-4">
+                        <small class="text-sm-left text-info">&nbsp;</small>
                         @Html.LabelFor(model => model.PatientFName, new { @class = "" })
                         @Html.TextBoxFor(model => model.PatientFName, new { @class = "k-textbox", style = "width: 100%;" })
                         <div>
@@ -41,6 +43,7 @@
                         </div>
                     </li>
                     <li class="col-md-4">
+                        <small class="text-sm-left text-info">&nbsp;</small>
                         @Html.LabelFor(model => model.PatientMName, new { @class = "" })
                         @Html.TextBoxFor(model => model.PatientMName, new { @class = "k-textbox", style = "width: 100%;" })
                         <div>
@@ -116,15 +119,15 @@
                     </li>
 
                     <li class="col-sm-8">
-                        @Html.LabelFor(model => model.Doctor, new {@class = ""})
+                        @Html.LabelFor(model => model.Doctor, new { @class = "" })
                         @Html.DropDownListFor(model => model.Doctor, new List<SelectListItem>(Model.Doctors.Select(a => new SelectListItem()
-                        {
-                            Text = a.DoctorName,
-                            Value = a.DoctorName
+                   {
+                       Text = a.DoctorName,
+                       Value = a.DoctorName
 
-                        }).ToList()), "Select Doctor Name...", new {style = "width:50%"})
+                   }).ToList()), "Select Doctor Name...", new { style = "width:50%" })
                         <div>
-                            @Html.ValidationMessageFor(model => model.Doctor, "", new {@class = "k-error-colored"})
+                            @Html.ValidationMessageFor(model => model.Doctor, "", new { @class = "k-error-colored" })
                         </div>
                     </li>
                     <li class="col-md-6">
@@ -159,7 +162,7 @@
                     </li>
                     <li class="col-md-6 pt-2">
                         @Html.LabelFor(model => model.Iban, new { @class = "" })
-                        @Html.TextBoxFor(model => model.Iban, new { @class = "k-textbox", style = "width:100%" })
+                        @Html.TextBoxFor(model => model.Iban, new { @class = "k-textbox", style = "width:100%", maxlength = "30" })
                         @Html.ValidationMessageFor(model => model.Iban, "", new { @class = "text-danger" })
                     </li>
                 </ul>
@@ -196,18 +199,25 @@
             <fieldset id="treatmentDetails" class="collapse">
                 <legend></legend>
                 <ul class="fieldlist row">
-                    <li class="col-md-5">
+                    <li class="col-md-3">
                         @Html.LabelFor(model => model.FirstApptDAte, new { @class = "" })
                         @Html.TextBoxFor(model => model.FirstApptDAte, "{0:MM/dd/yyyy}", new { @class = "", style = "width: 60%" })
                         <div>
                             @Html.ValidationMessageFor(model => model.FirstApptDAte, "", new { @class = "k-error-colored" })
                         </div>
                     </li>
-                    <li class="col-md-5">
+                    <li class="col-md-3">
                         @Html.LabelFor(model => model.EndTreatDate, new { @class = "" })
                         @Html.TextBoxFor(model => model.EndTreatDate, "{0:MM/dd/yyyy}", new { @class = "", style = "width: 60%" })
                         <div>
                             @Html.ValidationMessageFor(model => model.EndTreatDate, "", new { @class = "k-error-colored" })
+                        </div>
+                    </li>
+                    <li class="col-md-3">
+                        @Html.LabelFor(model => model.AuthorizedDate, new { @class = "" })
+                        @Html.TextBoxFor(model => model.AuthorizedDate, "{0:MM/dd/yyyy}", new { @class = "", style = "width: 60%" })
+                        <div>
+                            @Html.ValidationMessageFor(model => model.AuthorizedDate, "", new { @class = "k-error-colored" })
                         </div>
                     </li>
                     <li class="col-md-2">
@@ -245,7 +255,7 @@
     <script type="text/javascript">
 
 
-        $("#FirstApptDAte, #EndTreatDate").kendoDatePicker({
+        $("#FirstApptDAte, #EndTreatDate, #AuthorizedDate").kendoDatePicker({
 
         });
         $.validator.setDefaults({ ignore: '' });
@@ -260,6 +270,11 @@
                 mask: "AAAAAAAAAAAA",
                 promptChar: "",
                 //clearPromptChar: true
+            });
+            $("#PatientCID").bind('cut copy paste', function (e) {
+
+                e.preventDefault();
+
             });
             $("#USPhone").kendoMaskedTextBox({
                 mask: "0000000000"
@@ -311,7 +326,7 @@
             }
             form.submit(function( event ) {
                 var result = form.valid();
-                
+
 
                 if (!element2.find('select').valid()) {
                     element2.addClass("show");

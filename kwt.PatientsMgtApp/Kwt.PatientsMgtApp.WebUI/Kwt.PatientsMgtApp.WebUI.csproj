@@ -271,9 +271,11 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\AppRoleManager.cs" />
+    <Compile Include="Infrastructure\CrudRoles.cs" />
     <Compile Include="Infrastructure\ExtensionMethods.cs" />
     <Compile Include="Infrastructure\HtmlHelpers.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\FileViewModel.cs" />
     <Compile Include="Models\HomeViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -325,13 +327,17 @@
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\hover-min.css" />
     <Content Include="Content\hover.css" />
+    <Content Include="Content\Images\404-png.png" />
     <Content Include="Content\Images\bg-sidebar-btn.png" />
+    <Content Include="Content\Images\Blocked.png" />
     <Content Include="Content\Images\businessman.png" />
+    <Content Include="Content\Images\folder.png" />
     <Content Include="Content\Images\img_trans.gif" />
     <Content Include="Content\Images\Kuwait_embassyLogo.png" />
     <Content Include="Content\Images\loader.gif" />
     <Content Include="Content\Images\money-bag.png" />
     <Content Include="Content\Images\patient.png" />
+    <Content Include="Content\Images\patient_companions.png" />
     <Content Include="Content\Images\planning.png" />
     <Content Include="Content\Images\sprites.png" />
     <Content Include="Content\kendo.common.min.css" />
@@ -472,6 +478,7 @@
     <Content Include="Scripts\popper-utils.min.js" />
     <Content Include="Scripts\popper.js" />
     <Content Include="Scripts\popper.min.js" />
+    <Content Include="Scripts\printThis.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
@@ -577,6 +584,16 @@
     <Content Include="Views\Shared\_LoginLayout.cshtml" />
     <Content Include="Views\Admin\Edit.cshtml" />
     <Content Include="Views\Shared\_SearchedPatientjs.cshtml" />
+    <Content Include="Views\Admin\PaymentHistoryList.cshtml" />
+    <Content Include="Views\Error\Status404.cshtml" />
+    <Content Include="Views\Error\Status405.cshtml" />
+    <Content Include="Views\Error\GeneralError.cshtml" />
+    <Content Include="Views\Error\Index.cshtml" />
+    <Content Include="Views\Patient\AddPatientBooks.cshtml" />
+    <Content Include="Views\Error\AccessDenied.cshtml" />
+    <Content Include="Views\Patient\GetPatientFiles.cshtml" />
+    <Content Include="Views\Patient\GetPatientFolders.cshtml" />
+    <Content Include="Views\Report\PaymentReference.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -613,8 +630,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Reports\ArchivePaymentReport.rdlc" />
+    <EmbeddedResource Include="Reports\BankPaymentReport.rdlc" />
+    <EmbeddedResource Include="Reports\MinistryPaymentReport.rdlc" />
     <EmbeddedResource Include="Reports\PatientReport.rdlc" />
     <EmbeddedResource Include="Reports\PaymentReport.rdlc" />
+    <EmbeddedResource Include="Reports\StatisticalPaymentReport.rdlc" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

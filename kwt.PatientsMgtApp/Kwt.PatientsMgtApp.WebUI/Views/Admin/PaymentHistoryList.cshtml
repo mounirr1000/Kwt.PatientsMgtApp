@@ -1,0 +1,269 @@
+﻿@model IEnumerable<Kwt.PatientsMgtApp.Core.Models.PaymentHistoryModel>
+@{
+    ViewBag.Title = "Payment History";
+}
+@{
+    var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+    serializer.MaxJsonLength = Int32.MaxValue;
+    var jsonModel = serializer.Serialize(Model);
+}
+<div class="pt-3 pb-3">
+    <a href="@Url.Action("List", "Admin")" class="k-button"><i class="fa fa-hand-o-left" style="color: lightblue"></i> Back To Admin</a>
+</div>
+<div id="paymentHistoryDetail" style="display: none ">
+    <fieldset>
+        <legend>Voucher Info</legend>
+        <ul class="fieldlist form-row">
+            <li class="col-md-2">
+                <label>Voucher ID</label>
+                <input id="PaymentID" class="k-textbox edit" style="width: 100%;"/>
+            </li>
+            <li class="col-md-3">
+                <label>Agency Name</label>
+                <input id="AgencyName" class="k-textbox edit"/>
+            </li>
+            <li class="col-md-4">
+                <label>Hospital Name</label>
+                <input id="HospitalName" class="k-textbox edit" style="width: 100%;"/>
+            </li>
+        </ul>
+        <ul class="fieldlist form-row">
+            <li class="col-md-2">
+                <label>Payment Date</label>
+                <input id="PaymentDateFormated" class="k-textbox edit" style="width: 100%;" />
+            </li>
+            <li class="col-md-3">
+                <label>Start Date</label>
+                <input id="StartDateFormated" class="k-textbox edit" />
+            </li>
+            <li class="col-md-4">
+                <label>End Date</label>
+                <input id="EndDateFormated" class="k-textbox edit" style="width: 100%;" />
+            </li>
+        </ul>
+        <ul class="fieldlist form-row">
+            <li class="col-sm-3">
+                <label>C Amount</label>
+                <input id="CAmount" class="k-textbox edit" />
+            </li>
+            <li class="col-sm-3">
+                <label>P Amount</label>
+                <input id="PAmount" class="k-textbox edit" />
+            </li>
+            <li class="col-sm-3">
+                <label>Total Due</label>
+                <input id="TotalDue" class="k-textbox edit" />
+            </li>
+        </ul>
+        <ul class="fieldlist form-row">
+            <li class="col-sm-3">
+                <label>Total Correction</label>
+                <input id="TotalCorrection" class="k-textbox edit" />
+            </li>
+            <li class="col-sm-3">
+                <label>Final Amount</label>
+                <input id="FinalAmountAfterCorrection" class="k-textbox edit" />
+            </li>
+        </ul>
+        <ul class="fieldlist form-row">
+            <li class="col-md-3">
+                <label>Beneficiary CID</label>
+                <input id="BeneficiaryCID" class="k-textbox edit" style="width: 100%;" />
+            </li>
+            <li class="col-md-3">
+                <label>Beneficiary CompanionCid</label>
+                <input id="BeneficiaryCompanionCid" class="k-textbox edit" style="width: 100%;" />
+            </li>
+            <li class="col-md-4">
+                <label>Beneficiary PatientCid</label>
+                <input id="BeneficiaryPatientCid" class="k-textbox edit" style="width: 100%;" />
+            </li>
+        </ul>
+        <ul class="fieldlist form-row">
+            <li class="col-md-3">
+                <label>Beneficiary FName</label>
+                <input id="BeneficiaryFName" class="k-textbox edit" style="width: 100%;" />
+            </li>
+            <li class="col-md-3">
+                <label>Beneficiary MName</label>
+                <input id="BeneficiaryMName" class="k-textbox edit" style="width: 100%;" />
+            </li>
+            <li class="col-md-4">
+                <label>Beneficiary LName</label>
+                <input id="BeneficiaryLName" class="k-textbox edit" style="width: 100%;" />
+            </li>
+        </ul>
+        <ul class="fieldlist form-row">
+            <li class="col-md-3">
+                <label>Bank Code</label>
+                <input id="BeneficiaryBankCode" class="k-textbox edit" style="width: 100%;" />
+            </li>
+            <li class="col-md-3">
+                <label>Bank Name</label>
+                <input id="BeneficiaryBankName" class="k-textbox edit" style="width: 100%;" />
+            </li>
+            <li class="col-md-4">
+                <label>Iban</label>
+                <input id="BeneficiaryBankIban" class="k-textbox edit" style="width: 100%;" />
+            </li>
+        </ul>
+    </fieldset>
+</div>
+<div id="paymentHistory"></div>
+
+
+
+
+
+@section Scripts {
+
+
+    <script type="text/javascript">
+
+        $('document').ready(function() {
+            $("#content").css("visibility", "visible");
+            var paymentHistory = @Html.Raw(jsonModel);
+            console.log(paymentHistory);
+
+            function displayPaymentDetail(paymentid) {
+                paymentid = parseInt(paymentid, 10);
+                console.log("paymentid", paymentid);
+                //filter(function(hero) {
+                //    return hero.franchise == “Marvel”;
+                //});
+                var selectedPayment = paymentHistory.filter(function(p) {
+                    //console.log(p);
+                    return p.PaymentID === paymentid;
+                })[0];
+                console.log("selectedPayment ", selectedPayment);
+                if (selectedPayment) {
+                    $("#paymentHistoryDetail").css("display", "block");
+                    $("#PaymentID").val(selectedPayment.PaymentID);
+                    $("#AgencyName").val(selectedPayment.AgencyName);
+                    $("#BeneficiaryBankCode").val(selectedPayment.BeneficiaryBankCode);
+                    $("#BeneficiaryBankIban").val(selectedPayment.BeneficiaryBankIban);
+                    $("#BeneficiaryBankName").val(selectedPayment.BeneficiaryBankName);
+
+                    $("#BeneficiaryCID").val(selectedPayment.BeneficiaryCID);
+                    $("#BeneficiaryCompanionCid").val(selectedPayment.BeneficiaryCompanionCid);
+                    $("#BeneficiaryPatientCid").val(selectedPayment.BeneficiaryPatientCid);
+
+                    $("#BeneficiaryFName").val(selectedPayment.BeneficiaryFName);
+                    $("#BeneficiaryMName").val(selectedPayment.BeneficiaryMName);
+                    $("#BeneficiaryLName").val(selectedPayment.BeneficiaryLName);
+
+                    $("#CAmount").val(selectedPayment.CAmount != null ? selectedPayment.CAmount : 0);
+                    $("#PAmount").val(selectedPayment.PAmount != null ? selectedPayment.PAmount : 0);
+                    $("#TotalCorrection").val(selectedPayment.TotalCorrection != null ? selectedPayment.TotalCorrection : 0);
+                    $("#HospitalName").val(selectedPayment.HospitalName);
+                    $("#FinalAmountAfterCorrection").val(selectedPayment.FinalAmountAfterCorrection);
+                    $("#TotalDue").val(selectedPayment.TotalDue);
+
+                    $("#PaymentDateFormated").val(selectedPayment.PaymentDateFormated);
+                    $("#StartDateFormated").val(selectedPayment.StartDateFormated);
+                    $("#EndDateFormated").val(selectedPayment.EndDateFormated);
+                } else {
+                    $("#paymentHistoryDetail").css("display", "none");
+                    $("#paymentHistoryDetail :input").val("");
+                }
+
+            }
+
+            var grid = $("#paymentHistory").kendoGrid({
+                resizable: true,
+                pageable: {
+                    pageSize: 20,
+                    alwaysVisible: false,
+                    pageSizes: [5, 10, 15, "all"]
+                },
+                //serverFiltering: true,
+                //filterable: {
+                //    mode: "row"
+                //},
+                columns: [
+                    {
+                        field: "PaymentID",
+                        title: "Voucher#",
+                        template: "<button class=\"btn\">#= PaymentID#</button>",
+                        //template: "<a  href='javascript: displayPaymentDetail(#= PaymentID#)'>#= PaymentID #</a>"
+                        @*cellTemplate: '<div class="ui-grid-cell-contents"><a href={{@Url.Action("Details", "Payment")}} class="icon-bar">{{row.entity.Id}}</a></div>'*@
+                        filterable: {
+                            cell: {
+                                operator: "contains",
+                                suggestionOperator: "contains"
+                            }
+                        }
+                    },
+                    //{
+                    //    field: "PaymentDateFormatted",
+                    //    title: "Payment Date"
+                    //},
+                    {
+                        field: "PaymentType.PaymentType1",
+                        title: "Payment Type",
+                        template: "#= (PaymentType == null) ? 'Regular ' : PaymentType.PaymentType1 #"
+                    },
+                    {
+                        field: "PatientCID",
+                        title: "P_CID"
+                    },
+                    //{
+                    //    field: "PatientFullName",
+                    //    title: "Patient Name"
+                    //},
+                    {
+                        field: "CompanionCID",
+                        title: "C_CID"
+                    },
+                    //{
+                    //    field: "PaymentLengthPeriod",
+                    //    title: "Period"
+                    //},
+                    //{
+                    //    field: "PaymentStartDateFormatted",
+                    //    title: "From"
+                    //    // template: "#= kendo.toString(kendo.parseDate(PaymentStartDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
+                    //},
+                    //{
+                    //    field: "PaymentEndDateFormatted",
+                    //    title: "To"
+                    //    // template: "#= kendo.toString(kendo.parseDate(PaymentEndDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
+                    //},
+                    //{
+                    //    field: "PaymentDeductionObject.TotalDeduction",
+                    //    title: "Amount Deducted",
+                    //    template: "#if(PaymentDeductionObject!=null){# #: PaymentDeductionObject.TotalDeduction # #}else {##: '0' ##}#"
+                    //},
+                    {
+                        field: "TotalDue",
+                        title: "Final Amount"
+                    },
+                    //{
+                    //    field: "IsRejected",
+                    //    title: "Valid?",
+                    //    template: getRejectedTemplate('#=IsRejected#')
+                    //},
+                ],
+                dataSource: {
+                    data: paymentHistory
+                },
+                //
+                dataBound: function(e) {
+                    //console.log("dataBound");
+                    this.element.find(".btn").bind("click", function(m) {
+                        // console.log($(this).text());
+                        // console.log(e);
+                        var paymentId = $(this).text();
+                        displayPaymentDetail(paymentId);
+                    });
+                }
+                //
+            }).data("kendoGrid");
+            //kendo.ui.progress($("#patientList"), false);
+            $(".loader").css("display", "none");
+
+
+        });
+    </script>
+}
+

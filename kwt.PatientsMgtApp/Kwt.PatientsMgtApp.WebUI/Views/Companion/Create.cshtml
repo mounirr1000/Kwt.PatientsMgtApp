@@ -30,19 +30,27 @@
                 <legend></legend>
                 <ul class="fieldlist row">
                     <li class="col-md-4">
+                        <small class="text-sm-left text-info">Please Type CID, You can't copy paste</small>
                         @Html.LabelFor(model => model.CompanionCID, new {@class = ""})
-                        @Html.TextBoxFor(model => model.CompanionCID, new {@class = "k-textbox", style = "width: 100%;"})
+                        @Html.TextBoxFor(model => model.CompanionCID, new {@class = "k-textbox", style = "width: 100%;", maxlength = "12"})
                         <div>@Html.ValidationMessageFor(model => model.CompanionCID, "", new {@class = "text-danger"})</div>
                     </li>
                     <li class="col-md-4">
+                        <small class="text-sm-left text-info">Please Type CID, You can't copy paste</small>
                         @Html.LabelFor(model => model.PatientCID, new {@class = ""})
-                        @Html.TextBoxFor(model => model.PatientCID, new {@class = "k-textbox", style = "width: 100%;"})
+                        @Html.TextBoxFor(model => model.PatientCID, new {@class = "k-textbox", style = "width: 100%;", maxlength = "12"})
                         <div> @Html.ValidationMessageFor(model => model.PatientCID, "", new {@class = "text-danger"})</div>
                     </li>
-                    <li class="col-md-4">
+                    <li class="col-md-2">
+                        <small class="text-sm-left text-info">&nbsp;</small>
                         @Html.LabelFor(model => model.IsActive, new {@class = ""})
                         @Html.EditorFor(model => model.IsActive, new {@class = "k-textbox", style = "width: 100%;"})
                         <div> @Html.ValidationMessageFor(model => model.IsActive, "", new {@class = "text-danger"})</div>
+                    </li>
+                    <li class="col-md-2">
+                        <small class="text-sm-left text-info">&nbsp;</small>
+                        @Html.LabelFor(model => model.JustBeneficiary, new { @class = "" })
+                        @Html.EditorFor(model => model.JustBeneficiary, new { @class = "k-textbox", style = "width: 100%;" })
                     </li>
                     <li class="col-md-4">
                         @Html.LabelFor(model => model.CompanionFName, new {@class = ""})
@@ -122,7 +130,7 @@
 
                                 <li class="col-md-6">
                                     @Html.LabelFor(model => model.IBan, new {@class = ""})
-                                    @Html.TextBoxFor(model => model.IBan, new {@class = "k-textbox", style = "width: 100%;"})
+                                    @Html.TextBoxFor(model => model.IBan, new {@class = "k-textbox", style = "width: 100%;", maxlength = "30" })
                                     <div>@Html.ValidationMessageFor(model => model.IBan, "", new {@class = "text-danger"})</div>
                                 </li>
                             </ul>
@@ -187,11 +195,17 @@
                 mask: "AAAAAAAAAAAA",
                 promptChar: ""
             });
+
             $("#PatientCID").kendoMaskedTextBox({
                 mask: "AAAAAAAAAAAA",
                 promptChar: ""
             });
 
+            $("#PatientCID, #CompanionCID").bind('cut copy paste', function (e) {
+
+                e.preventDefault();
+
+            });
             var isBen = $('#IsBeneficiary');
             if (!isBen.is(":checked")) {
                 $('#bankInfo').hide();

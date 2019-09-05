@@ -16,29 +16,44 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
     public partial class Payment : System.Web.UI.Page
     {
         readonly IPaymentRepository _paymentRepository = new PaymentRepository();
+        readonly IBankRepository _bankRepository = new BankRepository();
 
         protected void Page_Load(object sender, EventArgs e)
         {
 
             if (!IsPostBack)
             {
-               
-                GenerateReport();
 
+                GenerateReport();
+                SetBanksDropDown();
+                // uncomment this line to show banks dorpdown menu
+                Banks.Visible = false;
             }
+          //  SetBanksDropDown();
         }
 
+
+        private void SetBanksDropDown()
+        {
+            //var banks = _bankRepository.GetBanks();
+            Banks.DataSource = _bankRepository.GetBanks(); 
+            Banks.DataTextField = "BankName";
+            Banks.DataValueField = "BankID";
+            Banks.DataBind();
+            Banks.Items.Insert(0, "-----------Select Bank------------");
+            Banks.SelectedIndex = 0;
+        }
         protected void Search_Click(object sender, EventArgs e)
         {
 
             string selectedValue = ReportTypes.SelectedItem.Value;
-
+         //   Response.Write(Banks.SelectedItem.Value);
 
             int reportType;
             Int32.TryParse(selectedValue, out reportType);
-          //  ReportViewer1.Visible = false;
+            //  ReportViewer1.Visible = false;
             GenerateReportType(reportType);
-           // ReportViewer1.Visible = true;
+            // ReportViewer1.Visible = true;
 
         }
 
@@ -47,72 +62,87 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
             StartDate.Text = null;
             EndDate.Text = null;
             PatientCid.Text = null;
-            //ResultMessage.Enabled = false;
-            //ResultMessage.Text = "";
+            SetBanksDropDown();
             GenerateReport();
         }
 
-        private List<PaymentReportModel> GenerateReport(string patientCid = null, DateTime? startDateTxt = null, DateTime? endDateTxt = null, int? reportType = 3)
+        private void GenerateReport(string patientCid = null, DateTime? startDateTxt = null, DateTime? endDateTxt = null, int? reportType = 3, int?  bankId=null)
         {
-           
+
             var patientId = string.IsNullOrEmpty(patientCid) ? null : patientCid;
-            var startDate = startDateTxt ?? DateTime.Now;
-            var endDate = endDateTxt ?? DateTime.Now; 
-            string reportName = "Details Report Payment";
+            var startDate = startDateTxt ?? (patientId != null ? startDateTxt : DateTime.Now);
+            var endDate = endDateTxt ?? (patientId != null ? endDateTxt : DateTime.Now); //endDateTxt ?? DateTime.Now; 
+            var bankid = bankId == 0 ? null : bankId;
+            string reportName = "Details";
+            string mapPath = "~/Reports/PaymentReport.rdlc";
+            string dataSource = "PaymentList";
             switch (reportType)
             {
                 case 1:
-                    reportName = "Bank Report Payment";
+                    reportName = "Bank";
+                    mapPath = "~/Reports/BankPaymentReport.rdlc";
+                    dataSource = "BankPaymentReportDataset";
                     break;
                 case 2:
-                    reportName = "Archive Report Payment";
+                    reportName = "Archive";
+                    mapPath = "~/Reports/ArchivePaymentReport.rdlc";
+                    dataSource = "ArchivePaymentReportDataset";
                     break;
                 case 4:
-                    reportName = "Ministry Report Payment";
+                    reportName = "Ministry";
+                    mapPath = "~/Reports/MinistryPaymentReport.rdlc";
+                    dataSource = "MinistryPaymentReportDataset";
+                    break;
+                case 5:
+                    reportName = "Statistical";
+                    mapPath = "~/Reports/StatisticalPaymentReport.rdlc";
+                    dataSource = "StatisticalPaymentReportDataset";
                     break;
                 default:
-                    reportName = "Details Report Payment";
+                    reportName = "Details";
                     break;
 
             }
 
-            List<PaymentReportModel> payments = _paymentRepository.GetPaymentsReport(patientId, startDate, endDate);//?.OrderByDescending(p => p.CreatedDate)?.ToList();
+            List<PaymentReportModel> payments = _paymentRepository.GetPaymentsReport(patientId, startDate, endDate, bankid);//?.OrderByDescending(p => p.CreatedDate)?.ToList();
 
             List<PaymentReportModel> returnedPayments = new List<PaymentReportModel>();
             if (payments == null || payments.Count == 0)
             {
                 Message.Enabled = true;
                 ErrorMessage.Visible = true;
-                Message.Text = "There is no payment to display in the report in the provided dates";
+                Message.Text = "There is no payment to display in the report in the provided criteria";
+                ReportViewer1.Visible = false;
             }
             else
             {
                 Message.Text = "";
                 ErrorMessage.Visible = false;
                 Message.Enabled = false;
-
+                ReportViewer1.Visible = true;
                 returnedPayments = PaymentTypeForReportingType(payments, reportType);
             }
-            ReportViewer1.LocalReport.ReportPath = Server.MapPath("~/Reports/PaymentReport.rdlc");
-            ReportViewer1.LocalReport.DisplayName = reportName + 
-                                                    (startDate!=null && endDate !=null? " From: " +
-                                                     StartDate.Text + " To: "+ EndDate.Text : "");
+            ReportViewer1.LocalReport.ReportPath = Server.MapPath(mapPath);
+            ReportViewer1.LocalReport.DisplayName = reportName +
+                                                    (startDate != null && endDate != null ? " From: " +
+                                                     StartDate.Text + " To: " + EndDate.Text : "");
             ReportViewer1.LocalReport.DataSources.Clear();
-            ReportDataSource rdc = new ReportDataSource("PaymentList", returnedPayments);
+            ReportDataSource rdc = new ReportDataSource(dataSource, returnedPayments);
             //new 
-            ReportParameter stDate = new ReportParameter("StartDate", startDate.ToString());
-            ReportParameter enDate = new ReportParameter("EndDate", endDate.ToString());
+            ReportParameter stDate = new ReportParameter("StartDate", startDate?.ToString());
+            ReportParameter enDate = new ReportParameter("EndDate", endDate?.ToString());
             ReportParameter rtType = new ReportParameter("ReportType", reportType?.ToString());
             // ReportParameter reason = new ReportParameter("DeductionReason", payments?.Select(r=>r.DeductionReasonText).ToString());
 
             ReportViewer1.LocalReport.SetParameters(new ReportParameter[] { stDate, enDate, rtType });
             // end new
             ReportViewer1.LocalReport.DataSources.Add(rdc);
+
             // ReportViewer1.EnableClientPrinting
             ReportViewer1.LocalReport.Refresh();
 
-            
-            return payments;
+
+            //  return payments;
         }
 
         protected void btnPrint_Click(object sender, EventArgs e)
@@ -183,48 +213,57 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
         {
             var startDate = new DateTime();
             var endDate = new DateTime();
-            var resultCount = 0;
+            //var resultCount = 0;
+            int bankId = 0;
+            string selectedBankId = Banks.SelectedItem.Value;
+            Int32.TryParse(selectedBankId, out bankId);
 
             if (DateTime.TryParse(StartDate.Text, out startDate) && DateTime.TryParse(EndDate.Text, out endDate))
             {
-                GenerateReport(PatientCid.Text, startDate, endDate, reportType);
+                GenerateReport(PatientCid.Text, startDate, endDate, reportType, bankId);
             }
             else
             {
 
-                resultCount = GenerateReport(PatientCid.Text, null, null, reportType).Count;
+                // resultCount = GenerateReport(PatientCid.Text, null, null, reportType).Count;
+                GenerateReport(PatientCid.Text, null, null, reportType, bankId);
             }
         }
 
         private List<PaymentReportModel> PaymentTypeForReportingType(List<PaymentReportModel> payments, int? reportType = null)
         {
+            List<PaymentReportModel> processedPayments = new List<PaymentReportModel>();
             if (reportType == (int)Enums.ReportType.Kuwait)// sent to kuwait
-                payments = CreateKuwaitPaymentReport(payments);
+                processedPayments = CreateKuwaitPaymentReport(payments);
             else if (reportType == (int)Enums.ReportType.Archive)// saved in Archive
-                payments = CreateArchivePaymentReport(payments);
+                processedPayments = CreateArchivePaymentReport(payments);
             else if (reportType == (int)Enums.ReportType.Details)
-                payments = CreateDetailsPaymentReport(payments);
+                processedPayments = CreateDetailsPaymentReport(payments);
+            else if (reportType == (int)Enums.ReportType.Statistical)
+                processedPayments = CreateDetailsPaymentReport(payments);
             //
 
             else if (reportType == (int)Enums.ReportType.Ministry)
-                payments = CreateDeductionAdjustmentPaymentReport(payments);
+                processedPayments = CreateMinistryPaymentReport(payments);
 
-            return payments?.OrderByDescending(p => p.PaymentID).ToList();
+            return processedPayments?.OrderByDescending(p => p.PaymentID).ToList();
         }
 
-        private List<PaymentReportModel> CreateDeductionAdjustmentPaymentReport(List<PaymentReportModel> payments)
+        private List<PaymentReportModel> CreateMinistryPaymentReport(List<PaymentReportModel> payments)
         {
             payments = CreateDetailsPaymentReport(payments);
             //new get the corrected payments, and search for it related rejected ids, add payments with the same info except the payment date
             var correctedPayments = payments?.Where(p => p.PaymentTypeId == (int)Enums.PaymentType.Correction).ToList();
             // to is correction payment 
             // in  this correctedPayments i have the ids of the payment that were rejected
-            var paymentList = _paymentRepository.GetPaymentsReportWithoutParms();
+
             //var paymentList = _paymentRepository.GetPaymentsReport(null, DateTime.Parse("01/01/2019"),DateTime.Now);
             if (correctedPayments != null)
+            {
                 foreach (var cor in correctedPayments)
                 {
-                    var newPayment = paymentList.SingleOrDefault(py => py.PaymentID == cor.RejectedPaymentId);
+                    var paymentList = _paymentRepository.GetPaymentsReportWithoutParms();
+                    var newPayment = paymentList?.SingleOrDefault(py => py.PaymentID == cor.RejectedPaymentId);
 
                     if (newPayment != null)
                     {
@@ -234,7 +273,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                             if (paymentsToRemove != null)
                             {
                                 paymentsToRemove.IsPaymentRejected = false;
-                                 payments.Remove(paymentsToRemove);
+                                payments.Remove(paymentsToRemove);
                             }
 
                             //payments.Remove(paymentsToRemove);
@@ -248,7 +287,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                         paymentToAdd.RowNumber = cor.RowNumber;
                         paymentToAdd.IsPaymentRejected = true;
                         paymentToAdd.Amount = newPayment.Amount * -1;
-                        paymentToAdd.FinalAmount = newPayment.FinalAmount*-1 ?? newPayment.Amount * -1;
+                        paymentToAdd.FinalAmount = newPayment.FinalAmount * -1 ?? newPayment.Amount * -1;
                         paymentToAdd.PatientCID = newPayment.PatientCID;
                         paymentToAdd.PatientName = newPayment.PatientName;
                         paymentToAdd.BeneficiaryCID = newPayment.BeneficiaryCID;
@@ -263,13 +302,15 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                         payments.Add(paymentToAdd);
                     }
                 }
+            }
             return payments;
         }
 
         private List<PaymentReportModel> CreateDetailsPaymentReport(List<PaymentReportModel> payments)
         {
             DeductionReasonRepository _deductionReasonRepository = new DeductionReasonRepository();
-            payments = payments?.Select(p => new PaymentReportModel()
+            List<PaymentReportModel> processedPayments = new List<PaymentReportModel>();
+            processedPayments = payments?.Select(p => new PaymentReportModel()
             {
                 AgencyName = p.AgencyName,
                 PaymentID = p.PaymentID,
@@ -285,7 +326,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                 Code = p.Code,
                 CompanionName = p.CompanionName,
                 DeductedAmount = p.DeductedAmount ?? 0,
-                IBan = p.IBan,
+                IBan = p.IBan?.ToUpper(),
                 PatientName = p.PatientName,
                 TotalPayments = payments.Count,
                 TotalPatients = payments.Select(pat => pat.PatientCID).Distinct().Count(),
@@ -297,7 +338,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                 PatientDeductionStartDate = p.PatientDeductionStartDate,
                 CompanionDeductionEndDate = p.CompanionDeductionEndDate,
                 CompanionDeductionStartDate = p.CompanionDeductionStartDate,
-                DeductionReasonText = _deductionReasonRepository.GetDeductionReason(p.DeductionReason)?.Reason,
+                DeductionReasonText = p.DeductionReasonText,// _deductionReasonRepository.GetDeductionReason(p.DeductionReason)?.Reason,
                 PatientDeduction = p.PatientDeduction,
                 CompanionDeduction = p.CompanionDeduction,
                 AmountBeforeDeduction = p.AmountBeforeDeduction,
@@ -313,7 +354,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                 AdjustmentReason = p.AdjustmentReason,
                 AdjustmentReasonID = p.AdjustmentReasonID,
             }).ToList();
-            return payments;
+            return processedPayments;
         }
 
         private List<PaymentReportModel> CreateArchivePaymentReport(List<PaymentReportModel> payments)
@@ -335,7 +376,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                 Code = p.Code,
                 CompanionName = p.CompanionName,
                 //   DeductedAmount = p.DeductedAmount ?? 0,
-                IBan = p.IBan,
+                IBan = p.IBan?.ToUpper(),
                 PatientName = p.PatientName,
                 //TotalPayments = payments.Count,
                 //TotalPatients = payments.Select(pat => pat.PatientCID).Distinct().Count(),
@@ -347,7 +388,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                 PatientDeductionStartDate = p.PatientDeductionStartDate,
                 CompanionDeductionEndDate = p.CompanionDeductionEndDate,
                 CompanionDeductionStartDate = p.CompanionDeductionStartDate,
-                DeductionReasonText = _deductionReasonRepository.GetDeductionReason(p.DeductionReason)?.Reason,
+                DeductionReasonText = p.DeductionReasonText,//_deductionReasonRepository.GetDeductionReason(p.DeductionReason)?.Reason,
                 PatientDeduction = p.PatientDeduction,
                 CompanionDeduction = p.CompanionDeduction,
                 AmountBeforeDeduction = p.AmountBeforeDeduction,
@@ -383,7 +424,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                 Code = p.Code,
                 CompanionName = p.CompanionName,
                 // DeductedAmount = p.DeductedAmount ?? 0,
-                IBan = p.IBan,
+                IBan = p.IBan?.ToUpper(),
                 PatientName = p.PatientName,
                 //TotalPayments = payments.Count,
                 //TotalPatients = payments.Select(pat => pat.PatientCID).Distinct().Count(),
@@ -395,7 +436,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                 PatientDeductionStartDate = p.PatientDeductionStartDate,
                 CompanionDeductionEndDate = p.CompanionDeductionEndDate,
                 CompanionDeductionStartDate = p.CompanionDeductionStartDate,
-                DeductionReasonText = _deductionReasonRepository.GetDeductionReason(p.DeductionReason)?.Reason,
+                DeductionReasonText = p.DeductionReasonText,//_deductionReasonRepository.GetDeductionReason(p.DeductionReason)?.Reason,
                 PatientDeduction = p.PatientDeduction,
                 CompanionDeduction = p.CompanionDeduction,
                 AmountBeforeDeduction = p.AmountBeforeDeduction,
@@ -415,25 +456,47 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
 
         //protected void Export(object sender, EventArgs e)
         //{
+            //    Warning[] warnings;
+            //    string[] streamIds;
+            //    string contentType;
+            //    string encoding;
+            //    string extension;
+
+            //    //Export the RDLC Report to Byte Array.
+            //    byte[] bytes = ReportViewer1.LocalReport.Render(rbFormat.SelectedItem.Value, null, out contentType, out encoding, out extension, out streamIds, out warnings);
+
+            //    //Download the RDLC Report in Word, Excel, PDF and Image formats.
+            //    Response.Clear();
+            //    Response.Buffer = true;
+            //    Response.Charset = "";
+            //    Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            //    Response.ContentType = contentType;
+            //    Response.AppendHeader("Content-Disposition", "attachment; filename=RDLC." + extension);
+            //    Response.BinaryWrite(bytes);
+            //    Response.Flush();
+            //    Response.End();
+            //---------------------------------------
+        //    ReportViewer rv = new ReportViewer();
+        //    rv.ProcessingMode = ProcessingMode.Local;
+        //    rv.LocalReport.ReportPath = Server.MapPath("Report2.rdlc"); // 
+        //    //point to the new rdlc without page breaks
+        //    rv.LocalReport.DataSources.Clear();
+        //    rv.LocalReport.DataSources.Add(...); // your report data source
         //    Warning[] warnings;
-        //    string[] streamIds;
-        //    string contentType;
+        //    string[] streamids;
+        //    string mimeType;
         //    string encoding;
         //    string extension;
+        //    byte[] bytes = rv.LocalReport.Render("EXCEL", null, out mimeType,
+        //    out encoding, out extension, out streamids, out warnings);
 
-        //    //Export the RDLC Report to Byte Array.
-        //    byte[] bytes = ReportViewer1.LocalReport.Render(rbFormat.SelectedItem.Value, null, out contentType, out encoding, out extension, out streamIds, out warnings);
-
-        //    //Download the RDLC Report in Word, Excel, PDF and Image formats.
-        //    Response.Clear();
-        //    Response.Buffer = true;
-        //    Response.Charset = "";
-        //    Response.Cache.SetCacheability(HttpCacheability.NoCache);
-        //    Response.ContentType = contentType;
-        //    Response.AppendHeader("Content-Disposition", "attachment; filename=RDLC." + extension);
-        //    Response.BinaryWrite(bytes);
-        //    Response.Flush();
-        //    Response.End();
+        //    HttpContext.Current.Response.Clear();
+        //    HttpContext.Current.Response.ContentType =
+        //    "application/vnd.ms-excel";
+        //    HttpContext.Current.Response.AddHeader("Content-disposition",
+        //    "attachment; filename=Report.xls");
+        //    HttpContext.Current.Response.BinaryWrite(bytes);
+        //    HttpContext.Current.Response.End();
         //}
     }
 }

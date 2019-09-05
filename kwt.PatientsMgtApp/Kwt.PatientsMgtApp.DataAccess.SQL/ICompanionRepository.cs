@@ -13,7 +13,9 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         List<CompanionModel> GetCompanions();
 
         CompanionModel GetCompanion(string companioncid);
+        CompanionModel GetCompanion(string companioncid, string patientCid);
 
+        CompanionModel GetCompanion(int id);
         CompanionModel GetPatientByCompanionCid(string companioncid);
 
         List<Companion> GetCompanionListByPatientCid(string patientcid);
@@ -24,6 +26,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
 
        Companion GetCompanionByPatientCid(string patientcid);
         int DeleteCompanion(string companionCid, string patientCid);
+
+        int DeleteCompanion(int id);
 
         void DataMigrationToInsertIntoBeneficiaryTable();
     }

@@ -1,0 +1,31 @@
+﻿
+@{
+    ViewBag.Title = "Payment Reference";
+}
+
+
+
+<div class="row p-3">
+    <a href="@Url.Action("Payment", "Report")" class="k-button" style="width: 200px"><i class="fa fa-arrow-circle-left"></i> Payment Report</a>
+</div>
+
+@using (Html.BeginForm("CreatePaymentRefrence", "Report", FormMethod.Post))
+{
+    <div class="row">
+        <div class="col-md-4">
+            <label><i class="fa fa-sort-numeric-asc"></i> Enter Reference Number</label>
+            @Html.TextBox("RefrenceNumber", null, new {placeholder = "Enter Reference number", id = "patientCid", @class = "k-textbox"})
+
+        </div>
+        <div class="col-md-4">
+            <label><i class="fa fa-calendar"></i> Payment Start Date</label>
+            @Html.TextBox("PaymentStartDate", null, new {@class = "k-textbox", readOnly = "true"})
+        </div>
+        <div class="col-md-4">
+            <label><i class="fa fa-calendar"></i> Payment End Date</label>
+            @Html.TextBox("PaymentStartDate", null, new {@class = "k-textbox", readOnly = "true"})
+        </div>
+    </div>
+}
+
+

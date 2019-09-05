@@ -1,0 +1,51 @@
+﻿@using Kwt.PatientsMgtApp.WebUI.Models
+@model FileViewModel
+@{
+    ViewBag.Title = @Model.FolderName;
+}
+
+
+
+<div class="mt-3">
+    <p>
+        <a href="@Url.Action("GetPatientFolders", "Patient", new {patientCid = @Model.PatientCid, patientName = @Model.PatientName})" class="k-button"><i class="fa fa-arrow-circle-left" aria-hidden="true" style="color: orange"></i> Patient Folders</a>
+    </p>
+</div>
+<div class="m-3">
+    <div class="badge-light p-2" style="text-transform: capitalize;"><i class="fa fa-files-o"></i> @Model.FolderName <span>Files</span></div>
+</div>
+@using (Html.BeginForm("Upload", "Patient", new { folderPath = @Model.FolderPath, foldername = @Model.FolderName }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+    <div  class="row demo-section k-content">
+        <div class="col-md-8">
+            <input name="patientFiles" id="patientFiles" type="file" aria-label="files"/>
+
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="k-button"><i class="fa fa-upload"></i> Upload Files</button>
+
+        </div>
+        <div class="col-md-12">
+            <span style="color: green">@ViewBag.UploadState</span>
+        </div>
+    </div>
+}
+<div class="row">
+    @for (int x = 0; x < @Model.FilesPath.Length; x++)
+{
+    <div class="col-md-12">
+        <a href="@Url.Action("Download", "Patient",  new { link = @Model.FilesPath[x], filename=@Model.FilesName[x]})">@Model.FilesName[x]</a>
+    </div>
+}
+</div>
+
+
+@section Scripts{
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#patientFiles").kendoUpload();
+        });
+    </script>
+}

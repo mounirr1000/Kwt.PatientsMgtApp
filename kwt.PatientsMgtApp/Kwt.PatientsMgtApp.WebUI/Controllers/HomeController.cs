@@ -28,6 +28,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             HomeViewModels model = new HomeViewModels();
             int totalActivePatients = 0;
             int totalPayment = 0;
+            int totalTodaysPatient = 0;
+            int totalTodaysPayments = 0;
             List<PatientModel> activePatients = new List<PatientModel>();
             List<PaymentModel> paymentList= new List<PaymentModel>();
             var patientslist = _patientRepository.GetPatients();
@@ -42,10 +44,14 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                 }
                 totalActivePatients = activePatients.Count();
                 totalPayment = paymentList.Count();
+                totalTodaysPatient = activePatients.Count(pa => pa.CreatedDateFormatted == DateTime.Now.Date.ToString("d"));
+                totalTodaysPayments = payments.Count(p => p.PaymentDateFormatted == DateTime.Now.Date.ToString("d"));
             }
             model.TotalActivePatients = totalActivePatients;
             model.TotalPayments = totalPayment;
+            model.TodaysPatients = totalTodaysPatient;
             model.TodayDateTime = DateTime.Now;
+            model.TotalTodaysPayments = totalTodaysPayments;
             return View(model);
         }
 

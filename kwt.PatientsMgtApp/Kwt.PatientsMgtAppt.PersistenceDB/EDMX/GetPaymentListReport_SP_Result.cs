@@ -50,5 +50,6 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public Nullable<int> AdjustmentReasonID { get; set; }
         public string AdjustmentReason { get; set; }
         public Nullable<long> RowNumber { get; set; }
+        public string DeductionReasonText { get; set; }
     }
 }

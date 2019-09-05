@@ -9,13 +9,15 @@ using Kwt.PatientsMgtApp.Core.Models;
 using Kwt.PatientsMgtApp.DataAccess.SQL;
 using Kwt.PatientsMgtApp.PersistenceDB.EDMX;
 using Kwt.PatientsMgtApp.WebUI.CustomFilter;
+using Kwt.PatientsMgtApp.WebUI.Infrastructure;
 using Kwt.PatientsMgtApp.WebUI.Models;
 using Kwt.PatientsMgtApp.WebUI.Utilities;
 using PagedList;
 
 namespace Kwt.PatientsMgtApp.WebUI.Controllers
 {
-    [Authorize(Roles = "Admin, Manager")]
+    //[CustomAuthorize(Roles = "Admin, Manager, Super Admin, User, Accountant, Auditor")]
+    [CustomAuthorize(Roles = CrudRoles.PaymentCrudRolesForAutorizeAttribute)]
     [HandleError(ExceptionType = typeof(PatientsMgtException), View = "ExceptionHandler")]
     public class PaymentController : BaseController
     {
@@ -161,16 +163,10 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             }
         }
 
-        //[ExceptionHandler]
-        //[HttpGet]
-        //public ActionResult AddPayment()
-        //{
-        //    PaymentModel payment = new PaymentModel();
-
-        //    return View(payment);
-        //}
+        
         [ExceptionHandler]
         [HttpGet]
+        [CustomAuthorize(Roles = CrudRoles.PaymentCreateRolesForAutorizeAttribute)]
         public ActionResult Create(string patientCid)
         {
             PaymentModel payment = new PaymentModel();
@@ -208,6 +204,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         }
         [ExceptionHandler]
         [HttpPost]
+        [CustomAuthorize(Roles = CrudRoles.PaymentCreateRolesForAutorizeAttribute)]
         public ActionResult Create(PaymentModel payment)
         {
             // allow the supper admin to make any payment without validating the payment
@@ -235,6 +232,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         }
 
         [ExceptionHandler]
+        [CustomAuthorize(Roles = CrudRoles.PaymentUpdateRolesForAutorizeAttribute)]
         public ActionResult Edit(int paymentId)
         {
             // PaymentViewModel paymentView = new PaymentViewModel();
@@ -248,6 +246,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         }
         [HttpPost]
         [ExceptionHandler]
+        [CustomAuthorize(Roles = CrudRoles.PaymentUpdateRolesForAutorizeAttribute)]
         public ActionResult Edit(PaymentModel pay)
         {
             if (!User.IsInRole(Roles.SuperAdmin))
@@ -270,7 +269,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         }
 
         [ExceptionHandler]
-        [Authorize(Roles = "Super Admin, Admin, Manager")]
+        //[Authorize(Roles = "Super Admin, Admin, Manager")]
+        [CustomAuthorize(Roles = CrudRoles.PaymentDeleteRolesForAutorizeAttribute)]
         public ActionResult Delete(int? paymentId)
         {
             PaymentModel payment = null;
@@ -374,8 +374,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                             if (ModelState.IsValidField("PaymentStartDate") && ModelState.IsValidField("PaymentEndDate"))
                             {
                                 //Todo: check for current date as well
-                                ModelState.AddModelError("PaymentStartDate", "Payment Start date should be after last payment end date");
-                                ModelState.AddModelError("PaymentEndDate", "Payment end date should be after last payment end date");
+                                ModelState.AddModelError("PaymentStartDate", "Conflict with old payment, Payment Start date should be after last payment end date");
+                                ModelState.AddModelError("PaymentEndDate", "Conflict with old payment, Payment End date should be after last payment end date");
                                 isValid = false;
                             }
                     }

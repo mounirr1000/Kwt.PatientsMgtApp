@@ -40,6 +40,7 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public Nullable<System.DateTime> ModifiedDate { get; set; }
         public Nullable<bool> IsBeneficiary { get; set; }
         public Nullable<int> CompanionTypeID { get; set; }
+        public Nullable<bool> justBeneficiary { get; set; }
     
         public virtual Bank Bank { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

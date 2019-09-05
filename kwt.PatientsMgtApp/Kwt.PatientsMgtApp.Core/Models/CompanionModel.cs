@@ -62,6 +62,9 @@ namespace Kwt.PatientsMgtApp.Core.Models
          DisplayName("Active status")]
         public bool IsActive { get; set; } = true;
 
+        [DisplayName("Is just Beneficiary?")]
+        public Nullable<bool> JustBeneficiary { get; set; }
+
         [MaxLength(250, ErrorMessage = "Maximum characters allowed is 250 ")]
         public string Notes { get; set; }
 

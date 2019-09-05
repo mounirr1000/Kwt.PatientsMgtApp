@@ -86,6 +86,15 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
 
             set { this.ReasonId = value; }
         }
+    }//new
+    public partial class BookType : IDomainObject
+    {
+        public int Id
+        {
+            get { return this.BookTypeID; }
+
+            set { this.BookTypeID = value; }
+        }
     }
     //new
     public partial class RejectionReason : IDomainObject
@@ -163,6 +172,17 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
     }
 
     //new
+
+    public partial class PaymentHistory : IDomainObject, IAuditObject
+    {
+
+        public int Id
+        {
+            get { return this.PaymentHistoryID; }
+
+            set { this.PaymentHistoryID = value; }
+        }
+    }
     public partial class PaymentType : IDomainObject
     {
         public int Id

@@ -26,6 +26,7 @@
           <Property Name="BankID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="BankName" Type="nvarchar" MaxLength="50" />
           <Property Name="BankCode" Type="char" MaxLength="3" />
+          <Property Name="BankSwift" Type="nvarchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="Beneficiaries">
           <Key>
@@ -40,6 +41,13 @@
           <Property Name="BeneficiaryLName" Type="nvarchar" MaxLength="50" />
           <Property Name="BankID" Type="int" />
           <Property Name="IBan" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="BookTypes">
+          <Key>
+            <PropertyRef Name="BookTypeID" />
+          </Key>
+          <Property Name="BookTypeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BookType" Type="nvarchar" MaxLength="250" />
         </EntityType>
         <EntityType Name="CompanionHistories">
           <Key>
@@ -83,6 +91,7 @@
           <Property Name="ModifiedDate" Type="datetime" />
           <Property Name="IsBeneficiary" Type="bit" />
           <Property Name="CompanionTypeID" Type="int" />
+          <Property Name="justBeneficiary" Type="bit" />
         </EntityType>
         <EntityType Name="CompanionTypes">
           <Key>
@@ -174,6 +183,8 @@
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="ModifiedBy" Type="nvarchar" MaxLength="50" />
           <Property Name="ModifiedDate" Type="datetime" />
+          <Property Name="AuthorizedDate" Type="date" />
+          <Property Name="IsBlocked" Type="bit" />
         </EntityType>
         <EntityType Name="PaymentDeductions">
           <Key>
@@ -205,6 +216,53 @@
           <Property Name="PatientDeductionRate" Type="decimal" Precision="18" Scale="0" />
           <Property Name="CompanionDeductionRate" Type="decimal" Precision="18" Scale="0" />
           <Property Name="ReasonId" Type="int" />
+        </EntityType>
+        <EntityType Name="PaymentHistories">
+          <Key>
+            <PropertyRef Name="PaymentHistoryID" />
+          </Key>
+          <Property Name="PaymentHistoryID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PaymentID" Type="int" Nullable="false" />
+          <Property Name="PaymentDate" Type="date" />
+          <Property Name="PatientCID" Type="nvarchar" MaxLength="12" />
+          <Property Name="CompanionCID" Type="nvarchar" MaxLength="12" />
+          <Property Name="BeneficiaryID" Type="int" />
+          <Property Name="BeneficiaryPatientCid" Type="nvarchar" MaxLength="12" />
+          <Property Name="BeneficiaryCompanionCid" Type="nvarchar" MaxLength="12" />
+          <Property Name="BeneficiaryCID" Type="nvarchar" MaxLength="12" />
+          <Property Name="BeneficiaryFName" Type="nvarchar" MaxLength="50" />
+          <Property Name="BeneficiaryMName" Type="nvarchar" MaxLength="50" />
+          <Property Name="BeneficiaryLName" Type="nvarchar" MaxLength="50" />
+          <Property Name="BeneficiaryBankId" Type="int" />
+          <Property Name="BeneficiaryBankName" Type="nvarchar" MaxLength="50" />
+          <Property Name="BeneficiaryBankCode" Type="char" MaxLength="3" />
+          <Property Name="BeneficiaryBankIban" Type="nvarchar" MaxLength="50" />
+          <Property Name="HospitalID" Type="int" />
+          <Property Name="HospitalName" Type="nvarchar" MaxLength="150" />
+          <Property Name="AgencyID" Type="int" />
+          <Property Name="AgencyName" Type="nvarchar" MaxLength="150" />
+          <Property Name="PayRateID" Type="int" />
+          <Property Name="CompanionRate" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="PatientRate" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="StartDate" Type="date" />
+          <Property Name="EndDate" Type="date" />
+          <Property Name="Period" Type="int" />
+          <Property Name="PAmount" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="CAmount" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="TotalDue" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Notes" Type="nvarchar" MaxLength="250" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="50" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="nvarchar" MaxLength="50" />
+          <Property Name="ModifiedDate" Type="datetime" />
+          <Property Name="FinalAmountAfterCorrection" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="TotalCorrection" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="IsRejected" Type="bit" />
+          <Property Name="PaymentTypeId" Type="int" />
+          <Property Name="PaymentType" Type="nvarchar" MaxLength="100" />
+          <Property Name="RejectedPaymentId" Type="int" />
+          <Property Name="AdjustmentReasonID" Type="int" />
+          <Property Name="AdjustmentReason" Type="nvarchar" MaxLength="250" />
         </EntityType>
         <EntityType Name="Payments">
           <Key>
@@ -594,6 +652,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_PaymentsHistory_Payments">
+          <End Role="Payments" Type="Self.Payments" Multiplicity="1" />
+          <End Role="PaymentHistories" Type="Self.PaymentHistories" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Payments">
+              <PropertyRef Name="PaymentID" />
+            </Principal>
+            <Dependent Role="PaymentHistories">
+              <PropertyRef Name="PaymentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_RejectedPayments_Payments">
           <End Role="Payments" Type="Self.Payments" Multiplicity="1" />
           <End Role="RejectedPayments" Type="Self.RejectedPayments" Multiplicity="*" />
@@ -627,17 +697,42 @@
           <Parameter Name="doctor" Type="nvarchar" Mode="In" />
           <Parameter Name="status" Type="bit" Mode="In" />
           <Parameter Name="speciality" Type="nvarchar" Mode="In" />
+          <Parameter Name="startDate" Type="date" Mode="In" />
+          <Parameter Name="endDate" Type="date" Mode="In" />
         </Function>
         <Function Name="GetPaymentListReport_SP" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="pCid" Type="nvarchar" Mode="In" />
           <Parameter Name="startDate" Type="date" Mode="In" />
           <Parameter Name="endDate" Type="date" Mode="In" />
+          <Parameter Name="bankId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="StatisticalPaymentReport_FN" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="paymentStartDate" Type="date" Mode="In" />
+          <Parameter Name="paymentEndDate" Type="date" Mode="In" />
+          <Parameter Name="kfhBankId" Type="int" Mode="In" />
+          <Parameter Name="daAgencyId" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="PaymentDate" Type="date" />
+                <Property Name="KfhBank" Type="decimal" Precision="18" Scale="0" />
+                <Property Name="OtherBank" Type="decimal" Precision="18" Scale="0" />
+                <Property Name="SubTotal" Type="decimal" Precision="18" Scale="0" />
+                <Property Name="Rejected" Type="decimal" Precision="18" Scale="0" />
+                <Property Name="DAAgency" Type="decimal" Precision="18" Scale="0" />
+                <Property Name="OtherAgencies" Type="decimal" Precision="18" Scale="0" />
+                <Property Name="TotalDeduction" Type="decimal" Precision="18" Scale="0" />
+                <Property Name="FinalTotal" Type="decimal" Precision="18" Scale="0" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
         </Function>
         <EntityContainer Name="PatientsMgtModelStoreContainer">
           <EntitySet Name="AdjustmentReasons" EntityType="Self.AdjustmentReasons" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Agencies" EntityType="Self.Agencies" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Banks" EntityType="Self.Banks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Beneficiaries" EntityType="Self.Beneficiaries" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BookTypes" EntityType="Self.BookTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CompanionHistories" EntityType="Self.CompanionHistories" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Companions" EntityType="Self.Companions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CompanionTypes" EntityType="Self.CompanionTypes" Schema="dbo" store:Type="Tables" />
@@ -648,6 +743,7 @@
           <EntitySet Name="PatientHistories" EntityType="Self.PatientHistories" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Patients" EntityType="Self.Patients" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PaymentDeductions" EntityType="Self.PaymentDeductions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PaymentHistories" EntityType="Self.PaymentHistories" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Payments" EntityType="Self.Payments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PaymentTypes" EntityType="Self.PaymentTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PayRates" EntityType="Self.PayRates" Schema="dbo" store:Type="Tables" />
@@ -749,6 +845,10 @@
             <End Role="PayRates" EntitySet="PayRates" />
             <End Role="Payments" EntitySet="Payments" />
           </AssociationSet>
+          <AssociationSet Name="FK_PaymentsHistory_Payments" Association="Self.FK_PaymentsHistory_Payments">
+            <End Role="Payments" EntitySet="Payments" />
+            <End Role="PaymentHistories" EntitySet="PaymentHistories" />
+          </AssociationSet>
           <AssociationSet Name="FK_RejectedPayments_Payments" Association="Self.FK_RejectedPayments_Payments">
             <End Role="Payments" EntitySet="Payments" />
             <End Role="RejectedPayments" EntitySet="RejectedPayments" />
@@ -779,6 +879,7 @@
           <Property Name="BankCode" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
           <NavigationProperty Name="Companions" Relationship="Self.FK_Companions_Banks" FromRole="Banks" ToRole="Companions" />
           <NavigationProperty Name="Patients" Relationship="Self.FK_Patients_Banks" FromRole="Banks" ToRole="Patients" />
+          <Property Name="BankSwift" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Beneficiary">
           <Key>
@@ -846,6 +947,7 @@
           <NavigationProperty Name="Patient" Relationship="Self.FK_Companions_Patients" FromRole="Companions" ToRole="Patients" />
           <NavigationProperty Name="Payments" Relationship="Self.FK_Payments_Companions" FromRole="Companions" ToRole="Payments" />
           <NavigationProperty Name="PaymentDeductions" Relationship="PatientsMgtModel.FK_PaymentDeductions_Companions" FromRole="Companion" ToRole="PaymentDeduction" />
+          <Property Name="justBeneficiary" Type="Boolean" />
         </EntityType>
         <EntityType Name="CompanionType">
           <Key>
@@ -944,6 +1046,8 @@
           <NavigationProperty Name="Payments" Relationship="Self.FK_Payments_Patients" FromRole="Patients" ToRole="Payments" />
           <NavigationProperty Name="PatientHistories" Relationship="PatientsMgtModel.FK_PatientHistories_Patients" FromRole="Patient" ToRole="PatientHistory" />
           <NavigationProperty Name="PaymentDeductions" Relationship="PatientsMgtModel.FK_PaymentDeductions_Patients" FromRole="Patient" ToRole="PaymentDeduction" />
+          <Property Name="AuthorizedDate" Type="DateTime" Precision="0" />
+          <Property Name="IsBlocked" Type="Boolean" />
         </EntityType>
         <EntityType Name="Payment">
           <Key>
@@ -982,6 +1086,7 @@
           <NavigationProperty Name="RejectedPayments" Relationship="PatientsMgtModel.FK_RejectedPayments_Payments" FromRole="Payment" ToRole="RejectedPayment" />
           <Property Name="AdjustmentReasonID" Type="Int32" />
           <NavigationProperty Name="AdjustmentReason" Relationship="PatientsMgtModel.FK_Payments_AdjustmentReasons" FromRole="Payment" ToRole="AdjustmentReason" />
+          <NavigationProperty Name="PaymentHistories" Relationship="PatientsMgtModel.FK_PaymentsHistory_Payments" FromRole="Payment" ToRole="PaymentHistory" />
         </EntityType>
         <EntityType Name="PayRate">
           <Key>
@@ -1286,11 +1391,14 @@
             <Parameter Name="doctor" Mode="In" Type="String" />
             <Parameter Name="status" Mode="In" Type="Boolean" />
             <Parameter Name="speciality" Mode="In" Type="String" />
+            <Parameter Name="startDate" Mode="In" Type="DateTime" />
+            <Parameter Name="endDate" Mode="In" Type="DateTime" />
           </FunctionImport>
           <FunctionImport Name="GetPaymentListReport_SP" ReturnType="Collection(PatientsMgtModel.GetPaymentListReport_SP_Result)">
             <Parameter Name="pCid" Mode="In" Type="String" />
             <Parameter Name="startDate" Mode="In" Type="DateTime" />
             <Parameter Name="endDate" Mode="In" Type="DateTime" />
+            <Parameter Name="bankId" Mode="In" Type="Int32" />
           </FunctionImport>
           <AssociationSet Name="FK_PatientHistories_Patients" Association="PatientsMgtModel.FK_PatientHistories_Patients">
             <End Role="Patient" EntitySet="Patients" />
@@ -1345,6 +1453,18 @@
             <End Role="AdjustmentReason" EntitySet="AdjustmentReasons" />
             <End Role="Payment" EntitySet="Payments" />
           </AssociationSet>
+          <EntitySet Name="PaymentHistories" EntityType="PatientsMgtModel.PaymentHistory" />
+          <AssociationSet Name="FK_PaymentsHistory_Payments" Association="PatientsMgtModel.FK_PaymentsHistory_Payments">
+            <End Role="Payment" EntitySet="Payments" />
+            <End Role="PaymentHistory" EntitySet="PaymentHistories" />
+          </AssociationSet>
+          <EntitySet Name="BookTypes" EntityType="PatientsMgtModel.BookType" />
+          <FunctionImport Name="StatisticalPaymentReport_FN" IsComposable="true" ReturnType="Collection(PatientsMgtModel.StatisticalPaymentReport_FN_Result)">
+            <Parameter Name="paymentStartDate" Mode="In" Type="DateTime" />
+            <Parameter Name="paymentEndDate" Mode="In" Type="DateTime" />
+            <Parameter Name="kfhBankId" Mode="In" Type="Int32" />
+            <Parameter Name="daAgencyId" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="GetPatientListReport_SP_Result">
           <Property Type="Int32" Name="id" Nullable="false" />
@@ -1380,7 +1500,7 @@
           <Property Type="String" Name="PatientName" Nullable="true" MaxLength="152" />
           <Property Type="String" Name="BeneficiaryCID" Nullable="true" MaxLength="12" />
           <Property Type="String" Name="BeneficiaryName" Nullable="true" MaxLength="152" />
-          <Property Type="String" Name="CompanionName" Nullable="true" MaxLength="152" />
+          <Property Type="String" Name="CompanionName" Nullable="true" MaxLength="101" />
           <Property Type="String" Name="AgencyName" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="IBan" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="Bank" Nullable="true" MaxLength="50" />
@@ -1408,6 +1528,7 @@
           <Property Type="Int32" Name="AdjustmentReasonID" Nullable="true" />
           <Property Type="String" Name="AdjustmentReason" Nullable="true" MaxLength="250" />
           <Property Type="Int64" Name="RowNumber" Nullable="true" />
+          <Property Type="String" Name="DeductionReasonText" Nullable="true" MaxLength="100" />
           </ComplexType>
         <Association Name="FK_PatientHistories_Patients">
           <End Type="PatientsMgtModel.Patient" Role="Patient" Multiplicity="1" />
@@ -1633,6 +1754,84 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="PaymentHistory">
+          <Key>
+            <PropertyRef Name="PaymentHistoryID" />
+          </Key>
+          <Property Name="PaymentHistoryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PaymentID" Type="Int32" Nullable="false" />
+          <Property Name="PaymentDate" Type="DateTime" Precision="0" />
+          <Property Name="PatientCID" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
+          <Property Name="CompanionCID" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
+          <Property Name="BeneficiaryID" Type="Int32" />
+          <Property Name="BeneficiaryPatientCid" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
+          <Property Name="BeneficiaryCompanionCid" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
+          <Property Name="BeneficiaryCID" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
+          <Property Name="BeneficiaryFName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BeneficiaryMName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BeneficiaryLName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BeneficiaryBankId" Type="Int32" />
+          <Property Name="BeneficiaryBankName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BeneficiaryBankCode" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
+          <Property Name="BeneficiaryBankIban" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="HospitalID" Type="Int32" />
+          <Property Name="HospitalName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="AgencyID" Type="Int32" />
+          <Property Name="AgencyName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="PayRateID" Type="Int32" />
+          <Property Name="CompanionRate" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="PatientRate" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="StartDate" Type="DateTime" Precision="0" />
+          <Property Name="EndDate" Type="DateTime" Precision="0" />
+          <Property Name="Period" Type="Int32" />
+          <Property Name="PAmount" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="CAmount" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="TotalDue" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Notes" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <Property Name="FinalAmountAfterCorrection" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="TotalCorrection" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="IsRejected" Type="Boolean" />
+          <Property Name="PaymentTypeId" Type="Int32" />
+          <Property Name="PaymentType" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="RejectedPaymentId" Type="Int32" />
+          <Property Name="AdjustmentReasonID" Type="Int32" />
+          <Property Name="AdjustmentReason" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Payment" Relationship="PatientsMgtModel.FK_PaymentsHistory_Payments" FromRole="PaymentHistory" ToRole="Payment" />
+        </EntityType>
+        <Association Name="FK_PaymentsHistory_Payments">
+          <End Type="PatientsMgtModel.Payment" Role="Payment" Multiplicity="1" />
+          <End Type="PatientsMgtModel.PaymentHistory" Role="PaymentHistory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Payment">
+              <PropertyRef Name="PaymentID" />
+            </Principal>
+            <Dependent Role="PaymentHistory">
+              <PropertyRef Name="PaymentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="BookType">
+          <Key>
+            <PropertyRef Name="BookTypeID" />
+          </Key>
+          <Property Name="BookTypeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BookType1" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <ComplexType Name="StatisticalPaymentReport_FN_Result">
+          <Property Type="DateTime" Name="PaymentDate" Nullable="true" Precision="10" />
+          <Property Type="Decimal" Name="KfhBank" Nullable="true" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="OtherBank" Nullable="true" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="SubTotal" Nullable="true" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="Rejected" Nullable="true" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="DAAgency" Nullable="true" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="OtherAgencies" Nullable="true" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="TotalDeduction" Nullable="true" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="FinalTotal" Nullable="true" Precision="18" Scale="0" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1650,6 +1849,7 @@
           <EntitySetMapping Name="Banks">
             <EntityTypeMapping TypeName="PatientsMgtModel.Bank">
               <MappingFragment StoreEntitySet="Banks">
+                <ScalarProperty Name="BankSwift" ColumnName="BankSwift" />
                 <ScalarProperty Name="BankID" ColumnName="BankID" />
                 <ScalarProperty Name="BankName" ColumnName="BankName" />
                 <ScalarProperty Name="BankCode" ColumnName="BankCode" />
@@ -1694,6 +1894,7 @@
           <EntitySetMapping Name="Companions">
             <EntityTypeMapping TypeName="PatientsMgtModel.Companion">
               <MappingFragment StoreEntitySet="Companions">
+                <ScalarProperty Name="justBeneficiary" ColumnName="justBeneficiary" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="CompanionCID" ColumnName="CompanionCID" />
                 <ScalarProperty Name="CompanionFName" ColumnName="CompanionFName" />
@@ -1779,6 +1980,8 @@
           <EntitySetMapping Name="Patients">
             <EntityTypeMapping TypeName="PatientsMgtModel.Patient">
               <MappingFragment StoreEntitySet="Patients">
+                <ScalarProperty Name="IsBlocked" ColumnName="IsBlocked" />
+                <ScalarProperty Name="AuthorizedDate" ColumnName="AuthorizedDate" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="PatientCID" ColumnName="PatientCID" />
                 <ScalarProperty Name="PatientFName" ColumnName="PatientFName" />
@@ -1956,6 +2159,7 @@
                 <ScalarProperty Name="AdjustmentReasonID" ColumnName="AdjustmentReasonID" />
                 <ScalarProperty Name="AdjustmentReason" ColumnName="AdjustmentReason" />
                 <ScalarProperty Name="RowNumber" ColumnName="RowNumber" />
+                <ScalarProperty Name="DeductionReasonText" ColumnName="DeductionReasonText" />
                 </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -2047,6 +2251,77 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="PaymentHistories">
+            <EntityTypeMapping TypeName="PatientsMgtModel.PaymentHistory">
+              <MappingFragment StoreEntitySet="PaymentHistories">
+                <ScalarProperty Name="AdjustmentReason" ColumnName="AdjustmentReason" />
+                <ScalarProperty Name="AdjustmentReasonID" ColumnName="AdjustmentReasonID" />
+                <ScalarProperty Name="RejectedPaymentId" ColumnName="RejectedPaymentId" />
+                <ScalarProperty Name="PaymentType" ColumnName="PaymentType" />
+                <ScalarProperty Name="PaymentTypeId" ColumnName="PaymentTypeId" />
+                <ScalarProperty Name="IsRejected" ColumnName="IsRejected" />
+                <ScalarProperty Name="TotalCorrection" ColumnName="TotalCorrection" />
+                <ScalarProperty Name="FinalAmountAfterCorrection" ColumnName="FinalAmountAfterCorrection" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="TotalDue" ColumnName="TotalDue" />
+                <ScalarProperty Name="CAmount" ColumnName="CAmount" />
+                <ScalarProperty Name="PAmount" ColumnName="PAmount" />
+                <ScalarProperty Name="Period" ColumnName="Period" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="PatientRate" ColumnName="PatientRate" />
+                <ScalarProperty Name="CompanionRate" ColumnName="CompanionRate" />
+                <ScalarProperty Name="PayRateID" ColumnName="PayRateID" />
+                <ScalarProperty Name="AgencyName" ColumnName="AgencyName" />
+                <ScalarProperty Name="AgencyID" ColumnName="AgencyID" />
+                <ScalarProperty Name="HospitalName" ColumnName="HospitalName" />
+                <ScalarProperty Name="HospitalID" ColumnName="HospitalID" />
+                <ScalarProperty Name="BeneficiaryBankIban" ColumnName="BeneficiaryBankIban" />
+                <ScalarProperty Name="BeneficiaryBankCode" ColumnName="BeneficiaryBankCode" />
+                <ScalarProperty Name="BeneficiaryBankName" ColumnName="BeneficiaryBankName" />
+                <ScalarProperty Name="BeneficiaryBankId" ColumnName="BeneficiaryBankId" />
+                <ScalarProperty Name="BeneficiaryLName" ColumnName="BeneficiaryLName" />
+                <ScalarProperty Name="BeneficiaryMName" ColumnName="BeneficiaryMName" />
+                <ScalarProperty Name="BeneficiaryFName" ColumnName="BeneficiaryFName" />
+                <ScalarProperty Name="BeneficiaryCID" ColumnName="BeneficiaryCID" />
+                <ScalarProperty Name="BeneficiaryCompanionCid" ColumnName="BeneficiaryCompanionCid" />
+                <ScalarProperty Name="BeneficiaryPatientCid" ColumnName="BeneficiaryPatientCid" />
+                <ScalarProperty Name="BeneficiaryID" ColumnName="BeneficiaryID" />
+                <ScalarProperty Name="CompanionCID" ColumnName="CompanionCID" />
+                <ScalarProperty Name="PatientCID" ColumnName="PatientCID" />
+                <ScalarProperty Name="PaymentDate" ColumnName="PaymentDate" />
+                <ScalarProperty Name="PaymentID" ColumnName="PaymentID" />
+                <ScalarProperty Name="PaymentHistoryID" ColumnName="PaymentHistoryID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BookTypes">
+            <EntityTypeMapping TypeName="PatientsMgtModel.BookType">
+              <MappingFragment StoreEntitySet="BookTypes">
+                <ScalarProperty Name="BookType1" ColumnName="BookType" />
+                <ScalarProperty Name="BookTypeID" ColumnName="BookTypeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="StatisticalPaymentReport_FN" FunctionName="PatientsMgtModel.Store.StatisticalPaymentReport_FN">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="PatientsMgtModel.StatisticalPaymentReport_FN_Result">
+                <ScalarProperty Name="PaymentDate" ColumnName="PaymentDate" />
+                <ScalarProperty Name="KfhBank" ColumnName="KfhBank" />
+                <ScalarProperty Name="OtherBank" ColumnName="OtherBank" />
+                <ScalarProperty Name="SubTotal" ColumnName="SubTotal" />
+                <ScalarProperty Name="Rejected" ColumnName="Rejected" />
+                <ScalarProperty Name="DAAgency" ColumnName="DAAgency" />
+                <ScalarProperty Name="OtherAgencies" ColumnName="OtherAgencies" />
+                <ScalarProperty Name="TotalDeduction" ColumnName="TotalDeduction" />
+                <ScalarProperty Name="FinalTotal" ColumnName="FinalTotal" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

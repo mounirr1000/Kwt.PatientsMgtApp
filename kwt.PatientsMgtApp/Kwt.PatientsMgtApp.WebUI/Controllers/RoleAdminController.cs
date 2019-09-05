@@ -11,10 +11,15 @@ using Kwt.PatientsMgtApp.WebUI.Utilities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
+using kwt.PatientsMgtApp.Utilities.Errors;
+using Kwt.PatientsMgtApp.WebUI.CustomFilter;
 
 namespace Kwt.PatientsMgtApp.WebUI.Controllers
 {
-    [Authorize(Roles = "Admin, Manager")]
+    //[HandleError(ExceptionType = typeof(PatientsMgtException), View = "ExceptionHandler")]
+    //[Authorize(Roles = "Super Admin")]
+    //[CustomAuthorize(Roles = "Super Admin")]
+    [CustomAuthorize(Roles = CrudRoles.AdminCreateRolesForAutorizeAttribute)]
     public class RoleAdminController : BaseController
     {
         public ActionResult Index()
@@ -28,6 +33,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         }
 
         [HttpPost]
+        //[Authorize(Roles = "Super Admin")]
+        [CustomAuthorize(Roles = CrudRoles.AdminCreateRolesForAutorizeAttribute)]
         public async Task<ActionResult> Create([Required]string name)
         {
             if (ModelState.IsValid)
@@ -46,6 +53,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             }
             return View(name);
         }
+        //[Authorize(Roles = "Super Admin")]
+        [CustomAuthorize(Roles = CrudRoles.AdminCreateRolesForAutorizeAttribute)]
         public async Task<ActionResult> Edit(string id)
         {
             var role = await RoleManager.FindByIdAsync(id);
@@ -62,6 +71,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         }
 
         [HttpPost]
+        //[Authorize(Roles = "Super Admin")]
+        [CustomAuthorize(Roles = CrudRoles.AdminCreateRolesForAutorizeAttribute)]
         public async Task<ActionResult> Edit(RoleModificationModel model)
         {
             IdentityResult result;
@@ -90,8 +101,10 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         }
 
         //[HttpPost]
-        
+
         //Todo This should be implemented using Httppost and not get
+        //[Authorize(Roles = "Super Admin")]
+        [CustomAuthorize(Roles = CrudRoles.AdminCreateRolesForAutorizeAttribute)]
         public async Task<ActionResult> Delete(string roleId)
         {
             IdentityRole role = await RoleManager.FindByIdAsync(roleId);

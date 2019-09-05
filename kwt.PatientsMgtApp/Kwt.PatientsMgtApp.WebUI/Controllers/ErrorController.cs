@@ -41,5 +41,33 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             TempData["errorMessage"] = filterContext.Exception.Message;
             filterContext.ExceptionHandled = false;
         }
+
+
+        public ActionResult Index()
+        {
+
+            return View();
+        }
+        public ActionResult Status404()
+        {
+            
+            return View();
+        }
+
+        public ActionResult Status405()
+        {
+
+            return View();
+        }
+        public ActionResult GeneralError()
+        {
+
+            return View();
+        }
+
+        public ActionResult AccessDenied()
+        {
+            return View();
+        }
     }
 }

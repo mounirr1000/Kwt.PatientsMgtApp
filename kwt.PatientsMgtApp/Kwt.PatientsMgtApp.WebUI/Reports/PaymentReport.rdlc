@@ -27,13 +27,7 @@
               <Width>0.51in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.56466in</Width>
-            </TablixColumn>
-            <TablixColumn>
-              <Width>0.71in</Width>
-            </TablixColumn>
-            <TablixColumn>
-              <Width>0.71in</Width>
+              <Width>2.51633in</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>0.71in</Width>
@@ -385,10 +379,8 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <ColSpan>2</ColSpan>
                   </CellContents>
                 </TablixCell>
-                <TablixCell />
                 <TablixCell>
                   <CellContents>
                     <Textbox Name="Textbox7">
@@ -424,10 +416,8 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <ColSpan>2</ColSpan>
                   </CellContents>
                 </TablixCell>
-                <TablixCell />
                 <TablixCell>
                   <CellContents>
                     <Textbox Name="Textbox25">
@@ -857,10 +847,8 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <ColSpan>2</ColSpan>
                   </CellContents>
                 </TablixCell>
-                <TablixCell />
                 <TablixCell>
                   <CellContents>
                     <Textbox Name="EndDate">
@@ -895,10 +883,8 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <ColSpan>2</ColSpan>
                   </CellContents>
                 </TablixCell>
-                <TablixCell />
                 <TablixCell>
                   <CellContents>
                     <Textbox Name="Amount">
@@ -1026,17 +1012,7 @@
             <TablixMember />
             <TablixMember />
             <TablixMember />
-            <TablixMember>
-              <Visibility>
-                <Hidden>=iif(IsNothing(Fields!Amount.Value),False,True)</Hidden>
-              </Visibility>
-            </TablixMember>
             <TablixMember />
-            <TablixMember>
-              <Visibility>
-                <Hidden>=iif(IsNothing(Fields!Amount.Value),False,True)</Hidden>
-              </Visibility>
-            </TablixMember>
             <TablixMember>
               <Visibility>
                 <Hidden>=iif(IsNothing(Fields!Amount.Value),True,False)</Hidden>
@@ -1063,9 +1039,8 @@
         </TablixRowHierarchy>
         <KeepTogether>true</KeepTogether>
         <DataSetName>PaymentList</DataSetName>
-        <Left>0.25in</Left>
         <Height>0.5in</Height>
-        <Width>12.56466in</Width>
+        <Width>11.09633in</Width>
         <Visibility>
           <Hidden>=IIf(Parameters!ReportType.Value=4,true,false)</Hidden>
         </Visibility>
@@ -1098,7 +1073,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox11</rd:DefaultName>
-            <Top>0.09721in</Top>
+            <Top>0.08333in</Top>
             <Left>3.1in</Left>
             <Height>0.25in</Height>
             <Width>1.93in</Width>
@@ -1206,7 +1181,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox6</rd:DefaultName>
-            <Top>0.41665in</Top>
+            <Top>0.40277in</Top>
             <Left>3.1in</Left>
             <Height>0.25in</Height>
             <Width>1.93in</Width>
@@ -1302,7 +1277,6 @@
         </ReportItems>
         <KeepTogether>true</KeepTogether>
         <Top>2.01847in</Top>
-        <Left>0.25in</Left>
         <Height>1.06598in</Height>
         <Width>5.03in</Width>
         <ZIndex>1</ZIndex>
@@ -3199,7 +3173,6 @@
         <KeepTogether>true</KeepTogether>
         <DataSetName>PaymentList</DataSetName>
         <Top>0.625in</Top>
-        <Left>0.25in</Left>
         <Height>1in</Height>
         <Width>11.09633in</Width>
         <ZIndex>2</ZIndex>
@@ -3330,7 +3303,6 @@
         </ReportItems>
         <KeepTogether>true</KeepTogether>
         <Top>3.21173in</Top>
-        <Left>0.25in</Left>
         <Height>1.04514in</Height>
         <Width>11.09633in</Width>
         <ZIndex>3</ZIndex>
@@ -3351,7 +3323,7 @@
       </Border>
     </Style>
   </Body>
-  <Width>12.82508in</Width>
+  <Width>11.09633in</Width>
   <Page>
     <PageHeader>
       <Height>1.7141in</Height>
@@ -3379,9 +3351,8 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox12</rd:DefaultName>
-          <Left>0.25in</Left>
           <Height>0.4in</Height>
-          <Width>11.85466in</Width>
+          <Width>11.09633in</Width>
           <Style>
             <Border>
               <Style>None</Style>
@@ -3413,9 +3384,8 @@
           </Paragraphs>
           <rd:DefaultName>Textbox16</rd:DefaultName>
           <Top>0.44167in</Top>
-          <Left>0.25in</Left>
           <Height>0.4in</Height>
-          <Width>11.85466in</Width>
+          <Width>11.09633in</Width>
           <ZIndex>1</ZIndex>
           <Style>
             <Border>
@@ -3484,9 +3454,8 @@
           </Paragraphs>
           <rd:DefaultName>Textbox14</rd:DefaultName>
           <Top>0.86528in</Top>
-          <Left>0.25in</Left>
           <Height>0.4in</Height>
-          <Width>11.85466in</Width>
+          <Width>11.09633in</Width>
           <ZIndex>2</ZIndex>
           <Style>
             <Border>
@@ -3528,7 +3497,6 @@
           </Paragraphs>
           <rd:DefaultName>Textbox32</rd:DefaultName>
           <Top>1.3391in</Top>
-          <Left>0.25in</Left>
           <Height>0.25in</Height>
           <Width>5.03in</Width>
           <ZIndex>3</ZIndex>
@@ -3575,9 +3543,9 @@
           </Paragraphs>
           <rd:DefaultName>Textbox33</rd:DefaultName>
           <Top>1.3391in</Top>
-          <Left>5.28in</Left>
+          <Left>5.03in</Left>
           <Height>0.25in</Height>
-          <Width>6.82466in</Width>
+          <Width>6.06633in</Width>
           <ZIndex>4</ZIndex>
           <Visibility>
             <Hidden>=Switch(Parameters!ReportType.Value=4,true,IsNothing(Parameters!EndDate.Value),True)</Hidden>
@@ -3600,7 +3568,7 @@
       </Style>
     </PageHeader>
     <PageFooter>
-      <Height>1in</Height>
+      <Height>0.80208in</Height>
       <PrintOnFirstPage>true</PrintOnFirstPage>
       <PrintOnLastPage>true</PrintOnLastPage>
       <ReportItems>
@@ -3626,7 +3594,6 @@
           </Paragraphs>
           <rd:DefaultName>Textbox19</rd:DefaultName>
           <Top>0.35938in</Top>
-          <Left>0.25in</Left>
           <Height>0.28125in</Height>
           <Width>3.1in</Width>
           <Visibility>
@@ -3664,9 +3631,9 @@
           </Paragraphs>
           <rd:DefaultName>Textbox19</rd:DefaultName>
           <Top>0.35938in</Top>
-          <Left>3.35in</Left>
+          <Left>3.12778in</Left>
           <Height>0.28125in</Height>
-          <Width>1.93in</Width>
+          <Width>1.90222in</Width>
           <ZIndex>1</ZIndex>
           <Visibility>
             <Hidden>=iif(IsNothing(Fields!TotalAmount.Value),True,False) or iif(Parameters!ReportType.Value=3,True,False) or IIf(Parameters!ReportType.Value=4,true,false)</Hidden>
@@ -3726,9 +3693,9 @@
           </Paragraphs>
           <rd:DefaultName>Textbox19</rd:DefaultName>
           <Top>0.35938in</Top>
-          <Left>5.28in</Left>
+          <Left>5.03in</Left>
           <Height>0.28125in</Height>
-          <Width>6.82466in</Width>
+          <Width>6.06633in</Width>
           <ZIndex>2</ZIndex>
           <Visibility>
             <Hidden>=iif(IsNothing(Fields!TotalAmount.Value),True,False) or iif(Parameters!ReportType.Value=3,True,False) or IIf(Parameters!ReportType.Value=4,true,false)</Hidden>
@@ -3752,8 +3719,11 @@
     </PageFooter>
     <PageHeight>8.27in</PageHeight>
     <PageWidth>11.69in</PageWidth>
+    <InteractiveHeight>8.27in</InteractiveHeight>
+    <InteractiveWidth>12.56466in</InteractiveWidth>
+    <LeftMargin>0.25in</LeftMargin>
+    <RightMargin>0.2in</RightMargin>
     <TopMargin>0.25in</TopMargin>
-    <BottomMargin>0.25in</BottomMargin>
     <Style />
   </Page>
   <AutoRefresh>0</AutoRefresh>

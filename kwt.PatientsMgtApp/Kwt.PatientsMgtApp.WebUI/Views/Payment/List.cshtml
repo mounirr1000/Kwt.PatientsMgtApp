@@ -140,10 +140,27 @@
                 }
                 return '<i class="fa fa-check fa-2x" style="color:green;"></i> '+isRejected+' ';
             }
+            
+            function getTodayPayment(payments) {
+                // uncomments these line to get only today payments
+                //var date1 = new Date().toDateString();
+                //var date2 = new Date().toDateString();
+                //payments= payments.filter(function(entry) {
+                //    var paymentDate = new Date(entry.PaymentDateFormatted).toDateString();
+                //    return (
+                //        //date1 >= new Date(paymentDate).getTime() && date2<= new Date(paymentDate).getTime()
+                //        (date1 === new Date(paymentDate).toDateString() || date2 === new Date(paymentDate).toDateString())
+                //            || (date1 < new Date(paymentDate).toDateString() && date2 > new Date(paymentDate).toDateString())
+                //    );
+                //});
+                return payments;
+            }
             var grid =  $("#paymentList").kendoGrid({
                 resizable: true,
-                toolbar: [//"pdf",
-                        "excel"],
+                toolbar: "<p class='alert alert-info'>Note: Rejected Payments are displayed in <i style='color:red; text-decoration:line-through;'>Red</i></p>",
+                //toolbar: [//"pdf",
+
+                //        "excel"],
                 //pdf: {
                 //    fileName: $("#paymentDt1").val()+" "+$("#paymentDt2").val()+" payments.pdf"
                 //},
@@ -177,6 +194,10 @@
                     title: "P_CID"
                 },
                 {
+                    field: "PatientFullName",
+                    title: "Patient Name"
+                },
+                {
                     field: "CompanionCID",
                     title: "C_CID"
                 },
@@ -195,6 +216,11 @@
                     // template: "#= kendo.toString(kendo.parseDate(PaymentEndDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
                 },
                 {
+                    field: "PaymentDeductionObject.TotalDeduction",
+                    title: "Amount Deducted",
+                    template: "#if(PaymentDeductionObject!=null){# #: PaymentDeductionObject.TotalDeduction # #}else {##: '0' ##}#"
+                },
+                {
                     field: "TotalDue",
                     title: "Final Amount"
                 },
@@ -210,7 +236,29 @@
                     hidden: !isAdmin
                 }],
                 dataSource: {
-                    data: data
+                    data: getTodayPayment(data)
+                },
+                dataBound: function(e) {
+                    // get the index of the UnitsInStock cell
+                   // var columns = e.sender.columns;
+                   // var columnIndex = this.wrapper.find(".k-grid-header [data-field=" + "UnitsInStock" + "]").index();
+
+                    // iterate the table rows and apply custom row and cell styling
+                    var rows = e.sender.tbody.children();
+                    for (var j = 0; j < rows.length; j++) {
+                        var row = $(rows[j]);
+                        var dataItem = e.sender.dataItem(row);
+
+                        //var units = dataItem.get("UnitsInStock");
+                        var discontinued = dataItem.get("IsRejected");
+
+                        if (discontinued) {
+                            row.addClass("isRejected");
+                        }
+
+                        //var cell = row.children().eq(columnIndex);
+                        //cell.addClass(getUnitsInStockClass(units));
+                    }
                 },
                 //
 
@@ -241,7 +289,7 @@
                 }
                 //
             }).data("kendoGrid");
-
+           
             $(".loader").css("display", "none");
         });
     </script>
@@ -273,7 +321,7 @@
             var date2 = new Date(secondDate).toDateString();
             date2 = new Date(date2).getTime();
             var payments = @Html.Raw(jsonModel);
-
+            
             payments = payments.filter(function(entry) {
                 var paymentDate = new Date(entry.PaymentDateFormatted).toDateString();
 
@@ -289,7 +337,7 @@
             });
             var paymentGrid = $("#paymentGrid").kendoGrid({
                 toolbar: [
-//"pdf",
+//"pdf",            
                     "excel"
                 ],
                 //pdf: {
@@ -330,10 +378,11 @@
                         field: "TotalDue",
                         title: "Final Amount"
                     }
-                    //, {
-                    //    field: "PaymentDeductionObject.Notes",
-                    //    title: "Deduct Notes"
-                    //}
+                    , {
+                        field: "PaymentDeductionNotes",
+                        title: "Notes",
+                        //template: "#if(PaymentDeductionObject!=null){# #: PaymentDeductionObject.Notes # #}#"
+                    }
                 ],
                 dataSource: {
                     data: payments
@@ -363,31 +412,7 @@
                         rows.push({ cells: rowCells, type: "data" });
                     }
                     sheet.rows = rows;
-                    // new for formating date
-                    
-                    //for (var rowIndex = 1; rowIndex < sheet.rows.length; rowIndex++) {
-                    //    var row = sheet.rows[rowIndex];
-                    //    for (var cellIndex = 0; cellIndex < row.cells.length; cellIndex ++) {
-                    //        debugger;
-                    //        row.cells[cellIndex].format = "yy-MM-dd hh:mm:ss";
-                    //    }
-                    //}
-                    //
-                },
-                //new
-                //schema: {
-                //    model : {
-                //        fields: {
-                //            PaymentStartDate: { type: "date" },
-                //            PaymentDateFormatted: { type: "string" },
-                //            PaymentEndDate: { type: "date" },
-                //            PatientCID: { type: "string" },
-                //            PatientPhone: { type: "string" },
-                //            TotalDue: { type: "number" }
-                //        }
-                //    }
-                //}
-                //end new
+                }
             }).data("kendoGrid");;
 
         }

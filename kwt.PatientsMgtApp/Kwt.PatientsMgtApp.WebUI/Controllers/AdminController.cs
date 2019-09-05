@@ -13,11 +13,15 @@ using Kwt.PatientsMgtApp.WebUI.Utilities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Kwt.PatientsMgtApp.Core;
-
+using kwt.PatientsMgtApp.Utilities.Errors;
+using Kwt.PatientsMgtApp.WebUI.CustomFilter;
+using Kwt.PatientsMgtApp.WebUI.Infrastructure;
 
 namespace Kwt.PatientsMgtApp.WebUI.Controllers
 {
-    [Authorize(Roles = "Admin, Manager")]
+    //[HandleError(ExceptionType = typeof(PatientsMgtException), View = "ExceptionHandler")]
+    //[CustomAuthorize(Roles = "Super Admin, Admin")]
+    [CustomAuthorize(Roles = CrudRoles.AdminCrudRolesForAutorizeAttribute)]
     public class AdminController : BaseController
     {
 
@@ -32,6 +36,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         private readonly CompanionTypeRepository _companionTypeRepository;
         private readonly CompanionHistoryRepository _companionHistoryRepository;
         private readonly PatientHistoryRepository _patientHistoryRepository;
+        private readonly IPaymentHistoryRepository _paymentHistoryRepository;
         public AdminController()
         {
             _doctorRepository = new DoctorRepository();
@@ -43,6 +48,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             _companionTypeRepository= new CompanionTypeRepository();
             _companionHistoryRepository = new CompanionHistoryRepository();
             _patientHistoryRepository= new PatientHistoryRepository();
+            _paymentHistoryRepository = new PaymentHistoryRepository();
         }
 
         public AdminController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
@@ -63,6 +69,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         }
 
 
+        
         public ActionResult List()
         {
 
@@ -79,17 +86,23 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                 _userManager = value;
             }
         }
+        //[CustomAuthorize(Roles = "Super Admin")]
+        [CustomAuthorize(Roles = CrudRoles.AdminCreateRolesForAutorizeAttribute)]
         public ActionResult Index()
         {
             return View(UserManager.Users);
         }
 
+        //[CustomAuthorize(Roles = "Super Admin")]
+        [CustomAuthorize(Roles = CrudRoles.AdminCreateRolesForAutorizeAttribute)]
         public ActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        //[CustomAuthorize(Roles = "Super Admin")]
+        [CustomAuthorize(Roles = CrudRoles.AdminCreateRolesForAutorizeAttribute)]
         public async Task<ActionResult> Create(RegisterViewModel model)
         {
             if (ModelState.IsValid)
@@ -111,6 +124,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
 
 
         [HttpGet]
+        //[CustomAuthorize(Roles = "Super Admin")]
+        [CustomAuthorize(Roles = CrudRoles.AdminCreateRolesForAutorizeAttribute)]
         public  ActionResult Edit(string id)
         {
             ApplicationUser user =  UserManager.FindById(id);
@@ -123,6 +138,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         }
 
         [HttpPost]
+        //[CustomAuthorize(Roles = "Super Admin")]
+        [CustomAuthorize(Roles = CrudRoles.AdminCreateRolesForAutorizeAttribute)]
         public async Task<ActionResult> Edit(string id, string email, string userName, string password,bool lockoutEnabled, DateTime? lockoutEndDateUtc)
         {
             ApplicationUser user = await UserManager.FindByIdAsync(id);
@@ -177,6 +194,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             return View(user);
         }
 
+        //[CustomAuthorize(Roles = "Super Admin")]
+        [CustomAuthorize(Roles = CrudRoles.AdminCreateRolesForAutorizeAttribute)]
         public async Task<ActionResult> Delete(string id)
         {
             ApplicationUser user = await UserManager.FindByIdAsync(id);
@@ -471,6 +490,13 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         {
             var patientHistory = _patientHistoryRepository.GetPatientsHistory();
             return View(patientHistory);
+        }
+        //PaymentHistory
+
+        public ActionResult PaymentHistoryList()
+        {
+            var paymentHistory = _paymentHistoryRepository.GetPaymentHistory();
+            return View(paymentHistory);
         }
     }
 }

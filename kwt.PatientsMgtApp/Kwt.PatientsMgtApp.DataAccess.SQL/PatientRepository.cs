@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using kwt.PatientsMgtApp.Utilities.Errors;
 using Kwt.PatientsMgtApp.Core;
 using Kwt.PatientsMgtApp.Core.Models;
@@ -20,7 +21,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             _domainObjectRepository = new DomainObjectRepository();
         }
 
-        public List<PatientReportModel> GetPatientsReport(string patientCid = null, string hospital = null, string doctor = null, Nullable<bool> status = null, string speciality = null)
+        public List<PatientReportModel> GetPatientsReport(string patientCid = null, string hospital = null, string doctor = null, Nullable<bool> status = null, string speciality = null, DateTime? startDate = null, DateTime? endDate = null)
         {
             Dictionary<string, object> parms = new Dictionary<string, object>();
             parms.Add("pCid", patientCid);
@@ -28,6 +29,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             parms.Add("doctor", doctor);
             parms.Add("status", status);
             parms.Add("specialty", speciality);
+            parms.Add("startDate", startDate);
+            parms.Add("endDate", endDate);
 
             //pCidParameter, hospitalParameter, doctorParameter, statusParameter, specialityParameter
             return _domainObjectRepository.ExecuteProcedure<PatientReportModel>("GetPatientListReport_SP", parms, false);
@@ -60,8 +63,9 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 CreatedDate = m.CreatedDate,
                 ModifiedDate = m.ModifiedDate,
                 Diagnosis = m.Diagnosis,
-                Specialty = m.Specialty?.Specialty1
-
+                Specialty = m.Specialty?.Specialty1,
+                AuthorizedDate = m.AuthorizedDate,
+                IsBlocked =m.IsBlocked
             }).ToList();
         }
 
@@ -210,7 +214,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                         CreatedDate = co.CreatedDate,
                         CompanionType = _domainObjectRepository.Get<CompanionType>(h => h.CompanionTypeID == co.CompanionTypeID).CompanionType1,
                     }).ToList(),
-
+                    AuthorizedDate = p.AuthorizedDate,
+                    IsBlocked = p.IsBlocked
                 };
             }
             return null;
@@ -291,7 +296,36 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                             PatientStartDate = pd.PatientStartDate,
                             DeductionReasonId = pd.ReasonId
 
-                        }).ToList()
+                        }).ToList(),
+                        PaymentDeductionObject = pa.PaymentDeductions?.Select(pd => new PaymentDeductionModel()
+                        {
+                            PatientDeduction = pd.PDeduction,
+                            CompanionAmount = pa.CAmount,
+                            PatientAmount = pa.PAmount,
+                            PatientCID = pd.PatientCID,
+                            ModifiedDate = pd.ModifiedDate,
+                            Notes = pd.Notes,
+                            FinalAmount = pd.FinalAmount,
+                            CompanionDeduction = pd.CDeduction,
+                            PayRateID = pd.PayRateID,
+                            ModifiedBy = pd.ModifiedBy,
+                            PaymentID = pd.PaymentID,
+                            DeductionID = pd.DeductionID,
+                            DeductionDate = pd.DeductionDate,
+                            TotalDeduction = pd.TotalDeduction,
+                            CreatedBy = pd.CreatedBy,
+                            DeductionEndDate = pd.EndDate,
+                            DeductionStartDate = pd.StartDate,
+                            CreatedDate = pd.CreatedDate,
+                            AmountPaid = pa.TotalDue,
+                            CompanionCID = pd.CompanionCID,
+                            CompanionEndDate = pd.CompanionEndDate,
+                            CompanionStartDate = pd.CompanionStartDate,
+                            PatientEndDate = pd.PatientEndDate,
+                            PatientStartDate = pd.PatientStartDate,
+                            DeductionReasonId = pd.ReasonId
+
+                        }).SingleOrDefault()
                         //
                     }).ToList(),
                     Companions = p.Companions.Select(co => new CompanionModel()
@@ -306,6 +340,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                         DateOut = co.DateOut,
                         Notes = co.Notes,
                         CreatedDate = co.CreatedDate,
+                        JustBeneficiary = co.justBeneficiary,
                         CompanionType = _domainObjectRepository.Get<CompanionType>(h => h.CompanionTypeID == co.CompanionTypeID).CompanionType1,
                     }).ToList(),
                     CompanionHistories = p.CompanionHistories.Select(ch => new CompanionHistoryModel()
@@ -347,7 +382,10 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                         PatientMName = ph.PatientMName,
                         PatientLName = ph.PatientLName,
                         PrimaryCompanionCid = ph.PrimaryCompanionCid
-                    }).ToList()
+                    }).ToList(),
+                    BookTypes = new BookTypeRepository().GetBookTypeList(),
+                    AuthorizedDate = p.AuthorizedDate,
+                    IsBlocked = p.IsBlocked
                 };
             }
             return null;
@@ -418,7 +456,9 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     PatientMName = patient.PatientMName?.Trim(),
                     FirstApptDate = patient.FirstApptDAte,
                     SpecialtyId = _domainObjectRepository.Get<Specialty>(a => a.Specialty1 == patient.Specialty)?.SpecialtyId,
-                    Diagnosis = patient.Diagnosis
+                    Diagnosis = patient.Diagnosis,
+                    AuthorizedDate = patient.AuthorizedDate,
+                    IsBlocked = patient.IsBlocked
                 };
 
                 _domainObjectRepository.Create<Patient>(p);
@@ -491,8 +531,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                             beneficiary.IBan = companion.IBan;
                             beneficiary.BeneficiaryCID = companion.CompanionCID;
                             beneficiary.BeneficiaryFName = companion.CompanionFName;
-                            beneficiary.BeneficiaryLName = companion.CompanionMName;
-                            beneficiary.BeneficiaryMName = companion.CompanionLName;
+                            beneficiary.BeneficiaryLName = companion.CompanionLName;
+                            beneficiary.BeneficiaryMName = companion.CompanionMName;
                             beneficiary.CompanionCID = companion.CompanionCID;
 
                         }
@@ -540,8 +580,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                             ben.IBan = companion.IBan;
                             ben.BeneficiaryCID = companion.CompanionCID;
                             ben.BeneficiaryFName = companion.CompanionFName;
-                            ben.BeneficiaryLName = companion.CompanionMName;
-                            ben.BeneficiaryMName = companion.CompanionLName;
+                            ben.BeneficiaryLName = companion.CompanionLName;
+                            ben.BeneficiaryMName = companion.CompanionMName;
                             ben.CompanionCID = companion.CompanionCID;
 
                             _domainObjectRepository.Update<Beneficiary>(ben);
@@ -580,6 +620,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 p.USphone = patient.USPhone;
                 p.SpecialtyId = _domainObjectRepository.Get<Specialty>(a => a.Specialty1 == patient.Specialty)?.SpecialtyId;
                 p.Diagnosis = patient.Diagnosis;
+                p.AuthorizedDate = patient.AuthorizedDate;
+                p.IsBlocked = patient.IsBlocked;
                 _domainObjectRepository.Update<Patient>(p);
                 // check if the patient become inactive and the end treatment date is not null, then the patient should become part of the history.
                 //check if IsActive has changed to False and EndTreatDate  has changed to a date time
@@ -675,11 +717,35 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         // ToDo : this functionality may not be needed
         public int DeletePatient(PatientModel patient)
         {
-            var p = _domainObjectRepository.Get<Patient>(pa => pa.PatientCID == patient.PatientCID);
+            var p = _domainObjectRepository.Get<Patient>(pa => pa.PatientCID == patient.PatientCID, new []{ "Payments", "PaymentDeductions", "Companions", "CompanionHistories" });
             if (p != null)
             {
                 //Delete all related tables to the patient
                 //delete Beneficiary record
+                 var payments = p.Payments;
+                var companions = p.Companions;
+                var companionsHistory = p.CompanionHistories;
+                var patientsHistory = p.PatientHistories;
+                if (payments != null && payments.Count > 0)
+                {
+                        throw new PatientsMgtException(1, "error", "Deleting Patient",
+                        "There are payments done to this patient, You can't delete this Patient unless you delete all the payments asscoiated to : " + p.PatientCID);
+                }
+                if (companions != null && companions.Count > 0)
+                {
+                    throw new PatientsMgtException(1, "error", "Deleting Patient",
+                    "There are companions with this patient, You can't delete this Patient unless you delete all the companions asscoiated to : " + p.PatientCID);
+                }
+                if (companionsHistory != null && companionsHistory.Count > 0 && !HttpContext.Current.User.IsInRole(Roles.SuperAdmin))
+                {
+                    throw new PatientsMgtException(1, "error", "Deleting Patient",
+                    "There are companion history with this patient, You can't delete this Patient since there are history to patient cid : " + p.PatientCID +", Check with the Super Admin");
+                }
+                if (patientsHistory != null && patientsHistory.Count > 0 && !HttpContext.Current.User.IsInRole(Roles.SuperAdmin))
+                {
+                    throw new PatientsMgtException(1, "error", "Deleting Patient",
+                    "There are patient history with this patient, You can't delete this Patient since there are history to patient cid : " + p.PatientCID + ", Check with the Super Admin");
+                }
                 _domainObjectRepository.Delete<Payment>(b => b.PatientCID == patient.PatientCID);
                 _domainObjectRepository.Delete<Beneficiary>(b => b.PatientCID == patient.PatientCID);
                 _domainObjectRepository.Delete<CompanionHistory>(ch => ch.PatientCID == patient.PatientCID);

@@ -21,6 +21,8 @@ namespace Kwt.PatientsMgtApp.Core.Models
 
         public bool IsActive { get; set; }
 
+        public bool? IsPatientBlocked { get; set; }
+
         [Required]
         [DisplayName("Patient Id")]
         public string PatientCID { get; set; }
@@ -133,8 +135,11 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public string DeductionNotes { get; set; }
         //new
         [DisplayName("Patient Notes")]
-        public string PatientNotes { get; set; }
+        public string PatientNotes { get; set; }        
+        public string PaymentDeductionNotes { get { return PaymentDeductionObject!=null ? PaymentDeductionObject.Notes:""; }  }
 
+        public decimal? TotalDeduction { get { return PaymentDeductionObject != null ? PaymentDeductionObject.TotalDeduction : 0; } }
+        public decimal? FinalAmount { get { return PaymentDeductionObject != null ? PaymentDeductionObject.FinalAmount : TotalDue; } }
         [DisplayName("Created By")]
         public string CreatedBy { get; set; }
 
@@ -167,6 +172,8 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public string PatientPhone { get; set; }
         //
         public List<PaymentModel> Payments { get; set; }
+
+        public List<PaymentHistoryModel> PaymentHistories { get; set; }
 
         public PaymentDeductionModel PaymentDeductionModel { get; set; }
 
@@ -204,6 +211,18 @@ namespace Kwt.PatientsMgtApp.Core.Models
 
         public string PatientFormatedPhone { get { return FormatPhoneNumber(PatientPhone, ""); } }
 
+        //new
+        public PaymentDeductionModel PaymentDeductionObjectFromList => GetPaymentDeductionModelFromList(PaymentDeductions);
+
+        public PaymentDeductionModel GetPaymentDeductionModelFromList(ICollection<PaymentDeductionModel> paymentDeductions)
+        {
+            if (paymentDeductions != null && paymentDeductions.Count > 0)
+            {
+                return paymentDeductions.FirstOrDefault();
+            }
+            return null;
+
+        }
         public string FormatPhoneNumber(string phoneNum, string phoneFormat)
         {
 

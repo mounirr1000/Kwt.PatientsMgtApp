@@ -23,7 +23,7 @@
                 </li>
                 <li>
                     @Html.LabelFor(model => model.Password, new {@class = ""})
-                    @Html.TextBoxFor(model => model.Password, new {@class = "k-textbox", style = "width: 100%;"})
+                    @Html.TextBoxFor(model => model.Password, new {@class = "k-textbox", style = "width: 100%;", type="Password"})
                     <div>
                         @Html.ValidationMessageFor(model => model.Password, "", new {@class = "k-error-colored"})
                     </div>
@@ -31,7 +31,7 @@
                 </li>
                 <li>
                     @Html.LabelFor(model => model.ConfirmPassword, new { @class = "" })
-                    @Html.TextBoxFor(model => model.ConfirmPassword, new { @class = "k-textbox", style = "width: 100%;" })
+                    @Html.TextBoxFor(model => model.ConfirmPassword, new { @class = "k-textbox", style = "width: 100%;", type = "Password" })
                     <div>
                         @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "k-error-colored" })
                     </div>

@@ -64,6 +64,9 @@
     <Compile Include="EDMX\Beneficiary.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
+    <Compile Include="EDMX\BookType.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
     <Compile Include="EDMX\Companion.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
@@ -121,6 +124,9 @@
     <Compile Include="EDMX\PaymentDeduction.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
+    <Compile Include="EDMX\PaymentHistory.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
     <Compile Include="EDMX\PaymentType.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
@@ -137,6 +143,9 @@
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
     <Compile Include="EDMX\Specialty.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\StatisticalPaymentReport_FN_Result.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
     <Compile Include="EDMX\User.cs">

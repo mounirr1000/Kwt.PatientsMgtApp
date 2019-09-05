@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using kwt.PatientsMgtApp.Utilities.Errors;
 using Kwt.PatientsMgtApp.Core;
 using Kwt.PatientsMgtApp.Core.Models;
@@ -45,11 +46,12 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 CreatedDate = c.CreatedDate,
                 ModifiedDate = c.ModifiedDate,
                 Id = c.Id,
-                ModifiedBy = c.ModifiedBy
+                ModifiedBy = c.ModifiedBy,
+                JustBeneficiary = c.justBeneficiary
             }).ToList();
         }
 
-        public CompanionModel GetCompanion(string companioncid)
+        public CompanionModel GetCompanion(string companioncid)//we should check patient cid
         {
             CompanionModel coModel;
             var companion = _domainObjectRepository.Get<Companion>(c => c.CompanionCID == companioncid);
@@ -75,7 +77,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     CreatedDate = companion.CreatedDate,
                     ModifiedDate = companion.ModifiedDate,
                     Id = companion.Id,
-                    ModifiedBy = companion.ModifiedBy
+                    ModifiedBy = companion.ModifiedBy,
+                    JustBeneficiary = companion.justBeneficiary
                 };
             }
             else
@@ -86,6 +89,81 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             return coModel;
         }
 
+        public CompanionModel GetCompanion(string companioncid, string patientCid)
+        {
+            CompanionModel coModel;
+            var companion = _domainObjectRepository.Get<Companion>(c => c.CompanionCID == companioncid && c.PatientCID == patientCid);
+            if (companion != null)
+            {
+                coModel = new CompanionModel()
+                {
+                    CompanionCID = companion.CompanionCID,
+                    BankName = _domainObjectRepository.Get<Bank>(b => b.BankID == companion.BankID)?.BankName,
+                    CompanionFName = companion.CompanionFName,
+                    CompanionMName = companion.CompanionMName,
+                    CompanionLName = companion.CompanionLName,
+                    CompanionType = _domainObjectRepository.Get<CompanionType>(ct => ct.CompanionTypeID == companion.CompanionTypeID)?.CompanionType1,
+                    DateIn = companion.DateIn,
+                    DateOut = companion.DateOut,
+                    IsActive = companion.IsActive == true ? true : false,
+                    IBan = companion.IBan,
+                    BankCode = _domainObjectRepository.Get<Bank>(b => b.BankID == companion.BankID)?.BankCode,
+                    IsBeneficiary = companion.IsBeneficiary == true ? true : false,
+                    Notes = companion.Notes,
+                    PatientCID = companion.PatientCID,
+                    CreatedBy = companion.CreatedBy,
+                    CreatedDate = companion.CreatedDate,
+                    ModifiedDate = companion.ModifiedDate,
+                    Id = companion.Id,
+                    ModifiedBy = companion.ModifiedBy,
+                    JustBeneficiary = companion.justBeneficiary
+                };
+            }
+            else
+            {
+                coModel = null;
+
+            }
+            return coModel;
+        }
+
+        public CompanionModel GetCompanion(int id)
+        {
+            CompanionModel coModel;
+            var companion = _domainObjectRepository.Get<Companion>(c => c.Id == id);
+            if (companion != null)
+            {
+                coModel = new CompanionModel()
+                {
+                    CompanionCID = companion.CompanionCID,
+                    BankName = _domainObjectRepository.Get<Bank>(b => b.BankID == companion.BankID)?.BankName,
+                    CompanionFName = companion.CompanionFName,
+                    CompanionMName = companion.CompanionMName,
+                    CompanionLName = companion.CompanionLName,
+                    CompanionType = _domainObjectRepository.Get<CompanionType>(ct => ct.CompanionTypeID == companion.CompanionTypeID)?.CompanionType1,
+                    DateIn = companion.DateIn,
+                    DateOut = companion.DateOut,
+                    IsActive = companion.IsActive == true ? true : false,
+                    IBan = companion.IBan,
+                    BankCode = _domainObjectRepository.Get<Bank>(b => b.BankID == companion.BankID)?.BankCode,
+                    IsBeneficiary = companion.IsBeneficiary == true ? true : false,
+                    Notes = companion.Notes,
+                    PatientCID = companion.PatientCID,
+                    CreatedBy = companion.CreatedBy,
+                    CreatedDate = companion.CreatedDate,
+                    ModifiedDate = companion.ModifiedDate,
+                    Id = companion.Id,
+                    ModifiedBy = companion.ModifiedBy,
+                    JustBeneficiary = companion.justBeneficiary
+                };
+            }
+            else
+            {
+                coModel = null;
+
+            }
+            return coModel;
+        }
         public CompanionModel GetPatientByCompanionCid(string companioncid)
         {
             return null;
@@ -104,7 +182,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             if (companionList.Any(comp => comp.CompanionTypeID == newCompanionTypeid))
             {
                 throw new PatientsMgtException(1, "error", "Creating/updating Companion",
-                    "You can't have two companions as primary associated to the same user");
+                    "You can't have two companions as primary associated to the same patient");
             }
         }
         public void AddCompanion(CompanionModel companion)
@@ -114,7 +192,12 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     c => c.CompanionCID == companion.CompanionCID && c.PatientCID == companion.PatientCID);
             if (existingRecord != null)
             {
-                throw new PatientsMgtException(1, "error", "Create new Companion", "There is aleady a record with the same companion and patient");
+                throw new PatientsMgtException(1, "error", "Create new Companion", "There is aleady a record with the same companion and patient CID");
+            }
+            if (companion.CompanionCID == companion.PatientCID)
+            {
+                if (!HttpContext.Current.User.IsInRole(Roles.SuperAdmin))
+                    throw new PatientsMgtException(1, "error", "Create new Companion", "Companion and patient have the same CID, If this is what you want, Let your Super Admin create this for you");
             }
             if (!String.IsNullOrEmpty(companion.PatientCID))
             {
@@ -155,7 +238,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                         IsBeneficiary = companion.IsBeneficiary, // == "Yes" ? true : false,
                         Notes = companion.Notes,
                         PatientCID = companion.PatientCID,
-                        CreatedBy = companion.CreatedBy
+                        CreatedBy = companion.CreatedBy,
+                        justBeneficiary = companion.JustBeneficiary
                     };
                     // check if the user entered a bank info when the companion is set as primary and beneficiary
 
@@ -360,6 +444,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 companionToUpdate.PatientCID = companion.PatientCID;
                 companionToUpdate.ModifiedBy = companion.ModifiedBy;
 
+                companionToUpdate.justBeneficiary = companion.JustBeneficiary;
+
                 if (companion.IsActive == false && companion.DateOut == null)
                 {
                     companionToUpdate.DateOut = DateTime.Now;
@@ -541,16 +627,80 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         public int DeleteCompanion(string companionCid, string patientCid)
         {
             var comp = _domainObjectRepository.Get<Companion>(c => c.CompanionCID == companionCid
-                                                          && c.PatientCID == patientCid);
+                                                          && c.PatientCID == patientCid, new[] { "CompanionHistories", "Payments", "PaymentDeductions" });
+
             int index = 0;
             if (comp != null)
             {
+                //
+                PaymentRepository paymentRepository = new PaymentRepository();
+                var payment = paymentRepository.GetPaymentsByCompanionCid(comp.CompanionCID);
+                var companionsHistory = comp.CompanionHistories;
+                if (payment != null && payment.Count > 0)
+                {
+                    if (payment.Exists(p => p.PatientCID == comp.PatientCID))
+                        throw new PatientsMgtException(1, "error", "Deleting Companion",
+                    string.Format("There are payments done to this companion and patient {1}, You can't delete this Companion unless you delete all the payments asscoiated with this companion: {0}", comp.CompanionCID, comp.PatientCID));
+                }
+                if (companionsHistory != null && companionsHistory.Count > 0)
+                {
+                    var isSuperAdmin = HttpContext.Current.User.IsInRole(Roles.SuperAdmin);
+                    if (!isSuperAdmin)
+                        throw new PatientsMgtException(1, "error", "Deleting Patient",
+                        "There are companion history with this companion, You can't delete this companion since there are history to compaion cid : " + comp.CompanionCID + ", Check with the Super Admin to confirm the delete");
+                }
+                //
                 var ben = _domainObjectRepository.Get<Beneficiary>(c => c.CompanionCID == companionCid
                                                                       && c.PatientCID == patientCid);
                 if (ben != null)
                 {
 
                     if (ben.BeneficiaryCID == companionCid)
+                    {
+                        ben.BeneficiaryCID = null;
+                        ben.BeneficiaryLName = null;
+                        ben.BeneficiaryLName = null;
+                        ben.BeneficiaryMName = null;
+                        ben.IBan = null;
+                        ben.BankID = null;
+                        ben.CompanionCID = null;
+                    }
+                    else
+                    {
+                        ben.CompanionCID = null;
+                    }
+                    _domainObjectRepository.Update<Beneficiary>(ben);
+                }
+                //delete from companion history
+                _domainObjectRepository.Delete<CompanionHistory>(ch => ch.CompanionCID == companionCid);
+                index = _domainObjectRepository.Delete<Companion>(comp);
+            }
+            return index;
+        }
+
+        public int DeleteCompanion(int id)
+        {
+            var comp = _domainObjectRepository.Get<Companion>(c => c.Id == id);
+
+            int index = 0;
+            if (comp != null)
+            {
+                //
+                PaymentRepository paymentRepository = new PaymentRepository();
+                var payment = paymentRepository.GetPaymentsByCompanionCid(comp.CompanionCID);
+                if (payment != null && payment.Count > 0)
+                {
+                    if (payment.Exists(p => p.PatientCID == comp.PatientCID))
+                        throw new PatientsMgtException(1, "error", "Deleting Companion",
+                        "There are payments done to this companion and patient, You can't delete this Companion unless you delete all the payments asscoiated with this companion: " + comp.CompanionCID);
+                }
+                //
+                var ben = _domainObjectRepository.Get<Beneficiary>(c => c.CompanionCID == comp.CompanionCID
+                                                                      && c.PatientCID == comp.PatientCID);
+                if (ben != null)
+                {
+
+                    if (ben.BeneficiaryCID == comp.CompanionCID)
                     {
                         ben.BeneficiaryCID = null;
                         ben.BeneficiaryLName = null;
@@ -567,12 +717,11 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     _domainObjectRepository.Update<Beneficiary>(ben);
                 }
                 //delete from companion history
-                _domainObjectRepository.Delete<CompanionHistory>(ch => ch.CompanionCID == companionCid);
+                _domainObjectRepository.Delete<CompanionHistory>(ch => ch.CompanionCID == comp.CompanionCID && ch.PatientCID == comp.PatientCID);
                 index = _domainObjectRepository.Delete<Companion>(comp);
             }
             return index;
         }
-
         // Data Migration to insert into Beneficiary table 
         public void DataMigrationToInsertIntoBeneficiaryTable()
         {

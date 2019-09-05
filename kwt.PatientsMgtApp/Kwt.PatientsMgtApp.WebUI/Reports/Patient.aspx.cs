@@ -65,7 +65,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                 
             }
         }
-
+        
         protected void Search_Click(object sender, EventArgs e)
         {
             bool? selectedActive;
@@ -95,7 +95,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
         }
         private void GenerateReport(string patientCid=null,string doctorTxt=null,
                                     string specialityTxt = null,string hospitalTxt = null,
-                                    bool? statusCheck =null)
+                                    bool? statusCheck =null, DateTime? startDateTxt = null, DateTime? endDateTxt = null)
         {
             var patientId = string.IsNullOrEmpty(patientCid) ? null : patientCid;
             var doctor = string.IsNullOrEmpty(doctorTxt) ? null : doctorTxt;
@@ -103,26 +103,59 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
             var hospital = string.IsNullOrEmpty(hospitalTxt) ? null : hospitalTxt;
             var status = statusCheck;//Convert.ToBoolean(statusCheck);//!statusCheck.HasValue || statusCheck.Value==false ? null : statusCheck;
 
-            List<PatientReportModel> patients = _patientRepository.GetPatientsReport(patientId, hospital, doctor, status, speciality);
+            var startDate = new DateTime();
+            var endDate = new DateTime();
+            List<PatientReportModel> patients = new List<PatientReportModel>();
+            if (DateTime.TryParse(StartDate.Text, out startDate) && DateTime.TryParse(EndDate.Text, out endDate))
+            {
+                patients = _patientRepository.GetPatientsReport(patientId, hospital, doctor, status, speciality,
+                    startDate, endDate);
+            }
+            // esle get last 30 days entered patients
+            else
+            {
+                startDate = DateTime.Now.AddDays(-30).Date;
+                endDate = DateTime.Now.Date;
+                if (patientId!=null || hospital!=null || doctor!=null || status!=null || speciality!=null)
+                {
+                    patients = _patientRepository.GetPatientsReport(patientId, hospital, doctor, status, speciality, null, null);
+                }
+                else patients = _patientRepository.GetPatientsReport(patientId, hospital, doctor, status, speciality, startDate, endDate);
+            }
 
-            
+            Message.Text = null;
+            //ErrorMessage.Visible = true;
+            //Message.Enabled = true;
             if (patients==null||patients.Count == 0)
             {
                 ErrorMessage.Visible = true;
                 Message.Enabled = true;
-                Message.Text = "There is no patient to display in the report!";
-                ReportViewer1.Visible = false;
+                if (startDate != null && endDate != null)
+                    Message.Text = "There is no patient to display in the selected search!";
+                if (startDate == null || endDate == null)
+                    Message.Text = "There is no patient in the last 30 days to display in the report!";
+              //  ReportViewer1.Visible = false;
             }
             else
             {
                 ReportViewer1.Visible = true;
                 ErrorMessage.Visible = false;
-                Message.Text = "";
+                Message.Text = "Total Number of patients: "+ patients.Count;
                 Message.Enabled = false;
             }
             ReportViewer1.LocalReport.ReportPath = Server.MapPath("~/Reports/PatientReport.rdlc");
             ReportViewer1.LocalReport.DataSources.Clear();
             ReportDataSource rdc = new ReportDataSource("PatientList", patients);
+
+            //
+            //ReportParameter isActive = new ReportParameter("IsActive", status.ToString());
+            ReportParameter selectedPatientCid = new ReportParameter("PatientCid", patientId);
+            ReportParameter selectedDoctor = new ReportParameter("Doctor", doctor);
+            ReportParameter selectedHospital = new ReportParameter("Hospital", hospital);
+            ReportParameter selectedSpecialty = new ReportParameter("Speciality", speciality);
+
+            ReportViewer1.LocalReport.SetParameters(new ReportParameter[] { selectedPatientCid, selectedDoctor, selectedHospital, selectedSpecialty });
+            //
             ReportViewer1.LocalReport.DataSources.Add(rdc);
             ReportViewer1.ShowPrintButton = true;
             ReportViewer1.PageCountMode = PageCountMode.Actual;
@@ -131,6 +164,32 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
             ReportViewer1.LocalReport.Refresh();
         }
 
-        
+
+        // export report to specified format
+        protected void Export(object sender, EventArgs e)
+        {
+            Warning[] warnings;
+            string[] streamIds;
+            string contentType;
+            string encoding;
+            string extension;
+
+            //Export the RDLC Report to Byte Array.
+            byte[] bytes = ReportViewer1.LocalReport.Render("PDF"//rbFormat.SelectedItem.Value
+                                                        , null, out contentType, out encoding, out extension, out streamIds, out warnings);
+
+            //Download the RDLC Report in Word, Excel, PDF and Image formats.
+            Response.Clear();
+            Response.Buffer = true;
+            Response.Charset = "";
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.ContentType = contentType;
+            Response.AppendHeader("Content-Disposition", "attachment; filename=RDLC." + extension);
+            Response.BinaryWrite(bytes);
+            Response.Flush();
+            Response.End();
+        }
+
+
     }
 }

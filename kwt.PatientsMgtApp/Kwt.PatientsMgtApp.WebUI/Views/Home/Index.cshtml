@@ -1,4 +1,5 @@
 ﻿@using Kwt.PatientsMgtApp.WebUI.Models
+@using Kwt.PatientsMgtApp.WebUI.Infrastructure
 @model HomeViewModels
 
 @{
@@ -15,16 +16,25 @@
     <div class="homePage site">
         <div class="row text-center pt-5 pb-5">
 
-            <div class="col-md-6 alert-info p-3">
-                <label class="p-3 font-weight-bold text-info">Total Active Patients:</label> @Model.TotalActivePatients
+            <div class="col-md-3 alert-info p-3">
+                <label class="p-3 font-weight-bold text-info">Active Patients:</label> @Model.TotalActivePatients
             </div>
-            <div class="col-md-6 alert-info p-3">
+            <div class="col-md-3 alert-info p-3">
                 <label class="p-3 font-weight-bold text-info">Total Payments:</label> @Model.TotalPayments
             </div>
+            @* new  *@
+            <div class="col-md-3 alert-info p-3">
+                <label class="p-3 font-weight-bold text-info">Today's Patients:</label> @Model.TodaysPatients
+            </div>
+            <div class="col-md-3 alert-info p-3">
+                <label class="p-3 font-weight-bold text-info">Today's Payments:</label> @Model.TotalTodaysPayments
+            </div>
+            @* end new  *@
         </div>
 
-        <div class="row text-center">
-            <div style="margin: 0 auto;">
+        <div class="row text-center" id="menuShortcuts" style="visibility: hidden">
+
+            <div class="col-md-3">
 
                 <a href="@Url.Action("List", "Patient")" style="text-decoration: none;" class="hvr-grow hvr-overline-from-center">
                     <h2>Patients</h2>
@@ -33,53 +43,65 @@
 
             </div>
 
-            @if (User.IsInRole("Admin"))
-            {
-                @*<div class="col-md-3">
-
-                    <a href="@Url.Action("List", "Patient")" style="text-decoration: none;">
-                        <h2>Patients</h2>
-                        <img src="~/Content/Images/patient.png"/>
-                    </a>
-
-                </div>*@
+            @if (User.IsInAnyRoles(CrudRoles.MainMenuAccess))
+                {
                 <div class="col-md-3">
 
                     <a href="@Url.Action("List", "Payment")" style="text-decoration: none;" class="hvr-grow hvr-overline-from-center">
                         <h2>Payments</h2>
-                        <img src="~/Content/Images/money-bag.png"/>
+                        <img src="~/Content/Images/money-bag.png" />
                     </a>
 
                 </div>
-                <div class="col-md-3">
+                    <div class="col-md-3">
 
-                    <a href="@Url.Action("List", "Report")" style="text-decoration: none;" class="hvr-grow hvr-overline-from-center">
-                        <h2>Reports</h2>
-                        <img src="~/Content/Images/planning.png"/>
-                    </a>
+                        <a href="@Url.Action("List", "Report")" style="text-decoration: none;" class="hvr-grow hvr-overline-from-center">
+                            <h2>Reports</h2>
+                            <img src="~/Content/Images/planning.png" />
+                        </a>
 
-                </div>
+                    </div>
+            }
+            @*@if (User.IsInRole("Super Admin"))*@
+            @if (User.IsInAnyRoles(CrudRoles.MainMenuAdminAccess))
+            {
                 <div class="col-md-3">
 
                     <a href="@Url.Action("List", "Admin")" style="text-decoration: none;" class="hvr-grow hvr-overline-from-center">
                         <h2>Admin Portal</h2>
-                        <img src="~/Content/Images/businessman.png"/>
+                        <img src="~/Content/Images/businessman.png" />
 
                     </a>
 
                 </div>
             }
+
         </div>
     </div>
 }
-@*else
-{
-    @Html.Action("Login","Account")
-}*@
+    @*else
+        {
+            @Html.Action("Login","Account")
+        }*@
 
-@section scripts
+    @section scripts
 {
-    <script type="text/javascript">
+        <script type="text/javascript">
 
-    </script>
-}
+            $(document).ready(function() {
+
+                var isSuperAdmin =   @Html.Raw(Json.Encode(User.IsInAnyRoles("Admin", "Super Admin")));
+
+                console.log(isSuperAdmin)
+                if (isSuperAdmin && isSuperAdmin === true) {
+                    $("#menuShortcuts div").removeClass("col-md-4").addClass("col-md-3");
+                }
+                if (isSuperAdmin === false) {
+                    $( "#menuShortcuts div" ).removeClass( "col-md-3" ).addClass( "col-md-4" );
+                }
+                $("#menuShortcuts").css("visibility", "visible");
+            });
+
+
+        </script>
+    }

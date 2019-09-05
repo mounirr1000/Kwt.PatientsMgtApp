@@ -32,7 +32,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
 
         PaymentModel GetPaymentObject();
 
-        List<PaymentReportModel> GetPaymentsReport(string patientCid = null, DateTime? startDate = null, DateTime? endDate = null);
+        List<PaymentReportModel> GetPaymentsReport(string patientCid = null, DateTime? startDate = null, DateTime? endDate = null, int? bankId = null);
 
         List<PaymentModel> GetNextPatientPayment(int? numberOfDays = null);
     }

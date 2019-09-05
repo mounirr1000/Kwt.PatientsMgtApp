@@ -1,0 +1,287 @@
+﻿@using Kwt.PatientsMgtApp.Core.Models
+@model PatientModel
+@{
+    ViewBag.Title = "Patient Books";
+}
+@{
+    List<string> patientList = ViewBag.Patients != null ? (List<string>)ViewBag.Patients : new List<string>();
+}
+
+@* Uncoment the following code to show this page 8/26/2019 *@
+@*<div class="row">
+    @using (Html.BeginForm("AddPatientBooks", "Patient", FormMethod.Get))
+    {
+        @Html.TextBox("patientCid", null, new { placeholder = "Enter Patient CID", id = "patientCid", @class = "k-textbox" })
+        <button type="submit" class="k-button"><i class="fa fa-search" style="color: greenyellow"></i> Search</button>
+    }
+
+</div>*@
+@* comment the next line after you uncoment the previous code *@
+<div class="alert-info">Under Construction!</div>
+
+@if (Model != null)
+{
+    <fieldset>
+        <legend>Patient Information</legend>
+        <ul class="fieldlist form-row">
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.Name, new { @class = "" })
+                @Html.TextBoxFor(model => model.Name, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-2">
+                @Html.LabelFor(model => model.PatientCID, new { @class = "" })
+                @Html.TextBoxFor(model => model.PatientCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-2">
+                @Html.LabelFor(model => model.Agency, new { @class = "" })
+                @Html.TextBoxFor(model => model.Agency, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-5">
+                @Html.LabelFor(model => model.Hospital, new { @class = "" })
+                @Html.TextBoxFor(model => model.Hospital, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+
+        </ul>
+        <ul class="fieldlist form-row">
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.Doctor, new { @class = "" })
+                @Html.TextBoxFor(model => model.Doctor, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-2">
+                @Html.LabelFor(model => model.FirstApptDAteFormatted, new { @class = "" })
+                @Html.TextBoxFor(model => model.FirstApptDAteFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-2">
+                @Html.LabelFor(model => model.USPhone, new { @class = "" })
+                @Html.TextBoxFor(model => model.USPhone, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-5">
+                @Html.LabelFor(model => model.Notes, new { @class = "" })
+                @Html.TextAreaFor(model => model.Notes, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+
+        </ul>
+    </fieldset>
+    <div id="bookTypes">
+        <div class="form-row form-group">
+            <div class="col-md-4">
+
+                @Html.DropDownListFor(model => model.BookType, new List<SelectListItem>
+            (Model.BookTypes.Select(a => new SelectListItem()
+            {
+                Text = a.BookType.ToString(),
+                Value = a.BookTypeID.ToString()
+
+            }).ToList()), "--Select Book Type To Create--")
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <button class="k-button pull-right" id="printBook" style="display:none;"><i class="fa fa-print" style="color: blueviolet"></i> Print</button>
+        </div>
+    </div>
+    <div id="selectedBookType" class="row">
+
+        <div id="jobLetter" style="margin:30px; display:none;">
+            <div class="row">
+                <div class="col-md-12" style="text-align:center;">
+                    <img src="~/Content/Images/Kuwait_embassyLogo.png" style="filter: grayscale(100%);" />
+                </div>
+                <div class="col-md-12">
+                    <h3 style="text-transform:uppercase; text-align:center;">Embassy Of The State of Kuwait Health Division</h3>
+                    <div class="p-3 m-3 pull-right"><u style="text-decoration:underline; font-weight:bold;">مدير ادارة العلاج بالخارج</u></div>
+                    <div class="p-3 m-3 pull-left"><u style="text-decoration:underline; font-weight:bold;">@DateTime.Now.ToShortDateString()</u></div>
+                    <table class="table table-bordered" style="text-align: right;">
+                       
+                        <tr>
+                            @*<td>Patient Name</td>*@
+                            <td>@Model.Name</td>
+                            <td>اسم المريض</td>
+                        </tr>
+                        <tr>
+                            @*<td>Patient CID</td>*@
+                            <td>@Model.PatientCID</td>
+                            <td>الرقم المدني</td>
+                        </tr>
+                        <tr>
+                            @*<td>Hospital</td>*@
+                            <td>@Model.Hospital</td>
+                            <td>اسم المستشفى</td>
+                        </tr>
+                        <tr>
+                            @*<td>Appointment Date</td>*@
+                            <td>@Model.FirstApptDAteLongArabicFormatted</td>
+                            <td>تاريخ بدء العلاج</td>
+                        </tr>
+                        <tr>
+                            @*<td>End Treatment</td>*@
+                            <td>@Model.EndTreatDateLongArabicFormatted</td>
+                            <td>تاريخ انتهاء العلاج</td>
+                        </tr>
+                        <tr>
+                            @*<td>Authorized Date</td>*@
+                            <td>@Model.AuthorizedDateLongArabicFormatted</td>
+                            <td>تاريخ انتهاء التغطية</td>
+                        </tr>
+                        <tr>
+                            @*<td>Treatment period</td>*@
+                            <td>@Model.TreatmentPeriod</td>
+                            <td>مدة العلاج بالايام</td>
+                        </tr>
+                        <tr>
+                            @*<td>Primary Companion</td>*@
+                            @*<td>@Model.Companions.Where(c=>c.CompanionType=="Primary").Select(co=>co.Name).SingleOrDefault()</td>*@
+
+                            <td>
+                                @if (Model.PrimaryCompanion != null)
+                                {
+                                @Model.PrimaryCompanion.Name
+                                }
+                                else
+                                {
+                                <text>No Companion</text>
+                                }
+                            </td>
+                            <td>المرافق الاول</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="col-md-12">
+                    <div style="text-align:center;"><u style="text-decoration:underline; font-weight:bold;">كتاب عمل</u></div>
+                </div>
+                <div class="col-md-12">
+                    <br />
+                    <label for="JobLetterNotes" id="labelForNote" style="text-decoration:underline; font-weight:bold;">Letter Note:</label>
+                    <textarea class="k-textbox" cols="120" data-val="true" data-val-maxlength="The field Notes must be a string or array type with a maximum length of '250'."
+                              data-val-maxlength-max="250" id="JobLetterNotes" name="JobLetterNotes"
+                              rows="2" style="width:100%; text-align:right;"></textarea>
+                </div>
+                <div class="col-md-12">
+                    <div class="p-3 m-3 pull-right"><u style="text-decoration:underline; font-weight:bold;">مرفق كتاب طلب</u></div>
+                    <div class="p-3 m-3 pull-left"><u style="text-decoration:underline; font-weight:bold;">رئيس المكتب الصحي- واشنطن</u></div>
+                </div>
+            </div>
+        </div>
+        <div id="houseRent" class="col-md-12" style="margin:30px;display:none;">
+            <h3 style="text-transform:uppercase; text-align:center;">House Rent</h3>
+        </div>
+        <div id="immigrationLetter" class="col-md-12" style="margin:30px; display:none;">
+            <h3 style="text-transform:uppercase; text-align:center;">immigartion letter</h3>
+        </div>
+        <div id="companionLetter" class="col-md-12" style="margin:30px; display:none;">
+            <h3 style="text-transform:uppercase; text-align:center;">companion letter</h3>
+        </div>
+        <div id="pledgeLetter" class="col-md-12" style="margin:30px; display:none;">
+            <h3 style="text-transform:uppercase; text-align:center;">pledge letter</h3>
+        </div>
+    </div>
+}
+
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $("form").submit(function (event) {
+            $(".k-widget").removeClass("input-validation-error");
+        });
+        var model = @Html.Raw(Json.Encode(Model));
+        console.log("model ",model);
+        var patientCids = @Html.Raw(Json.Encode(patientList));
+        console.log(patientCids);
+
+
+        if (patientCids != null) {
+            // var cids = patientCids.
+            localStorage.setItem("cids", patientCids);
+        }
+        if (localStorage.getItem("cids") === null) {
+            localStorage.setItem("cids", JSON.stringify(patientCids));
+        } else {
+            var idsString = localStorage.getItem("cids");
+            patientCids = idsString.split(",");
+        }
+        $("#patientCid").kendoAutoComplete({
+            dataSource: patientCids,
+            filter: "startswith",
+            placeholder: "Select Patient Civil ID..."
+        });
+        $('#JobLetterNotes').on('keyup paste', function() {
+            var $el = $(this),
+                offset = $el.innerHeight() - $el.height();
+
+            if ($el.innerHeight() < this.scrollHeight) {
+                // Grow the field if scroll height is smaller
+                $el.height(this.scrollHeight - offset);
+            } else {
+                // Shrink the field and then re-set it to the scroll height in case it needs to shrink
+                $el.height(1);
+                $el.height(this.scrollHeight - offset);
+            }
+        });
+        $('#printBook').click(function() {
+            var bookTypeid = $('#BookType').val();
+            if(bookTypeid){
+                $("#JobLetterNotes").css("border","none").css("text-align","right");
+                $("#labelForNote").css("display","none");
+                printBook(bookTypeid);
+            }
+        });
+        $('#jobLetter, #houseRent, #immigrationLetter, #companionLetter, #pledgeLetter, #printBook').hide();
+        $('#BookType').change(function() {
+            var bookTypeid = $('#BookType').val();
+            if(bookTypeid){
+                $('#printBook').show();
+                if (parseInt(bookTypeid) === 1) {//1 house rent
+                    $('#houseRent').show();
+                    $('#jobLetter, #immigrationLetter, #companionLetter, #pledgeLetter').hide();
+                }else if (parseInt(bookTypeid) === 2) {//2 immigration Letter
+                    $('#immigrationLetter').show();
+                    $('#jobLetter, #houseRent, #companionLetter, #pledgeLetter').hide();
+                }else if (parseInt(bookTypeid) === 3) {//3 Job Letter
+                    $('#jobLetter').show();
+                    $('#houseRent, #immigrationLetter, #companionLetter, #pledgeLetter').hide();
+                }else if (parseInt(bookTypeid) === 4) {//4 Companion Letter
+                    $('#companionLetter').show();
+                    $('#jobLetter, #houseRent, #immigrationLetter, #pledgeLetter').hide();
+                }else if (parseInt(bookTypeid) === 5) {//5 Pledge letter
+                    $('#pledgeLetter').show();
+                    $('#jobLetter, #houseRent, #immigrationLetter, #companionLetter').hide();
+                }
+            }else{
+                $('#jobLetter, #houseRent, #immigrationLetter, #companionLetter, #pledgeLetter, #printBook').hide();
+            }
+
+
+        });
+        function printBook(bookTypeid) {
+            var element = $();
+            var bookName="";
+            if(parseInt(bookTypeid) === 1){
+                element = $('#houseRent');
+                bookName ="House Rent";
+            }else if(parseInt(bookTypeid) === 2){
+                element = $('#immigrationLetter');
+                bookName ="Immigration Letter";
+            }else if(parseInt(bookTypeid) === 3){
+                element = $('#jobLetter');
+                bookName ="Job Letter";
+            }else if(parseInt(bookTypeid) === 4){
+                element = $('#companionLetter');
+                bookName ="Companion Letter";
+            }else if(parseInt(bookTypeid) === 5){
+                element = $('#pledgeLetter');
+                bookName ="Pledge Letter";
+            }
+            element.printThis({
+                //importCSS: false,
+                //loadCSS: "./Content/VoucherPrintStyle.css",
+                header: "<h2>"+bookName+"</h2>",
+                // debug: true,
+            });
+        }
+    </script>
+}
+

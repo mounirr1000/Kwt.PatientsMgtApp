@@ -69,8 +69,12 @@ namespace Kwt.PatientsMgtApp.Core.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public Nullable<System.DateTime> FirstApptDAte { get; set; }
+
+        [DisplayName("Appointment Date")]
         public String FirstApptDAteFormatted { get { return String.Format("{0:d}", FirstApptDAte); } }
 
+        public String FirstApptDAteLongFormatted { get { return String.Format("{0:d-MMMM-yyyy}", FirstApptDAte); } }
+        public String FirstApptDAteLongArabicFormatted { get { return String.Format(new System.Globalization.CultureInfo("ar-KW"), "{0:yyyy, MMMM dd}", FirstApptDAte); } }//   yyyy ,MMMM dd
         [DisplayName("End Treatment Date")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
@@ -78,7 +82,16 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public Nullable<System.DateTime> EndTreatDate { get; set; }
         //public Nullable<decimal> PatientRate { get; set; }
         public String EndTreatDateFormatted { get { return String.Format("{0:d}", EndTreatDate); } }
-
+    
+        public String EndTreatDateLongFormatted { get { return String.Format("{0:d-MMMM-yyyy}", EndTreatDate); } }
+        public String EndTreatDateLongArabicFormatted { get { return String.Format(new System.Globalization.CultureInfo("ar-KW"), "{0:yyyy, dd MMMM}", EndTreatDate); } }
+        [DisplayName("Authorized Date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        public Nullable<System.DateTime> AuthorizedDate { get; set; }
+        public String AuthorizedDateFormatted { get { return String.Format("{0:d}", AuthorizedDate); } }
+        public String AuthorizedDateLongFormatted { get { return String.Format("{0:d-MMMM-yyyy}", AuthorizedDate); } }
+        public String AuthorizedDateLongArabicFormatted { get { return String.Format(new System.Globalization.CultureInfo("ar-KW"), "{0:yyyy, dd MMMM}", AuthorizedDate); } }
         [Required(ErrorMessage = "If the patient is not Beneficiary, select No")]
         [DisplayName("Is Beneficiary?")]
         public bool IsBeneficiary { get; set; } = true;
@@ -86,6 +99,9 @@ namespace Kwt.PatientsMgtApp.Core.Models
         [DisplayName("Is Active?")]
         [Required(ErrorMessage = "The patient is either active or inactive, select one")]
         public bool IsActive { get; set; } = true;
+
+        [DisplayName("Is Blocked?")]
+        public Nullable<bool> IsBlocked { get; set; }
 
         [MaxLength(250)]
         public string Notes { get; set; }
@@ -121,6 +137,8 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public List<SpecialtyModel> Sepcialities { get; set; }
         public List<PaymentModel> Payments { get; set; }
         public List<CompanionModel> Companions { get; set; }
+
+        public CompanionModel PrimaryCompanion { get { return Companions!=null? Companions.Where(c=>c.CompanionType=="Primary" && c.JustBeneficiary!=true)?.SingleOrDefault():null; } }
         public BeneficiaryModel Beneficiary { get; set; }
 
         public  List<CompanionHistoryModel> CompanionHistories { get; set; }
@@ -150,5 +168,12 @@ namespace Kwt.PatientsMgtApp.Core.Models
             }
             return errors;
         }
+
+        public List<BookTypeModel> BookTypes { get; set; }
+        [DisplayName("Select Book Type")]
+        public BookTypeModel BookType { get; set; }
+
+        [DisplayName("Treatment Period")]
+        public int? TreatmentPeriod { get { return (DateTime.Now.Date - (FirstApptDAte != null ? FirstApptDAte.Value.Date : DateTime.Now.Date)).Days ; } }
     }
 }

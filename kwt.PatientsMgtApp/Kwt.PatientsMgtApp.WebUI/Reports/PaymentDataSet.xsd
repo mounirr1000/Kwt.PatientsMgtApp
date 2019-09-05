@@ -61,6 +61,7 @@
               <Mapping SourceColumn="AdjustmentReasonID" DataSetColumn="AdjustmentReasonID" />
               <Mapping SourceColumn="AdjustmentReason" DataSetColumn="AdjustmentReason" />
               <Mapping SourceColumn="RowNumber" DataSetColumn="RowNumber" />
+              <Mapping SourceColumn="DeductionReasonText" DataSetColumn="DeductionReasonText" />
             </Mappings>
             <Sources />
           </TableAdapter>
@@ -72,7 +73,7 @@
   <xs:element name="PaymentDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="PaymentDataSet" msprop:Generator_UserDSName="PaymentDataSet">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="GetPaymentListReport_SP" msprop:Generator_TableClassName="GetPaymentListReport_SPDataTable" msprop:Generator_TableVarName="tableGetPaymentListReport_SP" msprop:Generator_RowChangedName="GetPaymentListReport_SPRowChanged" msprop:Generator_TablePropName="GetPaymentListReport_SP" msprop:Generator_RowDeletingName="GetPaymentListReport_SPRowDeleting" msprop:Generator_RowChangingName="GetPaymentListReport_SPRowChanging" msprop:Generator_RowEvHandlerName="GetPaymentListReport_SPRowChangeEventHandler" msprop:Generator_RowDeletedName="GetPaymentListReport_SPRowDeleted" msprop:Generator_RowClassName="GetPaymentListReport_SPRow" msprop:Generator_UserTableName="GetPaymentListReport_SP" msprop:Generator_RowEvArgName="GetPaymentListReport_SPRowChangeEvent">
+        <xs:element name="GetPaymentListReport_SP" msprop:Generator_TableClassName="GetPaymentListReport_SPDataTable" msprop:Generator_TableVarName="tableGetPaymentListReport_SP" msprop:Generator_TablePropName="GetPaymentListReport_SP" msprop:Generator_RowDeletingName="GetPaymentListReport_SPRowDeleting" msprop:Generator_RowChangingName="GetPaymentListReport_SPRowChanging" msprop:Generator_RowEvHandlerName="GetPaymentListReport_SPRowChangeEventHandler" msprop:Generator_RowDeletedName="GetPaymentListReport_SPRowDeleted" msprop:Generator_UserTableName="GetPaymentListReport_SP" msprop:Generator_RowChangedName="GetPaymentListReport_SPRowChanged" msprop:Generator_RowEvArgName="GetPaymentListReport_SPRowChangeEvent" msprop:Generator_RowClassName="GetPaymentListReport_SPRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="PaymentID" msdata:ReadOnly="true" msdata:AutoIncrement="true" msprop:Generator_ColumnVarNameInTable="columnPaymentID" msprop:Generator_ColumnPropNameInRow="PaymentID" msprop:Generator_ColumnPropNameInTable="PaymentIDColumn" msprop:Generator_UserColumnName="PaymentID" type="xs:int" />

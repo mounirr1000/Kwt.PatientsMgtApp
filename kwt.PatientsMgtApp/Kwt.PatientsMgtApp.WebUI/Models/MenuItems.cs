@@ -14,9 +14,16 @@ namespace Kwt.PatientsMgtApp.WebUI.Models
         public string IconName { get; set; }
         public string Color { get; set; }
 
+        public SubMenu SubMenu { get; set; }
     }
 
     public class Menu
+    {
+        public List<MenuItems> MenuItem { get; set; }
+    }
+
+    //==================================
+    public class SubMenu
     {
         public List<MenuItems> MenuItem { get; set; }
     }

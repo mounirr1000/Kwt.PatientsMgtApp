@@ -24,6 +24,7 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public int BankID { get; set; }
         public string BankName { get; set; }
         public string BankCode { get; set; }
+        public string BankSwift { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Companion> Companions { get; set; }

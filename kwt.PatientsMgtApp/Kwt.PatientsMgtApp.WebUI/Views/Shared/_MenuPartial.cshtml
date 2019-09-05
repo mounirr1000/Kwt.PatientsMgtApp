@@ -64,14 +64,59 @@
                     {
                         if (item.MenuId < 3)
                         {
-                            @Html.ListItemAction(item.MenuName, item.ActionName, item.ControllerName, item.IconName, item.Color)
-                        }
-                        else
-                        {
-                            if (User.IsInRole("Admin"))
+                            //new
+                            if (item.MenuId == 2)
+                            {
+                                @Html.ListItemAction(item.MenuName, item.ActionName, item.ControllerName, item.IconName, item.Color, item.SubMenu)
+                            }
+                            else
                             {
                                 @Html.ListItemAction(item.MenuName, item.ActionName, item.ControllerName, item.IconName, item.Color)
                             }
+                            //end new
+                            // @Html.ListItemAction(item.MenuName, item.ActionName, item.ControllerName, item.IconName, item.Color)
+
+                        }
+
+                        else
+                        {
+                            //
+                            if (item.MenuId < 6)
+                            {
+                                if (User.IsInAnyRoles(CrudRoles.MainMenuAccess))
+                                {
+                                    if (item.MenuId == 2)//patient
+                                    {
+                                        @Html.ListItemAction(item.MenuName, item.ActionName, item.ControllerName, item.IconName, item.Color, item.SubMenu)
+                                    }
+                                    else
+                                    {
+                                        if (item.MenuId == 4)// payment
+                                        {
+                                            if (User.IsInAnyRoles(CrudRoles.PaymentCrudRoles))
+                                            {
+                                                @Html.ListItemAction(item.MenuName, item.ActionName, item.ControllerName, item.IconName, item.Color)
+                                            }
+                                        }
+                                        else
+                                        {
+                                            
+                                            @Html.ListItemAction(item.MenuName, item.ActionName, item.ControllerName, item.IconName, item.Color)
+                                        }
+
+                                    }
+                                    //@Html.ListItemAction(item.MenuName, item.ActionName, item.ControllerName, item.IconName, item.Color)
+                                }
+                            }
+                            else
+                            {
+                                if (User.IsInAnyRoles(CrudRoles.MainMenuAdminAccess))
+                                {
+                                    @Html.ListItemAction(item.MenuName, item.ActionName, item.ControllerName, item.IconName, item.Color)
+                                }
+                            }
+                            //
+                            
                         }
                     }
                 }

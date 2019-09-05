@@ -55,6 +55,7 @@
     <Compile Include="AgencyRepository.cs" />
     <Compile Include="BankRepository.cs" />
     <Compile Include="BeneficiaryRepository.cs" />
+    <Compile Include="BookTypeRepository.cs" />
     <Compile Include="CompanionHistoryRepository.cs" />
     <Compile Include="CompanionManagmentRepository.cs" />
     <Compile Include="CompanionRepository.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="IAgencyRepository.cs" />
     <Compile Include="IBankRepository.cs" />
     <Compile Include="IBeneficiaryRepository.cs" />
+    <Compile Include="IBookTypeRepository.cs" />
     <Compile Include="ICompanionHistoryRepository.cs" />
     <Compile Include="ICompanionManagmentRepository.cs" />
     <Compile Include="ICompanionRepository.cs" />
@@ -81,6 +83,7 @@
     <Compile Include="IPatientManagmentRepository.cs" />
     <Compile Include="IPatientRepository.cs" />
     <Compile Include="IPaymentDeductionRepository.cs" />
+    <Compile Include="IPaymentHistoryRepository.cs" />
     <Compile Include="IPaymentRepository.cs" />
     <Compile Include="IPaymentTypeRepository.cs" />
     <Compile Include="IPayRateRepository.cs" />
@@ -91,6 +94,7 @@
     <Compile Include="PatientManagmentRepository.cs" />
     <Compile Include="PatientRepository.cs" />
     <Compile Include="PaymentDeductionRepository.cs" />
+    <Compile Include="PaymentHistoryRepository.cs" />
     <Compile Include="PaymentRepository.cs" />
     <Compile Include="PaymentTypeRepository.cs" />
     <Compile Include="PayRateRepository.cs" />

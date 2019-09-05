@@ -4,20 +4,23 @@
 }
 
 <div class="adminTab">
-    <fieldset>
-        <legend>Admin Console</legend>
-        <ul class="fieldlist">
-            <li class="editor-field">
-                <a href="@Url.Action("Index", "Admin")" class="k-button"><i class="fa fa-users" ></i> Manage Users</a>
-                <a href="@Url.Action("Index", "RoleAdmin")" class="k-button" ><i class="fa fa-key"></i> Manage Roles</a>
-            </li>
+    @if (User.IsInRole("Super Admin"))
+    {
+        <fieldset>
+            <legend>Admin Console</legend>
+            <ul class="fieldlist form-row">
+                <li class="editor-field col-md-12">
+                    <a href="@Url.Action("Index", "Admin")" class="k-button"><i class="fa fa-users"></i> Manage Users</a>
+                    <a href="@Url.Action("Index", "RoleAdmin")" class="k-button"><i class="fa fa-key"></i> Manage Roles</a>
+                </li>
 
-        </ul>
-    </fieldset>
+            </ul>
+        </fieldset>
+    }
     <fieldset>
         <legend>Database Tables Console</legend>
-        <ul class="fieldlist">
-            <li class="editor-field">
+        <ul class="fieldlist form-row">
+            <li class="editor-field col-md-12">
                 <a href="@Url.Action("DoctorsList", "Admin")" class="k-button" ><i class="fa fa-user-md"></i> Doctors</a>
                 <a href="@Url.Action("HospitalsList", "Admin")" class="k-button" ><i class="fa fa-h-square"></i> Hospitals</a>
                 <a href="@Url.Action("BanksList", "Admin")" class="k-button" ><i class="fa fa-university"></i> Banks</a>
@@ -32,10 +35,27 @@
     </fieldset>
     <fieldset>
         <legend>History Console</legend>
-        <ul class="fieldlist">
-            <li class="editor-field">
-                <a href="@Url.Action("PatientHistoryList", "Admin")" class="k-button" ><i class="fa fa-history"></i> Patient History</a>
-                <a href="@Url.Action("CompanionHistoryList", "Admin")" class="k-button" ><i class="fa fa-history" aria-hidden="true"></i> Companion History</a>
+        <ul class="fieldlist form-row">
+            <li class="editor-field col-md-12">
+                <a href="@Url.Action("PatientHistoryList", "Admin")" class="k-button">
+
+
+                    <img src="~/Content/Images/folder.png" />
+                    @*<i class="fa fa-history"></i>*@ 
+                    Patient History
+                </a>
+                <a href="@Url.Action("CompanionHistoryList", "Admin")" class="k-button">
+                    @*<i class="fa fa-history" aria-hidden="true"></i>*@ 
+
+
+                    <img src="~/Content/Images/patient_companions.png" />
+                    Companion History
+                </a>
+                <a href="@Url.Action("PaymentHistoryList", "Admin")" class="k-button">
+                    <img src="~/Content/Images/money-bag.png"/>
+                    @*<i class="fa fa-history" aria-hidden="true"></i>*@
+                     Payment History
+                </a>
             </li>
 
         </ul>

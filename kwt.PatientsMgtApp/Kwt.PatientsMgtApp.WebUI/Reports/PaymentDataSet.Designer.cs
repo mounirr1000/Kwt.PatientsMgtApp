@@ -2548,6 +2548,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports.PaymentDataSetTableAdapters {
             tableMapping.ColumnMappings.Add("AdjustmentReasonID", "AdjustmentReasonID");
             tableMapping.ColumnMappings.Add("AdjustmentReason", "AdjustmentReason");
             tableMapping.ColumnMappings.Add("RowNumber", "RowNumber");
+            tableMapping.ColumnMappings.Add("DeductionReasonText", "DeductionReasonText");
             this._adapter.TableMappings.Add(tableMapping);
         }
         

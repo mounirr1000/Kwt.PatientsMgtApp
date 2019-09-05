@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -13,12 +15,16 @@ using Kwt.PatientsMgtApp.WebUI.Models;
 using Kwt.PatientsMgtApp.WebUI.Utilities;
 using Microsoft.Ajax.Utilities;
 using PagedList;
+using System.IO;
+using Kwt.PatientsMgtApp.Core;
+using Kwt.PatientsMgtApp.WebUI.Infrastructure;
 
 namespace Kwt.PatientsMgtApp.WebUI.Controllers
 {
 
     [HandleError(ExceptionType = typeof(PatientsMgtException), View = "ExceptionHandler")]
-    [Authorize]
+    //[Authorize]
+    [CustomAuthorize(Roles = CrudRoles.PatientCrudRolesForAutorizeAttribute)]
     public class PatientController : BaseController
     {
         private const int PageSize = 5;
@@ -141,6 +147,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         }
         [ExceptionHandler]
         [HttpGet]
+        [CustomAuthorize(Roles = CrudRoles.PatientCreateRolesForAutorizeAttribute)]
         public ActionResult Create()
         {
             PatientModel patient = new PatientModel();
@@ -154,6 +161,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         [ExceptionHandler]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CustomAuthorize(Roles = CrudRoles.PatientCreateRolesForAutorizeAttribute)]
         public ActionResult Create(PatientModel patient)
         {
             //throw new PatientsMgtException(1, "error", "Creating new Companion",
@@ -188,10 +196,18 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
 
         private void ValidatePatientModel(PatientModel patient)
         {
+            string pattern = "^[a-zA-Z0-9]+$";// only allow alphanumeric values ^[a-zA-Z0-9]+$
+            Regex rgx = new Regex(pattern);
             if (ModelState.IsValidField("PatientCID")
                 && patient.PatientCID?.Trim().Length < 12)
             {
                 ModelState.AddModelError("PatientCID", "The patient CID should be 12 characters long");
+            }
+            if (ModelState.IsValidField("PatientCID")
+               && patient.PatientCID != null
+               && !rgx.IsMatch(patient.PatientCID))
+            {
+                ModelState.AddModelError("PatientCID", "The Patient CID should contains only alphanumeric(a-z/0-9) values");
             }
             if (ModelState.IsValidField("IsBeneficiary")
                && patient.IsBeneficiary == true)
@@ -222,7 +238,9 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
 
         }
         [ExceptionHandler]
-        [Authorize(Roles = "Admin, Manager")]
+
+        //[CustomAuthorize(Roles = "Admin, Manager, Super Admin, Medical, Editor")]
+        [CustomAuthorize(Roles = CrudRoles.PatientUpdateRolesForAutorizeAttribute)]
         public ActionResult Edit(string patientCid)
         {
             var patient = _patientRepository.GetPatient(patientCid);
@@ -235,7 +253,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         }
         [HttpPost]
         [ExceptionHandler]
-        [Authorize(Roles = "Admin, Manager")]
+        //[CustomAuthorize(Roles = "Admin, Manager, Super Admin, Medical, Editor")]
+        [CustomAuthorize(Roles = CrudRoles.PatientUpdateRolesForAutorizeAttribute)]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(PatientModel patient)
         {
@@ -272,7 +291,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
 
         // Todo: Should fix Delete to be only with Httppost method
         [ExceptionHandler]
-        [Authorize(Roles = "Admin, Manager")]
+        //[CustomAuthorize(Roles = "Super Admin, Manager, Admin, Editor")]
+        [CustomAuthorize(Roles = CrudRoles.PatientDeleteRolesForAutorizeAttribute)]
         public ActionResult Delete(string patientCid)
         {
             var patient = _patientRepository.GetPatient(patientCid);
@@ -332,5 +352,227 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         //    //return new RazorPDF.PdfResult(patients, "PdfDoc");
         //    return null;
         //}
+
+
+        //new Books
+
+
+        [ExceptionHandler]
+        [HttpGet]
+        public ActionResult AddPatientBooks(string patientCid)
+        {
+            var patients = _patientRepository.GetActivePatients();
+            if (patients != null)
+            {
+                var cids = patients.Select(pcid => pcid.PatientCID).ToList();
+                ViewBag.Patients = cids;
+
+            }
+            if (!String.IsNullOrEmpty(patientCid))
+            {
+                var patient = _patientRepository.GetPatient(patientCid);
+                return View(patient);
+            }
+            //return new RazorPDF.PdfResult(patients, "PdfDoc");
+            return View();
+            //payment = patientCid != null ? _paymentRepository.GetPaymentObject(patientCid) : _paymentRepository.GetPaymentObject();
+            //if (!String.IsNullOrEmpty(patientCid) &&
+            //    (payment.PatientCID == null))
+            //{
+
+            //    Information(
+            //        String.Format(
+            //            "There is No patient in our records with this CID <b>{0}</b> Please Enter a Valid CID",
+            //            patientCid), true);
+            //}
+            //else if (!String.IsNullOrEmpty(patientCid) &&
+            //     (payment.BeneficiaryCID == null))
+            //{
+
+            //    Information(
+            //        String.Format(
+            //            "There is No Beneficiary with this patient <b>{0}</b> You can't make payment to this patient",
+            //            patientCid), true);
+            //}
+            //else if (!String.IsNullOrEmpty(patientCid)
+            //    && payment.PatientCID != null
+            //    && !payment.IsActive)
+            //{
+
+            //    Information(
+            //        String.Format(
+            //            "The patient with CID <b>{0}</b> is Not Active, You cannot add a payment to this patient",
+            //            patientCid), true);
+            //}
+
+            //return View(payment);
+        }
+
+        public ActionResult GetPatientFolders(string patientCid, string patientName)
+        {
+            //GetDirectories (string path, string searchPattern, System.IO.SearchOption searchOption);
+            var appSettings = ConfigurationManager.AppSettings;
+            string sharedPath = appSettings["SharedFolderLink"]??"";
+            string sharedForlder = @sharedPath;
+            string searchPattern = "" + patientCid + "*";
+            var fileViewModel = new FileViewModel();
+            string[] directoriesPaths = Directory.GetDirectories(sharedForlder, searchPattern);
+            // string[] filePaths = Directory.GetFiles(@"C:\Users\mouni\Desktop\2860128700414- MOHAMMAD JAMAL ABDULLAH AL-FARHAN");
+            if (directoriesPaths.Length > 0)
+            {
+                string[] patientDirectoriesPaths = Directory.GetDirectories(directoriesPaths[0]);
+
+                if (patientDirectoriesPaths.Length > 0)
+                {
+                    fileViewModel.FoldersPath = patientDirectoriesPaths;
+                    var foldersName = ExtractNames(patientDirectoriesPaths);
+                    //
+                    bool[] emptyFolders = new bool[patientDirectoriesPaths.Length];
+                    int i = 0;
+                    foreach (var path in patientDirectoriesPaths)
+                    {
+                        var files = Directory.GetFiles(path);
+                        if (files.Length > 0)
+                        {
+                            emptyFolders[i++] = true;
+                        }
+                        else
+                        {
+                            emptyFolders[i++] = false;
+                        }
+                    }
+                    fileViewModel.IsFolderEmpty = emptyFolders;
+                    //
+                    fileViewModel.FoldersName = foldersName;
+                }
+            }
+            //Uncoment the next lines once the implementation is approved by Hasbaoui
+            //else
+            //{
+            //    CreatePatientFolders(patientCid, patientName, sharedForlder);
+            //  return  RedirectToAction("GetPatientFolders", new {patientCid = patientCid, patientName = patientName });
+            //}
+            fileViewModel.PatientCid = patientCid;
+            fileViewModel.PatientName = patientName;
+            return View(fileViewModel);
+        }
+
+        [HttpPost]
+        public ActionResult Upload(HttpPostedFileBase[] patientFiles, string folderPath, string foldername)
+        {
+            if (patientFiles != null)
+            {
+                foreach (HttpPostedFileBase file in patientFiles)
+                {
+                    //Checking file is available to save.  
+                    if (file != null)
+                    {
+                        string path = @folderPath;// @"C:\Users\mouni\Desktop\shared";
+                                                  //string path = Server.MapPath("~/Uploads/");
+                        if (!Directory.Exists(path))
+                        {
+                            Directory.CreateDirectory(path);
+                        }
+                        var inputFileName = Path.GetFileName(file.FileName);
+                        string uploadFilePathAndName = Path.Combine(path, inputFileName);
+                        file.SaveAs(uploadFilePathAndName);
+                        // postedFile.SaveAs(path + Path.GetFileName(postedFile.FileName));
+                        ViewBag.UploadState = patientFiles.Count().ToString() + " files uploaded successfully.";
+                    }
+                }
+            }
+
+            return RedirectToAction("GetPatientFiles", new { patientFolderPath = folderPath, folderName= foldername, uploadState= ViewBag.UploadState });
+        }
+        private static string[] ExtractNames(string[] directoriesPaths)
+        {
+            string[] foldersName = new string[directoriesPaths.Length];
+
+            int i = 0;
+            foreach (var path in directoriesPaths)
+            {
+                int lastIndex = path.LastIndexOf(@"\");
+
+                string folderName = path.Substring(lastIndex, path.Length - (lastIndex));
+                //int firstIndex = folderName.LastIndexOf(@"\");
+                foldersName[i] = folderName;//.Substring(firstIndex, folderName.Length );
+                i++;
+            }
+            return foldersName;
+        }
+
+        public ActionResult GetPatientFiles(string patientFolderPath, string folderName, string  uploadState, string patientCid , string patientName )
+        {
+            //GetDirectories (string path, string searchPattern, System.IO.SearchOption searchOption);
+            //ViewBag.pageTitle = folderName;
+            string[] filePaths = Directory.GetFiles(patientFolderPath);
+            var fileNames = ExtractNames(filePaths);
+            var fileViewModel = new FileViewModel();
+            //bool[] emptyFolders = new bool[filePaths.Length];
+            //int i = 0;
+            //foreach (var path    in filePaths)
+            //{
+            //    if (!path.IsNullOrWhiteSpace()&& path.Length > 0)
+            //    {
+            //        emptyFolders[i++] = true;
+            //    }
+            //    else 
+            //    {
+            //        emptyFolders[i++] = false;
+            //    }
+            //}
+            //fileViewModel.IsFolderEmpty = emptyFolders;
+            fileViewModel.FilesPath = filePaths;
+            fileViewModel.FilesName = fileNames;
+            fileViewModel.FolderName = folderName;
+            fileViewModel.FolderPath = patientFolderPath;
+            fileViewModel.PatientCid = patientCid;
+            fileViewModel.PatientName = patientName;
+            ViewBag.UploadState = uploadState;
+
+            return View(fileViewModel);
+        }
+        public FileResult Download(string link, string filename)
+        {
+            byte[] fileBytes = System.IO.File.ReadAllBytes(link);
+            string fileName = filename;
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
+        }
+
+        private void CreatePatientFolders(string patientCid, string patientName, string folderPath)
+        {
+            var path = @folderPath + @"\" + patientCid + "- " + patientName;
+            if (!Directory.Exists(path))
+            {
+                Information(string.Format("We Just created the patient folders in the shared: [{0}]", folderPath), true);
+                Information(string.Format("This is the link to the shared: [{0}]", path), true);
+                // return;
+            }
+            try
+            {
+                
+                var createdDirectory = Directory.CreateDirectory(path);
+                var patientFolderPath = createdDirectory.FullName;
+
+                Directory.CreateDirectory(@patientFolderPath + @"\" + PatientFolders.Allowances);
+                Directory.CreateDirectory(@patientFolderPath + @"\" + PatientFolders.Appointments);
+                Directory.CreateDirectory(@patientFolderPath + @"\" + PatientFolders.CompanionInfo);
+                Directory.CreateDirectory(@patientFolderPath + @"\" + PatientFolders.FuneralArrangement);
+                Directory.CreateDirectory(@patientFolderPath + @"\" + PatientFolders.GuaranteeLetters);
+                Directory.CreateDirectory(@patientFolderPath + @"\" + PatientFolders.IncomingMph);
+                Directory.CreateDirectory(@patientFolderPath + @"\" + PatientFolders.MedicalReports);
+                Directory.CreateDirectory(@patientFolderPath + @"\" + PatientFolders.OutgoingMph);
+                Directory.CreateDirectory(@patientFolderPath + @"\" + PatientFolders.PatientInfo);
+                Directory.CreateDirectory(@patientFolderPath + @"\" + PatientFolders.ProgressReports);
+                Directory.CreateDirectory(@patientFolderPath + @"\" + PatientFolders.TicketingTransportation);
+            }
+            catch (Exception e)
+            {
+                Danger(string.Format("An Error accured while trying to create patient folders, Try Again...!"), true);
+            }
+            
+
+        }
+       
     }
 }

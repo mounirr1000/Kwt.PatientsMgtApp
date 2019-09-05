@@ -53,6 +53,9 @@
         <AssociationConnector Association="PatientsMgtModel.FK_RejectedPayments_RejectionReasons" />
         <EntityTypeShape EntityType="PatientsMgtModel.AdjustmentReason" Width="1.5" PointX="0.75" PointY="14.875" />
         <AssociationConnector Association="PatientsMgtModel.FK_Payments_AdjustmentReasons" />
+        <EntityTypeShape EntityType="PatientsMgtModel.PaymentHistory" Width="1.5" PointX="13.5" PointY="18.125" />
+        <AssociationConnector Association="PatientsMgtModel.FK_PaymentsHistory_Payments" />
+        <EntityTypeShape EntityType="PatientsMgtModel.BookType" Width="1.5" PointX="14.375" PointY="3.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

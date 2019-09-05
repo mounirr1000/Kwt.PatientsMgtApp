@@ -1,5 +1,6 @@
 ﻿@*@using PagedList.Mvc;
     @model PagedList.IPagedList<Kwt.PatientsMgtApp.Core.Models.PatientModel>*@
+@using Kwt.PatientsMgtApp.WebUI.Infrastructure
 @model List<Kwt.PatientsMgtApp.Core.Models.PatientModel>
 @{
     ViewBag.Title = "Patient List";
@@ -10,9 +11,19 @@
     serializer.MaxJsonLength = Int32.MaxValue;
     var jsonModel = serializer.Serialize(Model);
 }
-<div class="pt-3 pb-3">
-    <a href="@Url.Action("Create", "Patient")" class="k-button"><i class="fa fa-plus" style="color:yellowgreen"></i> New Patient</a>
-</div>
+@if (User.IsInAnyRoles(CrudRoles.PatientCreateRoles))
+{
+    <div class="row">
+        <div class="pt-3 pb-3 col-md-3">
+            <a href="@Url.Action("Create", "Patient")" class="k-button"><i class="fa fa-plus" style="color: yellowgreen"></i> New Patient</a>
+        </div>
+        <div class="pt-3 pb-3 col-md-3">
+            <a href="@Url.Action("AddPatientBooks", "Patient")" class="k-button"><i class="fa fa-book"></i> Patient Books</a>
+        </div>
+
+    </div>
+}
+
 @*@Ajax.ActionLink("","","",new AjaxOptions() {});*@
 <div id="patient-data" class="pb-5 pt-5">
     @if (Model.Any())
@@ -61,7 +72,7 @@
         var patients = @Html.Raw(jsonModel);
         $('document').ready(function() {
             $("#content").css("visibility", "visible");
-            var isAdmin =   @Html.Raw(Json.Encode(User.IsInRole("Admin")));
+            var isAdmin =   @Html.Raw(Json.Encode(User.IsInAnyRoles(CrudRoles.PatientDeleteRoles)));
 
             function getTemplate(patientCid) {
                 if (isAdmin) {
@@ -74,6 +85,7 @@
                 height: 550,
                 groupable: true,
                 sortable: true,
+                resizable: true,
                 //filterable: true
                 pageable: {
                     pageSize: 15,
@@ -103,7 +115,7 @@
                     },
                     {
                         field: "FirstApptDAte",
-                        title: "1st apt Date",
+                        title: "Start Treatment",
                         template: "#= kendo.toString(kendo.parseDate(FirstApptDAte, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
                     },
                     {
