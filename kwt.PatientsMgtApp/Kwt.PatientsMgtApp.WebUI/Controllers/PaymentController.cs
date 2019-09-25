@@ -51,24 +51,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             if (payments != null)
             {
                 payments = payments.OrderByDescending(c => c.CreatedDate).ToList();
-                //switch (sortOrder)
-                //{
-                //    case "name_desc":
-                //        payments = payments.OrderBy(c => c.CompanionFName).ThenBy(c => c.CompanionLName).ToList();
-                //        break;
-                //    case "cid":
-                //        payments = payments.OrderBy(c => c.PatientCID).ToList();
-                //        break;
-                //    case "date_desc":
-                //        payments = payments.OrderBy(c => c.PaymentDate).ToList();
-                //        break;
-                //    //case "Beneficiary":
-                //    //    payments = payments.OrderBy(c => c.IsBeneficiary).ToList();
-                //    //    break;
-                //    default: // created date ascending 
-                //        payments = payments.OrderByDescending(c => c.CreatedDate).ToList();
-                //        break;
-                //}
+                
                 if (clearSearch != true)
                 {
                     if (searchpaymentText != null)
@@ -88,7 +71,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                         var term = searchpaymentText.ToLower().Trim();
                         result = payments?
                             .Where(p =>
-                                p.PatientCID.ToLower().Trim().Contains(term)
+                                p.PatientCID.ToLower().Trim().Contains(term)|| p.PaymentID.ToString().Contains(term)
                             ).ToList();
                         if (DateTime.TryParse(searchpaymentText, out date))
                         {
@@ -119,7 +102,11 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                 }
             }
 
-            //return View(payments.ToPagedList(pageNumber, PageSize));
+            //for auditor roles, show nonapproved payment
+            if (User.IsInAnyRoles2(CrudRoles.PaymentApprovalRoles))
+            {
+                payments = payments?.Where(p => p.IsApproved != true).ToList();// get only nonApproved payment
+            }
             return View(payments);
         }
         //new February 28, 2019
@@ -134,10 +121,60 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         public JsonResult GetNextPayment(int? numberOfDays = null)
         {
             var payments = _paymentRepository.GetNextPatientPayment(numberOfDays);
-           
-           
-           // MaxJsonLength = Int32.MaxValue
+
+
+            // MaxJsonLength = Int32.MaxValue
             return Json(payments, JsonRequestBehavior.AllowGet);
+        }
+
+        [ExceptionHandler]
+        [CustomAuthorize(Roles = CrudRoles.PaymentApprovalRolesForAutorizeAttribute)]
+        public JsonResult RefreshPaymentListAfterApproval(int? paymentId)
+        {
+            PaymentModel payment = null;
+            if (paymentId != null)
+            {
+                var id = paymentId ?? 0;
+                payment = _paymentRepository.GetPaymentById(id);
+                if (payment != null)
+                {
+                    payment.IsApproved = true;
+                    //Edit(payment);
+                    _paymentRepository.UpdateApprovedPayment(payment);
+                }
+            }
+            var payments = _paymentRepository.GetPayments();
+            var unApprovedPayment = payments.Where(p => p.IsApproved != true).OrderByDescending(p => p.CreatedDate).ToList();
+            var jsonResult = new JsonResult();// Json(payments.Where(p => p.IsApproved == false), JsonRequestBehavior.AllowGet);
+            jsonResult.MaxJsonLength = Int32.MaxValue;
+            jsonResult.Data = unApprovedPayment;
+            jsonResult.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+             return jsonResult;
+        }
+        [ExceptionHandler]
+        public JsonResult ToggleApprovedPayment(int? toggleType)
+        {
+            var payments = _paymentRepository.GetPayments();
+            
+            List<PaymentModel> unApprovedPayment = new List<PaymentModel>();
+            if (toggleType != null)
+            {
+                if (toggleType == 2) // not approved
+                {
+                    unApprovedPayment = payments.Where(p => p.IsApproved != true).OrderByDescending(p=>p.CreatedDate).ToList();// get null and false isapproved
+                }
+                else // just approved Payment
+                {
+                    unApprovedPayment = payments.Where(p => p.IsApproved == true).OrderByDescending(p => p.CreatedDate).ToList();
+                }
+                    
+            }
+             
+            var jsonResult = new JsonResult();
+            jsonResult.MaxJsonLength = Int32.MaxValue;
+            jsonResult.Data = unApprovedPayment;
+            jsonResult.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return jsonResult;
         }
         //
         [ExceptionHandler]
@@ -163,7 +200,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             }
         }
 
-        
+
         [ExceptionHandler]
         [HttpGet]
         [CustomAuthorize(Roles = CrudRoles.PaymentCreateRolesForAutorizeAttribute)]

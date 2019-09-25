@@ -101,7 +101,7 @@
                 </ul>
             </fieldset>
 
-            @if (User.IsInAnyRoles("Admin", "Manager", "Auditor"))
+            @if (User.IsInAnyRoles(CrudRoles.CompanionCreateRoles))
             {
                 //if (Model.IsBeneficiary)
                 //{

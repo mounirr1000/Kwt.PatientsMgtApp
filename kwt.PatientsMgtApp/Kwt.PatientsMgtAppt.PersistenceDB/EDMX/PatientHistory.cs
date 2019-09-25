@@ -34,6 +34,8 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public System.DateTime OldCreatedDate { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public string PrimaryCompanionCid { get; set; }
+        public Nullable<bool> isDead { get; set; }
+        public Nullable<System.DateTime> DeathDate { get; set; }
     
         public virtual Patient Patient { get; set; }
     }

@@ -60,5 +60,20 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public string AdjustmentReason { get; set; }
         public Nullable<long> RowNumber { get; set; }
 
+        public string IbanHash { get; set; }
+        public Nullable<double> TotalHash { get; set; }
+
+        //new  statistical 2 report
+        public Nullable<System.DateTime> StatisticalPaymentDate { get; set; }
+        public Nullable<decimal> KfhBank { get; set; }
+        public Nullable<decimal> OtherBank { get; set; }
+        public Nullable<decimal> SubTotal { get; set; }
+        public Nullable<decimal> Rejected { get; set; }
+        public Nullable<decimal> DAAgency { get; set; }
+        public Nullable<decimal> OtherAgencies { get; set; }
+        public Nullable<decimal> StatisticalTotalDeduction { get; set; }
+        public Nullable<decimal> FinalTotal { get; set; }
+        public Nullable<bool> IsVoid { get; set; }
+        public Nullable<bool> IsDeleted { get; set; }
     }
 }

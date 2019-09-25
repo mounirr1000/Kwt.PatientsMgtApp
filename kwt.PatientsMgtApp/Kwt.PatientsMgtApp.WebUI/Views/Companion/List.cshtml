@@ -61,11 +61,12 @@
     <script type="text/javascript">
         var companions = @Html.Raw(jsonModel);
         console.log("companions",companions);
-        var isAdmin =   @Html.Raw(Json.Encode(User.IsInAnyRoles(new [] { "Admin", "Manager", "Super Admin" })));
+        var isAdmin =   @Html.Raw(Json.Encode(User.IsInAnyRoles(CrudRoles.CompanionDeleteRoles)));
         
         function getTemplate(id) {
             
             if (isAdmin) {
+                id = String("'"+id+"'");// convert the id into string and add quatation to it ''
                 return '<a href="javascript:confirmDelete('+id+','+'\'id\''+')" id='+id+'> <i class="fa fa-times fa-2x" style="color: lightcoral"></i></a>';
             }
             

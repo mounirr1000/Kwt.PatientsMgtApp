@@ -98,13 +98,26 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                     mapPath = "~/Reports/StatisticalPaymentReport.rdlc";
                     dataSource = "StatisticalPaymentReportDataset";
                     break;
+                case 6:
+                    reportName = "Statistical_2";
+                    mapPath = "~/Reports/StatisticalPaymentReport_2.rdlc";
+                    dataSource = "StatisticalPaymentDataset";
+                    break;
                 default:
                     reportName = "Details";
                     break;
 
             }
-
-            List<PaymentReportModel> payments = _paymentRepository.GetPaymentsReport(patientId, startDate, endDate, bankid);//?.OrderByDescending(p => p.CreatedDate)?.ToList();
+            List<PaymentReportModel> payments = new List<PaymentReportModel>();
+            if (reportType == 6)
+            {
+                payments = _paymentRepository.GetStatisticalPaymentsReport( startDate, endDate, 1,4);// 1 for kfh bank id, 4 for da agency id
+            }
+            else
+            {
+                payments = _paymentRepository.GetPaymentsReport(patientId, startDate, endDate, bankid);//?.OrderByDescending(p => p.CreatedDate)?.ToList();    
+            }
+            
 
             List<PaymentReportModel> returnedPayments = new List<PaymentReportModel>();
             if (payments == null || payments.Count == 0)
@@ -233,7 +246,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
         private List<PaymentReportModel> PaymentTypeForReportingType(List<PaymentReportModel> payments, int? reportType = null)
         {
             List<PaymentReportModel> processedPayments = new List<PaymentReportModel>();
-            if (reportType == (int)Enums.ReportType.Kuwait)// sent to kuwait
+            if (reportType == (int)Enums.ReportType.Kuwait)// sent to kuwait = Bank Report
                 processedPayments = CreateKuwaitPaymentReport(payments);
             else if (reportType == (int)Enums.ReportType.Archive)// saved in Archive
                 processedPayments = CreateArchivePaymentReport(payments);
@@ -241,6 +254,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                 processedPayments = CreateDetailsPaymentReport(payments);
             else if (reportType == (int)Enums.ReportType.Statistical)
                 processedPayments = CreateDetailsPaymentReport(payments);
+            else if (reportType == (int)Enums.ReportType.Statistical2)
+                processedPayments = CreateStatisticalPaymentReport(payments);
             //
 
             else if (reportType == (int)Enums.ReportType.Ministry)
@@ -448,34 +463,56 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                 RejectionNotes = p.RejectionNotes,
                 RejectionDate = p.RejectionDate,
                 RejectionReason = p.RejectionReason,
-                RowNumber = p.RowNumber
+                RowNumber = p.RowNumber,
+                IbanHash = p.IbanHash,
+                TotalHash = p.TotalHash
             }).ToList();
             return payments;
+        }
+
+        private List<PaymentReportModel> CreateStatisticalPaymentReport(List<PaymentReportModel> payments)
+        {
+            List<PaymentReportModel> processedPayments = new List<PaymentReportModel>();
+            processedPayments = payments?.Select(p => new PaymentReportModel()
+            {
+                StatisticalPaymentDate = p.PaymentDate,
+                PaymentDate = p.PaymentDate,
+                KfhBank =p.KfhBank,
+                OtherBank=p.OtherBank,
+                SubTotal= p.SubTotal,
+                Rejected= p.Rejected,
+                DAAgency=p.DAAgency,
+                OtherAgencies=p.OtherAgencies,
+                StatisticalTotalDeduction=p.TotalDeduction,
+                TotalDeduction = p.TotalDeduction,
+                FinalTotal =p.FinalTotal
+            }).ToList();
+            return processedPayments;
         }
 
 
         //protected void Export(object sender, EventArgs e)
         //{
-            //    Warning[] warnings;
-            //    string[] streamIds;
-            //    string contentType;
-            //    string encoding;
-            //    string extension;
+        //    Warning[] warnings;
+        //    string[] streamIds;
+        //    string contentType;
+        //    string encoding;
+        //    string extension;
 
-            //    //Export the RDLC Report to Byte Array.
-            //    byte[] bytes = ReportViewer1.LocalReport.Render(rbFormat.SelectedItem.Value, null, out contentType, out encoding, out extension, out streamIds, out warnings);
+        //    //Export the RDLC Report to Byte Array.
+        //    byte[] bytes = ReportViewer1.LocalReport.Render(rbFormat.SelectedItem.Value, null, out contentType, out encoding, out extension, out streamIds, out warnings);
 
-            //    //Download the RDLC Report in Word, Excel, PDF and Image formats.
-            //    Response.Clear();
-            //    Response.Buffer = true;
-            //    Response.Charset = "";
-            //    Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            //    Response.ContentType = contentType;
-            //    Response.AppendHeader("Content-Disposition", "attachment; filename=RDLC." + extension);
-            //    Response.BinaryWrite(bytes);
-            //    Response.Flush();
-            //    Response.End();
-            //---------------------------------------
+        //    //Download the RDLC Report in Word, Excel, PDF and Image formats.
+        //    Response.Clear();
+        //    Response.Buffer = true;
+        //    Response.Charset = "";
+        //    Response.Cache.SetCacheability(HttpCacheability.NoCache);
+        //    Response.ContentType = contentType;
+        //    Response.AppendHeader("Content-Disposition", "attachment; filename=RDLC." + extension);
+        //    Response.BinaryWrite(bytes);
+        //    Response.Flush();
+        //    Response.End();
+        //---------------------------------------
         //    ReportViewer rv = new ReportViewer();
         //    rv.ProcessingMode = ProcessingMode.Local;
         //    rv.LocalReport.ReportPath = Server.MapPath("Report2.rdlc"); // 

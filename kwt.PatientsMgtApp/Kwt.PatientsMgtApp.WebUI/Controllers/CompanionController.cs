@@ -111,7 +111,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                         {
                             Information(
                                 string.Format(
-                                    "There is no patient in our records with the selected search criteria <b>{0}</b>",
+                                    "There is no companion in our records with the selected search criteria <b>{0}</b>",
                                     searchCompanionText), true);
                         }
                     }

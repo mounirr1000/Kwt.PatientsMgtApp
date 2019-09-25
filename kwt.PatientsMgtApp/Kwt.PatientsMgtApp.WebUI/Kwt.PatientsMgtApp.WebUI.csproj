@@ -313,6 +313,11 @@
       <DependentUpon>PaymentDataSet.xsd</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
+    <Compile Include="StatisticalPaymentDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StatisticalPaymentDataSet.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\Alert.cs" />
     <Compile Include="Utilities\BaseController.cs" />
   </ItemGroup>
@@ -594,6 +599,17 @@
     <Content Include="Views\Patient\GetPatientFiles.cshtml" />
     <Content Include="Views\Patient\GetPatientFolders.cshtml" />
     <Content Include="Views\Report\PaymentReference.cshtml" />
+    <Content Include="StatisticalPaymentDataSet.xsc">
+      <DependentUpon>StatisticalPaymentDataSet.xsd</DependentUpon>
+    </Content>
+    <None Include="StatisticalPaymentDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>StatisticalPaymentDataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="StatisticalPaymentDataSet.xss">
+      <DependentUpon>StatisticalPaymentDataSet.xsd</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -636,6 +652,7 @@
     <EmbeddedResource Include="Reports\PatientReport.rdlc" />
     <EmbeddedResource Include="Reports\PaymentReport.rdlc" />
     <EmbeddedResource Include="Reports\StatisticalPaymentReport.rdlc" />
+    <EmbeddedResource Include="Reports\StatisticalPaymentReport_2.rdlc" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

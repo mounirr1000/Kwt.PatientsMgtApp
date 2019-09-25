@@ -270,6 +270,19 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             {
                 ModelState.AddModelError("BankName", "The patient is Beneficiary, so you need to enter the Bank Name field");
             }
+            // new check isdead validity
+            if (ModelState.IsValidField("IsDead")
+                && patient.IsDead == true
+                && (patient.DeathDate == null || patient.EndTreatDate == null))
+            {
+                if(patient.DeathDate == null)
+                    ModelState.AddModelError("DeathDate", "The patient is Dead, so you need to enter the Death Date field");
+                if (patient.EndTreatDate == null)
+                    ModelState.AddModelError("EndTreatDate", "The patient is Dead, so you need to enter the End Treat Date field");
+                if (patient.IsActive == true)
+                    ModelState.AddModelError("IsActive", "The patient is Dead, so the patient should not be active");
+            }
+            //
             if (ModelState.IsValid)
             {
                 patient.ModifiedBy = User.Identity.Name;
@@ -307,11 +320,16 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                         string.Format("Patient with Civil ID <b>{0}</b> was Successfully Deleted.", patient.PatientCID),
                         true);
                 }
+                else
+                {
+                    if (!string.IsNullOrEmpty(patientCid))
+                        Information(string.Format("Patient with Civil ID <b>{0}</b> was not deleted.", patientCid), true);
+                }
             }
             else
             {
                 if (!string.IsNullOrEmpty(patientCid))
-                    Information(string.Format("Patient with Civil ID <b>{0}</b> was not deleted.", patientCid), true);
+                    Information(string.Format("There is no patient in our records with CID <b> {0}</b>", patientCid), true);
             }
             return RedirectToAction("List");
         }

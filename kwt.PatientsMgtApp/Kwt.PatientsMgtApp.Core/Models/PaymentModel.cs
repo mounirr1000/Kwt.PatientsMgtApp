@@ -13,6 +13,8 @@ namespace Kwt.PatientsMgtApp.Core.Models
     {
         public int PaymentID { get; set; }
 
+        public string PaymentIDString { get { return PaymentID != null ? PaymentID.ToString() : ""; } }
+
         [DataType(DataType.Date)]
         [DisplayName("Payment Date")]
         public Nullable<System.DateTime> PaymentDate { get; set; }
@@ -208,7 +210,9 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public AdjustmentReasonModel AdjustmentReason { get; set; }
         public List<AdjustmentReasonModel> AdjustmentReasons { get; set; }
 
-
+        public Nullable<bool> IsApproved { get; set; }
+        public Nullable<bool> IsVoid { get; set; }
+        public Nullable<bool> IsDeleted { get; set; }
         public string PatientFormatedPhone { get { return FormatPhoneNumber(PatientPhone, ""); } }
 
         //new

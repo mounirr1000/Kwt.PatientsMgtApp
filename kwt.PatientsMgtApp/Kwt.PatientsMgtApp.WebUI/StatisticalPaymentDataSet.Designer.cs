@@ -10,7 +10,7 @@
 
 #pragma warning disable 1591
 
-namespace Kwt.PatientsMgtApp.WebUI.Reports {
+namespace Kwt.PatientsMgtApp.WebUI {
     
     
     /// <summary>
@@ -20,17 +20,17 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
     [global::System.ComponentModel.DesignerCategoryAttribute("code")]
     [global::System.ComponentModel.ToolboxItem(true)]
     [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedDataSetSchema")]
-    [global::System.Xml.Serialization.XmlRootAttribute("PatientDataSet")]
+    [global::System.Xml.Serialization.XmlRootAttribute("StatisticalPaymentDataSet")]
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.DataSet")]
-    public partial class PatientDataSet : global::System.Data.DataSet {
+    public partial class StatisticalPaymentDataSet : global::System.Data.DataSet {
         
-        private GetPatientListReport_SPDataTable tableGetPatientListReport_SP;
+        private GetStatisticalPaymentReport_SPDataTable tableGetStatisticalPaymentReport_SP;
         
         private global::System.Data.SchemaSerializationMode _schemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public PatientDataSet() {
+        public StatisticalPaymentDataSet() {
             this.BeginInit();
             this.InitClass();
             global::System.ComponentModel.CollectionChangeEventHandler schemaChangedHandler = new global::System.ComponentModel.CollectionChangeEventHandler(this.SchemaChanged);
@@ -41,7 +41,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        protected PatientDataSet(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+        protected StatisticalPaymentDataSet(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                 base(info, context, false) {
             if ((this.IsBinarySerialized(info, context) == true)) {
                 this.InitVars(false);
@@ -54,8 +54,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             if ((this.DetermineSchemaSerializationMode(info, context) == global::System.Data.SchemaSerializationMode.IncludeSchema)) {
                 global::System.Data.DataSet ds = new global::System.Data.DataSet();
                 ds.ReadXmlSchema(new global::System.Xml.XmlTextReader(new global::System.IO.StringReader(strSchema)));
-                if ((ds.Tables["GetPatientListReport_SP"] != null)) {
-                    base.Tables.Add(new GetPatientListReport_SPDataTable(ds.Tables["GetPatientListReport_SP"]));
+                if ((ds.Tables["GetStatisticalPaymentReport_SP"] != null)) {
+                    base.Tables.Add(new GetStatisticalPaymentReport_SPDataTable(ds.Tables["GetStatisticalPaymentReport_SP"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -79,9 +79,9 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Browsable(false)]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public GetPatientListReport_SPDataTable GetPatientListReport_SP {
+        public GetStatisticalPaymentReport_SPDataTable GetStatisticalPaymentReport_SP {
             get {
-                return this.tableGetPatientListReport_SP;
+                return this.tableGetStatisticalPaymentReport_SP;
             }
         }
         
@@ -127,7 +127,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         public override global::System.Data.DataSet Clone() {
-            PatientDataSet cln = ((PatientDataSet)(base.Clone()));
+            StatisticalPaymentDataSet cln = ((StatisticalPaymentDataSet)(base.Clone()));
             cln.InitVars();
             cln.SchemaSerializationMode = this.SchemaSerializationMode;
             return cln;
@@ -152,8 +152,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
                 this.Reset();
                 global::System.Data.DataSet ds = new global::System.Data.DataSet();
                 ds.ReadXml(reader);
-                if ((ds.Tables["GetPatientListReport_SP"] != null)) {
-                    base.Tables.Add(new GetPatientListReport_SPDataTable(ds.Tables["GetPatientListReport_SP"]));
+                if ((ds.Tables["GetStatisticalPaymentReport_SP"] != null)) {
+                    base.Tables.Add(new GetStatisticalPaymentReport_SPDataTable(ds.Tables["GetStatisticalPaymentReport_SP"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -188,10 +188,10 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         internal void InitVars(bool initTable) {
-            this.tableGetPatientListReport_SP = ((GetPatientListReport_SPDataTable)(base.Tables["GetPatientListReport_SP"]));
+            this.tableGetStatisticalPaymentReport_SP = ((GetStatisticalPaymentReport_SPDataTable)(base.Tables["GetStatisticalPaymentReport_SP"]));
             if ((initTable == true)) {
-                if ((this.tableGetPatientListReport_SP != null)) {
-                    this.tableGetPatientListReport_SP.InitVars();
+                if ((this.tableGetStatisticalPaymentReport_SP != null)) {
+                    this.tableGetStatisticalPaymentReport_SP.InitVars();
                 }
             }
         }
@@ -199,18 +199,18 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitClass() {
-            this.DataSetName = "PatientDataSet";
+            this.DataSetName = "StatisticalPaymentDataSet";
             this.Prefix = "";
-            this.Namespace = "http://tempuri.org/PatientDataSet.xsd";
+            this.Namespace = "http://tempuri.org/StatisticalPaymentDataSet.xsd";
             this.EnforceConstraints = true;
             this.SchemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
-            this.tableGetPatientListReport_SP = new GetPatientListReport_SPDataTable();
-            base.Tables.Add(this.tableGetPatientListReport_SP);
+            this.tableGetStatisticalPaymentReport_SP = new GetStatisticalPaymentReport_SPDataTable();
+            base.Tables.Add(this.tableGetStatisticalPaymentReport_SP);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        private bool ShouldSerializeGetPatientListReport_SP() {
+        private bool ShouldSerializeGetStatisticalPaymentReport_SP() {
             return false;
         }
         
@@ -225,7 +225,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedDataSetSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
-            PatientDataSet ds = new PatientDataSet();
+            StatisticalPaymentDataSet ds = new StatisticalPaymentDataSet();
             global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
             global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
             global::System.Xml.Schema.XmlSchemaAny any = new global::System.Xml.Schema.XmlSchemaAny();
@@ -270,67 +270,37 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
         }
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public delegate void GetPatientListReport_SPRowChangeEventHandler(object sender, GetPatientListReport_SPRowChangeEvent e);
+        public delegate void GetStatisticalPaymentReport_SPRowChangeEventHandler(object sender, GetStatisticalPaymentReport_SPRowChangeEvent e);
         
         /// <summary>
         ///Represents the strongly named DataTable class.
         ///</summary>
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class GetPatientListReport_SPDataTable : global::System.Data.TypedTableBase<GetPatientListReport_SPRow> {
+        public partial class GetStatisticalPaymentReport_SPDataTable : global::System.Data.TypedTableBase<GetStatisticalPaymentReport_SPRow> {
             
-            private global::System.Data.DataColumn columnid;
+            private global::System.Data.DataColumn columnPaymentDate;
             
-            private global::System.Data.DataColumn columnPatientCID;
+            private global::System.Data.DataColumn columnKfhBank;
             
-            private global::System.Data.DataColumn columnName;
+            private global::System.Data.DataColumn columnOtherBank;
             
-            private global::System.Data.DataColumn columnKWTphone;
+            private global::System.Data.DataColumn columnSubTotal;
             
-            private global::System.Data.DataColumn columnUSphone;
+            private global::System.Data.DataColumn columnRejected;
             
-            private global::System.Data.DataColumn columnFirstApptDate;
+            private global::System.Data.DataColumn columnDAAgency;
             
-            private global::System.Data.DataColumn columnEndTreatDate;
+            private global::System.Data.DataColumn columnOtherAgencies;
             
-            private global::System.Data.DataColumn columnIsActive;
+            private global::System.Data.DataColumn columnTotalDeduction;
             
-            private global::System.Data.DataColumn columnIsBeneficiary;
-            
-            private global::System.Data.DataColumn columnBankCode;
-            
-            private global::System.Data.DataColumn columnBankName;
-            
-            private global::System.Data.DataColumn columnIban;
-            
-            private global::System.Data.DataColumn columnAgency;
-            
-            private global::System.Data.DataColumn columnDoctor;
-            
-            private global::System.Data.DataColumn columnSpecialty;
-            
-            private global::System.Data.DataColumn columnDiagnosis;
-            
-            private global::System.Data.DataColumn columnHospital;
-            
-            private global::System.Data.DataColumn columnNotes;
-            
-            private global::System.Data.DataColumn columnCreatedDate;
-            
-            private global::System.Data.DataColumn columnCreatedBy;
-            
-            private global::System.Data.DataColumn columnModifiedDate;
-            
-            private global::System.Data.DataColumn columnModifiedBy;
-            
-            private global::System.Data.DataColumn columnIsDead;
-            
-            private global::System.Data.DataColumn columnDeathDate;
+            private global::System.Data.DataColumn columnFinalTotal;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public GetPatientListReport_SPDataTable() {
-                this.TableName = "GetPatientListReport_SP";
+            public GetStatisticalPaymentReport_SPDataTable() {
+                this.TableName = "GetStatisticalPaymentReport_SP";
                 this.BeginInit();
                 this.InitClass();
                 this.EndInit();
@@ -338,7 +308,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            internal GetPatientListReport_SPDataTable(global::System.Data.DataTable table) {
+            internal GetStatisticalPaymentReport_SPDataTable(global::System.Data.DataTable table) {
                 this.TableName = table.TableName;
                 if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
                     this.CaseSensitive = table.CaseSensitive;
@@ -355,200 +325,80 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            protected GetPatientListReport_SPDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+            protected GetStatisticalPaymentReport_SPDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn idColumn {
+            public global::System.Data.DataColumn PaymentDateColumn {
                 get {
-                    return this.columnid;
+                    return this.columnPaymentDate;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn PatientCIDColumn {
+            public global::System.Data.DataColumn KfhBankColumn {
                 get {
-                    return this.columnPatientCID;
+                    return this.columnKfhBank;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn NameColumn {
+            public global::System.Data.DataColumn OtherBankColumn {
                 get {
-                    return this.columnName;
+                    return this.columnOtherBank;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn KWTphoneColumn {
+            public global::System.Data.DataColumn SubTotalColumn {
                 get {
-                    return this.columnKWTphone;
+                    return this.columnSubTotal;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn USphoneColumn {
+            public global::System.Data.DataColumn RejectedColumn {
                 get {
-                    return this.columnUSphone;
+                    return this.columnRejected;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn FirstApptDateColumn {
+            public global::System.Data.DataColumn DAAgencyColumn {
                 get {
-                    return this.columnFirstApptDate;
+                    return this.columnDAAgency;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn EndTreatDateColumn {
+            public global::System.Data.DataColumn OtherAgenciesColumn {
                 get {
-                    return this.columnEndTreatDate;
+                    return this.columnOtherAgencies;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn IsActiveColumn {
+            public global::System.Data.DataColumn TotalDeductionColumn {
                 get {
-                    return this.columnIsActive;
+                    return this.columnTotalDeduction;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn IsBeneficiaryColumn {
+            public global::System.Data.DataColumn FinalTotalColumn {
                 get {
-                    return this.columnIsBeneficiary;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn BankCodeColumn {
-                get {
-                    return this.columnBankCode;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn BankNameColumn {
-                get {
-                    return this.columnBankName;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn IbanColumn {
-                get {
-                    return this.columnIban;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn AgencyColumn {
-                get {
-                    return this.columnAgency;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn DoctorColumn {
-                get {
-                    return this.columnDoctor;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn SpecialtyColumn {
-                get {
-                    return this.columnSpecialty;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn DiagnosisColumn {
-                get {
-                    return this.columnDiagnosis;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn HospitalColumn {
-                get {
-                    return this.columnHospital;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn NotesColumn {
-                get {
-                    return this.columnNotes;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn CreatedDateColumn {
-                get {
-                    return this.columnCreatedDate;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn CreatedByColumn {
-                get {
-                    return this.columnCreatedBy;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn ModifiedDateColumn {
-                get {
-                    return this.columnModifiedDate;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn ModifiedByColumn {
-                get {
-                    return this.columnModifiedBy;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn IsDeadColumn {
-                get {
-                    return this.columnIsDead;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn DeathDateColumn {
-                get {
-                    return this.columnDeathDate;
+                    return this.columnFinalTotal;
                 }
             }
             
@@ -563,98 +413,53 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public GetPatientListReport_SPRow this[int index] {
+            public GetStatisticalPaymentReport_SPRow this[int index] {
                 get {
-                    return ((GetPatientListReport_SPRow)(this.Rows[index]));
+                    return ((GetStatisticalPaymentReport_SPRow)(this.Rows[index]));
                 }
             }
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event GetPatientListReport_SPRowChangeEventHandler GetPatientListReport_SPRowChanging;
+            public event GetStatisticalPaymentReport_SPRowChangeEventHandler GetStatisticalPaymentReport_SPRowChanging;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event GetPatientListReport_SPRowChangeEventHandler GetPatientListReport_SPRowChanged;
+            public event GetStatisticalPaymentReport_SPRowChangeEventHandler GetStatisticalPaymentReport_SPRowChanged;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event GetPatientListReport_SPRowChangeEventHandler GetPatientListReport_SPRowDeleting;
+            public event GetStatisticalPaymentReport_SPRowChangeEventHandler GetStatisticalPaymentReport_SPRowDeleting;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event GetPatientListReport_SPRowChangeEventHandler GetPatientListReport_SPRowDeleted;
+            public event GetStatisticalPaymentReport_SPRowChangeEventHandler GetStatisticalPaymentReport_SPRowDeleted;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void AddGetPatientListReport_SPRow(GetPatientListReport_SPRow row) {
+            public void AddGetStatisticalPaymentReport_SPRow(GetStatisticalPaymentReport_SPRow row) {
                 this.Rows.Add(row);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public GetPatientListReport_SPRow AddGetPatientListReport_SPRow(
-                        string PatientCID, 
-                        string Name, 
-                        string KWTphone, 
-                        string USphone, 
-                        System.DateTime FirstApptDate, 
-                        System.DateTime EndTreatDate, 
-                        string IsActive, 
-                        string IsBeneficiary, 
-                        string BankCode, 
-                        string BankName, 
-                        string Iban, 
-                        string Agency, 
-                        string Doctor, 
-                        string Specialty, 
-                        string Diagnosis, 
-                        string Hospital, 
-                        string Notes, 
-                        System.DateTime CreatedDate, 
-                        string CreatedBy, 
-                        System.DateTime ModifiedDate, 
-                        string ModifiedBy, 
-                        string IsDead, 
-                        System.DateTime DeathDate) {
-                GetPatientListReport_SPRow rowGetPatientListReport_SPRow = ((GetPatientListReport_SPRow)(this.NewRow()));
+            public GetStatisticalPaymentReport_SPRow AddGetStatisticalPaymentReport_SPRow(System.DateTime PaymentDate, decimal KfhBank, decimal OtherBank, decimal SubTotal, decimal Rejected, decimal DAAgency, decimal OtherAgencies, decimal TotalDeduction, decimal FinalTotal) {
+                GetStatisticalPaymentReport_SPRow rowGetStatisticalPaymentReport_SPRow = ((GetStatisticalPaymentReport_SPRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
-                        null,
-                        PatientCID,
-                        Name,
-                        KWTphone,
-                        USphone,
-                        FirstApptDate,
-                        EndTreatDate,
-                        IsActive,
-                        IsBeneficiary,
-                        BankCode,
-                        BankName,
-                        Iban,
-                        Agency,
-                        Doctor,
-                        Specialty,
-                        Diagnosis,
-                        Hospital,
-                        Notes,
-                        CreatedDate,
-                        CreatedBy,
-                        ModifiedDate,
-                        ModifiedBy,
-                        IsDead,
-                        DeathDate};
-                rowGetPatientListReport_SPRow.ItemArray = columnValuesArray;
-                this.Rows.Add(rowGetPatientListReport_SPRow);
-                return rowGetPatientListReport_SPRow;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public GetPatientListReport_SPRow FindByPatientCID(string PatientCID) {
-                return ((GetPatientListReport_SPRow)(this.Rows.Find(new object[] {
-                            PatientCID})));
+                        PaymentDate,
+                        KfhBank,
+                        OtherBank,
+                        SubTotal,
+                        Rejected,
+                        DAAgency,
+                        OtherAgencies,
+                        TotalDeduction,
+                        FinalTotal};
+                rowGetStatisticalPaymentReport_SPRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowGetStatisticalPaymentReport_SPRow);
+                return rowGetStatisticalPaymentReport_SPRow;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public override global::System.Data.DataTable Clone() {
-                GetPatientListReport_SPDataTable cln = ((GetPatientListReport_SPDataTable)(base.Clone()));
+                GetStatisticalPaymentReport_SPDataTable cln = ((GetStatisticalPaymentReport_SPDataTable)(base.Clone()));
                 cln.InitVars();
                 return cln;
             }
@@ -662,147 +467,70 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Data.DataTable CreateInstance() {
-                return new GetPatientListReport_SPDataTable();
+                return new GetStatisticalPaymentReport_SPDataTable();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             internal void InitVars() {
-                this.columnid = base.Columns["id"];
-                this.columnPatientCID = base.Columns["PatientCID"];
-                this.columnName = base.Columns["Name"];
-                this.columnKWTphone = base.Columns["KWTphone"];
-                this.columnUSphone = base.Columns["USphone"];
-                this.columnFirstApptDate = base.Columns["FirstApptDate"];
-                this.columnEndTreatDate = base.Columns["EndTreatDate"];
-                this.columnIsActive = base.Columns["IsActive"];
-                this.columnIsBeneficiary = base.Columns["IsBeneficiary"];
-                this.columnBankCode = base.Columns["BankCode"];
-                this.columnBankName = base.Columns["BankName"];
-                this.columnIban = base.Columns["Iban"];
-                this.columnAgency = base.Columns["Agency"];
-                this.columnDoctor = base.Columns["Doctor"];
-                this.columnSpecialty = base.Columns["Specialty"];
-                this.columnDiagnosis = base.Columns["Diagnosis"];
-                this.columnHospital = base.Columns["Hospital"];
-                this.columnNotes = base.Columns["Notes"];
-                this.columnCreatedDate = base.Columns["CreatedDate"];
-                this.columnCreatedBy = base.Columns["CreatedBy"];
-                this.columnModifiedDate = base.Columns["ModifiedDate"];
-                this.columnModifiedBy = base.Columns["ModifiedBy"];
-                this.columnIsDead = base.Columns["IsDead"];
-                this.columnDeathDate = base.Columns["DeathDate"];
+                this.columnPaymentDate = base.Columns["PaymentDate"];
+                this.columnKfhBank = base.Columns["KfhBank"];
+                this.columnOtherBank = base.Columns["OtherBank"];
+                this.columnSubTotal = base.Columns["SubTotal"];
+                this.columnRejected = base.Columns["Rejected"];
+                this.columnDAAgency = base.Columns["DAAgency"];
+                this.columnOtherAgencies = base.Columns["OtherAgencies"];
+                this.columnTotalDeduction = base.Columns["TotalDeduction"];
+                this.columnFinalTotal = base.Columns["FinalTotal"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             private void InitClass() {
-                this.columnid = new global::System.Data.DataColumn("id", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnid);
-                this.columnPatientCID = new global::System.Data.DataColumn("PatientCID", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnPatientCID);
-                this.columnName = new global::System.Data.DataColumn("Name", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnName);
-                this.columnKWTphone = new global::System.Data.DataColumn("KWTphone", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnKWTphone);
-                this.columnUSphone = new global::System.Data.DataColumn("USphone", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnUSphone);
-                this.columnFirstApptDate = new global::System.Data.DataColumn("FirstApptDate", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnFirstApptDate);
-                this.columnEndTreatDate = new global::System.Data.DataColumn("EndTreatDate", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnEndTreatDate);
-                this.columnIsActive = new global::System.Data.DataColumn("IsActive", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnIsActive);
-                this.columnIsBeneficiary = new global::System.Data.DataColumn("IsBeneficiary", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnIsBeneficiary);
-                this.columnBankCode = new global::System.Data.DataColumn("BankCode", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnBankCode);
-                this.columnBankName = new global::System.Data.DataColumn("BankName", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnBankName);
-                this.columnIban = new global::System.Data.DataColumn("Iban", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnIban);
-                this.columnAgency = new global::System.Data.DataColumn("Agency", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnAgency);
-                this.columnDoctor = new global::System.Data.DataColumn("Doctor", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnDoctor);
-                this.columnSpecialty = new global::System.Data.DataColumn("Specialty", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnSpecialty);
-                this.columnDiagnosis = new global::System.Data.DataColumn("Diagnosis", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnDiagnosis);
-                this.columnHospital = new global::System.Data.DataColumn("Hospital", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnHospital);
-                this.columnNotes = new global::System.Data.DataColumn("Notes", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnNotes);
-                this.columnCreatedDate = new global::System.Data.DataColumn("CreatedDate", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnCreatedDate);
-                this.columnCreatedBy = new global::System.Data.DataColumn("CreatedBy", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnCreatedBy);
-                this.columnModifiedDate = new global::System.Data.DataColumn("ModifiedDate", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnModifiedDate);
-                this.columnModifiedBy = new global::System.Data.DataColumn("ModifiedBy", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnModifiedBy);
-                this.columnIsDead = new global::System.Data.DataColumn("IsDead", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnIsDead);
-                this.columnDeathDate = new global::System.Data.DataColumn("DeathDate", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnDeathDate);
-                this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
-                                this.columnPatientCID}, true));
-                this.columnid.AutoIncrement = true;
-                this.columnid.AutoIncrementSeed = -1;
-                this.columnid.AutoIncrementStep = -1;
-                this.columnid.AllowDBNull = false;
-                this.columnid.ReadOnly = true;
-                this.columnPatientCID.AllowDBNull = false;
-                this.columnPatientCID.Unique = true;
-                this.columnPatientCID.MaxLength = 12;
-                this.columnName.ReadOnly = true;
-                this.columnName.MaxLength = 152;
-                this.columnKWTphone.MaxLength = 15;
-                this.columnUSphone.MaxLength = 15;
-                this.columnIsActive.ReadOnly = true;
-                this.columnIsActive.MaxLength = 3;
-                this.columnIsBeneficiary.ReadOnly = true;
-                this.columnIsBeneficiary.MaxLength = 3;
-                this.columnBankCode.MaxLength = 3;
-                this.columnBankName.MaxLength = 50;
-                this.columnIban.MaxLength = 50;
-                this.columnAgency.MaxLength = 50;
-                this.columnDoctor.MaxLength = 50;
-                this.columnSpecialty.MaxLength = 100;
-                this.columnDiagnosis.MaxLength = 250;
-                this.columnHospital.MaxLength = 50;
-                this.columnNotes.MaxLength = 250;
-                this.columnCreatedDate.AllowDBNull = false;
-                this.columnCreatedBy.MaxLength = 50;
-                this.columnModifiedBy.MaxLength = 50;
-                this.columnIsDead.ReadOnly = true;
-                this.columnIsDead.MaxLength = 3;
+                this.columnPaymentDate = new global::System.Data.DataColumn("PaymentDate", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPaymentDate);
+                this.columnKfhBank = new global::System.Data.DataColumn("KfhBank", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnKfhBank);
+                this.columnOtherBank = new global::System.Data.DataColumn("OtherBank", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnOtherBank);
+                this.columnSubTotal = new global::System.Data.DataColumn("SubTotal", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSubTotal);
+                this.columnRejected = new global::System.Data.DataColumn("Rejected", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnRejected);
+                this.columnDAAgency = new global::System.Data.DataColumn("DAAgency", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnDAAgency);
+                this.columnOtherAgencies = new global::System.Data.DataColumn("OtherAgencies", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnOtherAgencies);
+                this.columnTotalDeduction = new global::System.Data.DataColumn("TotalDeduction", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnTotalDeduction);
+                this.columnFinalTotal = new global::System.Data.DataColumn("FinalTotal", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnFinalTotal);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public GetPatientListReport_SPRow NewGetPatientListReport_SPRow() {
-                return ((GetPatientListReport_SPRow)(this.NewRow()));
+            public GetStatisticalPaymentReport_SPRow NewGetStatisticalPaymentReport_SPRow() {
+                return ((GetStatisticalPaymentReport_SPRow)(this.NewRow()));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new GetPatientListReport_SPRow(builder);
+                return new GetStatisticalPaymentReport_SPRow(builder);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Type GetRowType() {
-                return typeof(GetPatientListReport_SPRow);
+                return typeof(GetStatisticalPaymentReport_SPRow);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanged(e);
-                if ((this.GetPatientListReport_SPRowChanged != null)) {
-                    this.GetPatientListReport_SPRowChanged(this, new GetPatientListReport_SPRowChangeEvent(((GetPatientListReport_SPRow)(e.Row)), e.Action));
+                if ((this.GetStatisticalPaymentReport_SPRowChanged != null)) {
+                    this.GetStatisticalPaymentReport_SPRowChanged(this, new GetStatisticalPaymentReport_SPRowChangeEvent(((GetStatisticalPaymentReport_SPRow)(e.Row)), e.Action));
                 }
             }
             
@@ -810,8 +538,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanging(e);
-                if ((this.GetPatientListReport_SPRowChanging != null)) {
-                    this.GetPatientListReport_SPRowChanging(this, new GetPatientListReport_SPRowChangeEvent(((GetPatientListReport_SPRow)(e.Row)), e.Action));
+                if ((this.GetStatisticalPaymentReport_SPRowChanging != null)) {
+                    this.GetStatisticalPaymentReport_SPRowChanging(this, new GetStatisticalPaymentReport_SPRowChangeEvent(((GetStatisticalPaymentReport_SPRow)(e.Row)), e.Action));
                 }
             }
             
@@ -819,8 +547,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleted(e);
-                if ((this.GetPatientListReport_SPRowDeleted != null)) {
-                    this.GetPatientListReport_SPRowDeleted(this, new GetPatientListReport_SPRowChangeEvent(((GetPatientListReport_SPRow)(e.Row)), e.Action));
+                if ((this.GetStatisticalPaymentReport_SPRowDeleted != null)) {
+                    this.GetStatisticalPaymentReport_SPRowDeleted(this, new GetStatisticalPaymentReport_SPRowChangeEvent(((GetStatisticalPaymentReport_SPRow)(e.Row)), e.Action));
                 }
             }
             
@@ -828,14 +556,14 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleting(e);
-                if ((this.GetPatientListReport_SPRowDeleting != null)) {
-                    this.GetPatientListReport_SPRowDeleting(this, new GetPatientListReport_SPRowChangeEvent(((GetPatientListReport_SPRow)(e.Row)), e.Action));
+                if ((this.GetStatisticalPaymentReport_SPRowDeleting != null)) {
+                    this.GetStatisticalPaymentReport_SPRowDeleting(this, new GetStatisticalPaymentReport_SPRowChangeEvent(((GetStatisticalPaymentReport_SPRow)(e.Row)), e.Action));
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void RemoveGetPatientListReport_SPRow(GetPatientListReport_SPRow row) {
+            public void RemoveGetStatisticalPaymentReport_SPRow(GetStatisticalPaymentReport_SPRow row) {
                 this.Rows.Remove(row);
             }
             
@@ -844,7 +572,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
                 global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
                 global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
-                PatientDataSet ds = new PatientDataSet();
+                StatisticalPaymentDataSet ds = new StatisticalPaymentDataSet();
                 global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
                 any1.Namespace = "http://www.w3.org/2001/XMLSchema";
                 any1.MinOccurs = new decimal(0);
@@ -862,7 +590,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
                 type.Attributes.Add(attribute1);
                 global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
                 attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "GetPatientListReport_SPDataTable";
+                attribute2.FixedValue = "GetStatisticalPaymentReport_SPDataTable";
                 type.Attributes.Add(attribute2);
                 type.Particle = sequence;
                 global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
@@ -906,640 +634,276 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
         /// <summary>
         ///Represents strongly named DataRow class.
         ///</summary>
-        public partial class GetPatientListReport_SPRow : global::System.Data.DataRow {
+        public partial class GetStatisticalPaymentReport_SPRow : global::System.Data.DataRow {
             
-            private GetPatientListReport_SPDataTable tableGetPatientListReport_SP;
+            private GetStatisticalPaymentReport_SPDataTable tableGetStatisticalPaymentReport_SP;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            internal GetPatientListReport_SPRow(global::System.Data.DataRowBuilder rb) : 
+            internal GetStatisticalPaymentReport_SPRow(global::System.Data.DataRowBuilder rb) : 
                     base(rb) {
-                this.tableGetPatientListReport_SP = ((GetPatientListReport_SPDataTable)(this.Table));
+                this.tableGetStatisticalPaymentReport_SP = ((GetStatisticalPaymentReport_SPDataTable)(this.Table));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int id {
-                get {
-                    return ((int)(this[this.tableGetPatientListReport_SP.idColumn]));
-                }
-                set {
-                    this[this.tableGetPatientListReport_SP.idColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string PatientCID {
-                get {
-                    return ((string)(this[this.tableGetPatientListReport_SP.PatientCIDColumn]));
-                }
-                set {
-                    this[this.tableGetPatientListReport_SP.PatientCIDColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string Name {
+            public System.DateTime PaymentDate {
                 get {
                     try {
-                        return ((string)(this[this.tableGetPatientListReport_SP.NameColumn]));
+                        return ((global::System.DateTime)(this[this.tableGetStatisticalPaymentReport_SP.PaymentDateColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Name\' in table \'GetPatientListReport_SP\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'PaymentDate\' in table \'GetStatisticalPaymentReport_SP\' is D" +
+                                "BNull.", e);
                     }
                 }
                 set {
-                    this[this.tableGetPatientListReport_SP.NameColumn] = value;
+                    this[this.tableGetStatisticalPaymentReport_SP.PaymentDateColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string KWTphone {
+            public decimal KfhBank {
                 get {
                     try {
-                        return ((string)(this[this.tableGetPatientListReport_SP.KWTphoneColumn]));
+                        return ((decimal)(this[this.tableGetStatisticalPaymentReport_SP.KfhBankColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'KWTphone\' in table \'GetPatientListReport_SP\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'KfhBank\' in table \'GetStatisticalPaymentReport_SP\' is DBNul" +
+                                "l.", e);
                     }
                 }
                 set {
-                    this[this.tableGetPatientListReport_SP.KWTphoneColumn] = value;
+                    this[this.tableGetStatisticalPaymentReport_SP.KfhBankColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string USphone {
+            public decimal OtherBank {
                 get {
                     try {
-                        return ((string)(this[this.tableGetPatientListReport_SP.USphoneColumn]));
+                        return ((decimal)(this[this.tableGetStatisticalPaymentReport_SP.OtherBankColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'USphone\' in table \'GetPatientListReport_SP\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'OtherBank\' in table \'GetStatisticalPaymentReport_SP\' is DBN" +
+                                "ull.", e);
                     }
                 }
                 set {
-                    this[this.tableGetPatientListReport_SP.USphoneColumn] = value;
+                    this[this.tableGetStatisticalPaymentReport_SP.OtherBankColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public System.DateTime FirstApptDate {
+            public decimal SubTotal {
                 get {
                     try {
-                        return ((global::System.DateTime)(this[this.tableGetPatientListReport_SP.FirstApptDateColumn]));
+                        return ((decimal)(this[this.tableGetStatisticalPaymentReport_SP.SubTotalColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'FirstApptDate\' in table \'GetPatientListReport_SP\' is DBNull" +
-                                ".", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'SubTotal\' in table \'GetStatisticalPaymentReport_SP\' is DBNu" +
+                                "ll.", e);
                     }
                 }
                 set {
-                    this[this.tableGetPatientListReport_SP.FirstApptDateColumn] = value;
+                    this[this.tableGetStatisticalPaymentReport_SP.SubTotalColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public System.DateTime EndTreatDate {
+            public decimal Rejected {
                 get {
                     try {
-                        return ((global::System.DateTime)(this[this.tableGetPatientListReport_SP.EndTreatDateColumn]));
+                        return ((decimal)(this[this.tableGetStatisticalPaymentReport_SP.RejectedColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'EndTreatDate\' in table \'GetPatientListReport_SP\' is DBNull." +
-                                "", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'Rejected\' in table \'GetStatisticalPaymentReport_SP\' is DBNu" +
+                                "ll.", e);
                     }
                 }
                 set {
-                    this[this.tableGetPatientListReport_SP.EndTreatDateColumn] = value;
+                    this[this.tableGetStatisticalPaymentReport_SP.RejectedColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string IsActive {
+            public decimal DAAgency {
                 get {
                     try {
-                        return ((string)(this[this.tableGetPatientListReport_SP.IsActiveColumn]));
+                        return ((decimal)(this[this.tableGetStatisticalPaymentReport_SP.DAAgencyColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'IsActive\' in table \'GetPatientListReport_SP\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'DAAgency\' in table \'GetStatisticalPaymentReport_SP\' is DBNu" +
+                                "ll.", e);
                     }
                 }
                 set {
-                    this[this.tableGetPatientListReport_SP.IsActiveColumn] = value;
+                    this[this.tableGetStatisticalPaymentReport_SP.DAAgencyColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string IsBeneficiary {
+            public decimal OtherAgencies {
                 get {
                     try {
-                        return ((string)(this[this.tableGetPatientListReport_SP.IsBeneficiaryColumn]));
+                        return ((decimal)(this[this.tableGetStatisticalPaymentReport_SP.OtherAgenciesColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'IsBeneficiary\' in table \'GetPatientListReport_SP\' is DBNull" +
-                                ".", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'OtherAgencies\' in table \'GetStatisticalPaymentReport_SP\' is" +
+                                " DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableGetPatientListReport_SP.IsBeneficiaryColumn] = value;
+                    this[this.tableGetStatisticalPaymentReport_SP.OtherAgenciesColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string BankCode {
+            public decimal TotalDeduction {
                 get {
                     try {
-                        return ((string)(this[this.tableGetPatientListReport_SP.BankCodeColumn]));
+                        return ((decimal)(this[this.tableGetStatisticalPaymentReport_SP.TotalDeductionColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'BankCode\' in table \'GetPatientListReport_SP\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'TotalDeduction\' in table \'GetStatisticalPaymentReport_SP\' i" +
+                                "s DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableGetPatientListReport_SP.BankCodeColumn] = value;
+                    this[this.tableGetStatisticalPaymentReport_SP.TotalDeductionColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string BankName {
+            public decimal FinalTotal {
                 get {
                     try {
-                        return ((string)(this[this.tableGetPatientListReport_SP.BankNameColumn]));
+                        return ((decimal)(this[this.tableGetStatisticalPaymentReport_SP.FinalTotalColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'BankName\' in table \'GetPatientListReport_SP\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'FinalTotal\' in table \'GetStatisticalPaymentReport_SP\' is DB" +
+                                "Null.", e);
                     }
                 }
                 set {
-                    this[this.tableGetPatientListReport_SP.BankNameColumn] = value;
+                    this[this.tableGetStatisticalPaymentReport_SP.FinalTotalColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string Iban {
-                get {
-                    try {
-                        return ((string)(this[this.tableGetPatientListReport_SP.IbanColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Iban\' in table \'GetPatientListReport_SP\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableGetPatientListReport_SP.IbanColumn] = value;
-                }
+            public bool IsPaymentDateNull() {
+                return this.IsNull(this.tableGetStatisticalPaymentReport_SP.PaymentDateColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string Agency {
-                get {
-                    try {
-                        return ((string)(this[this.tableGetPatientListReport_SP.AgencyColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Agency\' in table \'GetPatientListReport_SP\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableGetPatientListReport_SP.AgencyColumn] = value;
-                }
+            public void SetPaymentDateNull() {
+                this[this.tableGetStatisticalPaymentReport_SP.PaymentDateColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string Doctor {
-                get {
-                    try {
-                        return ((string)(this[this.tableGetPatientListReport_SP.DoctorColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Doctor\' in table \'GetPatientListReport_SP\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableGetPatientListReport_SP.DoctorColumn] = value;
-                }
+            public bool IsKfhBankNull() {
+                return this.IsNull(this.tableGetStatisticalPaymentReport_SP.KfhBankColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string Specialty {
-                get {
-                    try {
-                        return ((string)(this[this.tableGetPatientListReport_SP.SpecialtyColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Specialty\' in table \'GetPatientListReport_SP\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableGetPatientListReport_SP.SpecialtyColumn] = value;
-                }
+            public void SetKfhBankNull() {
+                this[this.tableGetStatisticalPaymentReport_SP.KfhBankColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string Diagnosis {
-                get {
-                    try {
-                        return ((string)(this[this.tableGetPatientListReport_SP.DiagnosisColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Diagnosis\' in table \'GetPatientListReport_SP\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableGetPatientListReport_SP.DiagnosisColumn] = value;
-                }
+            public bool IsOtherBankNull() {
+                return this.IsNull(this.tableGetStatisticalPaymentReport_SP.OtherBankColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string Hospital {
-                get {
-                    try {
-                        return ((string)(this[this.tableGetPatientListReport_SP.HospitalColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Hospital\' in table \'GetPatientListReport_SP\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableGetPatientListReport_SP.HospitalColumn] = value;
-                }
+            public void SetOtherBankNull() {
+                this[this.tableGetStatisticalPaymentReport_SP.OtherBankColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string Notes {
-                get {
-                    try {
-                        return ((string)(this[this.tableGetPatientListReport_SP.NotesColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Notes\' in table \'GetPatientListReport_SP\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableGetPatientListReport_SP.NotesColumn] = value;
-                }
+            public bool IsSubTotalNull() {
+                return this.IsNull(this.tableGetStatisticalPaymentReport_SP.SubTotalColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public System.DateTime CreatedDate {
-                get {
-                    return ((global::System.DateTime)(this[this.tableGetPatientListReport_SP.CreatedDateColumn]));
-                }
-                set {
-                    this[this.tableGetPatientListReport_SP.CreatedDateColumn] = value;
-                }
+            public void SetSubTotalNull() {
+                this[this.tableGetStatisticalPaymentReport_SP.SubTotalColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string CreatedBy {
-                get {
-                    try {
-                        return ((string)(this[this.tableGetPatientListReport_SP.CreatedByColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'CreatedBy\' in table \'GetPatientListReport_SP\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableGetPatientListReport_SP.CreatedByColumn] = value;
-                }
+            public bool IsRejectedNull() {
+                return this.IsNull(this.tableGetStatisticalPaymentReport_SP.RejectedColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public System.DateTime ModifiedDate {
-                get {
-                    try {
-                        return ((global::System.DateTime)(this[this.tableGetPatientListReport_SP.ModifiedDateColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ModifiedDate\' in table \'GetPatientListReport_SP\' is DBNull." +
-                                "", e);
-                    }
-                }
-                set {
-                    this[this.tableGetPatientListReport_SP.ModifiedDateColumn] = value;
-                }
+            public void SetRejectedNull() {
+                this[this.tableGetStatisticalPaymentReport_SP.RejectedColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string ModifiedBy {
-                get {
-                    try {
-                        return ((string)(this[this.tableGetPatientListReport_SP.ModifiedByColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ModifiedBy\' in table \'GetPatientListReport_SP\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableGetPatientListReport_SP.ModifiedByColumn] = value;
-                }
+            public bool IsDAAgencyNull() {
+                return this.IsNull(this.tableGetStatisticalPaymentReport_SP.DAAgencyColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string IsDead {
-                get {
-                    try {
-                        return ((string)(this[this.tableGetPatientListReport_SP.IsDeadColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'IsDead\' in table \'GetPatientListReport_SP\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableGetPatientListReport_SP.IsDeadColumn] = value;
-                }
+            public void SetDAAgencyNull() {
+                this[this.tableGetStatisticalPaymentReport_SP.DAAgencyColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public System.DateTime DeathDate {
-                get {
-                    try {
-                        return ((global::System.DateTime)(this[this.tableGetPatientListReport_SP.DeathDateColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'DeathDate\' in table \'GetPatientListReport_SP\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableGetPatientListReport_SP.DeathDateColumn] = value;
-                }
+            public bool IsOtherAgenciesNull() {
+                return this.IsNull(this.tableGetStatisticalPaymentReport_SP.OtherAgenciesColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsNameNull() {
-                return this.IsNull(this.tableGetPatientListReport_SP.NameColumn);
+            public void SetOtherAgenciesNull() {
+                this[this.tableGetStatisticalPaymentReport_SP.OtherAgenciesColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetNameNull() {
-                this[this.tableGetPatientListReport_SP.NameColumn] = global::System.Convert.DBNull;
+            public bool IsTotalDeductionNull() {
+                return this.IsNull(this.tableGetStatisticalPaymentReport_SP.TotalDeductionColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsKWTphoneNull() {
-                return this.IsNull(this.tableGetPatientListReport_SP.KWTphoneColumn);
+            public void SetTotalDeductionNull() {
+                this[this.tableGetStatisticalPaymentReport_SP.TotalDeductionColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetKWTphoneNull() {
-                this[this.tableGetPatientListReport_SP.KWTphoneColumn] = global::System.Convert.DBNull;
+            public bool IsFinalTotalNull() {
+                return this.IsNull(this.tableGetStatisticalPaymentReport_SP.FinalTotalColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsUSphoneNull() {
-                return this.IsNull(this.tableGetPatientListReport_SP.USphoneColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetUSphoneNull() {
-                this[this.tableGetPatientListReport_SP.USphoneColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsFirstApptDateNull() {
-                return this.IsNull(this.tableGetPatientListReport_SP.FirstApptDateColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetFirstApptDateNull() {
-                this[this.tableGetPatientListReport_SP.FirstApptDateColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsEndTreatDateNull() {
-                return this.IsNull(this.tableGetPatientListReport_SP.EndTreatDateColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetEndTreatDateNull() {
-                this[this.tableGetPatientListReport_SP.EndTreatDateColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsIsActiveNull() {
-                return this.IsNull(this.tableGetPatientListReport_SP.IsActiveColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetIsActiveNull() {
-                this[this.tableGetPatientListReport_SP.IsActiveColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsIsBeneficiaryNull() {
-                return this.IsNull(this.tableGetPatientListReport_SP.IsBeneficiaryColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetIsBeneficiaryNull() {
-                this[this.tableGetPatientListReport_SP.IsBeneficiaryColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsBankCodeNull() {
-                return this.IsNull(this.tableGetPatientListReport_SP.BankCodeColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetBankCodeNull() {
-                this[this.tableGetPatientListReport_SP.BankCodeColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsBankNameNull() {
-                return this.IsNull(this.tableGetPatientListReport_SP.BankNameColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetBankNameNull() {
-                this[this.tableGetPatientListReport_SP.BankNameColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsIbanNull() {
-                return this.IsNull(this.tableGetPatientListReport_SP.IbanColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetIbanNull() {
-                this[this.tableGetPatientListReport_SP.IbanColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsAgencyNull() {
-                return this.IsNull(this.tableGetPatientListReport_SP.AgencyColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetAgencyNull() {
-                this[this.tableGetPatientListReport_SP.AgencyColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsDoctorNull() {
-                return this.IsNull(this.tableGetPatientListReport_SP.DoctorColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetDoctorNull() {
-                this[this.tableGetPatientListReport_SP.DoctorColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsSpecialtyNull() {
-                return this.IsNull(this.tableGetPatientListReport_SP.SpecialtyColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetSpecialtyNull() {
-                this[this.tableGetPatientListReport_SP.SpecialtyColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsDiagnosisNull() {
-                return this.IsNull(this.tableGetPatientListReport_SP.DiagnosisColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetDiagnosisNull() {
-                this[this.tableGetPatientListReport_SP.DiagnosisColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsHospitalNull() {
-                return this.IsNull(this.tableGetPatientListReport_SP.HospitalColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetHospitalNull() {
-                this[this.tableGetPatientListReport_SP.HospitalColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsNotesNull() {
-                return this.IsNull(this.tableGetPatientListReport_SP.NotesColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetNotesNull() {
-                this[this.tableGetPatientListReport_SP.NotesColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsCreatedByNull() {
-                return this.IsNull(this.tableGetPatientListReport_SP.CreatedByColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetCreatedByNull() {
-                this[this.tableGetPatientListReport_SP.CreatedByColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsModifiedDateNull() {
-                return this.IsNull(this.tableGetPatientListReport_SP.ModifiedDateColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetModifiedDateNull() {
-                this[this.tableGetPatientListReport_SP.ModifiedDateColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsModifiedByNull() {
-                return this.IsNull(this.tableGetPatientListReport_SP.ModifiedByColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetModifiedByNull() {
-                this[this.tableGetPatientListReport_SP.ModifiedByColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsIsDeadNull() {
-                return this.IsNull(this.tableGetPatientListReport_SP.IsDeadColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetIsDeadNull() {
-                this[this.tableGetPatientListReport_SP.IsDeadColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsDeathDateNull() {
-                return this.IsNull(this.tableGetPatientListReport_SP.DeathDateColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetDeathDateNull() {
-                this[this.tableGetPatientListReport_SP.DeathDateColumn] = global::System.Convert.DBNull;
+            public void SetFinalTotalNull() {
+                this[this.tableGetStatisticalPaymentReport_SP.FinalTotalColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -1547,22 +911,22 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public class GetPatientListReport_SPRowChangeEvent : global::System.EventArgs {
+        public class GetStatisticalPaymentReport_SPRowChangeEvent : global::System.EventArgs {
             
-            private GetPatientListReport_SPRow eventRow;
+            private GetStatisticalPaymentReport_SPRow eventRow;
             
             private global::System.Data.DataRowAction eventAction;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public GetPatientListReport_SPRowChangeEvent(GetPatientListReport_SPRow row, global::System.Data.DataRowAction action) {
+            public GetStatisticalPaymentReport_SPRowChangeEvent(GetStatisticalPaymentReport_SPRow row, global::System.Data.DataRowAction action) {
                 this.eventRow = row;
                 this.eventAction = action;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public GetPatientListReport_SPRow Row {
+            public GetStatisticalPaymentReport_SPRow Row {
                 get {
                     return this.eventRow;
                 }
@@ -1578,7 +942,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
         }
     }
 }
-namespace Kwt.PatientsMgtApp.WebUI.Reports.PatientDataSetTableAdapters {
+namespace Kwt.PatientsMgtApp.WebUI.StatisticalPaymentDataSetTableAdapters {
     
     
     /// <summary>
@@ -1590,7 +954,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports.PatientDataSetTableAdapters {
     [global::System.ComponentModel.DesignerAttribute("Microsoft.VSDesigner.DataSource.Design.TableAdapterDesigner, Microsoft.VSDesigner" +
         ", Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-    public partial class GetPatientListReport_SPTableAdapter : global::System.ComponentModel.Component {
+    public partial class GetStatisticalPaymentReport_SPTableAdapter : global::System.ComponentModel.Component {
         
         private global::System.Data.SqlClient.SqlDataAdapter _adapter;
         
@@ -1604,7 +968,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports.PatientDataSetTableAdapters {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public GetPatientListReport_SPTableAdapter() {
+        public GetStatisticalPaymentReport_SPTableAdapter() {
             this.ClearBeforeFill = true;
         }
         
@@ -1701,31 +1065,16 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports.PatientDataSetTableAdapters {
             this._adapter = new global::System.Data.SqlClient.SqlDataAdapter();
             global::System.Data.Common.DataTableMapping tableMapping = new global::System.Data.Common.DataTableMapping();
             tableMapping.SourceTable = "Table";
-            tableMapping.DataSetTable = "GetPatientListReport_SP";
-            tableMapping.ColumnMappings.Add("id", "id");
-            tableMapping.ColumnMappings.Add("PatientCID", "PatientCID");
-            tableMapping.ColumnMappings.Add("Name", "Name");
-            tableMapping.ColumnMappings.Add("KWTphone", "KWTphone");
-            tableMapping.ColumnMappings.Add("USphone", "USphone");
-            tableMapping.ColumnMappings.Add("FirstApptDate", "FirstApptDate");
-            tableMapping.ColumnMappings.Add("EndTreatDate", "EndTreatDate");
-            tableMapping.ColumnMappings.Add("IsActive", "IsActive");
-            tableMapping.ColumnMappings.Add("IsBeneficiary", "IsBeneficiary");
-            tableMapping.ColumnMappings.Add("BankCode", "BankCode");
-            tableMapping.ColumnMappings.Add("BankName", "BankName");
-            tableMapping.ColumnMappings.Add("Iban", "Iban");
-            tableMapping.ColumnMappings.Add("Agency", "Agency");
-            tableMapping.ColumnMappings.Add("Doctor", "Doctor");
-            tableMapping.ColumnMappings.Add("Specialty", "Specialty");
-            tableMapping.ColumnMappings.Add("Diagnosis", "Diagnosis");
-            tableMapping.ColumnMappings.Add("Hospital", "Hospital");
-            tableMapping.ColumnMappings.Add("Notes", "Notes");
-            tableMapping.ColumnMappings.Add("CreatedDate", "CreatedDate");
-            tableMapping.ColumnMappings.Add("CreatedBy", "CreatedBy");
-            tableMapping.ColumnMappings.Add("ModifiedDate", "ModifiedDate");
-            tableMapping.ColumnMappings.Add("ModifiedBy", "ModifiedBy");
-            tableMapping.ColumnMappings.Add("IsDead", "IsDead");
-            tableMapping.ColumnMappings.Add("DeathDate", "DeathDate");
+            tableMapping.DataSetTable = "GetStatisticalPaymentReport_SP";
+            tableMapping.ColumnMappings.Add("PaymentDate", "PaymentDate");
+            tableMapping.ColumnMappings.Add("KfhBank", "KfhBank");
+            tableMapping.ColumnMappings.Add("OtherBank", "OtherBank");
+            tableMapping.ColumnMappings.Add("SubTotal", "SubTotal");
+            tableMapping.ColumnMappings.Add("Rejected", "Rejected");
+            tableMapping.ColumnMappings.Add("DAAgency", "DAAgency");
+            tableMapping.ColumnMappings.Add("OtherAgencies", "OtherAgencies");
+            tableMapping.ColumnMappings.Add("TotalDeduction", "TotalDeduction");
+            tableMapping.ColumnMappings.Add("FinalTotal", "FinalTotal");
             this._adapter.TableMappings.Add(tableMapping);
         }
         
@@ -1742,72 +1091,44 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports.PatientDataSetTableAdapters {
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = "dbo.GetPatientListReport_SP";
+            this._commandCollection[0].CommandText = "dbo.GetStatisticalPaymentReport_SP";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.StoredProcedure;
             this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@RETURN_VALUE", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.ReturnValue, 10, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@pCid", global::System.Data.SqlDbType.NVarChar, 12, global::System.Data.ParameterDirection.Input, 0, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@hospital", global::System.Data.SqlDbType.NVarChar, 50, global::System.Data.ParameterDirection.Input, 0, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@doctor", global::System.Data.SqlDbType.NVarChar, 50, global::System.Data.ParameterDirection.Input, 0, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@status", global::System.Data.SqlDbType.Bit, 1, global::System.Data.ParameterDirection.Input, 1, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@speciality", global::System.Data.SqlDbType.NVarChar, 100, global::System.Data.ParameterDirection.Input, 0, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@startDate", global::System.Data.SqlDbType.Date, 3, global::System.Data.ParameterDirection.Input, 10, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@endDate", global::System.Data.SqlDbType.Date, 3, global::System.Data.ParameterDirection.Input, 10, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@isDead", global::System.Data.SqlDbType.Bit, 1, global::System.Data.ParameterDirection.Input, 1, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@bankId", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 10, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@agency", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 10, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, true)]
-        public virtual int Fill(PatientDataSet.GetPatientListReport_SPDataTable dataTable, string pCid, string hospital, string doctor, global::System.Nullable<bool> status, string speciality, global::System.Nullable<global::System.DateTime> startDate, global::System.Nullable<global::System.DateTime> endDate, global::System.Nullable<bool> isDead) {
+        public virtual int Fill(StatisticalPaymentDataSet.GetStatisticalPaymentReport_SPDataTable dataTable, global::System.Nullable<global::System.DateTime> startDate, global::System.Nullable<global::System.DateTime> endDate, global::System.Nullable<int> bankId, global::System.Nullable<int> agency) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
-            if ((pCid == null)) {
+            if ((startDate.HasValue == true)) {
+                this.Adapter.SelectCommand.Parameters[1].Value = ((System.DateTime)(startDate.Value));
+            }
+            else {
                 this.Adapter.SelectCommand.Parameters[1].Value = global::System.DBNull.Value;
             }
-            else {
-                this.Adapter.SelectCommand.Parameters[1].Value = ((string)(pCid));
+            if ((endDate.HasValue == true)) {
+                this.Adapter.SelectCommand.Parameters[2].Value = ((System.DateTime)(endDate.Value));
             }
-            if ((hospital == null)) {
+            else {
                 this.Adapter.SelectCommand.Parameters[2].Value = global::System.DBNull.Value;
             }
-            else {
-                this.Adapter.SelectCommand.Parameters[2].Value = ((string)(hospital));
+            if ((bankId.HasValue == true)) {
+                this.Adapter.SelectCommand.Parameters[3].Value = ((int)(bankId.Value));
             }
-            if ((doctor == null)) {
+            else {
                 this.Adapter.SelectCommand.Parameters[3].Value = global::System.DBNull.Value;
             }
-            else {
-                this.Adapter.SelectCommand.Parameters[3].Value = ((string)(doctor));
-            }
-            if ((status.HasValue == true)) {
-                this.Adapter.SelectCommand.Parameters[4].Value = ((bool)(status.Value));
+            if ((agency.HasValue == true)) {
+                this.Adapter.SelectCommand.Parameters[4].Value = ((int)(agency.Value));
             }
             else {
                 this.Adapter.SelectCommand.Parameters[4].Value = global::System.DBNull.Value;
-            }
-            if ((speciality == null)) {
-                this.Adapter.SelectCommand.Parameters[5].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.SelectCommand.Parameters[5].Value = ((string)(speciality));
-            }
-            if ((startDate.HasValue == true)) {
-                this.Adapter.SelectCommand.Parameters[6].Value = ((System.DateTime)(startDate.Value));
-            }
-            else {
-                this.Adapter.SelectCommand.Parameters[6].Value = global::System.DBNull.Value;
-            }
-            if ((endDate.HasValue == true)) {
-                this.Adapter.SelectCommand.Parameters[7].Value = ((System.DateTime)(endDate.Value));
-            }
-            else {
-                this.Adapter.SelectCommand.Parameters[7].Value = global::System.DBNull.Value;
-            }
-            if ((isDead.HasValue == true)) {
-                this.Adapter.SelectCommand.Parameters[8].Value = ((bool)(isDead.Value));
-            }
-            else {
-                this.Adapter.SelectCommand.Parameters[8].Value = global::System.DBNull.Value;
             }
             if ((this.ClearBeforeFill == true)) {
                 dataTable.Clear();
@@ -1820,57 +1141,33 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports.PatientDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
-        public virtual PatientDataSet.GetPatientListReport_SPDataTable GetPatientListData(string pCid, string hospital, string doctor, global::System.Nullable<bool> status, string speciality, global::System.Nullable<global::System.DateTime> startDate, global::System.Nullable<global::System.DateTime> endDate, global::System.Nullable<bool> isDead) {
+        public virtual StatisticalPaymentDataSet.GetStatisticalPaymentReport_SPDataTable GetData(global::System.Nullable<global::System.DateTime> startDate, global::System.Nullable<global::System.DateTime> endDate, global::System.Nullable<int> bankId, global::System.Nullable<int> agency) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
-            if ((pCid == null)) {
+            if ((startDate.HasValue == true)) {
+                this.Adapter.SelectCommand.Parameters[1].Value = ((System.DateTime)(startDate.Value));
+            }
+            else {
                 this.Adapter.SelectCommand.Parameters[1].Value = global::System.DBNull.Value;
             }
-            else {
-                this.Adapter.SelectCommand.Parameters[1].Value = ((string)(pCid));
+            if ((endDate.HasValue == true)) {
+                this.Adapter.SelectCommand.Parameters[2].Value = ((System.DateTime)(endDate.Value));
             }
-            if ((hospital == null)) {
+            else {
                 this.Adapter.SelectCommand.Parameters[2].Value = global::System.DBNull.Value;
             }
-            else {
-                this.Adapter.SelectCommand.Parameters[2].Value = ((string)(hospital));
+            if ((bankId.HasValue == true)) {
+                this.Adapter.SelectCommand.Parameters[3].Value = ((int)(bankId.Value));
             }
-            if ((doctor == null)) {
+            else {
                 this.Adapter.SelectCommand.Parameters[3].Value = global::System.DBNull.Value;
             }
-            else {
-                this.Adapter.SelectCommand.Parameters[3].Value = ((string)(doctor));
-            }
-            if ((status.HasValue == true)) {
-                this.Adapter.SelectCommand.Parameters[4].Value = ((bool)(status.Value));
+            if ((agency.HasValue == true)) {
+                this.Adapter.SelectCommand.Parameters[4].Value = ((int)(agency.Value));
             }
             else {
                 this.Adapter.SelectCommand.Parameters[4].Value = global::System.DBNull.Value;
             }
-            if ((speciality == null)) {
-                this.Adapter.SelectCommand.Parameters[5].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.SelectCommand.Parameters[5].Value = ((string)(speciality));
-            }
-            if ((startDate.HasValue == true)) {
-                this.Adapter.SelectCommand.Parameters[6].Value = ((System.DateTime)(startDate.Value));
-            }
-            else {
-                this.Adapter.SelectCommand.Parameters[6].Value = global::System.DBNull.Value;
-            }
-            if ((endDate.HasValue == true)) {
-                this.Adapter.SelectCommand.Parameters[7].Value = ((System.DateTime)(endDate.Value));
-            }
-            else {
-                this.Adapter.SelectCommand.Parameters[7].Value = global::System.DBNull.Value;
-            }
-            if ((isDead.HasValue == true)) {
-                this.Adapter.SelectCommand.Parameters[8].Value = ((bool)(isDead.Value));
-            }
-            else {
-                this.Adapter.SelectCommand.Parameters[8].Value = global::System.DBNull.Value;
-            }
-            PatientDataSet.GetPatientListReport_SPDataTable dataTable = new PatientDataSet.GetPatientListReport_SPDataTable();
+            StatisticalPaymentDataSet.GetStatisticalPaymentReport_SPDataTable dataTable = new StatisticalPaymentDataSet.GetStatisticalPaymentReport_SPDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
         }
@@ -1944,7 +1241,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports.PatientDataSetTableAdapters {
         ///</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        private int UpdateUpdatedRows(PatientDataSet dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
+        private int UpdateUpdatedRows(StatisticalPaymentDataSet dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
             int result = 0;
             return result;
         }
@@ -1954,7 +1251,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports.PatientDataSetTableAdapters {
         ///</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        private int UpdateInsertedRows(PatientDataSet dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
+        private int UpdateInsertedRows(StatisticalPaymentDataSet dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allAddedRows) {
             int result = 0;
             return result;
         }
@@ -1964,7 +1261,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports.PatientDataSetTableAdapters {
         ///</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        private int UpdateDeletedRows(PatientDataSet dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows) {
+        private int UpdateDeletedRows(StatisticalPaymentDataSet dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows) {
             int result = 0;
             return result;
         }
@@ -1998,7 +1295,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports.PatientDataSetTableAdapters {
         ///</summary>
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public virtual int UpdateAll(PatientDataSet dataSet) {
+        public virtual int UpdateAll(StatisticalPaymentDataSet dataSet) {
             if ((dataSet == null)) {
                 throw new global::System.ArgumentNullException("dataSet");
             }

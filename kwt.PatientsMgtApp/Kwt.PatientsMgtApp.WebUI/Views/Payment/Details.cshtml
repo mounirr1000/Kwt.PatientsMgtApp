@@ -1,4 +1,5 @@
-﻿@model Kwt.PatientsMgtApp.Core.Models.PaymentModel
+﻿@using Kwt.PatientsMgtApp.WebUI.Infrastructure
+@model Kwt.PatientsMgtApp.Core.Models.PaymentModel
 
 @{
     ViewBag.Title = "Payment Details";
@@ -8,10 +9,17 @@
 <div class="mt-3">
     <p>
         <a href="@Url.Action("List")" class="k-button"><i class="fa fa-arrow-left" style="color: lightblue"></i> Back to List</a>
-        <a href="@Url.Action("Edit", new {paymentId=Model.Id})" class="k-button"><i class="fa fa-pencil" style="color: blueviolet"></i> Edit</a>
-        <a href="javascript:window.print()" class="k-button"><i class="fa fa-print" style="color: blueviolet"></i> Print This Page</a>
-        <a href="javascript:showTodayPayments()" class="k-button"><i class="fa fa-eye" style="color: blueviolet"></i> Show Voucher</a>
-        @*<a href="javascript:printPaymentVoucher()" class="k-button"><i class="fa fa-print" style="color: blueviolet"></i> Print Voucher</a>*@
+        @if (User.IsInAnyRoles(CrudRoles.PaymentUpdateRoles) || User.IsInAnyRoles(CrudRoles.PaymentApprovalRoles))
+        {
+            if (User.IsInAnyRoles(CrudRoles.PaymentUpdateRoles))
+            {
+                <a href="@Url.Action("Edit", new {paymentId=Model.Id})" class="k-button"><i class="fa fa-pencil" style="color: blueviolet"></i> Edit</a>
+            }
+            <a href="javascript:window.print()" class="k-button"><i class="fa fa-print" style="color: blueviolet"></i> Print This Page</a>
+            <a href="javascript:showTodayPayments()" class="k-button"><i class="fa fa-eye" style="color: blueviolet"></i> Show Voucher</a>
+            @*<a href="javascript:printPaymentVoucher()" class="k-button"><i class="fa fa-print" style="color: blueviolet"></i> Print Voucher</a>*@
+        }
+
     </p>
 </div>
 <div class="loader"></div>
@@ -85,13 +93,13 @@
 
     @if (Model.PaymentDeductions != null && Model.PaymentDeductions.Count > 0)
     {
-    <button data-toggle="collapse" data-target="#paymentDeduction"><i></i> Deduction Info</button>
-    <div id="paymentDeduction" class="collapse show"></div>
+        <button data-toggle="collapse" data-target="#paymentDeduction"><i></i> Deduction Info</button>
+        <div id="paymentDeduction" class="collapse show"></div>
     }
     @if (Model.Payments != null && Model.Payments.Count > 0)
     {
-    <button data-toggle="collapse" data-target="#paymentList"><i></i> Payments History</button>
-    <div id="paymentList" class="collapse show"></div>
+        <button data-toggle="collapse" data-target="#paymentList"><i></i> Payments History</button>
+        <div id="paymentList" class="collapse show"></div>
     }
     <button data-toggle="collapse" data-target="#BenfeciaryInfo"> <i></i> Beneficiary Info</button>
     <fieldset id="BenfeciaryInfo" class="collapse">
@@ -224,8 +232,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 @*<h4 class="modal-title" id="deleteLabel">
-                    Voucher @Model.PaymentID
-                </h4>*@
+                        Voucher @Model.PaymentID
+                    </h4>*@
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="printVoucher"><i class="fa fa-print" style="color: blueviolet"></i> Print Voucher</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -263,24 +271,24 @@
                     <legend>Companion Info</legend>
                     @if (Model.HasCompanion == true)
                     {
-                        <ul class="fieldlist form-row">
-                            <li class="col-md-6">
-                                <label>Companion CID</label>
-                                @Model.CompanionCID
-                            </li>
-                            <li class="col-md-6">
-                                <label>Companion Name</label>
-                                @Model.CompanionFullName
-                            </li>
-                        </ul>
+                    <ul class="fieldlist form-row">
+                        <li class="col-md-6">
+                            <label>Companion CID</label>
+                            @Model.CompanionCID
+                        </li>
+                        <li class="col-md-6">
+                            <label>Companion Name</label>
+                            @Model.CompanionFullName
+                        </li>
+                    </ul>
                     }
                     else
                     {
-                        <ul class="fieldlist form-row">
-                            <li class="col-md-6">
-                                <label>No Primary Companion with this patient</label>
-                            </li>
-                        </ul>
+                    <ul class="fieldlist form-row">
+                        <li class="col-md-6">
+                            <label>No Primary Companion with this patient</label>
+                        </li>
+                    </ul>
                     }
                 </fieldset>
 
@@ -304,29 +312,29 @@
                             <div class="col-md-4"><label>Initial Amount</label> @Model.TotalDue KWD</div>
                             @if (Model.PaymentDeductionObject != null)
                             {
-                                <div class="col-md-4">
-                                    <label>Total Deduction</label>
-                                    @if (@Model.PaymentDeductionObject.TotalDeduction != null)
+                            <div class="col-md-4">
+                                <label>Total Deduction</label>
+                                @if (@Model.PaymentDeductionObject.TotalDeduction != null)
                                     {
-                                        @Model.PaymentDeductionObject.TotalDeduction
-                                        <text> KWD</text>
+                                    @Model.PaymentDeductionObject.TotalDeduction
+                                    <text> KWD</text>
                                     }
                                     else
                                     {
-                                        <text>0 KWD</text>
+                                    <text>0 KWD</text>
                                     }
-                                </div>
+                            </div>
                             }
                             <div class="col-md-4">
                                 <label>Final Amount</label>
                                 @if (@Model.FinalAmount != null)
                                 {
-                                    @Model.FinalAmount
-                                    <text> KWD</text>
+                                @Model.FinalAmount
+                                <text> KWD</text>
                                 }
                                 else
                                 {
-                                    @Model.TotalDue<text> KWD</text>
+                                @Model.TotalDue<text> KWD</text>
                                 }
                             </div>
                         </div>
@@ -336,9 +344,22 @@
                     <legend>Beneficiary Info</legend>
                     <ul class="fieldlist form-row">
                         <li class="col-md-6"><label>Beneficiary Cid</label> @Model.BeneficiaryCID</li>
-                        <li class="col-md-6"><label>Beneficiary Name</label> @Model.PatientFullName</li>
+                        <li class="col-md-6"><label>Beneficiary Name</label> @Model.BeneficiaryFullName</li>
                         <li class="col-md-6"><label>Bank Name</label> @Model.BeneficiaryBank</li>
                         <li class="col-md-6"><label>IBan</label> @Model.BeneficiaryIBan</li>
+                    </ul>
+                </fieldset>
+                <fieldset>
+                    <legend>Notes</legend>
+                    <ul class="fieldlist form-row">
+                        @if (Model.PaymentDeductionNotes != null)
+                        {
+                            <li class="col-md-6"><label>Deduction Note</label> @Model.PaymentDeductionNotes</li>
+                        }
+                        else
+                        {
+                            <li class="col-md-6"><label>Payment Note</label> @Model.Notes</li>
+                        }                        
                     </ul>
                 </fieldset>
                 <fieldset>
@@ -347,13 +368,13 @@
                     <div id="paymentListVoucherModel"></div>
                 </fieldset>
                 @*<div class="pb-3">
-                    <div style="text-align: right;padding-right:20px;">
-                        <div class="pull-right" style="width: 230px; text-align: center;"><i>المحاسب</i></div>
-                        <div class="pull-right" style="width: 286px; text-align: center;"><i>المدقق</i></div>
-                        <div class="pull-left" style="width: 230px; text-align: center;"><i>الملحق المالي</i></div>
-                        <div class="pull-left" style="width: 100px;"><i>رئيس المكتب</i></div>
-                    </div>
-                </div>*@
+                        <div style="text-align: right;padding-right:20px;">
+                            <div class="pull-right" style="width: 230px; text-align: center;"><i>المحاسب</i></div>
+                            <div class="pull-right" style="width: 286px; text-align: center;"><i>المدقق</i></div>
+                            <div class="pull-left" style="width: 230px; text-align: center;"><i>الملحق المالي</i></div>
+                            <div class="pull-left" style="width: 100px;"><i>رئيس المكتب</i></div>
+                        </div>
+                    </div>*@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="printVoucher1"> <i class="fa fa-print" style="color: blueviolet"></i> Print Voucher</button>
@@ -551,7 +572,7 @@
                        '<div class="pull-right" style="width: 230px;"><i>المحاسب</i></div>'
                       +'<div class="pull-right" style="width: 286px; text-align: center;"><i>المدقق</i></div>'
                       +'<div class="pull-left" style="width: 230px; text-align: center;"><i>الملحق المالي</i></div>'
-                      //+'<div class="pull-right" style="width: 100px;"><i>رئيس المكتب</i></div></div>'
+                //+'<div class="pull-right" style="width: 100px;"><i>رئيس المكتب</i></div></div>'
                 // debug: true,
             });
         }

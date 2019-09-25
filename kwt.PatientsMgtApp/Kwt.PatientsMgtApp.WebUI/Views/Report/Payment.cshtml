@@ -1,4 +1,5 @@
-﻿
+﻿@using Kwt.PatientsMgtApp.WebUI.Infrastructure
+
 @{
     ViewBag.Title = "Payment Report";
 }
@@ -8,14 +9,18 @@
     @*<a href="@Url.Action("PaymentReference", "Report")" class="k-button col-md-3" ><i class="fa fa-plus-circle" style="color:orange"></i> Create Payment Reference</a>*@
 </div>
 
-<fieldset style="width: 100%; min-width: fit-content;">
-    <legend>Payment Report</legend>
-    <iframe runat="server" id="Reports" src="~/Reports/Payment.aspx"
-            scrolling="no"
-            style="border: none; width: 1000px; height: 1000px;"
-            onload="this.style.height = this.contentDocument.body.scrollHeight + 'px';
+@if (User.IsInAnyRoles(CrudRoles.PaymentReportCrudRoles))
+{
+    <fieldset style="width: 100%; min-width: fit-content;">
+        <legend>Payment Report</legend>
+        <iframe runat="server" id="Reports" src="~/Reports/Payment.aspx"
+                scrolling="no"
+                style="border: none; width: 1000px; height: 1000px;"
+                onload="this.style.height = this.contentDocument.body.scrollHeight + 'px';
 this.style.width = this.contentDocument.body.scrollWidth + 'px';"></iframe>
-</fieldset>
+    </fieldset>
+}
+
 
 
 @section scripts

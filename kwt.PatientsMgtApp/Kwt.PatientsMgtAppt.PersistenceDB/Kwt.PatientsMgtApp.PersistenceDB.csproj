@@ -94,6 +94,9 @@
     <Compile Include="EDMX\GetPaymentListReport_SP_Result.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
+    <Compile Include="EDMX\GetStatisticalPaymentReport_SP_Result.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
     <Compile Include="EDMX\Hospital.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>

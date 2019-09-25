@@ -1,4 +1,5 @@
-﻿@*@using PagedList.Mvc;
+﻿@using Kwt.PatientsMgtApp.WebUI.Infrastructure
+@*@using PagedList.Mvc;
     @model PagedList.IPagedList<Kwt.PatientsMgtApp.Core.Models.PaymentModel>*@
 
 @model List<Kwt.PatientsMgtApp.Core.Models.PaymentModel>
@@ -11,35 +12,40 @@
     serializer.MaxJsonLength = Int32.MaxValue;
     var jsonModel = serializer.Serialize(Model);
 }
-<div class="pt-3 pb-3">
-    <a href="@Url.Action("Create", "Payment")" class="k-button"><i class="fa fa-plus" style="color: yellowgreen"></i> New Payment</a>
-    <a href="javascript:window.print()" class="k-button"><i class="fa fa-print" style="color: blueviolet"></i> Print This Page</a>
-</div>
-@* new June 29, 2019 *@
-<div class="pt-4">
-    <div style="display: inline">
-        <input id="numberOfDays" class="k-textbox" placeholder="Enter Number Of Days" />
+@if (User.IsInAnyRoles(CrudRoles.PaymentCreateRoles))
+{
+    <div class="pt-3 pb-3">
+        <a href="@Url.Action("Create", "Payment")" class="k-button"><i class="fa fa-plus" style="color: yellowgreen"></i> New Payment</a>
+        <a href="javascript:window.print()" class="k-button"><i class="fa fa-print" style="color: blueviolet"></i> Print This Page</a>
+    </div>
+    @* new June 29, 2019 *@
+    <div class="pt-4">
+        <div style="display: inline">
+            <input id="numberOfDays" class="k-textbox" placeholder="Enter Number Of Days" />
+
+        </div>
+        <a href="javascript:showNextPatientPayments()" class="k-button" data-toggle="tooltip" title="Enter Number Of Days first!"><i class="fa fa-warning" style="color: orangered"></i> Payment Alert</a>
 
     </div>
-    <a href="javascript:showNextPatientPayments()" class="k-button" data-toggle="tooltip" title="Enter Number Of Days first!"><i class="fa fa-warning" style="color: orangered"></i> Payment Alert</a>
+    @* new February 28, 2019 *@
+    <div class="pt-4">
+        <div style="display: inline">
+            <input id="paymentDt1" class="k-textbox" placeholder="MM/dd/YYYY" />
 
-</div>
-@* new February 28, 2019 *@
-<div class="pt-4">
-    <div style="display: inline">
-        <input id="paymentDt1" class="k-textbox" placeholder="MM/dd/YYYY" />
+        </div>
+
+        <div style="display: inline">
+
+            <input id="paymentDt2" class="k-textbox" placeholder="MM/dd/YYYY" />
+
+        </div>
+        <a href="javascript:showTodayPayments()" class="k-button">Get Payments</a>
+
 
     </div>
-
-    <div style="display: inline">
-
-        <input id="paymentDt2" class="k-textbox" placeholder="MM/dd/YYYY" />
-
-    </div>
-    <a href="javascript:showTodayPayments()" class="k-button">Get Payments</a>
+}
 
 
-</div>
 <div class="modal fade bd-example-modal-lg" id="todayPaymentList" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -77,22 +83,55 @@
 <div class="pb-5 pt-5">
     @if (Model.Any())
     {
-        <div class="pb-3">
-            @{Html.RenderPartial("_PaymentSearchForm");}
-        </div>
-        <div class="loader"></div>
+        if (!User.IsInAnyRoles(CrudRoles.PaymentApprovalRoles))
+        {
+            <div class="pb-3">
+                @{Html.RenderPartial("_PaymentSearchForm");}
+            </div>
+                    }
 
-        <div id="content" style="visibility: hidden;">
-            <div id="paymentList"></div>
+                    <div class="loader"></div>
 
-        </div>
-                }
-                else
-                {
-                    <div class="alert-info">
-                        No Payments to show in our records!
+
+                    if (User.IsInAnyRoles(CrudRoles.PaymentApprovalRoles))
+                    {
+
+                        @* Uncomment the next lines once the invoice is complete *@
+                        @*<div class="row pb-3">
+                                <div class="btn-group btn-group-toggle col-md-8" data-toggle="buttons">
+                                    <label class="btn btn-secondary active">
+                                        <input type="radio" name="paymentApprovement" id="pending" autocomplete="off" value="2"> Pending Approval
+                                    </label>
+                                    <label class="btn btn-secondary">
+                                        <input type="radio" name="paymentApprovement" id="approved" autocomplete="off" checked value="1"> Approved Payment
+                                    </label>
+                                </div>
+                            </div>*@
+                        <div class="row pb-3">
+                            <div class="col-md-4">
+                                <input class=k-textbox type=text id="txtSearchString" style="width: 100%" placeholder="Voucher# Or PatientCID..." />
+                            </div>
+                            <div class="col-md-8">
+                                <button type="submit" class="k-button" id="btnSearch"><i class="fa fa-search" style="color: yellowgreen"></i> Search</button>
+                                <button type="submit" class="k-button k-notification-button" id="btnClear"><i class="fa fa-times" style="color: lightblue"></i> Clear</button>
+                            </div>
+
+                        </div>
+
+
+                    }
+
+                    <div id="content" style="visibility: hidden;">
+                        <div id="paymentList"></div>
+
                     </div>
-                }
+                    }
+                    else
+                    {
+                        <div class="alert-info">
+                            No Payments to show in our records!
+                        </div>
+                    }
 
 </div>
 
@@ -124,23 +163,25 @@
             //
             var data = @Html.Raw(jsonModel);
             console.log(data);
-            var isAdmin =   @Html.Raw(Json.Encode(User.IsInRole("Admin")));
+            var isAdmin =   @Html.Raw(Json.Encode(User.IsInAnyRoles(CrudRoles.PaymentDeleteRoles)));
+            var isAuditor =  @Html.Raw(Json.Encode(User.IsInAnyRoles(CrudRoles.PaymentApprovalRoles)));
             function getTemplate(paymentId) {
                 if (isAdmin) {
-                    return '<a href="javascript:confirmDelete('+paymentId+','+'\'paymentId\''+')" id='+paymentId+'> <i class="fa fa-times fa-2x" style="color: lightcoral"></i></a>';
+                    return '<div style="text-align: center;"><a href="javascript:confirmDelete('+paymentId+','+'\'paymentId\''+')" id='+paymentId+'> <i class="fa fa-times fa-2x" style="color: lightcoral"></i></a></div>';
                 }
                 return '';
             }
+
             function getRejectedTemplate(isRejected) {
-               // console.log(JSON.parse(isRejected));
-              
+                // console.log(JSON.parse(isRejected));
+
                 if (isRejected==='null') {
                     return '<i class="fa fa-ban fa-2x" style="color:red;"></i> '+isRejected+' ';
                     //return '<a href="javascript:confirmDelete('+paymentId+','+'\'paymentId\''+')" id='+paymentId+'> <i class="fa fa-times fa-2x" style="color: lightcoral"></i></a>';
                 }
                 return '<i class="fa fa-check fa-2x" style="color:green;"></i> '+isRejected+' ';
             }
-            
+
             function getTodayPayment(payments) {
                 // uncomments these line to get only today payments
                 //var date1 = new Date().toDateString();
@@ -155,15 +196,12 @@
                 //});
                 return payments;
             }
+
+
             var grid =  $("#paymentList").kendoGrid({
                 resizable: true,
                 toolbar: "<p class='alert alert-info'>Note: Rejected Payments are displayed in <i style='color:red; text-decoration:line-through;'>Red</i></p>",
-                //toolbar: [//"pdf",
 
-                //        "excel"],
-                //pdf: {
-                //    fileName: $("#paymentDt1").val()+" "+$("#paymentDt2").val()+" payments.pdf"
-                //},
                 excel: {
                     fileName: $("#paymentDt1").val()+" "+$("#paymentDt2").val()+" payments.xlsx",
                     allPages:true
@@ -178,70 +216,79 @@
                     title: "Voucher#",
 
                     template: "<a href='@Url.Action("Details", "Payment")?paymentId=#= Id#'>#= Id #</a>"
-                    @*cellTemplate: '<div class="ui-grid-cell-contents"><a href={{@Url.Action("Details", "Payment")}} class="icon-bar">{{row.entity.Id}}</a></div>'*@
+
                 },
-                {
-                    field: "PaymentDateFormatted",
-                    title: "Payment Date"
-                },
-                {
-                    field: "PaymentType.PaymentType1",
-                    title: "Payment Type",
-                    template: "#= (PaymentType == null) ? 'Regular ' : PaymentType.PaymentType1 #"
-                },
-                {
-                    field: "PatientCID",
-                    title: "P_CID"
-                },
-                {
-                    field: "PatientFullName",
-                    title: "Patient Name"
-                },
-                {
-                    field: "CompanionCID",
-                    title: "C_CID"
-                },
-                //{
-                //    field: "PaymentLengthPeriod",
-                //    title: "Period"
-                //},
-                {
-                    field: "PaymentStartDateFormatted",
-                    title: "From"
-                    // template: "#= kendo.toString(kendo.parseDate(PaymentStartDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
-                },
-                {
-                    field: "PaymentEndDateFormatted",
-                    title: "To"
-                    // template: "#= kendo.toString(kendo.parseDate(PaymentEndDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
-                },
-                {
-                    field: "PaymentDeductionObject.TotalDeduction",
-                    title: "Amount Deducted",
-                    template: "#if(PaymentDeductionObject!=null){# #: PaymentDeductionObject.TotalDeduction # #}else {##: '0' ##}#"
-                },
-                {
-                    field: "TotalDue",
-                    title: "Final Amount"
-                },
-                //{
-                //    field: "IsRejected",
-                //    title: "Valid?",
-                //    template: getRejectedTemplate('#=IsRejected#')
-                //},
-                {
-                    field: "Id",
-                    title: "Delete",
-                    template: getTemplate('#=Id#'),
-                    hidden: !isAdmin
-                }],
+                    {
+                        field: "PaymentDateFormatted",
+                        title: "Payment Date"
+                    },
+                    {
+                        field: "PaymentType.PaymentType1",
+                        title: "Payment Type",
+                        template: "#= (PaymentType == null) ? 'Regular ' : PaymentType.PaymentType1 #"
+                    },
+                    {
+                        field: "PatientCID",
+                        title: "P_CID"
+                    },
+                    {
+                        field: "PatientFullName",
+                        title: "Patient Name"
+                    },
+                    {
+                        field: "CompanionCID",
+                        title: "C_CID"
+                    },
+                    //{
+                    //    field: "PaymentLengthPeriod",
+                    //    title: "Period"
+                    //},
+                    {
+                        field: "PaymentStartDateFormatted",
+                        title: "From"
+                        // template: "#= kendo.toString(kendo.parseDate(PaymentStartDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
+                    },
+                    {
+                        field: "PaymentEndDateFormatted",
+                        title: "To"
+                        // template: "#= kendo.toString(kendo.parseDate(PaymentEndDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
+                    },
+                    {
+                        field: "PaymentDeductionObject.TotalDeduction",
+                        title: "Amount Deducted",
+                        template: "#if(PaymentDeductionObject!=null){# #: PaymentDeductionObject.TotalDeduction # #}else {##: '0' ##}#"
+                    },
+                    {
+                        field: "TotalDue",
+                        title: "Final Amount"
+                    },
+                    // Uncomment the next lines once the invoice is complete
+                    //{
+                    //    field: "IsApproved",
+                    //    title: "Is Approved",
+                    //    template: "#if(IsApproved==true){# <div style='text-align: center;'><i class='fa fa-check fa-2x' style='color:limegreen;'></i></div> #}else {#<div style='text-align: center;'><input type='checkbox' #= IsApproved ? 'checked=checked' : '' # id='#=Id#'  class='k-checkbox' #= IsApproved ? disabled='disabled' : ''# ></input></div>#}#",
+                    //    hidden: !isAuditor
+                    //},
+
+                    {
+                        field: "Id",
+                        title: "Delete",
+                        template: getTemplate('#=Id#'),
+                        hidden: !isAdmin
+                    }
+                    //,{
+                    //    field: "IsRejected",
+                    //    title: "Valid?",
+                    //    template: getRejectedTemplate('#=IsRejected#')
+                    //}
+                ],
                 dataSource: {
                     data: getTodayPayment(data)
                 },
                 dataBound: function(e) {
                     // get the index of the UnitsInStock cell
-                   // var columns = e.sender.columns;
-                   // var columnIndex = this.wrapper.find(".k-grid-header [data-field=" + "UnitsInStock" + "]").index();
+                    // var columns = e.sender.columns;
+                    // var columnIndex = this.wrapper.find(".k-grid-header [data-field=" + "UnitsInStock" + "]").index();
 
                     // iterate the table rows and apply custom row and cell styling
                     var rows = e.sender.tbody.children();
@@ -262,34 +309,161 @@
                 },
                 //
 
-                excelExport: function(e){
+                excelExport: function(e) {
                     var sheet = e.workbook.sheets[0];
                     var data = grid.dataSource.data();
                     var gridColumns = grid.columns;
-                    var columns = gridColumns.map(function(col){
+                    var columns = gridColumns.map(function(col) {
                         return {
                             value: col.title ? col.title : col.field,
-                            autoWidth:true,
+                            autoWidth: true,
                             background: "#7a7a7a",
                             color: "#fff"
                         };
                     });
 
-                    var rows = [{cells:columns, type: "header"}];
+                    var rows = [{ cells: columns, type: "header" }];
 
-                    for (var i = 0; i < data.length; i++){
+                    for (var i = 0; i < data.length; i++) {
                         var rowCells = [];
-                        for(var j=0;j < gridColumns.length;j++){
+                        for (var j = 0; j < gridColumns.length; j++) {
                             var cellValue = data[i][gridColumns[j].field];
-                            rowCells.push({value: cellValue});
+                            rowCells.push({ value: cellValue });
                         }
-                        rows.push({cells: rowCells, type: "data"});
+                        rows.push({ cells: rowCells, type: "data" });
                     }
                     sheet.rows = rows;
                 }
                 //
             }).data("kendoGrid");
-           
+
+
+            //search grid
+            function onSearch(e) {
+                debugger;
+                e.preventDefault();
+                //$("#searchPayment").keyup(function () {
+                var q = $("#txtSearchString").val();
+                q = q.toString();
+                grid.dataSource.query({
+                    page:1,
+                    pageSize:20,
+                    filter:{
+                        logic:"or",
+                        filters:[
+                          {field:"PaymentIDString", operator:"contains",value:q},
+                          {field:"PatientCID", operator:"contains",value:q}
+                        ]
+                    }
+                });
+
+                //  });
+            }
+            function onClear(e) {
+                debugger;
+                e.preventDefault();
+                //$("#searchPayment").keyup(function () {
+                $("#txtSearchString").val("");
+                var q = "";
+                grid.dataSource.query({
+                    page:1,
+                    pageSize:20,
+                    filter:{
+                        logic:"or",
+                        filters:[
+                          {field:"PaymentIDString", operator:"contains",value:q},
+                          {field:"PatientCID", operator:"contains",value:q}
+                        ]
+                    }
+                });
+
+                //  });
+            }
+            $("#btnSearch").kendoButton({
+                click: onSearch
+            });
+            $("#btnClear").kendoButton({
+                click: onClear
+            });
+            $('#txtSearchString').on('keydown', function(e) {
+                //debugger;
+                if (e.which == 13) {
+                   // e.preventDefault();
+                    onSearch(e);
+                }
+            });
+            //
+
+            //approved payment
+            $("[name='paymentApprovement']").change(function() {
+                //alert($(this).val());
+                var nextPaymentUrl = '/Payment/ToggleApprovedPayment';
+                var $this = $(this);
+                var selectorId = $this.val();
+                console.log(selectorId);
+                $.ajax({
+                    type: "GET",
+                    url: nextPaymentUrl,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "toggleType": selectorId },
+                    dataType: 'json',
+                    beforeSend: function() {
+                        //$("#loading-image").show();
+                        $(".loader").css("display", "block");
+                    },
+                    success: function(result) {
+                        grid.dataSource.data( result );
+                        grid.refresh();
+                        $(".loader").css("display", "none");
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                    }
+                });
+            });
+
+            function updateApprovedPayment() {
+                debugger;
+                var checked = this.checked,
+                    row = $(this).closest("tr"),
+                  //  grid = $("#paymentList").data("kendoGrid"),
+                    dataItem = grid.dataItem(row);
+
+                //checkedIds[dataItem.FirstName] = checked;
+
+                if (checked) {
+                    //-select the row
+                    row.addClass("k-state-selected");
+                } else {
+                    //-remove selection
+                    row.removeClass("k-state-selected");
+                }
+                var nextPaymentUrl = '/Payment/RefreshPaymentListAfterApproval';
+                var $this = $(this);
+                var selectorId = $this.attr('id');
+                $.ajax({
+                    type: "GET",
+                    url: nextPaymentUrl,
+                    contentType: "application/json; charset=utf-8",
+                    data: { "paymentId": selectorId },
+                    dataType: 'json',
+                    beforeSend: function() {
+                        //$("#loading-image").show();
+                        $(".loader").css("display", "block");
+                    },
+                    success: function(result) {
+                        grid.dataSource.data( result );
+                        grid.refresh();
+                        $(".loader").css("display", "none");
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed.");
+                    }
+                });
+                //
+            }
+            grid.table.on("click", ".k-checkbox", updateApprovedPayment);
+            //
             $(".loader").css("display", "none");
         });
     </script>
@@ -321,7 +495,7 @@
             var date2 = new Date(secondDate).toDateString();
             date2 = new Date(date2).getTime();
             var payments = @Html.Raw(jsonModel);
-            
+
             payments = payments.filter(function(entry) {
                 var paymentDate = new Date(entry.PaymentDateFormatted).toDateString();
 
@@ -337,7 +511,7 @@
             });
             var paymentGrid = $("#paymentGrid").kendoGrid({
                 toolbar: [
-//"pdf",            
+//"pdf",
                     "excel"
                 ],
                 //pdf: {
@@ -367,13 +541,13 @@
                         title: "From",
                         //format: "{0: dddd, MMMM dd, yyyy}",
                         //template: "#= kendo.toString(kendo.parseDate(PaymentStartDateFormatted, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
-                      //  template: "#= kendo.toString(kendo.parseDate(PaymentStartDate, 'MMMM dd, yyyy'), 'MMMM dd, yyyy') #"
+                        //  template: "#= kendo.toString(kendo.parseDate(PaymentStartDate, 'MMMM dd, yyyy'), 'MMMM dd, yyyy') #"
                     },
                     {
                         field: "PaymentEndDateLongFormatted",
                         title: "To",
                         // template: "#= kendo.toString(kendo.parseDate(PaymentEndDate, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
-                       // template: "#= kendo.toString(kendo.parseDate(PaymentEndDate, 'MMMM dd, yyyy'), 'MMMM dd, yyyy') #"
+                        // template: "#= kendo.toString(kendo.parseDate(PaymentEndDate, 'MMMM dd, yyyy'), 'MMMM dd, yyyy') #"
                     }, {
                         field: "TotalDue",
                         title: "Final Amount"

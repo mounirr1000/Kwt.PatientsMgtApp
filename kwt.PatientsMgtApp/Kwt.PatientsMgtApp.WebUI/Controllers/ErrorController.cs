@@ -43,11 +43,11 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         }
 
 
-        public ActionResult Index()
-        {
+        //public ActionResult Index()
+        //{
 
-            return View();
-        }
+        //    return View();
+        //}
         public ActionResult Status404()
         {
             

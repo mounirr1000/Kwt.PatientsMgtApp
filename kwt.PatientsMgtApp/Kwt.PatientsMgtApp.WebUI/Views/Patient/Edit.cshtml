@@ -16,45 +16,42 @@
         <div class="mb-4">
             <button type="submit" class="k-button"><i class="fa fa-check" style="color: greenyellow"></i> Update</button>
         </div>
-        @if (User.IsInAnyRoles("Super Admin","Admin"))
+        @if (User.IsInAnyRoles(CrudRoles.AdminCrudRoles))
         {
-            <div class="col-md-12 row">
-
+            @* Uncomment the next lines once the invoice is complete *@
+            @*<div class="col-md-12 row pb-3">
                 @if (Model.IsBlocked == true)
                 {
                     <div style="width: 100%">
-                        <p class="aler alert-info p-4" style="width: 100%">This Patient Is Blocked <i class="fa fa-ban"></i>, So he/she can't be paid. To Unblock him/her click '<i class="fa fa-unlock-alt"></i> Unblock This Patient' below  </p>     
+                        <p class="aler alert-dark p-4" style="width: 100%">This Patient Is Blocked <i class="fa fa-ban"></i>, So he/she can't be paid. To Unblock him/her click '<i class="fa fa-unlock-alt"></i> Unblock This Patient' below  </p>
                     </div>
                     <div>
                         <button id="unBlockPatient" type="submit" class="k-button" style="width: 100%"><i class="fa fa-unlock-alt" style="color: lightcoral"></i> Unblock This Patient</button>
                     </div>
-                    
                 }
                 else
                 {
                     <div style="width: 100%">
-                        <p class="aler alert-info p-4" style="width: 100%">This Patient Is Not Blocked, To block him/her click '<i class="fa fa-lock"></i> Block This Patient' below </p>     
+                        <p class="aler alert-dark p-4" style="width: 100%">This Patient Is Not Blocked, To block him/her click '<i class="fa fa-lock"></i> Block This Patient' below </p>
                     </div>
                     <div>
-                        <button id="blockPatient" type="submit" class="k-button" style="width: 100%"><i class="fa fa-lock" style="color: lightcoral"></i> Block This Patient</button>    
+                        <button id="blockPatient" type="submit" class="k-button" style="width: 100%"><i class="fa fa-lock" style="color: lightcoral"></i> Block This Patient</button>
                     </div>
-                    
+
                 }
-
-
-            </div>
+            </div>*@
         }
-            
-            
-        
+
+
+
     </div>
-    
+
 
 
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+        @Html.ValidationSummary(false, "", new { @class = "k-error-colored" })
         @Html.HiddenFor(model => model.PatientCID)
         @Html.HiddenFor(model => model.Id)
         <div id="patientEdit" style="visibility:hidden;">
@@ -65,27 +62,27 @@
                     <li class="col-md-4">
                         @Html.LabelFor(model => model.PatientFName, new { @class = "" })
                         @Html.TextBoxFor(model => model.PatientFName, new { @class = "k-textbox", style = "width: 100%;" })
-                        @Html.ValidationMessageFor(model => model.PatientFName, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(model => model.PatientFName, "", new { @class = "k-error-colored" })
                     </li>
                     <li class="col-md-4">
                         @Html.LabelFor(model => model.PatientMName, new { @class = "" })
                         @Html.TextBoxFor(model => model.PatientMName, new { @class = "k-textbox", style = "width: 100%;" })
-                        @Html.ValidationMessageFor(model => model.PatientMName, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(model => model.PatientMName, "", new { @class = "k-error-colored" })
                     </li>
                     <li class="col-md-4">
                         @Html.LabelFor(model => model.PatientLName, new { @class = "" })
                         @Html.TextBoxFor(model => model.PatientLName, new { @class = "k-textbox", style = "width: 100%;" })
-                        @Html.ValidationMessageFor(model => model.PatientLName, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(model => model.PatientLName, "", new { @class = "k-error-colored" })
                     </li>
                     <li class="col-md-4">
                         @Html.LabelFor(model => model.KWTPhone, new { @class = "" })
                         @Html.TextBoxFor(model => model.KWTPhone, new { @class = "k-textbox", style = "width: 100%;" })
-                        @Html.ValidationMessageFor(model => model.KWTPhone, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(model => model.KWTPhone, "", new { @class = "k-error-colored" })
                     </li>
                     <li class="col-md-4">
                         @Html.LabelFor(model => model.USPhone, htmlAttributes: new { @class = "" })
                         @Html.TextBoxFor(model => model.USPhone, new { @class = "k-textbox", style = "width: 100%;" })
-                        @Html.ValidationMessageFor(model => model.USPhone, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(model => model.USPhone, "", new { @class = "k-error-colored" })
                     </li>
                     @if (!User.IsInRole("Medical"))
                     {
@@ -96,7 +93,7 @@
                            Text = a.AgencyName,
                            Value = a.AgencyName
                        }).ToList()), "", new { style = "width:50%" })
-                            @Html.ValidationMessageFor(model => model.Agency, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(model => model.Agency, "", new { @class = "k-error-colored" })
                         </li>
                     }
                     else
@@ -122,7 +119,7 @@
                            Text = a.HospitalName,
                            Value = a.HospitalName
                        }).ToList()), "", new { style = "width:90%" })
-                            @Html.ValidationMessageFor(model => model.Hospital, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(model => model.Hospital, "", new { @class = "k-error-colored" })
                         </li>
                         <li class="col-md-6">
                             @Html.LabelFor(model => model.Specialty, new { @class = "" })
@@ -131,7 +128,7 @@
                            Text = a.Speciality,
                            Value = a.Speciality
                        }).ToList()), "", new { style = "width:50%" })
-                            @Html.ValidationMessageFor(model => model.Specialty, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(model => model.Specialty, "", new { @class = "k-error-colored" })
                         </li>
                         <li class="col-md-6">
                             @Html.LabelFor(model => model.Doctor, new { @class = "" })
@@ -140,7 +137,7 @@
                            Text = a.DoctorName,
                            Value = a.DoctorName
                        }).ToList()), "", new { style = "width:50%" })
-                            @Html.ValidationMessageFor(model => model.Doctor, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(model => model.Doctor, "", new { @class = "k-error-colored" })
                         </li>
                     }
                     else
@@ -156,7 +153,7 @@
                            Text = a.Speciality,
                            Value = a.Speciality
                        }).ToList()), "", new { style = "width:50%" })
-                            @Html.ValidationMessageFor(model => model.Specialty, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(model => model.Specialty, "", new { @class = "k-error-colored" })
                         </li>
                         <li class="col-md-6">
                             @Html.LabelFor(model => model.Doctor, new { @class = "" })
@@ -180,7 +177,7 @@
                         <li class="col-md-2">
                             @Html.LabelFor(model => model.IsBeneficiary, new { @class = "k-checkbox-label" })
                             @Html.EditorFor(model => model.IsBeneficiary, new { @class = "k-checkbox" })
-                            @Html.ValidationMessageFor(model => model.IsBeneficiary, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(model => model.IsBeneficiary, "", new { @class = "k-error-colored" })
                         </li>
                     }
                     else
@@ -202,7 +199,7 @@
                            Text = a.BankName,
                            Value = a.BankName
                        }).ToList()), "", new { style = "width:60%" })
-                            @Html.ValidationMessageFor(model => model.BankName, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(model => model.BankName, "", new { @class = "k-error-colored" })
                         </li>
                     }
                     else
@@ -216,7 +213,7 @@
                     <li class="col-md-6 pt-2">
                         @Html.LabelFor(model => model.Iban, new { @class = "" })
                         @Html.TextBoxFor(model => model.Iban, new { @class = "k-textbox", style = "width:100%", maxlength = "30" })
-                        @Html.ValidationMessageFor(model => model.Iban, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(model => model.Iban, "", new { @class = "k-error-colored" })
                     </li>
                 </ul>
             </fieldset>
@@ -227,12 +224,12 @@
                     <li class="col-md-3">
                         @Html.LabelFor(model => model.FirstApptDAte, new { @class = "" })
                         @Html.TextBoxFor(model => model.FirstApptDAte, "{0:MM/dd/yyyy}", new { @class = "", style = "width: 60%" })
-                        @Html.ValidationMessageFor(model => model.FirstApptDAte, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(model => model.FirstApptDAte, "", new { @class = "k-error-colored" })
                     </li>
                     <li class="col-md-3">
                         @Html.LabelFor(model => model.EndTreatDate, new { @class = "" })
                         @Html.TextBoxFor(model => model.EndTreatDate, "{0:MM/dd/yyyy}", new { @class = "", style = "width: 60%" })
-                        @Html.ValidationMessageFor(model => model.EndTreatDate, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(model => model.EndTreatDate, "", new { @class = "k-error-colored" })
                     </li>
                     <li class="col-md-3">
                         @Html.LabelFor(model => model.AuthorizedDate, new { @class = "" })
@@ -246,7 +243,18 @@
                         <li class="col-md-2">
                             @Html.LabelFor(model => model.IsActive, new { @class = "" })
                             @Html.EditorFor(model => model.IsActive, new { @class = "form-control", style = "width: 100%" })
-                            @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "k-error-colored" })
+                        </li>
+                        <li class="col-md-3">
+                            @Html.LabelFor(model => model.IsDead, new { @class = "" })
+                            @Html.EditorFor(model => model.IsDead, new { @class = "form-control", style = "width: 100%" })
+                        </li>
+                        <li class="col-md-3 hidden" id="taggleDeathDate">
+                            @Html.LabelFor(model => model.DeathDate, new { @class = "" })
+                            @Html.TextBoxFor(model => model.DeathDate, "{0:MM/dd/yyyy}", new { @class = "", style = "width: 60%;" })
+                            <div>
+                                @Html.ValidationMessageFor(model => model.DeathDate, "", new { @class = "k-error-colored" })
+                            </div>
                         </li>
                     }
                     else
@@ -255,12 +263,23 @@
                             @Html.LabelFor(model => model.IsActive, new { @class = "" })
                             @Html.EditorFor(model => model.IsActive, new { @class = "form-control", style = "width: 100%" })
                         </li>
+                        <li class="col-md-3">
+                            @Html.LabelFor(model => model.IsDead, new { @class = "" })
+                            @Html.EditorFor(model => model.IsDead, new { @class = "form-control", style = "width: 100%" })
+                        </li>
+                        <li class="col-md-3">
+                            @Html.LabelFor(model => model.DeathDate, new { @class = "" })
+                            @Html.TextBoxFor(model => model.DeathDate, "{0:MM/dd/yyyy}", new { @class = "", style = "width: 60%" })
+                            <div>
+                                @Html.ValidationMessageFor(model => model.DeathDate, "", new { @class = "k-error-colored" })
+                            </div>
+                        </li>
                     }
 
-                    <li class="col-md-8">
+                    <li class="col-md-4">
                         @Html.LabelFor(model => model.Notes, new { @class = "" })
                         @Html.TextAreaFor(model => model.Notes, new { @class = "k-editor-textarea", maxlength = "250", style = "width: 100%" })
-                        @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "k-error-colored" })
                     </li>
 
 
@@ -287,11 +306,16 @@
         //    dateFormat: "m/d/yy"
         //});
 
-
+        $("form").submit(function(event) {
+            $(".k-widget").removeClass("input-validation-error");
+        });
         $(document).ready(function () {
+
             var isMedical =   @Html.Raw(Json.Encode(User.IsInRole("Medical")));
+            var patient = @Html.Raw(Json.Encode(Model));
+            console.log(patient);
             if (!isMedical) {
-                var datePicker =  $("#EndTreatDate, #FirstApptDAte, #AuthorizedDate").kendoDatePicker();
+                var datePicker =  $("#EndTreatDate, #FirstApptDAte, #AuthorizedDate, #DeathDate").kendoDatePicker();
                 var dropDownlist =  $("#BankName, #Hospital, #Agency, #Specialty, #Doctor").kendoDropDownList();
             }
 
@@ -328,13 +352,13 @@
                 //e.preventDefault();
                 //Model.IsBlocked = false;
                 $('#PatientEdit').append('<input type="hidden" name="IsBlocked" value="false" />');
-               
+
             });
             $('#blockPatient').click(function (e) {
                 //e.preventDefault();
                 //Model.IsBlocked = true;
                 $('#PatientEdit').append('<input type="hidden" name="IsBlocked" value="true" />');
-               
+
             });
             //new
 
@@ -369,6 +393,30 @@
                 //specialty.css("border", "2px solid lightgreen");
             }
 
+
+            // is dead ipmplementation
+            console.log($('#IsDead').val());
+            //if ($('#IsDead').val() && $('#IsDead').val() === 'true')
+            if ($('#IsDead').is(":checked"))
+                $('#taggleDeathDate').addClass('visible').removeClass("hidden");
+            else {
+                $('#taggleDeathDate').addClass('hidden').removeClass("visible");
+            }
+            $('#IsDead').change(function() {
+
+                var isdead = $('#IsDead').val();
+                console.log(isdead);
+                //if (isdead && isdead === 'true') 
+                if ($('#IsDead').is(":checked"))
+                {
+                    $('#taggleDeathDate').removeClass("hidden").addClass("visible");
+                    //alert(isdead);
+                } else {
+                    $('#DeathDate').val(null);
+                    $('#taggleDeathDate').removeClass("visible").addClass("hidden");
+                }
+
+            });
             //
             $(".loader").css("display", "none");
         });

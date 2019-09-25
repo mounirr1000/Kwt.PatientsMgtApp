@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
-using System.Web;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Kwt.PatientsMgtApp.WebUI.Infrastructure
+namespace Kwt.PatientsMgtApp.DataAccess.SQL
 {
-    public class ExtensionMethods
-    {
-
-    }
     public static class PrincipalExtensions
     {
         public static bool IsInAllRoles(this IPrincipal principal, params string[] roles)
@@ -18,12 +15,6 @@ namespace Kwt.PatientsMgtApp.WebUI.Infrastructure
         }
 
         public static bool IsInAnyRoles(this IPrincipal principal, params string[] roles)
-        {
-            return roles.Any(r => principal.IsInRole(r));
-        }
-
-        //This next method for removing ambigous confusing from other implementation on class PrincipalExtensions
-        public static bool IsInAnyRoles2(this IPrincipal principal, params string[] roles)
         {
             return roles.Any(r => principal.IsInRole(r));
         }

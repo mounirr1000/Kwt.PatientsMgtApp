@@ -16,9 +16,10 @@
         else $('#deleteConfirmModal').modal('hide');
     }
 
+
     function confirmDelete(id, queryString) {
         toBeDeletedId = id;
-        //console.log(id);
+        console.log("confirm delete from receiver id ", id);
         // controller = controllerName,
         query = queryString;
         $('#deleteConfirmModal').modal('show');

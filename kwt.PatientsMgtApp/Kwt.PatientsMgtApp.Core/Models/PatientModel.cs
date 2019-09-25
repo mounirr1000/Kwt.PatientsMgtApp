@@ -175,5 +175,11 @@ namespace Kwt.PatientsMgtApp.Core.Models
 
         [DisplayName("Treatment Period")]
         public int? TreatmentPeriod { get { return (DateTime.Now.Date - (FirstApptDAte != null ? FirstApptDAte.Value.Date : DateTime.Now.Date)).Days ; } }
+
+        [DisplayName("Is The Patient Dead?")]
+        public bool IsDead { get; set; }
+        //public Nullable<bool> IsDead { get; set; }
+        [DisplayName("Death Date")]
+        public Nullable<System.DateTime> DeathDate { get; set; }
     }
 }

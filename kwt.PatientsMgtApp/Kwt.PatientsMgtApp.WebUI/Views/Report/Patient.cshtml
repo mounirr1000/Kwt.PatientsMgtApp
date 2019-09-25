@@ -1,10 +1,15 @@
-﻿
+﻿@using Kwt.PatientsMgtApp.WebUI.Infrastructure
+
 @{
     ViewBag.Title = "Patient Report";
 }
 
 <div class="pt-3 pb-3 row">
-    <a href="@Url.Action("Payment", "Report")" class="k-button col-md-3"><i class="fa fa-dollar" style="color: orange"></i> Payment Report</a>
+    @if (User.IsInAnyRoles(CrudRoles.PaymentReportCrudRoles))
+    {
+        <a href="@Url.Action("Payment", "Report")" class="k-button col-md-3"><i class="fa fa-dollar" style="color: orange"></i> Payment Report</a>
+    }
+
     @*<a href="@Url.Action("PaymentReference", "Report")" class="k-button col-md-3" ><i class="fa fa-plus-circle" style="color:orange"></i> Create Payment Reference</a>*@
 </div>
 

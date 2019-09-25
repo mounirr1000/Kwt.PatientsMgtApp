@@ -196,8 +196,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             }
             if (companion.CompanionCID == companion.PatientCID)
             {
-                if (!HttpContext.Current.User.IsInRole(Roles.SuperAdmin))
-                    throw new PatientsMgtException(1, "error", "Create new Companion", "Companion and patient have the same CID, If this is what you want, Let your Super Admin create this for you");
+                if (!HttpContext.Current.User.IsInAnyRoles(Roles.Admin, Roles.SuperAdmin))
+                    throw new PatientsMgtException(1, "error", "Create new Companion", "Companion and patient have the same CID, If this is what you want, Let your Admin create this for you");
             }
             if (!String.IsNullOrEmpty(companion.PatientCID))
             {
@@ -216,9 +216,12 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 }
                 //
                 #endregion
+
                 var patient = _domainObjectRepository.Get<Patient>(p => p.PatientCID == companion.PatientCID);
                 if (patient != null)
                 {
+                    //validate if this new companion is not already an active patient
+                    ValidateCompanion(companion, newCompanionTypeid);
                     #region validate beneficiary
                     CheckBeneficiary(patient, companion, companionList, newCompanionTypeid);
                     #endregion
@@ -255,6 +258,18 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 }
             }
 
+        }
+
+        private void ValidateCompanion(CompanionModel companion, int? companionTypeid)
+        {
+            //check if the new added companion is not an active patient
+            // payment should not be done for an active primary companion and be a patient at the same time
+            var patient = _domainObjectRepository.Get<Patient>(p => p.PatientCID == companion.CompanionCID);
+            if (patient?.IsActive == true && (companionTypeid == 1 || companion.JustBeneficiary != true))//primary companion
+            {
+                throw new PatientsMgtException(1, "error", "Adding New Companion",
+                    "This companion <b>" + companion.CompanionCID + "</b> is an active patient, You need to set this patient as inactive OR make this new companion as secondary or just benefeciary");
+            }
         }
         //Create a method to check which of the two newCompanion or patient is Benificiary
         private static void CheckBeneficiary(Patient patient, CompanionModel newCompanion, List<Companion> existingCompanion, int? companionTypeId)
@@ -644,10 +659,10 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 }
                 if (companionsHistory != null && companionsHistory.Count > 0)
                 {
-                    var isSuperAdmin = HttpContext.Current.User.IsInRole(Roles.SuperAdmin);
+                    var isSuperAdmin = HttpContext.Current.User.IsInAnyRoles(Roles.Admin, Roles.SuperAdmin);
                     if (!isSuperAdmin)
                         throw new PatientsMgtException(1, "error", "Deleting Patient",
-                        "There are companion history with this companion, You can't delete this companion since there are history to compaion cid : " + comp.CompanionCID + ", Check with the Super Admin to confirm the delete");
+                        "There are companion history with this companion, You can't delete this companion since there are history to compaion cid : " + comp.CompanionCID + ", Check with the you admin to confirm the delete");
                 }
                 //
                 var ben = _domainObjectRepository.Get<Beneficiary>(c => c.CompanionCID == companionCid

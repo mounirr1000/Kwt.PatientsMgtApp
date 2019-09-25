@@ -88,5 +88,14 @@ namespace Kwt.PatientsMgtApp.WebUI.Tests
             };
             _paymentRepository.AddPayment(payment);
         }
+
+        [TestMethod]
+        public void GetStatisticalPaymentsReport()
+        {
+            
+            var payments = _paymentRepository.GetStatisticalPaymentsReport(new DateTime(2019,07,21), new DateTime(2019, 07, 23),1,4);
+
+            Assert.IsNotNull(payments);
+        }
     }
 }

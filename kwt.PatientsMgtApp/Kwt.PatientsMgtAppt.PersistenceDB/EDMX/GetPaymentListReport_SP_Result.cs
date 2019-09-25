@@ -51,5 +51,7 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public string AdjustmentReason { get; set; }
         public Nullable<long> RowNumber { get; set; }
         public string DeductionReasonText { get; set; }
+        public string IbanHash { get; set; }
+        public Nullable<double> TotalHash { get; set; }
     }
 }

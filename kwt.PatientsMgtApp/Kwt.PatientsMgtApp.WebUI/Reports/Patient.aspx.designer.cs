@@ -49,6 +49,15 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
         protected global::System.Web.UI.WebControls.DropDownList IsActiveList;
         
         /// <summary>
+        /// IsDeadList control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList IsDeadList;
+        
+        /// <summary>
         /// PatientCid control.
         /// </summary>
         /// <remarks>

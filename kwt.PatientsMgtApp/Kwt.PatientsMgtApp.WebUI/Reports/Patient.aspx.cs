@@ -60,7 +60,19 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                 IsActiveList.DataTextField = "key";
                 IsActiveList.DataValueField = "value";
                 IsActiveList.DataBind();
-                
+
+                //new isdead
+                IDictionary<string, bool?> isDead = new Dictionary<string, bool?>();
+                isDead.Add("----Select----", null);
+                isDead.Add("Dead", true);
+                isDead.Add("Not Dead", false);
+
+                IsDeadList.DataSource = isDead.ToList();
+                IsDeadList.DataBind();
+                IsDeadList.DataTextField = "key";
+                IsDeadList.DataValueField = "value";
+                IsDeadList.DataBind();
+
                 GenerateReport();
                 
             }
@@ -69,6 +81,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
         protected void Search_Click(object sender, EventArgs e)
         {
             bool? selectedActive;
+            bool? selectedDeatStatus;
             if (string.IsNullOrEmpty(IsActiveList.SelectedValue))
             {
                 selectedActive = null;
@@ -77,9 +90,17 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
             {
                 selectedActive = Convert.ToBoolean(IsActiveList.SelectedValue);
             }
-            
+            if (string.IsNullOrEmpty(IsDeadList.SelectedValue))
+            {
+                selectedDeatStatus = null;
+            }
+            else
+            {
+                selectedDeatStatus = Convert.ToBoolean(IsDeadList.SelectedValue);
+            }
+
             //GenerateReport(PatientCid.Text,Doctor.Text,Speciality.Text,Hospital.Text,Status.Checked);
-            GenerateReport(PatientCid.Text, DoctorList.SelectedValue, SpecialityList.SelectedValue, HospitalList.SelectedValue, selectedActive);
+            GenerateReport(PatientCid.Text, DoctorList.SelectedValue, SpecialityList.SelectedValue, HospitalList.SelectedValue, selectedActive,null,null, selectedDeatStatus);
         }
         protected void Clear_Click(object sender, EventArgs e)
         {
@@ -87,21 +108,23 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
             DoctorList.Text = null;
 
             IsActiveList.SelectedValue = null;
-
+            IsDeadList.SelectedValue = null;
             HospitalList.Text = null;
             PatientCid.Text = null;
             IsActiveList.Text = null;
+            IsDeadList.Text = null;
             GenerateReport();
         }
         private void GenerateReport(string patientCid=null,string doctorTxt=null,
                                     string specialityTxt = null,string hospitalTxt = null,
-                                    bool? statusCheck =null, DateTime? startDateTxt = null, DateTime? endDateTxt = null)
+                                    bool? statusCheck =null, DateTime? startDateTxt = null, DateTime? endDateTxt = null, bool? isDead = null)
         {
             var patientId = string.IsNullOrEmpty(patientCid) ? null : patientCid;
             var doctor = string.IsNullOrEmpty(doctorTxt) ? null : doctorTxt;
             var speciality = string.IsNullOrEmpty(specialityTxt) ? null : specialityTxt;
             var hospital = string.IsNullOrEmpty(hospitalTxt) ? null : hospitalTxt;
             var status = statusCheck;//Convert.ToBoolean(statusCheck);//!statusCheck.HasValue || statusCheck.Value==false ? null : statusCheck;
+            var isDeadValue = isDead;//(isDead==false ||isDead==null)? false:true;
 
             var startDate = new DateTime();
             var endDate = new DateTime();
@@ -109,18 +132,18 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
             if (DateTime.TryParse(StartDate.Text, out startDate) && DateTime.TryParse(EndDate.Text, out endDate))
             {
                 patients = _patientRepository.GetPatientsReport(patientId, hospital, doctor, status, speciality,
-                    startDate, endDate);
+                    startDate, endDate, isDeadValue);
             }
             // esle get last 30 days entered patients
             else
             {
                 startDate = DateTime.Now.AddDays(-30).Date;
                 endDate = DateTime.Now.Date;
-                if (patientId!=null || hospital!=null || doctor!=null || status!=null || speciality!=null)
+                if (patientId!=null || hospital!=null || doctor!=null || status!=null || speciality!=null|| isDeadValue!=null)
                 {
-                    patients = _patientRepository.GetPatientsReport(patientId, hospital, doctor, status, speciality, null, null);
+                    patients = _patientRepository.GetPatientsReport(patientId, hospital, doctor, status, speciality, null, null, isDeadValue);
                 }
-                else patients = _patientRepository.GetPatientsReport(patientId, hospital, doctor, status, speciality, startDate, endDate);
+                else patients = _patientRepository.GetPatientsReport(patientId, hospital, doctor, status, speciality, startDate, endDate, isDeadValue);
             }
 
             Message.Text = null;
@@ -134,7 +157,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                     Message.Text = "There is no patient to display in the selected search!";
                 if (startDate == null || endDate == null)
                     Message.Text = "There is no patient in the last 30 days to display in the report!";
-              //  ReportViewer1.Visible = false;
+                ReportViewer1.Visible = false;
             }
             else
             {

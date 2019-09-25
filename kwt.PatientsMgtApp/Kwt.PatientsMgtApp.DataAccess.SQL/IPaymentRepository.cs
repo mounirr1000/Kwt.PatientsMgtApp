@@ -26,6 +26,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
 
         PaymentModel UpdatePayment(PaymentModel payment);
 
+        PaymentModel UpdateApprovedPayment(PaymentModel payment);
+
         int DeletePayment(PaymentModel payment);
 
         PaymentModel GetPaymentObject(string patientCid);
@@ -35,5 +37,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         List<PaymentReportModel> GetPaymentsReport(string patientCid = null, DateTime? startDate = null, DateTime? endDate = null, int? bankId = null);
 
         List<PaymentModel> GetNextPatientPayment(int? numberOfDays = null);
+
+        List<PaymentReportModel> GetStatisticalPaymentsReport(DateTime? startDate = null,
+            DateTime? endDate = null, int? bankId = null, int? agencyId = null);
     }
 }

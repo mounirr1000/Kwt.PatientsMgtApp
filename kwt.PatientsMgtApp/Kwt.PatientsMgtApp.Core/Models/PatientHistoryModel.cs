@@ -31,5 +31,8 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public System.DateTime CreatedDate { get; set; }
         public string PrimaryCompanionCid { get; set; }
 
+        public Nullable<bool> IsDead { get; set; }
+        public Nullable<System.DateTime> DeathDate { get; set; }
+
     }
 }

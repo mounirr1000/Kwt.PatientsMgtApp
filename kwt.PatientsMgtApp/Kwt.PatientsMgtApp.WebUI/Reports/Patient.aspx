@@ -27,48 +27,56 @@
                 </div>
                 <div id="collapse1" class="panel-collapse collapse">
                     <div class="panel-body" >
-                        <ul class="fieldlistReport" style="margin: 0">
-                            <li class="editor-field">
+                        <ul class="fieldlistReport row" style="margin: 0">
+                            <li class="editor-field col-md-3">
 
                                 <label class="" for="StartDate">Created Date</label>
 
                                 <asp:TextBox ID="StartDate" runat="server"></asp:TextBox>
                             </li>
-                            <li class="editor-field">
+                            <li class="editor-field col-md-3">
 
                                 <label class="" for="EndDate">Created Date</label>
 
                                 <asp:TextBox ID="EndDate" runat="server"></asp:TextBox>
                             </li>
 
-                            <li class="editor-field">
+                            <li class="editor-field col-md-3">
 
                                 <label class="" for="IsActiveList">Active</label>
                                 <%--<asp:CheckBox ID="Status" runat="server" Class="k-checkbox" />--%>
                                 <asp:DropDownList ID="IsActiveList" runat="server" Width="100%" ></asp:DropDownList>
                             </li>
-                            <li class="editor-field">
+                            <%-- new isdead --%>
+                            <li class="editor-field col-md-3">
+
+                                <label class="" for="IsDeadList">Is Dead?</label>
+                                <%--<asp:CheckBox ID="Status" runat="server" Class="k-checkbox" />--%>
+                                <asp:DropDownList ID="IsDeadList" runat="server" Width="100%" ></asp:DropDownList>
+                            </li>
+                            <%--  --%>
+                            <li class="editor-field col-md-3">
 
                                 <label class="" for="PatientCid">Patient Cid</label>
                                 <asp:TextBox ID="PatientCid" runat="server" CssClass="k-textbox" Width="100%"></asp:TextBox>
                             </li>
-                            <li class="editor-field">
+                            <li class="editor-field col-md-3">
 
                                 <label class="" for="DoctorList">Doctor</label>
                                 <asp:DropDownList ID="DoctorList" runat="server" Width="100%" ></asp:DropDownList>
                             </li>
-                            <li class="editor-field">
+                            <li class="editor-field col-md-3">
 
                                 <label class="" for="HospitalList">Hospital</label>
                                 <asp:DropDownList ID="HospitalList" runat="server" Width="100%"></asp:DropDownList>
                             </li>
 
-                            <li class="editor-field">
+                            <li class="editor-field col-md-3">
 
                                 <label class="" for="SpecialityList">Speciality</label>
                                 <asp:DropDownList ID="SpecialityList" runat="server" Width="100%"></asp:DropDownList>
                             </li>
-                            <li class="editor-field">
+                            <li class="editor-field col-md-6">
                                 <label class="">&nbsp;</label>
                                
                                 <asp:LinkButton ID="LinkSearchButton" runat="server" Class="k-button" OnClick="Search_Click"><i class="fa fa-search" style="color:yellowgreen"></i> Search</asp:LinkButton>

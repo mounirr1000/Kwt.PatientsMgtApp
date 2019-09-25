@@ -172,8 +172,9 @@
                             @Html.LabelFor(model => model.PaymentDate, new { @class = "" })
                             @Html.TextBoxFor(model => model.PaymentDate, new { @class = "", style = "width: 100%;" })
                         </li>
-                        @if (Model.PayRates != null && !String.IsNullOrEmpty(Model.CompanionCID))
-                    {
+                        @if (Model.PayRates != null && !String.IsNullOrEmpty(Model.CompanionCID)
+                            && Model.HasCompanion != null && Model.HasCompanion == true)
+                        {
                         <li class="col-md-3">
                             @Html.LabelFor(model => model.CompanionPayRate, new { @class = "" })
                             @Html.DropDownListFor(model => model.CompanionPayRate, new List<SelectListItem>
@@ -187,7 +188,7 @@
                         }
                         else
                         {
-                        <li class="col-md-3"><label>This Patient Has No Companion</label></li>
+                        <li class="col-md-3"><label>This Patient Has No Active Companion</label></li>
                         }
                         <li class="col-md-3">
                             @Html.LabelFor(model => model.PatientPayRate, new { @class = "" })
@@ -252,7 +253,7 @@
                         }
                         else
                         {
-                        <li class="col-md-3"><label>This Patient Has No Companion</label></li>
+                        <li class="col-md-3"><label>This Patient Has No Active Companion</label></li>
                         }
                         <li class="col-md-3">
                             @Html.LabelFor(model => model.TotalDue, new { @class = "" })

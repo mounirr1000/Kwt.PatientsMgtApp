@@ -257,7 +257,16 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         public void ExecuteProcedure(string procedureCommand, params SqlParameter[] sqlParams)
         {
             dbContext.Database.ExecuteSqlCommand(procedureCommand, sqlParams);
+
+           
         }
+
+        //Temp fix for calling tableValuedFunction
+        //public List<StatisticalPaymentReport_FN_Result> ExecuteTableValuedFucntion(DateTime? startDate, DateTime? endDate, int? bankId, int? agencyId)
+        //{
+        //   var result= dbContext.StatisticalPaymentReport_FN(startDate, endDate, bankId, agencyId);
+        //    return result.ToList();
+        //}
 
         public List<T> ExecuteProcedure<T>(string procedureCommand, Dictionary<string, object> sqlParams, bool transaction = false)
         {

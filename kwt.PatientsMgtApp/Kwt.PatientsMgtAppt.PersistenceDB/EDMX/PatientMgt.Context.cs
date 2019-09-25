@@ -53,7 +53,7 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public virtual DbSet<PaymentHistory> PaymentHistories { get; set; }
         public virtual DbSet<BookType> BookTypes { get; set; }
     
-        public virtual ObjectResult<GetPatientListReport_SP_Result> GetPatientListReport_SP(string pCid, string hospital, string doctor, Nullable<bool> status, string speciality, Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate)
+        public virtual ObjectResult<GetPatientListReport_SP_Result> GetPatientListReport_SP(string pCid, string hospital, string doctor, Nullable<bool> status, string speciality, Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate, Nullable<bool> isDead)
         {
             var pCidParameter = pCid != null ?
                 new ObjectParameter("pCid", pCid) :
@@ -83,7 +83,11 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
                 new ObjectParameter("endDate", endDate) :
                 new ObjectParameter("endDate", typeof(System.DateTime));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetPatientListReport_SP_Result>("GetPatientListReport_SP", pCidParameter, hospitalParameter, doctorParameter, statusParameter, specialityParameter, startDateParameter, endDateParameter);
+            var isDeadParameter = isDead.HasValue ?
+                new ObjectParameter("isDead", isDead) :
+                new ObjectParameter("isDead", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetPatientListReport_SP_Result>("GetPatientListReport_SP", pCidParameter, hospitalParameter, doctorParameter, statusParameter, specialityParameter, startDateParameter, endDateParameter, isDeadParameter);
         }
     
         public virtual ObjectResult<GetPaymentListReport_SP_Result> GetPaymentListReport_SP(string pCid, Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate, Nullable<int> bankId)
@@ -136,6 +140,27 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
                 new ObjectParameter("daAgencyId", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<StatisticalPaymentReport_FN_Result>("[PatientsMgtEntities].[StatisticalPaymentReport_FN](@paymentStartDate, @paymentEndDate, @kfhBankId, @daAgencyId)", paymentStartDateParameter, paymentEndDateParameter, kfhBankIdParameter, daAgencyIdParameter);
+        }
+    
+        public virtual ObjectResult<GetStatisticalPaymentReport_SP_Result> GetStatisticalPaymentReport_SP(Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate, Nullable<int> bankId, Nullable<int> agency)
+        {
+            var startDateParameter = startDate.HasValue ?
+                new ObjectParameter("startDate", startDate) :
+                new ObjectParameter("startDate", typeof(System.DateTime));
+    
+            var endDateParameter = endDate.HasValue ?
+                new ObjectParameter("endDate", endDate) :
+                new ObjectParameter("endDate", typeof(System.DateTime));
+    
+            var bankIdParameter = bankId.HasValue ?
+                new ObjectParameter("bankId", bankId) :
+                new ObjectParameter("bankId", typeof(int));
+    
+            var agencyParameter = agency.HasValue ?
+                new ObjectParameter("agency", agency) :
+                new ObjectParameter("agency", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetStatisticalPaymentReport_SP_Result>("GetStatisticalPaymentReport_SP", startDateParameter, endDateParameter, bankIdParameter, agencyParameter);
         }
     }
 }

@@ -11,9 +11,14 @@
         @if (User.IsInAnyRoles(CrudRoles.PatientUpdateRoles))
         {
             <a href="@Url.Action("Edit", new {patientCid = Model.PatientCID})" class="k-button"><i class="fa fa-pencil" style="color: blueviolet"></i> Edit</a>
-            <div class="pt-3 pb-3 col-md-3">
+            
+        }
+        @if (User.IsInAnyRoles(CrudRoles.PatientCrudRoles))
+        {
+            @* Uncomment the next lines once the invoice is complete *@
+            @*<div class="pt-3 pb-3 col-md-3">
                 <a href="@Url.Action("GetPatientFolders", "Patient", new { patientCid = Model.PatientCID, patientName=Model.PatientFName+" "+Model.PatientMName+" "+Model.PatientLName })" class="k-button"><i class="fa fa-file-pdf-o" style="color:lightcoral"></i> Patient Files</a>
-            </div>
+            </div>*@
         }
     </p>
 </div>
@@ -76,11 +81,11 @@
                             </td>
                             <td>
                                 @if (Model.IsActive)
-                        {
-                        <span style="color: yellowgreen"> Active</span>
-                        }
-                        else
-                        {<span style="color: lightcoral"> Not Active</span>}
+                                {
+                                    <span style="color: yellowgreen"> Active</span>
+                                }
+                                else
+                                {<span style="color: lightcoral"> Not Active</span>}
                             </td>
                         </tr>
                     </tbody>
@@ -328,7 +333,7 @@
 
 
     </fieldset>
-    @if (User.IsInAnyRoles("Admin", "Manager", "Auditor"))
+    @if (User.IsInAnyRoles(CrudRoles.PaymentCrudRoles))
     {
         <button data-target="#panelbarPayment" data-toggle="collapse"><i></i> Payments Information</button>
         <fieldset id="panelbarPayment" class="collapse">
@@ -360,39 +365,39 @@
         <h3>Patient History</h3>
         @if (Model.PatientHistories.Any())
             {
-        <ul>
-            <li>
-                <table id="patientHistoryInfo">
+            <ul>
+                <li>
+                    <table id="patientHistoryInfo">
 
-                    <thead>
-                        <tr>
-                            <th>
-                                Patient CID
-                            </th>
-                            <th>
-                                Name
-                            </th>
-                            <th>
-                                Hospital
-                            </th>
-                            <th>
-                                Doctor
-                            </th>
+                        <thead>
+                            <tr>
+                                <th>
+                                    Patient CID
+                                </th>
+                                <th>
+                                    Name
+                                </th>
+                                <th>
+                                    Hospital
+                                </th>
+                                <th>
+                                    Doctor
+                                </th>
 
-                            <th>
-                                Date In
-                            </th>
-                            <th>
-                                Date Out
-                            </th>
-                            <th>
-                                Notes
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var patient in Model.PatientHistories)
-                                {
+                                <th>
+                                    Date In
+                                </th>
+                                <th>
+                                    Date Out
+                                </th>
+                                <th>
+                                    Notes
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var patient in Model.PatientHistories)
+                            {
                                 <tr>
                                     <td>
                                         @patient.PatientCID
@@ -418,63 +423,63 @@
                                     </td>
 
                                 </tr>
-                                }
-                    </tbody>
+                            }
+                        </tbody>
 
-                </table>
-            </li>
-        </ul>
+                    </table>
+                </li>
+            </ul>
 
-            }
-            else
-            {
-        <ul>
-            <li>
-                <span>No patient history found in our records for this patient</span>
-            </li>
-        </ul>
+        }
+        else
+        {
+            <ul>
+                <li>
+                    <span>No patient history found in our records for this patient</span>
+                </li>
+            </ul>
 
-            }
+        }
 
 
         <h3>Companions History</h3>
         @if (Model.CompanionHistories.Any())
             {
-        <ul>
-            <li>
-                <table id="patientCompanionHistoryInfo">
+            <ul>
+                <li>
+                    <table id="patientCompanionHistoryInfo">
 
-                    <thead>
-                        <tr>
-                            <th>
-                                Companion CID
-                            </th>
-                            <th>
-                                Name
-                            </th>
-                            <th>
-                                Status
-                            </th>
-                            <th>
-                                Beneficiary?
-                            </th>
-                            <th>
-                                Date In
-                            </th>
-                            <th>
-                                Date Out
-                            </th>
-                            <th>
-                                Comapnion Type
-                            </th>
-                            <th>
-                                Notes
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var companion in Model.CompanionHistories)
-                                {
+                        <thead>
+                            <tr>
+                                <th>
+                                    Companion CID
+                                </th>
+                                <th>
+                                    Name
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                <th>
+                                    Beneficiary?
+                                </th>
+                                <th>
+                                    Date In
+                                </th>
+                                <th>
+                                    Date Out
+                                </th>
+                                <th>
+                                    Comapnion Type
+                                </th>
+                                <th>
+                                    Notes
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var companion in Model.CompanionHistories)
+                            {
                                 <tr>
                                     <td>
                                         @companion.CompanionCID
@@ -484,23 +489,23 @@
                                     </td>
                                     <td>
                                         @if (companion.IsActive == true)
-                                            {
+                                        {
                                             <span style="color: yellowgreen"> Active</span>
-                                            }
-                                            else
-                                            {
+                                        }
+                                        else
+                                        {
                                             <span style="color: lightcoral"> Not Active</span>
-                                            }
+                                        }
                                     </td>
                                     <td>
                                         @if (companion.IsBeneficiary == true)
-                                            {
+                                        {
                                             <span style="color: yellowgreen"> Beneficiary</span>
-                                            }
-                                            else
-                                            {
+                                        }
+                                        else
+                                        {
                                             <span style="color: lightcoral"> Not Beneficiary</span>
-                                            }
+                                        }
                                     </td>
                                     <td>
                                         @companion.DateInFormatted
@@ -516,23 +521,23 @@
                                     </td>
 
                                 </tr>
-                                }
-                    </tbody>
+                            }
+                        </tbody>
 
-                </table>
-            </li>
-        </ul>
+                    </table>
+                </li>
+            </ul>
 
-            }
-            else
-            {
-        <ul>
-            <li>
-                <span>No companion history found in our records for this patient</span>
-            </li>
-        </ul>
+        }
+        else
+        {
+            <ul>
+                <li>
+                    <span>No companion history found in our records for this patient</span>
+                </li>
+            </ul>
 
-            }
+        }
 
     </fieldset>
 
@@ -596,7 +601,7 @@
             var payments = @Html.Raw(Json.Encode(Model.Payments));
             console.log(payments);
             $("#patientPaymentInfo").kendoGrid({
-                height: 350,
+                //height: 350,
                 scrollable: {
                     virtual: true
                 },
@@ -659,7 +664,7 @@
                 }
             });
             $("#patientHistoryInfo").kendoGrid({
-                height: 350,
+                //height: 350,
                 scrollable: {
                     virtual: true
                 },
@@ -670,12 +675,12 @@
 
                 },
                 serverPaging: true,
-                pageSize: 1
+                pageSize: 3
                 //groupable: true,
                 //sortable: true
             });
             $("#patientCompanionHistoryInfo").kendoGrid({
-                height: 350,
+                //height: 350,
                 scrollable: {
                     virtual: true
                 },

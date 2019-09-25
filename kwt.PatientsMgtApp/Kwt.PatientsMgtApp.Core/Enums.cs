@@ -30,11 +30,12 @@ namespace Kwt.PatientsMgtApp.Core
 
         public enum ReportType
         {
-            Kuwait = 1,
+            Kuwait = 1,// bank
             Archive = 2,
             Details = 3,
             Ministry = 4,
             Statistical = 5,
+            Statistical2 = 6,
         }
         public enum PaymentType
         {

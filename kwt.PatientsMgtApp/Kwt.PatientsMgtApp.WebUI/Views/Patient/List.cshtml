@@ -17,9 +17,11 @@
         <div class="pt-3 pb-3 col-md-3">
             <a href="@Url.Action("Create", "Patient")" class="k-button"><i class="fa fa-plus" style="color: yellowgreen"></i> New Patient</a>
         </div>
-        <div class="pt-3 pb-3 col-md-3">
+
+        @* Uncomment the next lines once the invoice is complete *@
+        @*<div class="pt-3 pb-3 col-md-3">
             <a href="@Url.Action("AddPatientBooks", "Patient")" class="k-button"><i class="fa fa-book"></i> Patient Books</a>
-        </div>
+        </div>*@
 
     </div>
 }
@@ -70,12 +72,14 @@
     </script>
     <script type="text/javascript">
         var patients = @Html.Raw(jsonModel);
+        console.log(patients);
         $('document').ready(function() {
             $("#content").css("visibility", "visible");
             var isAdmin =   @Html.Raw(Json.Encode(User.IsInAnyRoles(CrudRoles.PatientDeleteRoles)));
 
             function getTemplate(patientCid) {
                 if (isAdmin) {
+                    patientCid = String("'"+patientCid+"'");// convert the id into string and add quatation to it ''
                     return '<a href="javascript:confirmDelete('+patientCid+','+'\'patientCid\''+')" id='+patientCid+'> <i class="fa fa-times fa-2x" style="color: lightcoral"></i></a>';
                 }
                 return '';
@@ -121,7 +125,7 @@
                     {
                         field: "EndTreatDate",
                         title: "End Treatment",
-                        template: "#if(EndTreatDate==null){# #: '' # #}else{##: kendo.toString(kendo.parseDate(FirstApptDAte, 'yyyy-MM-dd'), 'MM/dd/yyyy')##}#"
+                        template: "#if(EndTreatDate==null){# #: '' # #}else{##: kendo.toString(kendo.parseDate(EndTreatDate, 'yyyy-MM-dd'), 'MM/dd/yyyy')##}#"
                     },
                     {
                         field: "IsActive",

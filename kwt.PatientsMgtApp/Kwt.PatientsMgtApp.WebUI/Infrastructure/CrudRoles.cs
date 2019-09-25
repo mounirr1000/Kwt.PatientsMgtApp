@@ -43,6 +43,9 @@ namespace Kwt.PatientsMgtApp.WebUI.Infrastructure
         public static string[] PaymentDeleteRoles => new[] { Roles.Admin, Roles.Accountant, Roles.SuperAdmin };
         public const string PaymentDeleteRolesForAutorizeAttribute = Roles.Admin + ", " + Roles.Accountant + ", " + Roles.SuperAdmin;
 
+        public static string[] PaymentApprovalRoles => new[] { Roles.Auditor, Roles.Admin, Roles.SuperAdmin };
+        public const string PaymentApprovalRolesForAutorizeAttribute = Roles.Admin + ", " + Roles.Auditor + ", " + Roles.SuperAdmin;
+
         //admin
         public static string[] AdminCrudRoles => new[] { Roles.Admin, Roles.SuperAdmin };
         public const string AdminCrudRolesForAutorizeAttribute = Roles.Admin + ", "  + Roles.SuperAdmin ;
@@ -55,6 +58,11 @@ namespace Kwt.PatientsMgtApp.WebUI.Infrastructure
         public static string[] AdminDeleteRoles => new[] { Roles.Admin, Roles.SuperAdmin };
         public const string AdminDeleteRolesForAutorizeAttribute = Roles.Admin + ", " + Roles.SuperAdmin;
 
+        //Payment Report
+        public static string[] PaymentReportCrudRoles => new[] { Roles.Accountant, Roles.Auditor, Roles.Admin, Roles.SuperAdmin };
+        public const string PaymentReportCrudRolesForAutorizeAttribute = Roles.Admin + ", " + Roles.SuperAdmin + ", "+ Roles.Accountant + ", " + Roles.Auditor;
+
+        //Menu
         public static string[] MainMenuAccess => new[] { Roles.Accountant, Roles.Admin, Roles.Auditor, Roles.Editor, Roles.SuperAdmin, Roles.Medical, Roles.User };
         public static string[] MainMenuAdminAccess => new[] {  Roles.Admin,  Roles.SuperAdmin};
 
