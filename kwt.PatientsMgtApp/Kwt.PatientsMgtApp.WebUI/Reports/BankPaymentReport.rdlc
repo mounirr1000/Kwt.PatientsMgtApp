@@ -110,10 +110,9 @@
                           <TextRuns>
                             <TextRun>
                               <Label>TotalHash</Label>
-                              <Value>=Sum(Fields!TotalHash.Value, "BankPaymentReportDataset")</Value>
+                              <Value>=Fields!SumTotalHash.Value</Value>
                               <Style>
                                 <FontWeight>Bold</FontWeight>
-                                <Format>0;(0)</Format>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -715,6 +714,9 @@
               <TablixMembers>
                 <TablixMember />
               </TablixMembers>
+              <Visibility>
+                <Hidden>=IIf(Fields!FinalAmount.Value=0,true, false)</Hidden>
+              </Visibility>
             </TablixMember>
           </TablixMembers>
         </TablixRowHierarchy>
@@ -1975,6 +1977,38 @@
         <Field Name="TotalHash">
           <DataField>TotalHash</DataField>
           <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="IsDeleted">
+          <DataField>IsDeleted</DataField>
+          <rd:TypeName>System.Boolean</rd:TypeName>
+        </Field>
+        <Field Name="IsVoid">
+          <DataField>IsVoid</DataField>
+          <rd:TypeName>System.Boolean</rd:TypeName>
+        </Field>
+        <Field Name="PaymentBeneficiaryName">
+          <DataField>PaymentBeneficiaryName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PaymentIban">
+          <DataField>PaymentIban</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PaymentBankName">
+          <DataField>PaymentBankName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PaymentBankCode">
+          <DataField>PaymentBankCode</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PaymentBeneficiaryCID">
+          <DataField>PaymentBeneficiaryCID</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SumTotalHash">
+          <DataField>SumTotalHash</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
       </Fields>
       <rd:DataSetInfo>

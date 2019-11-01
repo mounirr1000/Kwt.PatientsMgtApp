@@ -138,7 +138,7 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public List<PaymentModel> Payments { get; set; }
         public List<CompanionModel> Companions { get; set; }
 
-        public CompanionModel PrimaryCompanion { get { return Companions!=null? Companions.Where(c=>c.CompanionType=="Primary" && c.JustBeneficiary!=true)?.SingleOrDefault():null; } }
+        public CompanionModel PrimaryCompanion { get { return Companions != null ? Companions.Where(c => c.CompanionType == "Primary" && c.JustBeneficiary != true && c.DateOut == null && c.IsActive == true)?.FirstOrDefault() : null; } }
         public BeneficiaryModel Beneficiary { get; set; }
 
         public  List<CompanionHistoryModel> CompanionHistories { get; set; }

@@ -37,5 +37,6 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public string ModifiedBy { get; set; }
         public string IsDead { get; set; }
         public Nullable<System.DateTime> DeathDate { get; set; }
+        public Nullable<System.DateTime> AuthorizedDate { get; set; }
     }
 }

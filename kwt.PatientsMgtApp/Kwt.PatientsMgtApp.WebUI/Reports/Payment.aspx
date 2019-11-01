@@ -37,8 +37,8 @@
                                     <asp:ListItem Text="DETAILS REPORT" Value="3" Selected="True"></asp:ListItem>
                                     <asp:ListItem Text="MINISTRY REPORT" Value="4"></asp:ListItem>
                                     <%--@* Uncomment the next lines once the invoice is complete *@--%>
-                                    <%--<asp:ListItem Text="STATISTICAL REPORT-1" Value="5"></asp:ListItem>
-                                    <asp:ListItem Text="STATISTICAL REPORT-2" Value="6"></asp:ListItem>--%>
+                                    <asp:ListItem Text="STATISTICAL REPORT-1" Value="5"></asp:ListItem>
+                                    <asp:ListItem Text="STATISTICAL REPORT-2" Value="6"></asp:ListItem>
                                 </asp:DropDownList>
                             </li>
                         </ul>

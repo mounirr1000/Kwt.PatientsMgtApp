@@ -40,7 +40,12 @@
 
                                 <asp:TextBox ID="EndDate" runat="server"></asp:TextBox>
                             </li>
+                             <li class="editor-field col-md-3">
 
+                                <label class="" for="AuthorizedDate">Authorized Date</label>
+
+                                <asp:TextBox ID="AuthorizedDate" runat="server"></asp:TextBox>
+                            </li>
                             <li class="editor-field col-md-3">
 
                                 <label class="" for="IsActiveList">Active</label>
@@ -120,7 +125,7 @@
             $("#PatientCid").kendoMaskedTextBox({
                 mask: "AAAAAAAAAAAA"
             });
-            $("#StartDate, #EndDate").kendoDatePicker();
+            $("#StartDate, #EndDate, #AuthorizedDate").kendoDatePicker();
             //$("#DoctorList, #HospitalList, #SpecialityList").kendoDropDownList({
 
             //});

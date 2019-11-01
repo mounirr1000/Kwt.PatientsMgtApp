@@ -13,7 +13,11 @@
         {
             if (User.IsInAnyRoles(CrudRoles.PaymentUpdateRoles))
             {
-                <a href="@Url.Action("Edit", new {paymentId=Model.Id})" class="k-button"><i class="fa fa-pencil" style="color: blueviolet"></i> Edit</a>
+                if (Model.IsVoid != true)
+                {
+                    <a href="@Url.Action("Edit", new {paymentId=Model.Id})" class="k-button"><i class="fa fa-pencil" style="color: blueviolet"></i> Edit</a>
+                }
+
             }
             <a href="javascript:window.print()" class="k-button"><i class="fa fa-print" style="color: blueviolet"></i> Print This Page</a>
             <a href="javascript:showTodayPayments()" class="k-button"><i class="fa fa-eye" style="color: blueviolet"></i> Show Voucher</a>
@@ -173,30 +177,30 @@
         <legend>Companion Information</legend>
         @if (Model.CompanionCID != null)
         {
-        <ul class="fieldlist form-row">
-            <li class="col-md-3">
-                @Html.LabelFor(model => model.CompanionCID, new { @class = "" })
-                @Html.TextBoxFor(model => model.CompanionCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-            </li>
-            <li class="col-md-3">
-                @Html.LabelFor(model => model.CompanionFName, new { @class = "" })
-                @Html.TextBoxFor(model => model.CompanionFName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-            </li>
-            <li class="col-md-3">
-                @Html.LabelFor(model => model.CompanionMName, new { @class = "" })
-                @Html.TextBoxFor(model => model.CompanionMName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-            </li>
-            <li class="col-md-3">
-                @Html.LabelFor(model => model.CompanionLName, new { @class = "" })
-                @Html.TextBoxFor(model => model.CompanionLName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
-            </li>
+            <ul class="fieldlist form-row">
+                <li class="col-md-3">
+                    @Html.LabelFor(model => model.CompanionCID, new { @class = "" })
+                    @Html.TextBoxFor(model => model.CompanionCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                </li>
+                <li class="col-md-3">
+                    @Html.LabelFor(model => model.CompanionFName, new { @class = "" })
+                    @Html.TextBoxFor(model => model.CompanionFName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                </li>
+                <li class="col-md-3">
+                    @Html.LabelFor(model => model.CompanionMName, new { @class = "" })
+                    @Html.TextBoxFor(model => model.CompanionMName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                </li>
+                <li class="col-md-3">
+                    @Html.LabelFor(model => model.CompanionLName, new { @class = "" })
+                    @Html.TextBoxFor(model => model.CompanionLName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                </li>
 
-        </ul>
+            </ul>
         }
         else
         {
 
-        <span>No active companion found in our records for this patient</span>
+            <span>No active companion found in our records for this patient</span>
 
 
         }
@@ -242,17 +246,29 @@
             <div class="modal-body" id="voucherPrintBody" style="font-size: 22px;">
                 <fieldset>
                     <legend>Voucher Info</legend>
+
+
+                    @if (Model.IsVoid == true)
+                    {
+
+                        <span class="alert-danger" style="text-transform: uppercase"> This Is A Void Payment, It will not count as a payment for this patient </span>
+
+                    }
+
                     <ul class="fieldlist form-row">
-                        <li>
+
+                        <li class="col-md-6">
                             <label>Printed By</label>
                             @User.Identity.Name
                         </li>
-                        <li>
+                        <li class="col-md-6">
                             <label>Printed Date</label>
                             @DateTime.Now
                         </li>
                     </ul>
                 </fieldset>
+
+
                 <fieldset>
                     <legend>Patient Info</legend>
                     <ul class="fieldlist form-row">
@@ -271,24 +287,24 @@
                     <legend>Companion Info</legend>
                     @if (Model.HasCompanion == true)
                     {
-                    <ul class="fieldlist form-row">
-                        <li class="col-md-6">
-                            <label>Companion CID</label>
-                            @Model.CompanionCID
-                        </li>
-                        <li class="col-md-6">
-                            <label>Companion Name</label>
-                            @Model.CompanionFullName
-                        </li>
-                    </ul>
+                        <ul class="fieldlist form-row">
+                            <li class="col-md-6">
+                                <label>Companion CID</label>
+                                @Model.CompanionCID
+                            </li>
+                            <li class="col-md-6">
+                                <label>Companion Name</label>
+                                @Model.CompanionFullName
+                            </li>
+                        </ul>
                     }
                     else
                     {
-                    <ul class="fieldlist form-row">
-                        <li class="col-md-6">
-                            <label>No Primary Companion with this patient</label>
-                        </li>
-                    </ul>
+                        <ul class="fieldlist form-row">
+                            <li class="col-md-6">
+                                <label>No Primary Companion with this patient</label>
+                            </li>
+                        </ul>
                     }
                 </fieldset>
 
@@ -312,29 +328,29 @@
                             <div class="col-md-4"><label>Initial Amount</label> @Model.TotalDue KWD</div>
                             @if (Model.PaymentDeductionObject != null)
                             {
-                            <div class="col-md-4">
-                                <label>Total Deduction</label>
-                                @if (@Model.PaymentDeductionObject.TotalDeduction != null)
+                                <div class="col-md-4">
+                                    <label>Total Deduction</label>
+                                    @if (@Model.PaymentDeductionObject.TotalDeduction != null)
                                     {
-                                    @Model.PaymentDeductionObject.TotalDeduction
-                                    <text> KWD</text>
+                                        @Model.PaymentDeductionObject.TotalDeduction
+                                        <text> KWD</text>
                                     }
                                     else
                                     {
-                                    <text>0 KWD</text>
+                                        <text>0 KWD</text>
                                     }
-                            </div>
+                                </div>
                             }
                             <div class="col-md-4">
                                 <label>Final Amount</label>
                                 @if (@Model.FinalAmount != null)
                                 {
-                                @Model.FinalAmount
-                                <text> KWD</text>
+                                    @Model.FinalAmount
+                                    <text> KWD</text>
                                 }
                                 else
                                 {
-                                @Model.TotalDue<text> KWD</text>
+                                    @Model.TotalDue<text> KWD</text>
                                 }
                             </div>
                         </div>
@@ -359,7 +375,7 @@
                         else
                         {
                             <li class="col-md-6"><label>Payment Note</label> @Model.Notes</li>
-                        }                        
+                        }
                     </ul>
                 </fieldset>
                 <fieldset>
@@ -542,7 +558,7 @@
                 }
             ],
             dataSource: {
-                data: paymentVoucherHistory
+                data: paymentVoucherHistory//paymentList
             }
         });
 

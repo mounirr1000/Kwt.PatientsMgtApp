@@ -56,6 +56,8 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public Nullable<int> RejectedPaymentId { get; set; }
         public Nullable<int> AdjustmentReasonID { get; set; }
         public string AdjustmentReason { get; set; }
+        public Nullable<bool> IsVoid { get; set; }
+        public Nullable<bool> IsDeleted { get; set; }
     
         public virtual Payment Payment { get; set; }
     }

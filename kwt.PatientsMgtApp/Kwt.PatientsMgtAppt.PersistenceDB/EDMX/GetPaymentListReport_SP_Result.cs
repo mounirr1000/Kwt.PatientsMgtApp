@@ -53,5 +53,13 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public string DeductionReasonText { get; set; }
         public string IbanHash { get; set; }
         public Nullable<double> TotalHash { get; set; }
+        public Nullable<bool> IsDeleted { get; set; }
+        public Nullable<bool> IsVoid { get; set; }
+        public string PaymentBeneficiaryName { get; set; }
+        public string PaymentIban { get; set; }
+        public string PaymentBankName { get; set; }
+        public string PaymentBankCode { get; set; }
+        public string PaymentBeneficiaryCID { get; set; }
+        public Nullable<decimal> SumTotalHash { get; set; }
     }
 }

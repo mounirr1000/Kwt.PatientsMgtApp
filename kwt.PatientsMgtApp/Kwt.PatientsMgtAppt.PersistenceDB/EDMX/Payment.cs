@@ -50,6 +50,13 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public Nullable<bool> IsApproved { get; set; }
         public Nullable<bool> IsVoid { get; set; }
         public Nullable<bool> IsDeleted { get; set; }
+        public string BeneficiaryFName { get; set; }
+        public string BeneficiaryMName { get; set; }
+        public string BeneficiaryLName { get; set; }
+        public string BeneficiaryCID { get; set; }
+        public string BankName { get; set; }
+        public string BankCode { get; set; }
+        public string IBan { get; set; }
     
         public virtual Beneficiary Beneficiary { get; set; }
         public virtual Companion Companion { get; set; }

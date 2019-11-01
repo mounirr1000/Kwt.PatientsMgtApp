@@ -1,33 +1,42 @@
-﻿
+﻿@using Kwt.PatientsMgtApp.WebUI.Infrastructure
+
 <script type="text/javascript">
     var toBeDeletedId;
-
+    var isAccountant =   @Html.Raw(Json.Encode(User.IsInAnyRoles(CrudRoles.AccountantCrudRoles)));
     //debugger;
     // var controller;//='@ViewContext.RouteData.Values["controller"].ToString()';
     var query;
-
+    var isPaymentVoid=false;
     function Delete(id, queryString) {
-       // debugger;
+        // debugger;
         if (queryString) {
             queryString = queryString.toString();
-            window.location.href = '@Url.Action("Delete")' + "/?" + queryString + "=" + id;
+            if(isPaymentVoid)
+                window.location.href = '@Url.Action("VoidPayment")' + "/?" + queryString + "=" + id;
+            else  window.location.href = '@Url.Action("Delete")' + "/?" + queryString + "=" + id;
             //console.log(window.location.href);
         }
         else $('#deleteConfirmModal').modal('hide');
     }
 
 
-    function confirmDelete(id, queryString) {
+    function confirmDelete(id, queryString, ispaymentVoid) {
         toBeDeletedId = id;
-        console.log("confirm delete from receiver id ", id);
         // controller = controllerName,
         query = queryString;
-        $('#deleteConfirmModal').modal('show');
+        if (ispaymentVoid) {
+            isPaymentVoid = ispaymentVoid;
+            $('#voidConfirmModal').modal('show');
+        }else
+            $('#deleteConfirmModal').modal('show');
 
     }
 
     $(function () {
         $("#deleteConfirmModal").on('click', "#deleteConfirm", function () {
+            Delete(toBeDeletedId, query);
+        });
+        $("#voidConfirmModal").on('click', "#voidConfirm", function () {
             Delete(toBeDeletedId, query);
         });
     });

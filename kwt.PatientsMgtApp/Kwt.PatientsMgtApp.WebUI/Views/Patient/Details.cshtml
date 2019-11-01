@@ -16,9 +16,9 @@
         @if (User.IsInAnyRoles(CrudRoles.PatientCrudRoles))
         {
             @* Uncomment the next lines once the invoice is complete *@
-            @*<div class="pt-3 pb-3 col-md-3">
+            <div class="pt-3 pb-3 col-md-3">
                 <a href="@Url.Action("GetPatientFolders", "Patient", new { patientCid = Model.PatientCID, patientName=Model.PatientFName+" "+Model.PatientMName+" "+Model.PatientLName })" class="k-button"><i class="fa fa-file-pdf-o" style="color:lightcoral"></i> Patient Files</a>
-            </div>*@
+            </div>
         }
     </p>
 </div>

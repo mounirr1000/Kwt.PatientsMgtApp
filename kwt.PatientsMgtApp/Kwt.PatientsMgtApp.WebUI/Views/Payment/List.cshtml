@@ -81,57 +81,57 @@
 </div>
 @* new February 28, 2019 *@
 <div class="pb-5 pt-5">
-    @if (Model.Any())
+    @*@if (Model.Any())
+        {*@
+    @if (!User.IsInAnyRoles(CrudRoles.PaymentApprovalRoles))
     {
-        if (!User.IsInAnyRoles(CrudRoles.PaymentApprovalRoles))
-        {
-            <div class="pb-3">
-                @{Html.RenderPartial("_PaymentSearchForm");}
+        <div class="pb-3">
+            @{Html.RenderPartial("_PaymentSearchForm");}
+        </div>
+                }
+
+    <div class="loader"></div>
+
+
+    @if (User.IsInAnyRoles(CrudRoles.PaymentApprovalRoles))
+    {
+
+        @* Uncomment the next lines once the invoice is complete *@
+        <div class="row pb-3">
+            <div class="btn-group btn-group-toggle col-md-8" data-toggle="buttons">
+                <label class="btn btn-secondary active">
+                    <input type="radio" name="paymentApprovement" id="pending" autocomplete="off" value="2"> Pending Approval
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="paymentApprovement" id="approved" autocomplete="off" checked value="1"> Approved Payment
+                </label>
             </div>
-                    }
+        </div>
+        <div class="row pb-3">
+            <div class="col-md-4">
+                <input class=k-textbox type=text id="txtSearchString" style="width: 100%" placeholder="Voucher# Or PatientCID..." />
+            </div>
+            <div class="col-md-8">
+                <button type="submit" class="k-button" id="btnSearch"><i class="fa fa-search" style="color: yellowgreen"></i> Search</button>
+                <button type="submit" class="k-button k-notification-button" id="btnClear"><i class="fa fa-times" style="color: lightblue"></i> Clear</button>
+            </div>
 
-                    <div class="loader"></div>
-
-
-                    if (User.IsInAnyRoles(CrudRoles.PaymentApprovalRoles))
-                    {
-
-                        @* Uncomment the next lines once the invoice is complete *@
-                        @*<div class="row pb-3">
-                                <div class="btn-group btn-group-toggle col-md-8" data-toggle="buttons">
-                                    <label class="btn btn-secondary active">
-                                        <input type="radio" name="paymentApprovement" id="pending" autocomplete="off" value="2"> Pending Approval
-                                    </label>
-                                    <label class="btn btn-secondary">
-                                        <input type="radio" name="paymentApprovement" id="approved" autocomplete="off" checked value="1"> Approved Payment
-                                    </label>
-                                </div>
-                            </div>*@
-                        <div class="row pb-3">
-                            <div class="col-md-4">
-                                <input class=k-textbox type=text id="txtSearchString" style="width: 100%" placeholder="Voucher# Or PatientCID..." />
-                            </div>
-                            <div class="col-md-8">
-                                <button type="submit" class="k-button" id="btnSearch"><i class="fa fa-search" style="color: yellowgreen"></i> Search</button>
-                                <button type="submit" class="k-button k-notification-button" id="btnClear"><i class="fa fa-times" style="color: lightblue"></i> Clear</button>
-                            </div>
-
-                        </div>
+        </div>
 
 
-                    }
+    }
 
-                    <div id="content" style="visibility: hidden;">
-                        <div id="paymentList"></div>
+    <div id="content" style="visibility: hidden;">
+        <div id="paymentList"></div>
 
-                    </div>
-                    }
-                    else
-                    {
-                        <div class="alert-info">
-                            No Payments to show in our records!
-                        </div>
-                    }
+    </div>
+    @*}*@
+    @*else
+        {
+            <div class="alert-success">
+                No Payments to show in our records hahaha!
+            </div>
+        }*@
 
 </div>
 
@@ -163,10 +163,17 @@
             //
             var data = @Html.Raw(jsonModel);
             console.log(data);
-            var isAdmin =   @Html.Raw(Json.Encode(User.IsInAnyRoles(CrudRoles.PaymentDeleteRoles)));
+            var isAdmin =   @Html.Raw(Json.Encode(User.IsInAnyRoles(CrudRoles.AdminCrudRoles)));
+            var isAccountant =   @Html.Raw(Json.Encode(User.IsInAnyRoles(CrudRoles.PaymentDeleteRoles)));
             var isAuditor =  @Html.Raw(Json.Encode(User.IsInAnyRoles(CrudRoles.PaymentApprovalRoles)));
             function getTemplate(paymentId) {
                 if (isAdmin) {
+                    return '<div style="text-align: center;"><a href="javascript:confirmDelete('+paymentId+','+'\'paymentId\''+')" id='+paymentId+'> <i class="fa fa-trash-o"></i></a></div>';
+                }
+                return '';
+            }
+            function getVoidTemplate(paymentId) {
+                if (isAccountant) {
                     return '<div style="text-align: center;"><a href="javascript:confirmDelete('+paymentId+','+'\'paymentId\''+')" id='+paymentId+'> <i class="fa fa-times fa-2x" style="color: lightcoral"></i></a></div>';
                 }
                 return '';
@@ -200,6 +207,9 @@
 
             var grid =  $("#paymentList").kendoGrid({
                 resizable: true,
+                height: 550,
+                groupable: true,
+                sortable: true,
                 toolbar: "<p class='alert alert-info'>Note: Rejected Payments are displayed in <i style='color:red; text-decoration:line-through;'>Red</i></p>",
 
                 excel: {
@@ -214,7 +224,7 @@
                 columns: [{
                     field: "Id",
                     title: "Voucher#",
-
+                    //template: "#if(IsVoid==true){# <div style='text-align: center;'>#= Id # </div>#}else {#<div style='text-align: center;'><a href='@Url.Action("Details", "Payment")?paymentId=#= Id#'>#= Id #</a></div>#}#",
                     template: "<a href='@Url.Action("Details", "Payment")?paymentId=#= Id#'>#= Id #</a>"
 
                 },
@@ -263,18 +273,25 @@
                         title: "Final Amount"
                     },
                     // Uncomment the next lines once the invoice is complete
-                    //{
-                    //    field: "IsApproved",
-                    //    title: "Is Approved",
-                    //    template: "#if(IsApproved==true){# <div style='text-align: center;'><i class='fa fa-check fa-2x' style='color:limegreen;'></i></div> #}else {#<div style='text-align: center;'><input type='checkbox' #= IsApproved ? 'checked=checked' : '' # id='#=Id#'  class='k-checkbox' #= IsApproved ? disabled='disabled' : ''# ></input></div>#}#",
-                    //    hidden: !isAuditor
-                    //},
+                    {
+                        field: "IsApproved",
+                        title: "Is Approved",
+                        template: "#if(IsApproved==true){# <div style='text-align: center;'><i class='fa fa-check fa-2x' style='color:limegreen;'></i></div> #}else {#<div style='text-align: center;'><input type='checkbox' #= IsApproved ? 'checked=checked' : '' # id='#=Id#'  class='k-checkbox' #= IsApproved ? disabled='disabled' : ''# ></input></div>#}#",
+                        hidden: !isAuditor
+                    },
 
                     {
                         field: "Id",
                         title: "Delete",
                         template: getTemplate('#=Id#'),
                         hidden: !isAdmin
+                    },
+                    {
+                        field: "Id",
+                        title: "Void",
+                        // template: getVoidTemplate('#=Id#'),
+                        template: "#if(IsVoid==true){# <div style='text-align: center;'><i class='fa fa-ban' style='color:OrangeRed;'></i></div> #}else {#<div style='text-align: center;'><a href=\"javascript:confirmDelete('#=Id#','paymentId', true)\" id='#= Id#'> <i class='fa fa-times' style='color:Crimson;'></i></a></div>#}#",
+                        hidden: !isAccountant
                     }
                     //,{
                     //    field: "IsRejected",
@@ -388,7 +405,7 @@
             $('#txtSearchString').on('keydown', function(e) {
                 //debugger;
                 if (e.which == 13) {
-                   // e.preventDefault();
+                    // e.preventDefault();
                     onSearch(e);
                 }
             });
@@ -462,6 +479,7 @@
                 });
                 //
             }
+
             grid.table.on("click", ".k-checkbox", updateApprovedPayment);
             //
             $(".loader").css("display", "none");
@@ -476,11 +494,43 @@
         //    grid.saveAsExcel();
         //    console.log("Print excel payment");
         //}
-        function showTodayPayments() {
+        function getApprovedPayment() {
+            //alert($(this).val());
+            // return new Promise(function (resolve, reject) {
+            //$.ajax(options).done(resolve).fail(reject);
+            var id = $("[name='paymentApprovement']:checked").val();
+            
+            var approvedPayment=[];
+            var approvedPaymentUrl = '/Payment/GetApprovedPayment';
+            $.ajax({
+                type: "GET",
+                url: approvedPaymentUrl,
+                contentType: "application/json; charset=utf-8",
+                data: { "id": id },
+                dataType: 'json',
+                async: false,// this option is depricated, It slows down the browser response, Temp fix, should be handeled
+                beforeSend: function() {
+                    //$("#loading-image").show();
+                    $(".loader").css("display", "block");
+                },
+                success: function(result) {
+                    approvedPayment = result;
+                    $(".loader").css("display", "none");
+                    //return approvedPayment;
+                },
+                error: function () {
+                    approvedPayment = [];
+                    $(".loader").css("display", "none");
+                }
+            });
 
+            return approvedPayment;
+        };
+        function showTodayPayments() {
+            
             var firstDate = $('#paymentDt1').val();
             var secondDate = $('#paymentDt2').val();
-
+            //console.log(getApprovedPayment());
             $("#payment1").html(firstDate);
             $('#payment2').html(function() {
                 if (secondDate && firstDate) {
@@ -494,7 +544,7 @@
 
             var date2 = new Date(secondDate).toDateString();
             date2 = new Date(date2).getTime();
-            var payments = @Html.Raw(jsonModel);
+            var payments =   @Html.Raw(jsonModel);
 
             payments = payments.filter(function(entry) {
                 var paymentDate = new Date(entry.PaymentDateFormatted).toDateString();
@@ -552,11 +602,18 @@
                         field: "TotalDue",
                         title: "Final Amount"
                     }
-                    , {
-                        field: "PaymentDeductionNotes",
-                        title: "Notes",
-                        //template: "#if(PaymentDeductionObject!=null){# #: PaymentDeductionObject.Notes # #}#"
-                    }
+                    ,
+                       {
+                           field: "PaymentDeductionNotes",
+                           title: "Deduction Notes",
+                           //template: "#if(PaymentDeductionObject!=null){# #: PaymentDeductionObject.Notes # #}#"
+                       }
+                       ,
+                       {
+                           field: "Notes",
+                           title: "Payment Notes",
+                           //template: "#if(PaymentDeductionObject!=null){# #: PaymentDeductionObject.Notes # #}#"
+                       }
                 ],
                 dataSource: {
                     data: payments

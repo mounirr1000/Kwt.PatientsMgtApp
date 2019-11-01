@@ -113,6 +113,10 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
             {
                 payments = _paymentRepository.GetStatisticalPaymentsReport( startDate, endDate, 1,4);// 1 for kfh bank id, 4 for da agency id
             }
+            else if (reportType == 2)//archive report
+            {
+                payments = _paymentRepository.GetArchivePaymentsReport(patientId, startDate, endDate, bankid, reportType);//?.OrderByDescending(p => p.CreatedDate)?.ToList();    
+            }
             else
             {
                 payments = _paymentRepository.GetPaymentsReport(patientId, startDate, endDate, bankid);//?.OrderByDescending(p => p.CreatedDate)?.ToList();    
@@ -134,25 +138,42 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                 Message.Enabled = false;
                 ReportViewer1.Visible = true;
                 returnedPayments = PaymentTypeForReportingType(payments, reportType);
+                if (returnedPayments.Count == 0)
+                {
+                    Message.Enabled = true;
+                    ErrorMessage.Visible = true;
+                    Message.Text = "There is no payment to display in the report in the provided criteria";
+                    ReportViewer1.Visible = false;
+                }
+                else
+                {
+                    //
+                    if (reportType ==1)//only bank report
+                    {
+                        reportName = reportName + "[" + payments?.Select(p => p.SumTotalHash).FirstOrDefault()+"]";
+                    }
+                    //
+                    ReportViewer1.LocalReport.ReportPath = Server.MapPath(mapPath);
+                    ReportViewer1.LocalReport.DisplayName = reportName +
+                                                            (startDate != null && endDate != null ? " From: " +
+                                                             StartDate.Text + " To: " + EndDate.Text : "");
+                    ReportViewer1.LocalReport.DataSources.Clear();
+                    ReportDataSource rdc = new ReportDataSource(dataSource, returnedPayments);
+                    //new 
+                    ReportParameter stDate = new ReportParameter("StartDate", startDate?.ToString());
+                    ReportParameter enDate = new ReportParameter("EndDate", endDate?.ToString());
+                    ReportParameter rtType = new ReportParameter("ReportType", reportType?.ToString());
+                    // ReportParameter reason = new ReportParameter("DeductionReason", payments?.Select(r=>r.DeductionReasonText).ToString());
+
+                    ReportViewer1.LocalReport.SetParameters(new ReportParameter[] { stDate, enDate, rtType });
+                    // end new
+                    ReportViewer1.LocalReport.DataSources.Add(rdc);
+
+                    // ReportViewer1.EnableClientPrinting
+                    ReportViewer1.LocalReport.Refresh();
+                }
             }
-            ReportViewer1.LocalReport.ReportPath = Server.MapPath(mapPath);
-            ReportViewer1.LocalReport.DisplayName = reportName +
-                                                    (startDate != null && endDate != null ? " From: " +
-                                                     StartDate.Text + " To: " + EndDate.Text : "");
-            ReportViewer1.LocalReport.DataSources.Clear();
-            ReportDataSource rdc = new ReportDataSource(dataSource, returnedPayments);
-            //new 
-            ReportParameter stDate = new ReportParameter("StartDate", startDate?.ToString());
-            ReportParameter enDate = new ReportParameter("EndDate", endDate?.ToString());
-            ReportParameter rtType = new ReportParameter("ReportType", reportType?.ToString());
-            // ReportParameter reason = new ReportParameter("DeductionReason", payments?.Select(r=>r.DeductionReasonText).ToString());
-
-            ReportViewer1.LocalReport.SetParameters(new ReportParameter[] { stDate, enDate, rtType });
-            // end new
-            ReportViewer1.LocalReport.DataSources.Add(rdc);
-
-            // ReportViewer1.EnableClientPrinting
-            ReportViewer1.LocalReport.Refresh();
+            
 
 
             //  return payments;
@@ -305,11 +326,11 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                         paymentToAdd.FinalAmount = newPayment.FinalAmount * -1 ?? newPayment.Amount * -1;
                         paymentToAdd.PatientCID = newPayment.PatientCID;
                         paymentToAdd.PatientName = newPayment.PatientName;
-                        paymentToAdd.BeneficiaryCID = newPayment.BeneficiaryCID;
-                        paymentToAdd.BeneficiaryName = newPayment.BeneficiaryName;
+                        paymentToAdd.BeneficiaryCID = newPayment.PaymentBeneficiaryCID;// newPayment.BeneficiaryCID;
+                        paymentToAdd.BeneficiaryName = newPayment.PaymentBeneficiaryName;// newPayment.BeneficiaryName;
                         paymentToAdd.AgencyName = newPayment.RejectionDateFormatted;// display rejected date insyead of agency name
-                        paymentToAdd.Code = newPayment.Code;
-                        paymentToAdd.IBan = newPayment.RejectionReason;
+                        paymentToAdd.Code = newPayment.PaymentBankCode;// newPayment.Code;
+                        paymentToAdd.IBan = newPayment.RejectionReason;// they want the rejection reason to be displayed in Iban field
                         paymentToAdd.StartDate = newPayment.StartDate;
                         paymentToAdd.EndDate = newPayment.EndDate;
                         paymentToAdd.CreatedDate = newPayment.CreatedDate;
@@ -318,11 +339,12 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                     }
                 }
             }
-            return payments;
+            return payments?.Where(p => p.IsVoid != true).ToList();
         }
 
         private List<PaymentReportModel> CreateDetailsPaymentReport(List<PaymentReportModel> payments)
         {
+            payments = payments?.Where(p => p.IsVoid != true).ToList();
             DeductionReasonRepository _deductionReasonRepository = new DeductionReasonRepository();
             List<PaymentReportModel> processedPayments = new List<PaymentReportModel>();
             processedPayments = payments?.Select(p => new PaymentReportModel()
@@ -332,20 +354,22 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                 FinalAmount = (p.IsPaymentRejected == true ? p.FinalAmount * -1 : p.FinalAmount) ?? (p.IsPaymentRejected == true ? p.Amount * -1 : p.Amount),
                 PatientCID = p.PatientCID,
                 CreatedDate = p.CreatedDate,
-                BeneficiaryCID = p.BeneficiaryCID,
+                //BeneficiaryCID = p.PaymentBeneficiaryCID,// p.BeneficiaryCID,
                 EndDate = p.EndDate,
                 StartDate = p.StartDate,
                 Amount = p.IsPaymentRejected == true ? p.Amount * -1 : p.Amount,
-                Bank = p.Bank,
-                BeneficiaryName = p.BeneficiaryName,
-                Code = p.Code,
+             //   Bank = p.PaymentBankName,// p.Bank,
+              //  BeneficiaryCID = p.PaymentBeneficiaryCID,// p.BeneficiaryCID,
+              //  BeneficiaryName = p.PaymentBeneficiaryName,// p.BeneficiaryName,
+             //   IBan = p.PaymentIban?.ToUpper(),// p.IBan?.ToUpper(),
+             //   Code = p.PaymentBankCode,//p.Code,
                 CompanionName = p.CompanionName,
                 DeductedAmount = p.DeductedAmount ?? 0,
-                IBan = p.IBan?.ToUpper(),
+                //IBan = p.PaymentIban?.ToUpper(),// p.IBan?.ToUpper(),
                 PatientName = p.PatientName,
-                TotalPayments = payments.Count,
-                TotalPatients = payments.Select(pat => pat.PatientCID).Distinct().Count(),
-                TotalAmount = payments.Sum(pay => pay.FinalAmount),
+                TotalPayments = payments.Where(pa => pa.IsVoid != true).ToList().Count,
+                TotalPatients = payments.Where(pa => pa.IsVoid != true).Select(pat => pat.PatientCID).Distinct().Count(),
+                TotalAmount = payments.Where(pa => pa.IsVoid != true).Sum(pay => pay.FinalAmount),
                 TotalDeduction = p.TotalDeduction,
                 DeductionNotes = p.DeductionNotes,
                 DeductionReason = p.DeductionReason,
@@ -368,8 +392,16 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                 RowNumber = p.RowNumber,
                 AdjustmentReason = p.AdjustmentReason,
                 AdjustmentReasonID = p.AdjustmentReasonID,
+                IsDeleted = p.IsDeleted,
+                IsVoid = p.IsVoid,
+                Bank = p.PaymentBankName,// p.Bank,
+                BeneficiaryCID = p.PaymentBeneficiaryCID,// p.BeneficiaryCID,
+                BeneficiaryName = p.PaymentBeneficiaryName,// p.BeneficiaryName,
+                IBan = p.PaymentIban?.ToUpper(),// p.IBan?.ToUpper(),
+                Code = p.PaymentBankCode,//p.Code,
             }).ToList();
-            return processedPayments;
+            // get only non void payment
+            return processedPayments?.Where(p=>p.IsVoid!=true).ToList();
         }
 
         private List<PaymentReportModel> CreateArchivePaymentReport(List<PaymentReportModel> payments)
@@ -379,23 +411,23 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
             {
                 AgencyName = p.AgencyName,
                 PaymentID = p.PaymentID,
-                FinalAmount = (p.IsPaymentRejected == true ? p.FinalAmount * -1 : p.FinalAmount) ?? (p.IsPaymentRejected == true ? p.Amount * -1 : p.Amount),
+                FinalAmount = p.IsVoid!=true? (p.IsPaymentRejected == true ? p.FinalAmount * -1 : p.FinalAmount) ?? (p.IsPaymentRejected == true ? p.Amount * -1 : p.Amount):0,
                 PatientCID = p.PatientCID,
                 CreatedDate = p.CreatedDate,
-                BeneficiaryCID = p.BeneficiaryCID,
+              //  BeneficiaryCID = p.BeneficiaryCID,
                 EndDate = p.EndDate,
                 StartDate = p.StartDate,
                 //  Amount = p.Amount,
-                Bank = p.Bank,
-                BeneficiaryName = p.BeneficiaryName,
-                Code = p.Code,
+               // Bank = p.PaymentBankName,// p.Bank,
+               // BeneficiaryName = p.BeneficiaryName,
+               // Code = p.Code,
                 CompanionName = p.CompanionName,
                 //   DeductedAmount = p.DeductedAmount ?? 0,
-                IBan = p.IBan?.ToUpper(),
+               // IBan = p.IBan?.ToUpper(),
                 PatientName = p.PatientName,
                 //TotalPayments = payments.Count,
                 //TotalPatients = payments.Select(pat => pat.PatientCID).Distinct().Count(),
-                TotalAmount = payments.Sum(pay => pay.FinalAmount ?? pay.Amount),
+                TotalAmount = payments.Where(pa => pa.IsVoid != true).Sum(pay => pay.FinalAmount ?? pay.Amount),
                 TotalDeduction = p.TotalDeduction,
                 DeductionNotes = p.DeductionNotes,
                 DeductionReason = p.DeductionReason,
@@ -415,13 +447,21 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                 RejectionNotes = p.RejectionNotes,
                 RejectionDate = p.RejectionDate,
                 RejectionReason = p.RejectionReason,
-                RowNumber = p.RowNumber
+                RowNumber = p.RowNumber,
+                IsDeleted = p.IsDeleted,
+                IsVoid = p.IsVoid,
+                Bank = p.PaymentBankName,// p.Bank,
+                BeneficiaryCID = p.PaymentBeneficiaryCID,// p.BeneficiaryCID,
+                BeneficiaryName = p.PaymentBeneficiaryName,// p.BeneficiaryName,
+                IBan = p.PaymentIban?.ToUpper(),// p.IBan?.ToUpper(),
+                Code = p.PaymentBankCode,//p.Code,
             }).ToList();
             return payments;
         }
 
         private List<PaymentReportModel> CreateKuwaitPaymentReport(List<PaymentReportModel> payments)
         {
+            payments = payments?.Where(p => p.IsVoid != true).ToList();
             DeductionReasonRepository _deductionReasonRepository = new DeductionReasonRepository();
             payments = payments?.Select(p => new PaymentReportModel()
             {
@@ -430,16 +470,16 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                 FinalAmount = (p.IsPaymentRejected == true ? p.FinalAmount * -1 : p.FinalAmount) ?? (p.IsPaymentRejected == true ? p.Amount * -1 : p.Amount),
                 PatientCID = p.PatientCID,
                 CreatedDate = p.CreatedDate,
-                BeneficiaryCID = p.BeneficiaryCID,
+               // BeneficiaryCID = p.BeneficiaryCID,
                 EndDate = p.EndDate,
                 StartDate = p.StartDate,
                 //Amount = p.Amount,
-                Bank = p.Bank,
-                BeneficiaryName = p.BeneficiaryName,
-                Code = p.Code,
+              //  Bank = p.Bank,
+              //  BeneficiaryName = p.BeneficiaryName,
+              //  Code = p.Code,
                 CompanionName = p.CompanionName,
                 // DeductedAmount = p.DeductedAmount ?? 0,
-                IBan = p.IBan?.ToUpper(),
+              //  IBan = p.IBan?.ToUpper(),
                 PatientName = p.PatientName,
                 //TotalPayments = payments.Count,
                 //TotalPatients = payments.Select(pat => pat.PatientCID).Distinct().Count(),
@@ -465,13 +505,26 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                 RejectionReason = p.RejectionReason,
                 RowNumber = p.RowNumber,
                 IbanHash = p.IbanHash,
-                TotalHash = p.TotalHash
+                TotalHash = p.TotalHash,
+                IsDeleted = p.IsDeleted,
+                IsVoid = p.IsVoid,
+                Bank = p.PaymentBankName,// p.Bank,
+                BeneficiaryCID = p.PaymentBeneficiaryCID,// p.BeneficiaryCID,
+                BeneficiaryName = p.PaymentBeneficiaryName,// p.BeneficiaryName,
+                IBan = p.PaymentIban?.ToUpper(),// p.IBan?.ToUpper(),
+                Code = p.PaymentBankCode,//p.Code,
+                //new sum totalHash
+                SumTotalHash =p.SumTotalHash
+                // TotalHash = payments.Sum(pay => pay.TotalHash),
+
             }).ToList();
-            return payments;
+                // payments with final amount is zero no need to be dispalyed in the report
+            return payments?.Where(p => p.IsVoid != true).Where(p=>p.FinalAmount!=0).ToList();
         }
 
         private List<PaymentReportModel> CreateStatisticalPaymentReport(List<PaymentReportModel> payments)
         {
+            payments = payments?.Where(p => p.IsVoid != true).ToList();
             List<PaymentReportModel> processedPayments = new List<PaymentReportModel>();
             processedPayments = payments?.Select(p => new PaymentReportModel()
             {
@@ -485,9 +538,14 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                 OtherAgencies=p.OtherAgencies,
                 StatisticalTotalDeduction=p.TotalDeduction,
                 TotalDeduction = p.TotalDeduction,
-                FinalTotal =p.FinalTotal
+                FinalTotal =p.FinalTotal,
+                Bank = p.PaymentBankName,// p.Bank,
+                BeneficiaryCID = p.PaymentBeneficiaryCID,// p.BeneficiaryCID,
+                BeneficiaryName = p.PaymentBeneficiaryName,// p.BeneficiaryName,
+                IBan = p.PaymentIban?.ToUpper(),// p.IBan?.ToUpper(),
+                Code = p.PaymentBankCode,//p.Code,
             }).ToList();
-            return processedPayments;
+            return processedPayments?.Where(p => p.IsVoid != true).ToList();
         }
 
 

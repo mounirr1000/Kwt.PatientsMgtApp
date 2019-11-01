@@ -19,7 +19,7 @@
         @if (User.IsInAnyRoles(CrudRoles.AdminCrudRoles))
         {
             @* Uncomment the next lines once the invoice is complete *@
-            @*<div class="col-md-12 row pb-3">
+            <div class="col-md-12 row pb-3">
                 @if (Model.IsBlocked == true)
                 {
                     <div style="width: 100%">
@@ -39,7 +39,7 @@
                     </div>
 
                 }
-            </div>*@
+            </div>
         }
 
 
@@ -320,7 +320,7 @@
             }
 
             $("#KWTPhone").kendoMaskedTextBox({
-                mask: "96500000000"
+                mask: "0000000000"
             });
             $("#USPhone").kendoMaskedTextBox({
                 mask: "0000000000"

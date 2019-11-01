@@ -75,5 +75,11 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public Nullable<decimal> FinalTotal { get; set; }
         public Nullable<bool> IsVoid { get; set; }
         public Nullable<bool> IsDeleted { get; set; }
+        public string PaymentBeneficiaryName { get; set; }
+        public string PaymentIban { get; set; }
+        public string PaymentBankName { get; set; }
+        public string PaymentBankCode { get; set; }
+        public string PaymentBeneficiaryCID { get; set; }
+        public Nullable<decimal> SumTotalHash { get; set; }
     }
 }

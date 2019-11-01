@@ -213,6 +213,14 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public Nullable<bool> IsApproved { get; set; }
         public Nullable<bool> IsVoid { get; set; }
         public Nullable<bool> IsDeleted { get; set; }
+
+        //public string BeneficiaryFName { get; set; }
+        //public string BeneficiaryMName { get; set; }
+        //public string BeneficiaryLName { get; set; }
+        //public string BeneficiaryCID { get; set; }
+        public string BankName { get; set; }
+        public string BankCode { get; set; }
+        public string IBan { get; set; }
         public string PatientFormatedPhone { get { return FormatPhoneNumber(PatientPhone, ""); } }
 
         //new

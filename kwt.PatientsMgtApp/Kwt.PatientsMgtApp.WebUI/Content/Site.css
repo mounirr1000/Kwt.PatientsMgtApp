@@ -1197,3 +1197,8 @@ tbody:empty:before {
 .hidden {
     visibility: hidden;
 }
+
+/*===============================patient books====================*/
+.houseletter p {
+    display: inline;
+}

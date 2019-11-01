@@ -32,6 +32,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Infrastructure
         public const string CompanionDeleteRolesForAutorizeAttribute =  Roles.Admin + ", " + Roles.Editor + ", " + Roles.SuperAdmin ;
 
         //payment
+        public static string[] AccountantCrudRoles => new[] { Roles.Accountant};
         public static string[] PaymentCrudRoles => new[] { Roles.Accountant, Roles.Admin, Roles.Auditor, Roles.Editor, Roles.SuperAdmin, Roles.Medical, Roles.User };
         public const string PaymentCrudRolesForAutorizeAttribute = Roles.Accountant + ", " + Roles.Admin + ", " + Roles.Auditor + ", " + Roles.Editor + ", " + Roles.SuperAdmin + ", " + Roles.Medical + ", " + Roles.User;
         public static string[] PaymentCreateRoles => new[] { Roles.Admin, Roles.Accountant, Roles.SuperAdmin };

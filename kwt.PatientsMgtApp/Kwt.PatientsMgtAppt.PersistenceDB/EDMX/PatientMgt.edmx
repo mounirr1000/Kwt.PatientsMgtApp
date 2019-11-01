@@ -267,6 +267,8 @@
           <Property Name="RejectedPaymentId" Type="int" />
           <Property Name="AdjustmentReasonID" Type="int" />
           <Property Name="AdjustmentReason" Type="nvarchar" MaxLength="250" />
+          <Property Name="IsVoid" Type="bit" />
+          <Property Name="IsDeleted" Type="bit" />
         </EntityType>
         <EntityType Name="Payments">
           <Key>
@@ -300,6 +302,13 @@
           <Property Name="IsApproved" Type="bit" />
           <Property Name="IsVoid" Type="bit" />
           <Property Name="IsDeleted" Type="bit" />
+          <Property Name="BeneficiaryFName" Type="nvarchar" MaxLength="50" />
+          <Property Name="BeneficiaryMName" Type="nvarchar" MaxLength="50" />
+          <Property Name="BeneficiaryLName" Type="nvarchar" MaxLength="50" />
+          <Property Name="BeneficiaryCID" Type="nvarchar" MaxLength="12" />
+          <Property Name="BankName" Type="nvarchar" MaxLength="50" />
+          <Property Name="BankCode" Type="char" MaxLength="3" />
+          <Property Name="IBan" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="PaymentTypes">
           <Key>
@@ -707,12 +716,14 @@
           <Parameter Name="startDate" Type="date" Mode="In" />
           <Parameter Name="endDate" Type="date" Mode="In" />
           <Parameter Name="isDead" Type="bit" Mode="In" />
+          <Parameter Name="authorizedDate" Type="date" Mode="In" />
         </Function>
         <Function Name="GetPaymentListReport_SP" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="pCid" Type="nvarchar" Mode="In" />
           <Parameter Name="startDate" Type="date" Mode="In" />
           <Parameter Name="endDate" Type="date" Mode="In" />
           <Parameter Name="bankId" Type="int" Mode="In" />
+          <Parameter Name="reportType" Type="int" Mode="In" />
         </Function>
         <Function Name="GetStatisticalPaymentReport_SP" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="startDate" Type="date" Mode="In" />
@@ -1108,6 +1119,13 @@
           <Property Name="IsApproved" Type="Boolean" />
           <Property Name="IsVoid" Type="Boolean" />
           <Property Name="IsDeleted" Type="Boolean" />
+          <Property Name="BeneficiaryFName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BeneficiaryMName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BeneficiaryLName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BeneficiaryCID" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
+          <Property Name="BankName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BankCode" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
+          <Property Name="IBan" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="PayRate">
           <Key>
@@ -1415,12 +1433,14 @@
             <Parameter Name="startDate" Mode="In" Type="DateTime" />
             <Parameter Name="endDate" Mode="In" Type="DateTime" />
             <Parameter Name="isDead" Mode="In" Type="Boolean" />
+            <Parameter Name="authorizedDate" Mode="In" Type="DateTime" />
           </FunctionImport>
           <FunctionImport Name="GetPaymentListReport_SP" ReturnType="Collection(PatientsMgtModel.GetPaymentListReport_SP_Result)">
             <Parameter Name="pCid" Mode="In" Type="String" />
             <Parameter Name="startDate" Mode="In" Type="DateTime" />
             <Parameter Name="endDate" Mode="In" Type="DateTime" />
             <Parameter Name="bankId" Mode="In" Type="Int32" />
+            <Parameter Name="reportType" Mode="In" Type="Int32" />
           </FunctionImport>
           <AssociationSet Name="FK_PatientHistories_Patients" Association="PatientsMgtModel.FK_PatientHistories_Patients">
             <End Role="Patient" EntitySet="Patients" />
@@ -1519,6 +1539,7 @@
           <Property Type="String" Name="ModifiedBy" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="IsDead" Nullable="true" MaxLength="3" />
           <Property Type="DateTime" Name="DeathDate" Nullable="true" />
+          <Property Type="DateTime" Name="AuthorizedDate" Nullable="true" />
         </ComplexType>
         <ComplexType Name="GetPaymentListReport_SP_Result">
           <Property Type="Int32" Name="PaymentID" Nullable="false" />
@@ -1561,6 +1582,14 @@
           <Property Type="String" Name="DeductionReasonText" Nullable="true" MaxLength="100" />
           <Property Type="String" Name="IbanHash" Nullable="true" MaxLength="22" />
           <Property Type="Double" Name="TotalHash" Nullable="true" />
+          <Property Type="Boolean" Name="IsDeleted" Nullable="true" />
+          <Property Type="Boolean" Name="IsVoid" Nullable="true" />
+          <Property Type="String" Name="PaymentBeneficiaryName" Nullable="true" MaxLength="152" />
+          <Property Type="String" Name="PaymentIban" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="PaymentBankName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="PaymentBankCode" Nullable="true" MaxLength="3" />
+          <Property Type="String" Name="PaymentBeneficiaryCID" Nullable="true" MaxLength="12" />
+          <Property Type="Decimal" Name="SumTotalHash" Nullable="true" Precision="38" Scale="0" />
           </ComplexType>
         <Association Name="FK_PatientHistories_Patients">
           <End Type="PatientsMgtModel.Patient" Role="Patient" Multiplicity="1" />
@@ -1833,6 +1862,8 @@
           <Property Name="AdjustmentReasonID" Type="Int32" />
           <Property Name="AdjustmentReason" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Payment" Relationship="PatientsMgtModel.FK_PaymentsHistory_Payments" FromRole="PaymentHistory" ToRole="Payment" />
+          <Property Name="IsVoid" Type="Boolean" />
+          <Property Name="IsDeleted" Type="Boolean" />
         </EntityType>
         <Association Name="FK_PaymentsHistory_Payments">
           <End Type="PatientsMgtModel.Payment" Role="Payment" Multiplicity="1" />
@@ -2058,6 +2089,13 @@
           <EntitySetMapping Name="Payments">
             <EntityTypeMapping TypeName="PatientsMgtModel.Payment">
               <MappingFragment StoreEntitySet="Payments">
+                <ScalarProperty Name="IBan" ColumnName="IBan" />
+                <ScalarProperty Name="BankCode" ColumnName="BankCode" />
+                <ScalarProperty Name="BankName" ColumnName="BankName" />
+                <ScalarProperty Name="BeneficiaryCID" ColumnName="BeneficiaryCID" />
+                <ScalarProperty Name="BeneficiaryLName" ColumnName="BeneficiaryLName" />
+                <ScalarProperty Name="BeneficiaryMName" ColumnName="BeneficiaryMName" />
+                <ScalarProperty Name="BeneficiaryFName" ColumnName="BeneficiaryFName" />
                 <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
                 <ScalarProperty Name="IsVoid" ColumnName="IsVoid" />
                 <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
@@ -2168,6 +2206,7 @@
                 <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
                 <ScalarProperty Name="IsDead" ColumnName="IsDead" />
                 <ScalarProperty Name="DeathDate" ColumnName="DeathDate" />
+                <ScalarProperty Name="AuthorizedDate" ColumnName="AuthorizedDate" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -2214,6 +2253,14 @@
                 <ScalarProperty Name="DeductionReasonText" ColumnName="DeductionReasonText" />
                 <ScalarProperty Name="IbanHash" ColumnName="IbanHash" />
                 <ScalarProperty Name="TotalHash" ColumnName="TotalHash" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="IsVoid" ColumnName="IsVoid" />
+                <ScalarProperty Name="PaymentBeneficiaryName" ColumnName="PaymentBeneficiaryName" />
+                <ScalarProperty Name="PaymentIban" ColumnName="PaymentIban" />
+                <ScalarProperty Name="PaymentBankName" ColumnName="PaymentBankName" />
+                <ScalarProperty Name="PaymentBankCode" ColumnName="PaymentBankCode" />
+                <ScalarProperty Name="PaymentBeneficiaryCID" ColumnName="PaymentBeneficiaryCID" />
+                <ScalarProperty Name="SumTotalHash" ColumnName="SumTotalHash" />
                 </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -2308,6 +2355,8 @@
           <EntitySetMapping Name="PaymentHistories">
             <EntityTypeMapping TypeName="PatientsMgtModel.PaymentHistory">
               <MappingFragment StoreEntitySet="PaymentHistories">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="IsVoid" ColumnName="IsVoid" />
                 <ScalarProperty Name="AdjustmentReason" ColumnName="AdjustmentReason" />
                 <ScalarProperty Name="AdjustmentReasonID" ColumnName="AdjustmentReasonID" />
                 <ScalarProperty Name="RejectedPaymentId" ColumnName="RejectedPaymentId" />

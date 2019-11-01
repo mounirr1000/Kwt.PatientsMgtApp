@@ -120,8 +120,24 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         [ExceptionHandler]
         public JsonResult GetNextPayment(int? numberOfDays = null)
         {
-            var payments = _paymentRepository.GetNextPatientPayment(numberOfDays);
+            var payments = _paymentRepository.GetNextPatientPayment(numberOfDays);//-80 2019-08-09 
+            //var paymentEndDate = payments.Select(p => p.PaymentEndDate).SingleOrDefault(); //2019-08-09
+            //var patientCidList = payments.Select(p => p.PatientCID).ToList();// cid 40 patients
+            ////total 40   =>39
+            //var pays = _paymentRepository.GetPayments();  // total payments
 
+            //var payMatches = from pay in pays
+            //              where patientCidList.Contains(pay.PatientCID)
+            //              select pay;
+
+            //var pa = from pay in payMatches
+            //         where pay.PaymentEndDate> paymentEndDate
+            //         select pay;
+
+
+            // pays.Where(p=>p.PatientCID )
+            // l
+            //pays.Select(p=>p.PatientCID).ToList().().
 
             // MaxJsonLength = Int32.MaxValue
             return Json(payments, JsonRequestBehavior.AllowGet);
@@ -173,6 +189,30 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             var jsonResult = new JsonResult();
             jsonResult.MaxJsonLength = Int32.MaxValue;
             jsonResult.Data = unApprovedPayment;
+            jsonResult.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return jsonResult;
+        }
+        [ExceptionHandler]
+        public JsonResult GetApprovedPayment(int? id)
+        {
+            var payments = _paymentRepository.GetPayments();
+            if (id != null)
+            {
+                if (id == 2) // not approved
+                {
+                    payments = payments.Where(p => p.IsApproved != true).OrderByDescending(p => p.CreatedDate).ToList();// get null and false isapproved
+                }
+                else // just approved Payment
+                {
+                    payments = payments.Where(p => p.IsApproved == true).OrderByDescending(p => p.CreatedDate).ToList();
+                }
+
+            }
+            
+           // payments = payments.Where(p => p.IsApproved == true).OrderByDescending(p => p.CreatedDate).ToList();
+            var jsonResult = new JsonResult();
+            jsonResult.MaxJsonLength = Int32.MaxValue;
+            jsonResult.Data = payments;
             jsonResult.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
             return jsonResult;
         }
@@ -245,7 +285,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         public ActionResult Create(PaymentModel payment)
         {
             // allow the supper admin to make any payment without validating the payment
-            if (!User.IsInRole(Roles.SuperAdmin))
+            if (!User.IsInAnyRoles2(CrudRoles.AdminCrudRoles))
                 ValidatePayment(payment);
             if (ModelState.IsValid)
             {
@@ -274,6 +314,15 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         {
             // PaymentViewModel paymentView = new PaymentViewModel();
             var payment = _paymentRepository.GetPaymentById(paymentId);
+            if (payment==null)
+            {
+                Warning(string.Format("There is no payment id with {0}",paymentId), true);
+                return RedirectToAction("List");
+            }
+            if (payment.IsVoid == true)
+            {
+                return RedirectToAction("Details", "Payment", new { paymentId = paymentId });
+            }
             payment.PayRates = _payRateRepository.GetPayRatesList();
             // paymentView.Payment = payment;
 
@@ -286,6 +335,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         [CustomAuthorize(Roles = CrudRoles.PaymentUpdateRolesForAutorizeAttribute)]
         public ActionResult Edit(PaymentModel pay)
         {
+            
             if (!User.IsInRole(Roles.SuperAdmin))
                 ValidatePayment(pay, true);
 
@@ -334,12 +384,48 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             }
             return RedirectToAction("List");
         }
+
+        [ExceptionHandler]
+        //[Authorize(Roles = "Super Admin, Admin, Manager")]
+        [CustomAuthorize(Roles = CrudRoles.PaymentDeleteRolesForAutorizeAttribute)]
+        public ActionResult VoidPayment(int? paymentId)
+        {
+            PaymentModel payment = null;
+            if (paymentId != null)
+            {
+                var id = paymentId ?? 0;
+                payment = _paymentRepository.GetPaymentById(id);
+            }
+            if (payment != null)
+            {
+                var upDatedPayment = _paymentRepository.VoidPayment(payment);
+                if (upDatedPayment.IsVoid == true)
+                {
+                    // display delete message success and redirect to patient list
+                    Success(
+                        string.Format("Payment with Id <b>{0}</b> was Successfully Voided.", payment.Id),
+                        true);
+                }
+                else
+                {
+                    Warning(
+                        string.Format("Payment with Id <b>{0}</b> was not Voided.", payment.Id),
+                        true);
+                }
+            }
+            else
+            {
+                if (paymentId != null)
+                    Information(string.Format("No Payment with Id <b>{0}</b> In our record.", paymentId), true);
+            }
+            return RedirectToAction("List");
+        }
         private void ValidatePayment(PaymentModel payment, bool isEdit = false)
         {
             //--When payrateid = 1, for the same payment period, means both patient and compnaion get paid
             //--When payrateid = 2, for the same payment period, means  patient get paid and not the compnaion
             //--When payrateid = 3, for the same payment period, means the companion get paid and not the patient
-            var historyPayments = _paymentRepository.GetPaymentsByPatientCid(payment.PatientCID);
+            var historyPayments = _paymentRepository.GetPaymentsByPatientCid(payment.PatientCID)?.Where(p=>p.IsVoid!=true).ToList();
             if (!ValidatePaymentDates(payment, historyPayments, isEdit)) return;
             //new 07-16-2019
             // when payment is a correction or adjustment means we can have duplicate payment dates

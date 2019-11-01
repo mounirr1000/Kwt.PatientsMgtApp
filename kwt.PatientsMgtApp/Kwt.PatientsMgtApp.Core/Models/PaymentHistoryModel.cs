@@ -56,6 +56,9 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public Nullable<int> RejectedPaymentId { get; set; }
         public Nullable<int> AdjustmentReasonID { get; set; }
         public string AdjustmentReason { get; set; }
+
+        public Nullable<bool> IsVoid { get; set; }
+        public Nullable<bool> IsDeleted { get; set; }
         public  PaymentModel Payment { get; set; }
     }
 }

@@ -53,7 +53,7 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public virtual DbSet<PaymentHistory> PaymentHistories { get; set; }
         public virtual DbSet<BookType> BookTypes { get; set; }
     
-        public virtual ObjectResult<GetPatientListReport_SP_Result> GetPatientListReport_SP(string pCid, string hospital, string doctor, Nullable<bool> status, string speciality, Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate, Nullable<bool> isDead)
+        public virtual ObjectResult<GetPatientListReport_SP_Result> GetPatientListReport_SP(string pCid, string hospital, string doctor, Nullable<bool> status, string speciality, Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate, Nullable<bool> isDead, Nullable<System.DateTime> authorizedDate)
         {
             var pCidParameter = pCid != null ?
                 new ObjectParameter("pCid", pCid) :
@@ -87,10 +87,14 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
                 new ObjectParameter("isDead", isDead) :
                 new ObjectParameter("isDead", typeof(bool));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetPatientListReport_SP_Result>("GetPatientListReport_SP", pCidParameter, hospitalParameter, doctorParameter, statusParameter, specialityParameter, startDateParameter, endDateParameter, isDeadParameter);
+            var authorizedDateParameter = authorizedDate.HasValue ?
+                new ObjectParameter("authorizedDate", authorizedDate) :
+                new ObjectParameter("authorizedDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetPatientListReport_SP_Result>("GetPatientListReport_SP", pCidParameter, hospitalParameter, doctorParameter, statusParameter, specialityParameter, startDateParameter, endDateParameter, isDeadParameter, authorizedDateParameter);
         }
     
-        public virtual ObjectResult<GetPaymentListReport_SP_Result> GetPaymentListReport_SP(string pCid, Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate, Nullable<int> bankId)
+        public virtual ObjectResult<GetPaymentListReport_SP_Result> GetPaymentListReport_SP(string pCid, Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate, Nullable<int> bankId, Nullable<int> reportType)
         {
             var pCidParameter = pCid != null ?
                 new ObjectParameter("pCid", pCid) :
@@ -108,7 +112,11 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
                 new ObjectParameter("bankId", bankId) :
                 new ObjectParameter("bankId", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetPaymentListReport_SP_Result>("GetPaymentListReport_SP", pCidParameter, startDateParameter, endDateParameter, bankIdParameter);
+            var reportTypeParameter = reportType.HasValue ?
+                new ObjectParameter("reportType", reportType) :
+                new ObjectParameter("reportType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetPaymentListReport_SP_Result>("GetPaymentListReport_SP", pCidParameter, startDateParameter, endDateParameter, bankIdParameter, reportTypeParameter);
         }
     
         public virtual ObjectResult<GetNextPaymentPatientList_SP_Result> GetNextPaymentPatientList_SP(Nullable<int> numberOfDays)

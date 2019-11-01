@@ -19,3 +19,30 @@
         </div>
     </div>
 </div>
+
+@* new for void payment *@
+<div class="modal fade" id="voidConfirmModal" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header alert-danger">
+                <h4 class="modal-title" id="voidLabel">Void Payment</h4>
+            </div>
+            <div class="modal-body alert-warning">
+                <p>You have selected to void this payment.</p>
+                <p>
+                    once the payment is voided, it will not be shown on payment report,
+                    and it will not count as a payment for the patient.
+                </p>
+                <p>
+                    If this was the action that you wanted to do,
+                    please confirm your choice, or cancel and return
+                    to the page.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="voidConfirm">Void Payment</button>
+            </div>
+        </div>
+    </div>
+</div>

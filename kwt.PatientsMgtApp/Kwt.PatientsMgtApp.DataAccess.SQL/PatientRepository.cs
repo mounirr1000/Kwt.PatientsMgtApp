@@ -21,7 +21,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             _domainObjectRepository = new DomainObjectRepository();
         }
 
-        public List<PatientReportModel> GetPatientsReport(string patientCid = null, string hospital = null, string doctor = null, Nullable<bool> status = null, string speciality = null, DateTime? startDate = null, DateTime? endDate = null, Nullable<bool> isDead = null)
+        public List<PatientReportModel> GetPatientsReport(string patientCid = null, string hospital = null, string doctor = null, Nullable<bool> status = null, string speciality = null, DateTime? startDate = null, DateTime? endDate = null, Nullable<bool> isDead = null, Nullable<DateTime> authorizedDate = null)
         {
             Dictionary<string, object> parms = new Dictionary<string, object>();
             parms.Add("pCid", patientCid);
@@ -32,6 +32,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             parms.Add("startDate", startDate);
             parms.Add("endDate", endDate);
             parms.Add("isDead", isDead);
+            parms.Add("authorizedDate", authorizedDate);
 
             //pCidParameter, hospitalParameter, doctorParameter, statusParameter, specialityParameter
             return _domainObjectRepository.ExecuteProcedure<PatientReportModel>("GetPatientListReport_SP", parms, false);
@@ -172,6 +173,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                         FinalAmountAfterCorrection = pa.FinalAmountAfterCorrection,
                         DeductedAmount = pa.TotalCorrection,
                         Notes = pa.Notes,
+                        IsVoid = pa.IsVoid,
+                        IsDeleted = pa.IsDeleted,
                         //new 
                         PaymentDeductions = pa.PaymentDeductions?.Select(pd => new PaymentDeductionModel()
                         {
@@ -204,7 +207,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                         }).ToList(),
                         DeductionNotes = pa.PaymentDeductions.Where(a => a.PaymentID == pa.Id).Select(paydedu => paydedu.Notes).SingleOrDefault()
                         //
-                    }).OrderByDescending(py => py.CreatedDate).ThenByDescending(py => py.PaymentID).Take(3).ToList(),
+                    }).Where(pa=>pa.IsVoid!=true).OrderByDescending(py => py.CreatedDate).ThenByDescending(py => py.PaymentID).Take(3).ToList(),
                     Companions = p.Companions.Select(co => new CompanionModel()
                     {
                         CompanionCID = co.CompanionCID,
@@ -274,6 +277,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                         PaymentEndDate = pa.EndDate,
                         TotalDue = pa.TotalDue,
                         PaymentDate = pa.PaymentDate,
+                        IsVoid = pa.IsVoid,
+                        IsDeleted = pa.IsDeleted,
                         //new 
                         PaymentDeductions = pa.PaymentDeductions?.Select(pd => new PaymentDeductionModel()
                         {
@@ -334,7 +339,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
 
                         }).SingleOrDefault()
                         //
-                    }).ToList(),
+                    }).Where(pay=>pay.IsVoid!=true).ToList(),
                     Companions = p.Companions.Select(co => new CompanionModel()
                     {
                         CompanionCID = co.CompanionCID,
@@ -646,6 +651,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 p.IsBlocked = patient.IsBlocked;
                 p.DeathDate = patient.DeathDate;
                 p.isDead = patient.DeathDate != null || patient.IsDead;// patient.IsDead;
+                p.ModifiedBy = patient.ModifiedBy;
                 if (p.isDead==true)
                 {
                     p.IsActive = false;

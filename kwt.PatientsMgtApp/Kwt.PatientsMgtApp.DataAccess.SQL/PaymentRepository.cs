@@ -104,6 +104,21 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             var report = _domainObjectRepository.ExecuteProcedure<PaymentReportModel>("GetStatisticalPaymentReport_SP", parms, false);
             return report;
         }
+        public List<PaymentReportModel> GetArchivePaymentsReport(string patientCid = null, DateTime? startDate = null,
+            DateTime? endDate = null, int? bankId = null, int? reportType = null)
+        {
+
+            Dictionary<string, object> parms = new Dictionary<string, object>();
+            parms.Add("pCid", patientCid);
+            parms.Add("startDate", startDate);
+            parms.Add("endDate", endDate);
+            parms.Add("bankId", bankId);
+            parms.Add("reportType", reportType);
+
+            //pCidParameter, hospitalParameter, doctorParameter, statusParameter, specialityParameter
+            var report = _domainObjectRepository.ExecuteProcedure<PaymentReportModel>("GetPaymentListReport_SP", parms, false);
+            return report;
+        }
 
         //
         public List<PaymentModel> GetPayments()
@@ -118,11 +133,11 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 PatientFName = p.Patient.PatientFName,
                 PatientLName = p.Patient.PatientLName,
                 PatientMName = p.Patient.PatientMName,
-                BeneficiaryFName = p.Beneficiary.BeneficiaryFName,
-                BeneficiaryLName = p.Beneficiary.BeneficiaryLName,
-                BeneficiaryMName = p.Beneficiary.BeneficiaryMName,
+                //BeneficiaryFName = p.Beneficiary.BeneficiaryFName,
+                //BeneficiaryLName = p.Beneficiary.BeneficiaryLName,
+               // BeneficiaryMName = p.Beneficiary.BeneficiaryMName,
                 //BeneficiaryBank = _domainObjectRepository.Get<Bank>(b=>b.BankName==p.Beneficiary.BankName).BankName,
-                BeneficiaryIBan = p.Beneficiary.IBan,
+               // BeneficiaryIBan = p.Beneficiary.IBan,
                 CompanionCID = p.CompanionCID,
                 //CompanionFName = p.Companion.CompanionFName,
                 //CompanionLName = p.Companion.CompanionLName,
@@ -157,9 +172,17 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     PaymentTypeId = p.PaymentType.PaymentTypeId
                 } : null,
                 IsApproved = p.IsApproved,
-                //end new
-                // new 
-                PaymentDeductionObject = p.PaymentDeductions.Select(pd => new PaymentDeductionModel()
+                IsVoid = p.IsVoid,
+                IsDeleted = p.IsDeleted,
+                BeneficiaryFName = p.BeneficiaryFName,// payment.Beneficiary?.BeneficiaryFName;
+                BeneficiaryLName = p.BeneficiaryLName, //payment.Beneficiary?.BeneficiaryLName;
+                BeneficiaryMName = p.BeneficiaryMName, //payment.Beneficiary?.BeneficiaryMName;
+                BeneficiaryBank = p.BankName,// payment.Beneficiary != null ? _domainObjectRepository.Get<Bank>(b => b.BankID == payment.Beneficiary.BankID)?.BankName: "";
+                BeneficiaryIBan = p.IBan,// payment.Beneficiary?.IBan;
+                BankCode = p.BankCode,
+            //end new
+            // new 
+            PaymentDeductionObject = p.PaymentDeductions.Select(pd => new PaymentDeductionModel()
                 {
                     PatientDeduction = pd.PDeduction,
                     CompanionAmount = p.CAmount,
@@ -451,13 +474,13 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 pay.PatientFName = payment?.Patient?.PatientFName;
                 pay.PatientLName = payment?.Patient?.PatientLName;
                 pay.PatientMName = payment?.Patient?.PatientMName;
-                pay.BeneficiaryFName = payment.Beneficiary?.BeneficiaryFName;
-                pay.BeneficiaryLName = payment.Beneficiary?.BeneficiaryLName;
-                pay.BeneficiaryMName = payment.Beneficiary?.BeneficiaryMName;
-                pay.BeneficiaryBank = payment.Beneficiary != null
-                    ? _domainObjectRepository.Get<Bank>(b => b.BankID == payment.Beneficiary.BankID)?.BankName
-                    : "";
-                pay.BeneficiaryIBan = payment.Beneficiary?.IBan;
+                pay.BeneficiaryFName = payment.BeneficiaryFName;// payment.Beneficiary?.BeneficiaryFName;
+                pay.BeneficiaryLName = payment.BeneficiaryLName; //payment.Beneficiary?.BeneficiaryLName;
+                pay.BeneficiaryMName = payment.BeneficiaryMName; //payment.Beneficiary?.BeneficiaryMName;
+                pay.BeneficiaryBank = payment.BankName;// payment.Beneficiary != null ? _domainObjectRepository.Get<Bank>(b => b.BankID == payment.Beneficiary.BankID)?.BankName: "";
+                pay.BeneficiaryIBan = payment.IBan;// payment.Beneficiary?.IBan;
+                pay.BeneficiaryCID = payment.BeneficiaryCID;
+                pay.BankCode = payment.BankCode;
                 pay.CompanionCID = payment.CompanionCID;
                 pay.CreatedBy = payment.CreatedBy;
                 pay.CreatedDate = payment.CreatedDate;
@@ -477,12 +500,14 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 pay.PaymentStartDate = payment.StartDate;
                 pay.TotalDue = payment.TotalDue;
                 pay.Id = payment.PaymentID;
-                pay.BeneficiaryCID = payment.Beneficiary?.BeneficiaryCID;
+                //pay.BeneficiaryCID = payment.Beneficiary?.BeneficiaryCID;
                 pay.CompanionFName = payment.Companion?.CompanionFName;
                 pay.CompanionLName = payment.Companion?.CompanionLName;
                 pay.CompanionMName = payment.Companion?.CompanionMName;
                 pay.HasCompanion = pa.Companions?.Count(com => com.justBeneficiary == null || com.justBeneficiary == false) > 0;
                 // new
+                pay.IsVoid = payment.IsVoid;
+                pay.IsDeleted = payment.IsDeleted;
                 pay.PaymentDeductions = payment.PaymentDeductions?.Select(pd => new PaymentDeductionModel()
                 {
                     PatientDeduction = pd.PDeduction,
@@ -555,7 +580,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 }
                 // once the payment is corrected we cannot update it back to be not rejected
                 var payments = GetPaymentsByPatientCid(pay.PatientCID);
-                pay.Payments = payments.OrderByDescending(p => p.PaymentID).ToList();
+                pay.Payments = payments?.Where(p=>p.IsVoid!=true).OrderByDescending(p => p.PaymentID).ToList();
                 if (payments != null)
                 {
                     var correctedPayment = payments.SingleOrDefault(p => p.RejectedPaymentId == pay.PaymentID);
@@ -671,7 +696,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             //IPaymentRepository paymentRepository = new PaymentRepository();
 
             var lastPayment =// paymentRepository.
-                            GetPaymentsByPatientCid(payment?.PatientCID)?
+                            GetPaymentsByPatientCid(payment?.PatientCID)?.Where(p => p.IsVoid != true)?
                             .OrderByDescending(p => p.PaymentDate).FirstOrDefault();
             // payment should be only in 15 days period
             if (lastPayment?.PaymentEndDate != null)
@@ -696,7 +721,9 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 }
             }
 
-
+            var beneficiary = _domainObjectRepository.Get<Beneficiary>(b => b.PatientCID == payment.PatientCID);
+            var bankid = _domainObjectRepository.Get<Beneficiary>(b => b.PatientCID == payment.PatientCID).BankID;
+            var bank = _domainObjectRepository.Get<Bank>(b => b.BankID == bankid);
             Payment newPayment = new Payment()
             {
                 PatientCID = payment?.PatientCID,
@@ -723,7 +750,14 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 RejectedPaymentId = payment?.RejectedPaymentId,
                 IsRejected = payment?.IsRejected,
                 AdjustmentReasonID = payment?.AdjustmentReasonID,
-
+                //beneficiary info
+                BeneficiaryCID = beneficiary?.BeneficiaryCID,
+                BeneficiaryFName = beneficiary?.BeneficiaryFName,
+                BeneficiaryMName = beneficiary?.BeneficiaryMName,
+                BeneficiaryLName = beneficiary?.BeneficiaryLName,
+                BankName = bank?.BankName,
+                BankCode = bank?.BankCode,
+                IBan = beneficiary?.IBan
             };
             using (TransactionScope scope = new TransactionScope())
             {
@@ -812,7 +846,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 BeneficiaryFName = p.Beneficiary?.BeneficiaryFName,
                 BeneficiaryMName = p.Beneficiary?.BeneficiaryMName,
                 BeneficiaryLName = p.Beneficiary?.BeneficiaryLName,
-
+                IsVoid = p.IsVoid,
+                IsDeleted = p.IsDeleted,
                 BeneficiaryBankIban = p.Beneficiary?.IBan,
                 BeneficiaryCID = p.Beneficiary?.BeneficiaryCID,
                 BeneficiaryCompanionCid = p.Beneficiary?.CompanionCID,
@@ -870,7 +905,10 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 //    payrate = _domainObjectRepository.Get<PayRate>(pr => pr.PatientRate == payment.PatientPayRate&& pr.CompanionRate ==0)// hardcoded, should be fixed
                 //        .PayRateID;
                 //}
-
+                var beneficiary =
+                    _domainObjectRepository.Get<Beneficiary>(b => b.PatientCID == payment.PatientCID);
+                var bankid = _domainObjectRepository.Get<Beneficiary>(b => b.PatientCID == payment.PatientCID).BankID;
+                var bank = _domainObjectRepository.Get<Bank>(b => b.BankID == bankid);
                 Payment updatedPayment = new Payment()
                 {
                     PatientCID = payment.PatientCID,
@@ -896,7 +934,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     ModifiedDate = DateTime.Now,
                     PaymentDeductions = paymentToUpdate.PaymentDeductions,
                     // if there is a deduction we get the final amount after deduction otherwise null
-                    FinalAmountAfterCorrection = payment.PaymentDeductionObject.FinalAmount > 0 ? payment.PaymentDeductionObject.FinalAmount : null,
+                    FinalAmountAfterCorrection = payment.PaymentDeductionObject.FinalAmount ,//> 0 ? payment.PaymentDeductionObject.FinalAmount : null,
                     TotalCorrection = payment.PaymentDeductionObject.TotalDeduction > 0 ? payment.PaymentDeductionObject.TotalDeduction : null,
                     //new 07-13-2019
                     IsRejected = payment.IsRejected,
@@ -914,8 +952,29 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     //    RejectionReasonID = payment.RejectedPayment.RejectionReasonID,
                     //})
                     //new 07-17-2019
-                    IsApproved = payment.IsApproved
+                    IsApproved = payment.IsApproved,
+                    BeneficiaryCID = beneficiary?.BeneficiaryCID,
                 };
+                //only update beneficairy info before payment is approved
+                if (paymentToUpdate.IsApproved != true)
+                {
+                    updatedPayment.BeneficiaryFName = beneficiary?.BeneficiaryFName;
+                    updatedPayment.BeneficiaryMName = beneficiary?.BeneficiaryMName;
+                    updatedPayment.BeneficiaryLName = beneficiary?.BeneficiaryLName;
+                    updatedPayment.BankName = bank?.BankName;
+                    updatedPayment.BankCode = bank?.BankCode;
+                    updatedPayment.IBan = beneficiary?.IBan;
+                }
+                //once the payment is approved, keep the same benefeciary info
+                else
+                {
+                    updatedPayment.BeneficiaryFName = paymentToUpdate.BeneficiaryFName;
+                    updatedPayment.BeneficiaryMName = paymentToUpdate.BeneficiaryMName;
+                    updatedPayment.BeneficiaryLName = paymentToUpdate.BeneficiaryLName;
+                    updatedPayment.BankName = paymentToUpdate.BankName;
+                    updatedPayment.BankCode = paymentToUpdate.BankCode;
+                    updatedPayment.IBan = paymentToUpdate.IBan;
+                }
                 //new 07-13-2019
 
                 AddOrUpdateRejectedPayment(updatedPayment, payment);
@@ -1163,6 +1222,30 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 index = _domainObjectRepository.Delete<Payment>(pay);
             }
             return index;
+            //throw new NotImplementedException();
+        }
+
+        public PaymentModel VoidPayment(PaymentModel payment)
+        {
+
+            var pay = _domainObjectRepository.Get<Payment>(p => p.PaymentID == payment.PaymentID);
+            
+            if (pay != null)
+            {
+                var paymentHistory = _domainObjectRepository.Get<PaymentHistory>(p => p.PaymentID == pay.PaymentID);
+                pay.IsVoid = true;
+                pay.IsDeleted = true;
+                _domainObjectRepository.Update<Payment>(pay);
+                payment.IsVoid = pay.IsVoid;
+                if (paymentHistory!=null)
+                {
+                    paymentHistory.IsVoid = true;
+                    paymentHistory.IsDeleted = true;
+                    _domainObjectRepository.Update<PaymentHistory>(paymentHistory);
+                }
+            }
+
+            return payment;
             //throw new NotImplementedException();
         }
 

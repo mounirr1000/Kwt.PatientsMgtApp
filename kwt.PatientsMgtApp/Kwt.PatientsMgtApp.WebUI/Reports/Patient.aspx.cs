@@ -19,13 +19,13 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
         readonly ISpecialityRepository _specialityRepository = new SpecialityRepository();
         protected void Page_Load(object sender, EventArgs e)
         {
-            
-            
+
+
 
             //
-            
+
             //
-            
+
             if (!IsPostBack)
             {
                 ListItem emptyItem = new ListItem("----Select----", "");
@@ -50,11 +50,11 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                 SpecialityList.DataBind();
                 SpecialityList.Items.Insert(0, emptyItem);
 
-                IDictionary<string,bool?> isActive = new Dictionary<string, bool?>();
+                IDictionary<string, bool?> isActive = new Dictionary<string, bool?>();
                 isActive.Add("----Select----", null);
-                isActive.Add("Active",true);
+                isActive.Add("Active", true);
                 isActive.Add("Not Active", false);
-                
+
                 IsActiveList.DataSource = isActive.ToList();
                 IsActiveList.DataBind();
                 IsActiveList.DataTextField = "key";
@@ -74,10 +74,10 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                 IsDeadList.DataBind();
 
                 GenerateReport();
-                
+
             }
         }
-        
+
         protected void Search_Click(object sender, EventArgs e)
         {
             bool? selectedActive;
@@ -100,7 +100,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
             }
 
             //GenerateReport(PatientCid.Text,Doctor.Text,Speciality.Text,Hospital.Text,Status.Checked);
-            GenerateReport(PatientCid.Text, DoctorList.SelectedValue, SpecialityList.SelectedValue, HospitalList.SelectedValue, selectedActive,null,null, selectedDeatStatus);
+            GenerateReport(PatientCid.Text, DoctorList.SelectedValue, SpecialityList.SelectedValue, HospitalList.SelectedValue, selectedActive, null, null, selectedDeatStatus);
         }
         protected void Clear_Click(object sender, EventArgs e)
         {
@@ -113,11 +113,14 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
             PatientCid.Text = null;
             IsActiveList.Text = null;
             IsDeadList.Text = null;
+            AuthorizedDate.Text = null;
             GenerateReport();
         }
-        private void GenerateReport(string patientCid=null,string doctorTxt=null,
-                                    string specialityTxt = null,string hospitalTxt = null,
-                                    bool? statusCheck =null, DateTime? startDateTxt = null, DateTime? endDateTxt = null, bool? isDead = null)
+        private void GenerateReport(string patientCid = null, string doctorTxt = null,
+                                    string specialityTxt = null, string hospitalTxt = null,
+                                    bool? statusCheck = null, DateTime? startDateTxt = null,
+                                    DateTime? endDateTxt = null, bool? isDead = null,
+                                    DateTime? authDate = null)
         {
             var patientId = string.IsNullOrEmpty(patientCid) ? null : patientCid;
             var doctor = string.IsNullOrEmpty(doctorTxt) ? null : doctorTxt;
@@ -128,28 +131,35 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
 
             var startDate = new DateTime();
             var endDate = new DateTime();
+
+            DateTime? authorizedDate = null;
+            DateTime authorizedDate2;
+            bool success = DateTime.TryParse(AuthorizedDate.Text, out authorizedDate2);
+            if (success) authorizedDate = authorizedDate2;
+
             List<PatientReportModel> patients = new List<PatientReportModel>();
             if (DateTime.TryParse(StartDate.Text, out startDate) && DateTime.TryParse(EndDate.Text, out endDate))
             {
-                patients = _patientRepository.GetPatientsReport(patientId, hospital, doctor, status, speciality,
-                    startDate, endDate, isDeadValue);
+
+                patients = _patientRepository.GetPatientsReport(patientId, hospital, doctor, status,
+                                                            speciality, startDate, endDate, isDeadValue);
             }
             // esle get last 30 days entered patients
             else
             {
                 startDate = DateTime.Now.AddDays(-30).Date;
                 endDate = DateTime.Now.Date;
-                if (patientId!=null || hospital!=null || doctor!=null || status!=null || speciality!=null|| isDeadValue!=null)
+                if (patientId != null || hospital != null || doctor != null || status != null || speciality != null || isDeadValue != null|| authorizedDate != null)
                 {
-                    patients = _patientRepository.GetPatientsReport(patientId, hospital, doctor, status, speciality, null, null, isDeadValue);
+                    patients = _patientRepository.GetPatientsReport(patientId, hospital, doctor, status, speciality, null, null, isDeadValue, authorizedDate);
                 }
-                else patients = _patientRepository.GetPatientsReport(patientId, hospital, doctor, status, speciality, startDate, endDate, isDeadValue);
+                else patients = _patientRepository.GetPatientsReport(patientId, hospital, doctor, status, speciality, startDate, endDate, isDeadValue, authorizedDate);
             }
 
             Message.Text = null;
             //ErrorMessage.Visible = true;
             //Message.Enabled = true;
-            if (patients==null||patients.Count == 0)
+            if (patients == null || patients.Count == 0)
             {
                 ErrorMessage.Visible = true;
                 Message.Enabled = true;
@@ -163,7 +173,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
             {
                 ReportViewer1.Visible = true;
                 ErrorMessage.Visible = false;
-                Message.Text = "Total Number of patients: "+ patients.Count;
+                Message.Text = "Total Number of patients: " + patients.Count;
                 Message.Enabled = false;
             }
             ReportViewer1.LocalReport.ReportPath = Server.MapPath("~/Reports/PatientReport.rdlc");
@@ -183,7 +193,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
             ReportViewer1.ShowPrintButton = true;
             ReportViewer1.PageCountMode = PageCountMode.Actual;
             ReportViewer1.Width = Unit.Percentage(100);
-            ReportViewer1.Font.Bold=true;
+            ReportViewer1.Font.Bold = true;
             ReportViewer1.LocalReport.Refresh();
         }
 

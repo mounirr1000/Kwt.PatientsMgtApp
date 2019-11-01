@@ -367,6 +367,22 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             
             private global::System.Data.DataColumn columnTotalHash;
             
+            private global::System.Data.DataColumn columnIsDeleted;
+            
+            private global::System.Data.DataColumn columnIsVoid;
+            
+            private global::System.Data.DataColumn columnPaymentBeneficiaryName;
+            
+            private global::System.Data.DataColumn columnPaymentIban;
+            
+            private global::System.Data.DataColumn columnPaymentBankName;
+            
+            private global::System.Data.DataColumn columnPaymentBankCode;
+            
+            private global::System.Data.DataColumn columnPaymentBeneficiaryCID;
+            
+            private global::System.Data.DataColumn columnSumTotalHash;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public GetPaymentListReport_SPDataTable() {
@@ -754,6 +770,70 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn IsDeletedColumn {
+                get {
+                    return this.columnIsDeleted;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn IsVoidColumn {
+                get {
+                    return this.columnIsVoid;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn PaymentBeneficiaryNameColumn {
+                get {
+                    return this.columnPaymentBeneficiaryName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn PaymentIbanColumn {
+                get {
+                    return this.columnPaymentIban;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn PaymentBankNameColumn {
+                get {
+                    return this.columnPaymentBankName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn PaymentBankCodeColumn {
+                get {
+                    return this.columnPaymentBankCode;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn PaymentBeneficiaryCIDColumn {
+                get {
+                    return this.columnPaymentBeneficiaryCID;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn SumTotalHashColumn {
+                get {
+                    return this.columnSumTotalHash;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -832,7 +912,15 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
                         long RowNumber, 
                         string RejectionDateFormatted, 
                         string IbanHash, 
-                        double TotalHash) {
+                        double TotalHash, 
+                        bool IsDeleted, 
+                        bool IsVoid, 
+                        string PaymentBeneficiaryName, 
+                        string PaymentIban, 
+                        string PaymentBankName, 
+                        string PaymentBankCode, 
+                        string PaymentBeneficiaryCID, 
+                        decimal SumTotalHash) {
                 GetPaymentListReport_SPRow rowGetPaymentListReport_SPRow = ((GetPaymentListReport_SPRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
@@ -878,7 +966,15 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
                         RowNumber,
                         RejectionDateFormatted,
                         IbanHash,
-                        TotalHash};
+                        TotalHash,
+                        IsDeleted,
+                        IsVoid,
+                        PaymentBeneficiaryName,
+                        PaymentIban,
+                        PaymentBankName,
+                        PaymentBankCode,
+                        PaymentBeneficiaryCID,
+                        SumTotalHash};
                 rowGetPaymentListReport_SPRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowGetPaymentListReport_SPRow);
                 return rowGetPaymentListReport_SPRow;
@@ -952,6 +1048,14 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
                 this.columnRejectionDateFormatted = base.Columns["RejectionDateFormatted"];
                 this.columnIbanHash = base.Columns["IbanHash"];
                 this.columnTotalHash = base.Columns["TotalHash"];
+                this.columnIsDeleted = base.Columns["IsDeleted"];
+                this.columnIsVoid = base.Columns["IsVoid"];
+                this.columnPaymentBeneficiaryName = base.Columns["PaymentBeneficiaryName"];
+                this.columnPaymentIban = base.Columns["PaymentIban"];
+                this.columnPaymentBankName = base.Columns["PaymentBankName"];
+                this.columnPaymentBankCode = base.Columns["PaymentBankCode"];
+                this.columnPaymentBeneficiaryCID = base.Columns["PaymentBeneficiaryCID"];
+                this.columnSumTotalHash = base.Columns["SumTotalHash"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1045,6 +1149,22 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
                 base.Columns.Add(this.columnIbanHash);
                 this.columnTotalHash = new global::System.Data.DataColumn("TotalHash", typeof(double), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnTotalHash);
+                this.columnIsDeleted = new global::System.Data.DataColumn("IsDeleted", typeof(bool), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnIsDeleted);
+                this.columnIsVoid = new global::System.Data.DataColumn("IsVoid", typeof(bool), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnIsVoid);
+                this.columnPaymentBeneficiaryName = new global::System.Data.DataColumn("PaymentBeneficiaryName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPaymentBeneficiaryName);
+                this.columnPaymentIban = new global::System.Data.DataColumn("PaymentIban", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPaymentIban);
+                this.columnPaymentBankName = new global::System.Data.DataColumn("PaymentBankName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPaymentBankName);
+                this.columnPaymentBankCode = new global::System.Data.DataColumn("PaymentBankCode", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPaymentBankCode);
+                this.columnPaymentBeneficiaryCID = new global::System.Data.DataColumn("PaymentBeneficiaryCID", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPaymentBeneficiaryCID);
+                this.columnSumTotalHash = new global::System.Data.DataColumn("SumTotalHash", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSumTotalHash);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnPaymentID}, true));
                 this.columnPaymentID.AutoIncrement = true;
@@ -1076,6 +1196,13 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
                 this.columnIbanHash.ReadOnly = true;
                 this.columnIbanHash.MaxLength = 22;
                 this.columnTotalHash.ReadOnly = true;
+                this.columnPaymentBeneficiaryName.ReadOnly = true;
+                this.columnPaymentBeneficiaryName.MaxLength = 152;
+                this.columnPaymentIban.MaxLength = 50;
+                this.columnPaymentBankName.MaxLength = 50;
+                this.columnPaymentBankCode.MaxLength = 3;
+                this.columnPaymentBeneficiaryCID.MaxLength = 12;
+                this.columnSumTotalHash.ReadOnly = true;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1938,6 +2065,139 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsDeleted {
+                get {
+                    try {
+                        return ((bool)(this[this.tableGetPaymentListReport_SP.IsDeletedColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'IsDeleted\' in table \'GetPaymentListReport_SP\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.IsDeletedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsVoid {
+                get {
+                    try {
+                        return ((bool)(this[this.tableGetPaymentListReport_SP.IsVoidColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'IsVoid\' in table \'GetPaymentListReport_SP\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.IsVoidColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string PaymentBeneficiaryName {
+                get {
+                    try {
+                        return ((string)(this[this.tableGetPaymentListReport_SP.PaymentBeneficiaryNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'PaymentBeneficiaryName\' in table \'GetPaymentListReport_SP\' " +
+                                "is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.PaymentBeneficiaryNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string PaymentIban {
+                get {
+                    try {
+                        return ((string)(this[this.tableGetPaymentListReport_SP.PaymentIbanColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'PaymentIban\' in table \'GetPaymentListReport_SP\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.PaymentIbanColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string PaymentBankName {
+                get {
+                    try {
+                        return ((string)(this[this.tableGetPaymentListReport_SP.PaymentBankNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'PaymentBankName\' in table \'GetPaymentListReport_SP\' is DBNu" +
+                                "ll.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.PaymentBankNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string PaymentBankCode {
+                get {
+                    try {
+                        return ((string)(this[this.tableGetPaymentListReport_SP.PaymentBankCodeColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'PaymentBankCode\' in table \'GetPaymentListReport_SP\' is DBNu" +
+                                "ll.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.PaymentBankCodeColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string PaymentBeneficiaryCID {
+                get {
+                    try {
+                        return ((string)(this[this.tableGetPaymentListReport_SP.PaymentBeneficiaryCIDColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'PaymentBeneficiaryCID\' in table \'GetPaymentListReport_SP\' i" +
+                                "s DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.PaymentBeneficiaryCIDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public decimal SumTotalHash {
+                get {
+                    try {
+                        return ((decimal)(this[this.tableGetPaymentListReport_SP.SumTotalHashColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'SumTotalHash\' in table \'GetPaymentListReport_SP\' is DBNull." +
+                                "", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPaymentListReport_SP.SumTotalHashColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsPatientCIDNull() {
                 return this.IsNull(this.tableGetPaymentListReport_SP.PatientCIDColumn);
             }
@@ -2439,6 +2699,102 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             public void SetTotalHashNull() {
                 this[this.tableGetPaymentListReport_SP.TotalHashColumn] = global::System.Convert.DBNull;
             }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsIsDeletedNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.IsDeletedColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetIsDeletedNull() {
+                this[this.tableGetPaymentListReport_SP.IsDeletedColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsIsVoidNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.IsVoidColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetIsVoidNull() {
+                this[this.tableGetPaymentListReport_SP.IsVoidColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsPaymentBeneficiaryNameNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.PaymentBeneficiaryNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetPaymentBeneficiaryNameNull() {
+                this[this.tableGetPaymentListReport_SP.PaymentBeneficiaryNameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsPaymentIbanNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.PaymentIbanColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetPaymentIbanNull() {
+                this[this.tableGetPaymentListReport_SP.PaymentIbanColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsPaymentBankNameNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.PaymentBankNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetPaymentBankNameNull() {
+                this[this.tableGetPaymentListReport_SP.PaymentBankNameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsPaymentBankCodeNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.PaymentBankCodeColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetPaymentBankCodeNull() {
+                this[this.tableGetPaymentListReport_SP.PaymentBankCodeColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsPaymentBeneficiaryCIDNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.PaymentBeneficiaryCIDColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetPaymentBeneficiaryCIDNull() {
+                this[this.tableGetPaymentListReport_SP.PaymentBeneficiaryCIDColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsSumTotalHashNull() {
+                return this.IsNull(this.tableGetPaymentListReport_SP.SumTotalHashColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetSumTotalHashNull() {
+                this[this.tableGetPaymentListReport_SP.SumTotalHashColumn] = global::System.Convert.DBNull;
+            }
         }
         
         /// <summary>
@@ -2640,6 +2996,14 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports.PaymentDataSetTableAdapters {
             tableMapping.ColumnMappings.Add("DeductionReasonText", "DeductionReasonText");
             tableMapping.ColumnMappings.Add("IbanHash", "IbanHash");
             tableMapping.ColumnMappings.Add("TotalHash", "TotalHash");
+            tableMapping.ColumnMappings.Add("IsDeleted", "IsDeleted");
+            tableMapping.ColumnMappings.Add("IsVoid", "IsVoid");
+            tableMapping.ColumnMappings.Add("PaymentBeneficiaryName", "PaymentBeneficiaryName");
+            tableMapping.ColumnMappings.Add("PaymentIban", "PaymentIban");
+            tableMapping.ColumnMappings.Add("PaymentBankName", "PaymentBankName");
+            tableMapping.ColumnMappings.Add("PaymentBankCode", "PaymentBankCode");
+            tableMapping.ColumnMappings.Add("PaymentBeneficiaryCID", "PaymentBeneficiaryCID");
+            tableMapping.ColumnMappings.Add("SumTotalHash", "SumTotalHash");
             this._adapter.TableMappings.Add(tableMapping);
         }
         
@@ -2663,13 +3027,14 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports.PaymentDataSetTableAdapters {
             this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@startDate", global::System.Data.SqlDbType.Date, 3, global::System.Data.ParameterDirection.Input, 10, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@endDate", global::System.Data.SqlDbType.Date, 3, global::System.Data.ParameterDirection.Input, 10, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@bankId", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 10, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@reportType", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 10, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, true)]
-        public virtual int Fill(PaymentDataSet.GetPaymentListReport_SPDataTable dataTable, string pCid, global::System.Nullable<global::System.DateTime> startDate, global::System.Nullable<global::System.DateTime> endDate, global::System.Nullable<int> bankId) {
+        public virtual int Fill(PaymentDataSet.GetPaymentListReport_SPDataTable dataTable, string pCid, global::System.Nullable<global::System.DateTime> startDate, global::System.Nullable<global::System.DateTime> endDate, global::System.Nullable<int> bankId, global::System.Nullable<int> reportType) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
             if ((pCid == null)) {
                 this.Adapter.SelectCommand.Parameters[1].Value = global::System.DBNull.Value;
@@ -2694,6 +3059,12 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports.PaymentDataSetTableAdapters {
             }
             else {
                 this.Adapter.SelectCommand.Parameters[4].Value = global::System.DBNull.Value;
+            }
+            if ((reportType.HasValue == true)) {
+                this.Adapter.SelectCommand.Parameters[5].Value = ((int)(reportType.Value));
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[5].Value = global::System.DBNull.Value;
             }
             if ((this.ClearBeforeFill == true)) {
                 dataTable.Clear();
@@ -2706,7 +3077,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports.PaymentDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
-        public virtual PaymentDataSet.GetPaymentListReport_SPDataTable GetData(string pCid, global::System.Nullable<global::System.DateTime> startDate, global::System.Nullable<global::System.DateTime> endDate, global::System.Nullable<int> bankId) {
+        public virtual PaymentDataSet.GetPaymentListReport_SPDataTable GetData(string pCid, global::System.Nullable<global::System.DateTime> startDate, global::System.Nullable<global::System.DateTime> endDate, global::System.Nullable<int> bankId, global::System.Nullable<int> reportType) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
             if ((pCid == null)) {
                 this.Adapter.SelectCommand.Parameters[1].Value = global::System.DBNull.Value;
@@ -2731,6 +3102,12 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports.PaymentDataSetTableAdapters {
             }
             else {
                 this.Adapter.SelectCommand.Parameters[4].Value = global::System.DBNull.Value;
+            }
+            if ((reportType.HasValue == true)) {
+                this.Adapter.SelectCommand.Parameters[5].Value = ((int)(reportType.Value));
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[5].Value = global::System.DBNull.Value;
             }
             PaymentDataSet.GetPaymentListReport_SPDataTable dataTable = new PaymentDataSet.GetPaymentListReport_SPDataTable();
             this.Adapter.Fill(dataTable);
