@@ -49,7 +49,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         }
 
         [ExceptionHandler]
-        public ActionResult List(string searchPatientText, string currentFilter, string sortOrder, int? page, bool? clearSearch)
+        public ActionResult List2(string searchPatientText, string currentFilter, string sortOrder, int? page, bool? clearSearch)
         {
             int pageNumber = (page ?? 1);
             // ViewBag.isBeneficiary = isBeneficiary ?? false;
@@ -128,7 +128,93 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             return View(patients);
 
         }
+        //new list
+        [ExceptionHandler]
+        public ActionResult List(string searchPatientText, string currentFilter, string sortOrder, int? page, bool? clearSearch)
+        {
+            int pageNumber = (page ?? 1);
+            // ViewBag.isBeneficiary = isBeneficiary ?? false;
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.AptSortParm = String.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
+            ViewBag.CidSortParm = String.IsNullOrEmpty(sortOrder) ? "Cid" : "";
+            ViewBag.BeneficiarySortParm = String.IsNullOrEmpty(sortOrder) ? "Beneficiary" : "";
 
+            var patients = _patientRepository.GetPatients();
+            if (patients != null)
+            {
+                // filter just active patients
+                patients = patients.Where(p => p.IsActive).ToList();
+                if (clearSearch != true)
+                {
+                    if (searchPatientText != null)
+                    {
+                        page = 1;
+                    }
+                    else
+                    {
+                        searchPatientText = currentFilter;
+                    }
+
+                    ViewBag.CurrentFilter = searchPatientText;
+                    var result = new List<PatientModel>();
+                    if (!String.IsNullOrEmpty(searchPatientText))
+                    {
+                        var term = searchPatientText.ToLower();
+                        result = patients?
+                            .Where(p => (
+                                  p.PatientCID.ToLower().Contains(term.Trim())
+                               //|| p.PatientFName.ToLower().Trim().Contains(term.Trim())
+                               //|| p.PatientLName.ToLower().Trim().Contains(term.Trim()))
+                               //|| p.Name.ToLower().Trim().Contains(term.Trim()
+                               )
+                            ).ToList();
+                    }
+
+                    if (result?.Count > 0)
+                    {
+                        Success(string.Format("We have <b>{0}</b> returned results from the searched criteria", result.Count),
+                            true);
+                        //return View(result.ToPagedList(pageNumber, PageSize));
+                        return View(result);
+                    }
+
+                    if (result?.Count == 0 && !String.IsNullOrEmpty(searchPatientText))
+                    {
+                        Information(
+                                string.Format(
+                                    "There is no patient in our records with the selected search criteria <b>{0}</b>",
+                                    searchPatientText), true);
+                    }
+
+                }
+            }
+            return View(patients);
+
+        }
+        // end new list
+        // new 2020
+        [HttpGet]
+        public JsonResult GetPatientsJson(string query)
+        {
+            var patients = _patientRepository.GetPatients();
+            if (!String.IsNullOrEmpty(query))
+                patients = patients?
+                                .Where(p =>
+                                    p.PatientCID.ToLower().Trim().Contains(query.ToLower().Trim()) || 
+                                    p.Name.ToLower().ToString().Trim().Contains(query.ToLower().Trim())
+                                ).OrderByDescending(c => c.CreatedDate).ToList();
+            else
+            {
+                patients = patients.Where(p => p.IsActive).ToList();
+            }
+            var jsonResult = new JsonResult();
+            jsonResult.MaxJsonLength = Int32.MaxValue;
+            jsonResult.Data = patients;
+            jsonResult.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return jsonResult;
+        }
+        //emd new 2020
         [ExceptionHandler]
         public ActionResult Details(string patientCid)
         {
@@ -380,6 +466,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         public ActionResult AddPatientBooks(string patientCid)
         {
             var patients = _patientRepository.GetActivePatients();
+                
             if (patients != null)
             {
                 var cids = patients.Select(pcid => pcid.PatientCID).ToList();

@@ -59,6 +59,12 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 PatientFName = m.PatientFName,
                 PatientLName = m.PatientLName,
                 PatientMName = m.PatientMName,
+                // add english name
+                EnglishPatFName = m.EnglishPatFName,
+                EnglishPatLName = m.EnglishPatLName,
+                EnglishPatMName = m.EnglishPatMName,
+                //
+                
                 PatientCID = m.PatientCID,
                 USPhone = m.USphone,
                 CreatedBy = m.CreatedBy,
@@ -67,7 +73,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 Diagnosis = m.Diagnosis,
                 Specialty = m.Specialty?.Specialty1,
                 AuthorizedDate = m.AuthorizedDate,
-                IsBlocked =m.IsBlocked,
+                IsBlocked = m.IsBlocked,
                 DeathDate = m.DeathDate,
                 IsDead = m.isDead ?? false
             }).ToList();
@@ -102,6 +108,11 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 PatientFName = m.PatientFName,
                 PatientLName = m.PatientLName,
                 PatientMName = m.PatientMName,
+                // add english name
+                EnglishPatFName = m.EnglishPatFName,
+                EnglishPatLName = m.EnglishPatLName,
+                EnglishPatMName = m.EnglishPatMName,
+                //
                 PatientCID = m.PatientCID,
                 USPhone = m.USphone,
                 CreatedDate = m.CreatedDate,
@@ -137,6 +148,11 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     PatientFName = p.PatientFName,
                     PatientLName = p.PatientLName,
                     PatientMName = p.PatientMName,
+                    // add english name
+                    EnglishPatFName = p.EnglishPatFName,
+                    EnglishPatLName = p.EnglishPatLName,
+                    EnglishPatMName = p.EnglishPatMName,
+                    //
                     PatientCID = p.PatientCID,
                     USPhone = p.USphone,
                     CreatedDate = p.CreatedDate,
@@ -207,13 +223,18 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                         }).ToList(),
                         DeductionNotes = pa.PaymentDeductions.Where(a => a.PaymentID == pa.Id).Select(paydedu => paydedu.Notes).SingleOrDefault()
                         //
-                    }).Where(pa=>pa.IsVoid!=true).OrderByDescending(py => py.CreatedDate).ThenByDescending(py => py.PaymentID).Take(3).ToList(),
+                    }).Where(pa => pa.IsVoid != true).OrderByDescending(py => py.CreatedDate).ThenByDescending(py => py.PaymentID).Take(3).ToList(),
                     Companions = p.Companions.Select(co => new CompanionModel()
                     {
                         CompanionCID = co.CompanionCID,
                         CompanionFName = co.CompanionFName,
                         CompanionMName = co.CompanionMName,
                         CompanionLName = co.CompanionLName,
+                        //
+                        EnglishComFName = co.EnglishComFName,
+                        EnglishComMName = co.EnglishComMName,
+                        EnglishComLName = co.EnglishComLName,
+                        //
                         IsBeneficiary = co.IsBeneficiary ?? false,
                         IsActive = co.IsActive ?? false,
                         DateIn = co.DateIn,
@@ -254,6 +275,11 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     PatientFName = p.PatientFName,
                     PatientLName = p.PatientLName,
                     PatientMName = p.PatientMName,
+                    // add english name
+                    EnglishPatFName = p.EnglishPatFName,
+                    EnglishPatLName = p.EnglishPatLName,
+                    EnglishPatMName = p.EnglishPatMName,
+                    //
                     PatientCID = p.PatientCID,
                     USPhone = p.USphone,
                     CreatedDate = p.CreatedDate,
@@ -336,16 +362,20 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                             PatientEndDate = pd.PatientEndDate,
                             PatientStartDate = pd.PatientStartDate,
                             DeductionReasonId = pd.ReasonId
-
                         }).SingleOrDefault()
                         //
-                    }).Where(pay=>pay.IsVoid!=true).ToList(),
+                    }).Where(pay => pay.IsVoid != true).ToList(),
                     Companions = p.Companions.Select(co => new CompanionModel()
                     {
                         CompanionCID = co.CompanionCID,
                         CompanionFName = co.CompanionFName,
                         CompanionMName = co.CompanionMName,
                         CompanionLName = co.CompanionLName,
+                        //
+                        EnglishComFName = co.EnglishComFName,
+                        EnglishComMName = co.EnglishComMName,
+                        EnglishComLName = co.EnglishComLName,
+                        //
                         IsBeneficiary = co.IsBeneficiary ?? false,
                         IsActive = co.IsActive ?? false,
                         DateIn = co.DateIn,
@@ -371,7 +401,6 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                         ModifiedBy = ch.ModifiedBy,
                         ModifiedDate = ch.ModifiedDate,
                         Name = ch.Name,
-
                     }).ToList(),
                     PatientHistories = p.PatientHistories.Select(ph => new PatientHistoryModel()
                     {
@@ -393,9 +422,14 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                         PatientFName = ph.PatientFName,
                         PatientMName = ph.PatientMName,
                         PatientLName = ph.PatientLName,
+                        // add english name
+                        EnglishPatFName = ph.EnglishPatFName,
+                        EnglishPatLName = ph.EnglishPatLName,
+                        EnglishPatMName = ph.EnglishPatMName,
+                        //
                         PrimaryCompanionCid = ph.PrimaryCompanionCid
                     }).ToList(),
-                    BookTypes = new BookTypeRepository().GetBookTypeList(),
+                    BookTypes = new BookTypeRepository().GetBookTypeList()?.Where(b=>b.BookTypeID!=5).ToList(),// we are removing pledge letter with booktype id 5
                     AuthorizedDate = p.AuthorizedDate,
                     IsBlocked = p.IsBlocked,
                     DeathDate = p.DeathDate,
@@ -422,6 +456,11 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     CompanionFName = m.CompanionFName,
                     CompanionMName = m.CompanionMName,
                     CompanionLName = m.CompanionLName,
+                    //
+                    EnglishComFName = m.EnglishComFName,
+                    EnglishComMName = m.EnglishComMName,
+                    EnglishComLName = m.EnglishComLName,
+                    //
                     CompanionType = m.CompanionType.CompanionType1,//_domainObjectRepository.Get<CompanionType>(ct =>  ct.CompanionTypeID == m.CompanionTypeID ).CompanionType1,
                     DateIn = m.DateIn,
                     DateOut = m.DateOut,
@@ -446,7 +485,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         {
 
             var pa = _domainObjectRepository.Get<Patient>(tp => tp.PatientCID == patient.PatientCID);
-            
+
             if (pa == null)
             {
                 ValidatePatient(patient);
@@ -469,6 +508,11 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     PatientFName = patient.PatientFName?.Trim(),
                     PatientLName = patient.PatientLName?.Trim(),
                     PatientMName = patient.PatientMName?.Trim(),
+                    // add english name
+                    EnglishPatFName = patient.EnglishPatFName?.Trim(),
+                    EnglishPatLName = patient.EnglishPatLName?.Trim(),
+                    EnglishPatMName = patient.EnglishPatMName?.Trim(),
+                    //
                     FirstApptDate = patient.FirstApptDAte,
                     SpecialtyId = _domainObjectRepository.Get<Specialty>(a => a.Specialty1 == patient.Specialty)?.SpecialtyId,
                     Diagnosis = patient.Diagnosis,
@@ -490,7 +534,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             //check if the new added patient is not an active primary companion
             // payment should not be done for an active primary companion and be a patient at the same time
             var companion = _domainObjectRepository.Get<Companion>(c => c.CompanionCID == patient.PatientCID);
-            if (companion?.IsActive == true && (companion.CompanionTypeID == 1 || companion.justBeneficiary!=true))//primary companion
+            if (companion?.IsActive == true && (companion.CompanionTypeID == 1 || companion.justBeneficiary != true))//primary companion
             {
                 throw new PatientsMgtException(1, "error", "Adding New Patient",
                     "This patient <b>" + patient.PatientCID + "</b> is an active primary companion, You need to set this companion as inactive OR secondary companion before you can create new patient");
@@ -515,6 +559,11 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                         CompanionFName = companion.CompanionFName,
                         CompanionMName = companion.CompanionMName,
                         CompanionLName = companion.CompanionLName,
+                        //
+                        EnglishComFName = companion.EnglishComFName,
+                        EnglishComMName = companion.EnglishComMName,
+                        EnglishComLName = companion.EnglishComLName,
+                        //
                         CompanionCID = companion.CompanionCID,
                         IsBeneficiary = companion.IsBeneficiary,
                         IsActive = companion.IsActive
@@ -638,6 +687,11 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 p.PatientFName = patient.PatientFName;
                 p.PatientLName = patient.PatientLName;
                 p.PatientMName = patient.PatientMName;
+                // add english name
+                p.EnglishPatFName = patient.EnglishPatFName?.Trim();
+                p.EnglishPatLName = patient.EnglishPatLName?.Trim();
+                p.EnglishPatMName = patient.EnglishPatMName?.Trim();
+                //
                 p.Iban = patient.Iban;
                 p.EndTreatDate = patient.EndTreatDate;//String.Equals(a.BankName, patient.BankName, StringComparison.OrdinalIgnoreCase)
                 p.AgencyID = _domainObjectRepository.Get<Agency>(a => a.AgencyName.Trim() == patient.Agency.Trim()).AgencyID;
@@ -652,10 +706,10 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 p.DeathDate = patient.DeathDate;
                 p.isDead = patient.DeathDate != null || patient.IsDead;// patient.IsDead;
                 p.ModifiedBy = patient.ModifiedBy;
-                if (p.isDead==true)
+                if (p.isDead == true)
                 {
                     p.IsActive = false;
-                   // patient.EndTreatDate = patient.DeathDate;
+                    // patient.EndTreatDate = patient.DeathDate;
                 }
                 _domainObjectRepository.Update<Patient>(p);
                 // check if the patient become inactive and the end treatment date is not null, then the patient should become part of the history.
@@ -689,6 +743,11 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                         PatientFName = p.PatientFName,
                         PatientLName = p.PatientLName,
                         PatientMName = p.PatientMName,
+                        // add english name
+                        EnglishPatFName = p.EnglishPatFName,
+                        EnglishPatLName = p.EnglishPatLName,
+                        EnglishPatMName = p.EnglishPatMName,
+                        //
                         USphone = p.USphone,
                         DeathDate = p.DeathDate,
                         isDead = p.isDead,
@@ -744,6 +803,9 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     IsActive = companion.IsActive,
                     IsBeneficiary = companion.IsBeneficiary,
                     Name = companion.CompanionFName + " " + companion.CompanionMName + " " + companion.CompanionLName,
+                    EnglishComFName=companion.EnglishComFName,
+                    EnglishComLName=companion.EnglishComLName,
+                    EnglishComMName=companion.EnglishComMName,
                     Notes = companion.Notes,
                     CompanionType = companion.CompanionTypeID == (int)Enums.CompanionType.Primary ? "Primary" : "Secondary"
                 };
@@ -754,19 +816,19 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         // ToDo : this functionality may not be needed
         public int DeletePatient(PatientModel patient)
         {
-            var p = _domainObjectRepository.Get<Patient>(pa => pa.PatientCID == patient.PatientCID, new []{ "Payments", "PaymentDeductions", "Companions", "CompanionHistories" });
+            var p = _domainObjectRepository.Get<Patient>(pa => pa.PatientCID == patient.PatientCID, new[] { "Payments", "PaymentDeductions", "Companions", "CompanionHistories" });
             if (p != null)
             {
                 //Delete all related tables to the patient
                 //delete Beneficiary record
-                 var payments = p.Payments;
+                var payments = p.Payments;
                 var companions = p.Companions;
                 var companionsHistory = p.CompanionHistories;
                 var patientsHistory = p.PatientHistories;
                 if (payments != null && payments.Count > 0)
                 {
-                        throw new PatientsMgtException(1, "error", "Deleting Patient",
-                        "There are payments done to this patient, You can't delete this Patient unless you delete all the payments asscoiated to : " + p.PatientCID);
+                    throw new PatientsMgtException(1, "error", "Deleting Patient",
+                    "There are payments done to this patient, You can't delete this Patient unless you delete all the payments asscoiated to : " + p.PatientCID);
                 }
                 if (companions != null && companions.Count > 0)
                 {

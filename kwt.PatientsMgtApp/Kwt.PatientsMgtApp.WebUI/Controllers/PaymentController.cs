@@ -51,7 +51,13 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             if (payments != null)
             {
                 payments = payments.OrderByDescending(c => c.CreatedDate).ToList();
-                
+
+                // get only last 30 days payments to avoid loading too many anneccessary payments
+
+                payments = payments.Where(p => p.IsActive ==true)
+                                   .Where(p => p.CreatedDate >= DateTime.Now.AddDays(-60))
+                                   .OrderByDescending(c => c.CreatedDate).ToList();
+
                 if (clearSearch != true)
                 {
                     if (searchpaymentText != null)
@@ -71,7 +77,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                         var term = searchpaymentText.ToLower().Trim();
                         result = payments?
                             .Where(p =>
-                                p.PatientCID.ToLower().Trim().Contains(term)|| p.PaymentID.ToString().Contains(term)
+                                p.PatientCID.ToLower().Trim().Contains(term) || p.PaymentID.ToString().Contains(term)
                             ).ToList();
                         if (DateTime.TryParse(searchpaymentText, out date))
                         {
@@ -103,12 +109,61 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             }
 
             //for auditor roles, show nonapproved payment
-            if (User.IsInAnyRoles2(CrudRoles.PaymentApprovalRoles))
-            {
-                payments = payments?.Where(p => p.IsApproved != true).ToList();// get only nonApproved payment
-            }
+            // try to use json instead, so outofstack exception wont be thrown
+            //if (User.IsInAnyRoles2(CrudRoles.PaymentApprovalRoles))
+            //{
+            //    payments = payments?.Where(p => p.IsApproved != true).ToList();// get only nonApproved payment
+            //}
             return View(payments);
         }
+        // new 2020
+        [HttpGet]
+        public JsonResult GetPaymentsJson(string query)
+        {
+            var payments = _paymentRepository.GetPayments();
+            if (!String.IsNullOrEmpty(query))
+                payments = payments?
+                                .Where(p =>
+                                    p.PatientCID.ToLower().Trim().Contains(query) || p.PaymentID.ToString().Contains(query)
+                                ).OrderByDescending(c => c.CreatedDate).ToList();
+            else
+            {
+                payments = payments.Where(p => p.IsActive == true)
+                                   .Where(p => p.CreatedDate >= DateTime.Now.AddDays(-60))
+                                   .OrderByDescending(c => c.CreatedDate).ToList();
+            }
+            var jsonResult = new JsonResult();
+            jsonResult.MaxJsonLength = Int32.MaxValue;
+            jsonResult.Data = payments;
+            jsonResult.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return jsonResult;
+        }
+        //emd new 2020
+        // new 2020
+        [HttpGet]
+        public JsonResult GetPaymentsBetweenTwoDatesJson(string date1, string date2)
+        {
+            var payments = new List<PaymentModel>() ;
+            if (!String.IsNullOrEmpty(date1)&& !String.IsNullOrEmpty(date2))
+            {
+                payments = _paymentRepository.GetPayments();
+                DateTime d1 ;
+                DateTime d2;
+                DateTime.TryParse(date1, out d1);
+                DateTime.TryParse(date2, out d2);
+                payments = payments?
+                                .Where(p =>
+                                    p.PaymentDate >= d1 && p.PaymentDate <= d2
+                                ).OrderByDescending(c => c.CreatedDate).ToList();
+            }
+                
+            var jsonResult = new JsonResult();
+            jsonResult.MaxJsonLength = Int32.MaxValue;
+            jsonResult.Data = payments;
+            jsonResult.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return jsonResult;
+        }
+        //emd new 2020
         //new February 28, 2019
         public ActionResult GetTodaysPayments()
         {
@@ -165,27 +220,34 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             jsonResult.MaxJsonLength = Int32.MaxValue;
             jsonResult.Data = unApprovedPayment;
             jsonResult.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
-             return jsonResult;
+            return jsonResult;
         }
         [ExceptionHandler]
         public JsonResult ToggleApprovedPayment(int? toggleType)
         {
             var payments = _paymentRepository.GetPayments();
-            
+            // get only last 30 days payments to avoid loading too many anneccessary payments
+            if (payments != null)
+                payments = payments.Where(p => p.CreatedDate >= DateTime.Now.AddDays(-60)).ToList();
+
             List<PaymentModel> unApprovedPayment = new List<PaymentModel>();
             if (toggleType != null)
             {
                 if (toggleType == 2) // not approved
                 {
-                    unApprovedPayment = payments.Where(p => p.IsApproved != true).OrderByDescending(p=>p.CreatedDate).ToList();// get null and false isapproved
+                    unApprovedPayment = payments.Where(p => p.IsApproved != true).OrderByDescending(p => p.CreatedDate).ToList();// get null and false isapproved
                 }
-                else // just approved Payment
+                else if (toggleType == 1) //  approved
                 {
                     unApprovedPayment = payments.Where(p => p.IsApproved == true).OrderByDescending(p => p.CreatedDate).ToList();
                 }
-                    
+                else // just approved Payment
+                {
+                    unApprovedPayment = payments.OrderByDescending(p => p.CreatedDate).ToList();
+                }
+
             }
-             
+
             var jsonResult = new JsonResult();
             jsonResult.MaxJsonLength = Int32.MaxValue;
             jsonResult.Data = unApprovedPayment;
@@ -196,6 +258,9 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         public JsonResult GetApprovedPayment(int? id)
         {
             var payments = _paymentRepository.GetPayments();
+            // get only last 30 days payments to avoid loading too many anneccessary payments
+            if (payments != null)
+                payments = payments.Where(p => p.CreatedDate >= DateTime.Now.AddDays(-30)).ToList();
             if (id != null)
             {
                 if (id == 2) // not approved
@@ -208,8 +273,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                 }
 
             }
-            
-           // payments = payments.Where(p => p.IsApproved == true).OrderByDescending(p => p.CreatedDate).ToList();
+
+            // payments = payments.Where(p => p.IsApproved == true).OrderByDescending(p => p.CreatedDate).ToList();
             var jsonResult = new JsonResult();
             jsonResult.MaxJsonLength = Int32.MaxValue;
             jsonResult.Data = payments;
@@ -314,9 +379,9 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         {
             // PaymentViewModel paymentView = new PaymentViewModel();
             var payment = _paymentRepository.GetPaymentById(paymentId);
-            if (payment==null)
+            if (payment == null)
             {
-                Warning(string.Format("There is no payment id with {0}",paymentId), true);
+                Warning(string.Format("There is no payment id with {0}", paymentId), true);
                 return RedirectToAction("List");
             }
             if (payment.IsVoid == true)
@@ -335,7 +400,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         [CustomAuthorize(Roles = CrudRoles.PaymentUpdateRolesForAutorizeAttribute)]
         public ActionResult Edit(PaymentModel pay)
         {
-            
+
             if (!User.IsInRole(Roles.SuperAdmin))
                 ValidatePayment(pay, true);
 
@@ -425,7 +490,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             //--When payrateid = 1, for the same payment period, means both patient and compnaion get paid
             //--When payrateid = 2, for the same payment period, means  patient get paid and not the compnaion
             //--When payrateid = 3, for the same payment period, means the companion get paid and not the patient
-            var historyPayments = _paymentRepository.GetPaymentsByPatientCid(payment.PatientCID)?.Where(p=>p.IsVoid!=true).ToList();
+            var historyPayments = _paymentRepository.GetPaymentsByPatientCid(payment.PatientCID)?.Where(p => p.IsVoid != true).ToList();
             if (!ValidatePaymentDates(payment, historyPayments, isEdit)) return;
             //new 07-16-2019
             // when payment is a correction or adjustment means we can have duplicate payment dates

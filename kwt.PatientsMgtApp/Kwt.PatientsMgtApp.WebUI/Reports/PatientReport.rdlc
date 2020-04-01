@@ -597,19 +597,6 @@
                             <TextAlign>Center</TextAlign>
                           </Style>
                         </Paragraph>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value>=Fields!KWTphone.Value</Value>
-                              <Style>
-                                <Color>CornflowerBlue</Color>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Center</TextAlign>
-                          </Style>
-                        </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>USphone</rd:DefaultName>
                       <Style>

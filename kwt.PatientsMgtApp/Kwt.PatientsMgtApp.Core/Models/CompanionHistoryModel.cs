@@ -11,6 +11,10 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public int HistoryID { get; set; }
         public string CompanionCID { get; set; }
         public string Name { get; set; }
+        public string EnglishComFName { get; set; }        
+        public string EnglishComMName { get; set; }        
+        public string EnglishComLName { get; set; }
+
         public string PatientCID { get; set; }
         public Nullable<System.DateTime> DateIn { get; set; }
         public String DateInFormatted { get { return String.Format("{0:d}", DateIn); } }

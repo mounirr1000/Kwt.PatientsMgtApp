@@ -964,6 +964,34 @@
                 dataSource: {
                     data: payHistory
                 }
+                //
+                ,
+                dataBound: function(e) {
+                    // get the index of the UnitsInStock cell
+                    // var columns = e.sender.columns;
+                    // var columnIndex = this.wrapper.find(".k-grid-header [data-field=" + "UnitsInStock" + "]").index();
+
+                    // iterate the table rows and apply custom row and cell styling
+                    var rows = e.sender.tbody.children();
+                    for (var j = 0; j < rows.length; j++) {
+                        var row = $(rows[j]);
+                        var dataItem = e.sender.dataItem(row);
+
+                        //var units = dataItem.get("UnitsInStock");
+                        var discontinued = dataItem.get("IsRejected");
+                        var voided = dataItem.get("IsVoid");
+
+                        if (discontinued) {
+                            row.addClass("isRejected");
+                        }
+                        if (voided) {
+                            row.addClass("isVoided");
+                        }
+                        //var cell = row.children().eq(columnIndex);
+                        //cell.addClass(getUnitsInStockClass(units));
+                    }
+                }
+                //
             });
             var maxLength = 250;
             var intialLength = 0;

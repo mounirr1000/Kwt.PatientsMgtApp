@@ -57,7 +57,7 @@
         </ul>
     </fieldset>
 
-    @if (User.IsInAnyRoles("Admin", "Manager", "Auditor"))
+    @if (User.IsInAnyRoles("Super Admin", "Admin", "Manager", "Auditor"))
     {
         if (Model.IsBeneficiary)
         {

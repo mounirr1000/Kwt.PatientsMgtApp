@@ -33,6 +33,11 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 CompanionFName = c.CompanionFName,
                 CompanionMName = c.CompanionMName,
                 CompanionLName = c.CompanionLName,
+                //
+                EnglishComFName = c.EnglishComFName,
+                EnglishComMName = c.EnglishComMName,
+                EnglishComLName = c.EnglishComLName,
+                //
                 CompanionType = c.CompanionType.CompanionType1,//, _domainObjectRepository.Get<CompanionType>(ct => ct.CompanionTypeID == c.CompanionTypeID)?.CompanionType1,
                 DateIn = c.DateIn,
                 DateOut = c.DateOut,
@@ -64,6 +69,11 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     CompanionFName = companion.CompanionFName,
                     CompanionMName = companion.CompanionMName,
                     CompanionLName = companion.CompanionLName,
+                    //
+                    EnglishComFName = companion.EnglishComFName,
+                    EnglishComMName = companion.EnglishComMName,
+                    EnglishComLName = companion.EnglishComLName,
+                    //
                     CompanionType = _domainObjectRepository.Get<CompanionType>(ct => ct.CompanionTypeID == companion.CompanionTypeID)?.CompanionType1,
                     DateIn = companion.DateIn,
                     DateOut = companion.DateOut,
@@ -102,6 +112,11 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     CompanionFName = companion.CompanionFName,
                     CompanionMName = companion.CompanionMName,
                     CompanionLName = companion.CompanionLName,
+                    //
+                    EnglishComFName = companion.EnglishComFName,
+                    EnglishComMName = companion.EnglishComMName,
+                    EnglishComLName = companion.EnglishComLName,
+                    //
                     CompanionType = _domainObjectRepository.Get<CompanionType>(ct => ct.CompanionTypeID == companion.CompanionTypeID)?.CompanionType1,
                     DateIn = companion.DateIn,
                     DateOut = companion.DateOut,
@@ -140,6 +155,11 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     CompanionFName = companion.CompanionFName,
                     CompanionMName = companion.CompanionMName,
                     CompanionLName = companion.CompanionLName,
+                    //
+                    EnglishComFName = companion.EnglishComFName,
+                    EnglishComMName = companion.EnglishComMName,
+                    EnglishComLName = companion.EnglishComLName,
+                    //
                     CompanionType = _domainObjectRepository.Get<CompanionType>(ct => ct.CompanionTypeID == companion.CompanionTypeID)?.CompanionType1,
                     DateIn = companion.DateIn,
                     DateOut = companion.DateOut,
@@ -232,6 +252,11 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                         CompanionFName = companion.CompanionFName,
                         CompanionMName = companion.CompanionMName,
                         CompanionLName = companion.CompanionLName,
+                        //
+                        EnglishComFName = companion.EnglishComFName,
+                        EnglishComMName = companion.EnglishComMName,
+                        EnglishComLName = companion.EnglishComLName,
+                        //
                         CompanionTypeID = newCompanionTypeid,
                         DateIn = companion.DateIn,
                         DateOut = companion.DateOut,
@@ -378,6 +403,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     BeneficiaryFName = companion.CompanionFName,
                     BeneficiaryLName = companion.CompanionLName,
                     BeneficiaryMName = companion.CompanionMName,
+                    
                     CompanionCID = companion.CompanionCID,
 
                 };
@@ -405,32 +431,48 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         {
             if (companion.IsActive == false && companion.DateOut != null)
             {
-                // check that the companion is not in the table with the same patient
-                // we can have more than one history for the same companion if the patient is diffrent
-                // var comp = _domainObjectRepository.Get<CompanionHistory>(c => c.CompanionCID == companion.CompanionCID
-                //             && c.PatientCID == companion.PatientCID);
+            //    check that the companion is not in the table with the same patient
+            //we can have more than one history for the same companion if the patient is diffrent
+                 var comp = _domainObjectRepository.Get<CompanionHistory>(c => c.CompanionCID == companion.CompanionCID
+                             && c.PatientCID == companion.PatientCID);
 
-                //    if (comp == null)
-                // {
-                _domainObjectRepository.Create<CompanionHistory>(new CompanionHistory()
+                if (comp == null)
                 {
-                    CompanionCID = companion.CompanionCID,
-                    DateIn = companion.DateIn,
-                    DateOut = companion.DateOut,
-                    PatientCID = companion.PatientCID,
-                    CompanionType = _domainObjectRepository.Get<CompanionType>(ct => ct.CompanionTypeID == companion.CompanionTypeID)?.CompanionType1,
-                    IsActive = companion.IsActive,
-                    CreatedDate = companion.CreatedDate,
-                    IsBeneficiary = companion.IsBeneficiary,
-                    ModifiedBy = companion.ModifiedBy,
-                    ModifiedDate = companion.ModifiedDate,
-                    Name = companion.CompanionFName + " " + companion.CompanionMName + " " + companion.CompanionLName,
-                    Notes = companion.Notes,
-                    CreatedBy = companion.CreatedBy,
+                    _domainObjectRepository.Create<CompanionHistory>(new CompanionHistory()
+                    {
+                        CompanionCID = companion.CompanionCID,
+                        DateIn = companion.DateIn,
+                        DateOut = companion.DateOut,
+                        PatientCID = companion.PatientCID,
+                        CompanionType = _domainObjectRepository.Get<CompanionType>(ct => ct.CompanionTypeID == companion.CompanionTypeID)?.CompanionType1,
+                        IsActive = companion.IsActive,
+                        CreatedDate = companion.CreatedDate,
+                        IsBeneficiary = companion.IsBeneficiary,
+                        ModifiedBy = companion.ModifiedBy,
+                        ModifiedDate = companion.ModifiedDate,
+                        Name = companion.CompanionFName + " " + companion.CompanionMName + " " + companion.CompanionLName,
+                        EnglishComFName = companion.EnglishComFName,
+                        EnglishComMName = companion.EnglishComMName,
+                        EnglishComLName = companion.EnglishComLName,
+                        Notes = companion.Notes,
+                        CreatedBy = companion.CreatedBy,
 
-                });
+                    });
 
-                // }
+                }else
+                {
+                    comp.DateIn = companion.DateIn;
+                    comp.DateOut = companion.DateOut;                   
+                    comp.CompanionType = _domainObjectRepository.Get<CompanionType>(ct => ct.CompanionTypeID == companion.CompanionTypeID)?.CompanionType1;
+                    comp.IsActive = companion.IsActive;
+                    comp.CreatedDate = companion.CreatedDate;
+                    comp.IsBeneficiary = companion.IsBeneficiary;
+                    comp.ModifiedBy = companion.ModifiedBy;
+                    comp.ModifiedDate = companion.ModifiedDate;                    
+                    comp.Notes = companion.Notes;
+                    comp.CreatedBy = companion.CreatedBy;
+                    _domainObjectRepository.Update<CompanionHistory>(comp);
+                }
 
             }
         }
@@ -448,6 +490,11 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 companionToUpdate.CompanionFName = companion.CompanionFName;
                 companionToUpdate.CompanionMName = companion.CompanionMName;
                 companionToUpdate.CompanionLName = companion.CompanionLName;
+                //
+                companionToUpdate.EnglishComFName = companion.EnglishComFName;
+                companionToUpdate.EnglishComMName = companion.EnglishComMName;
+                companionToUpdate.EnglishComLName = companion.EnglishComLName;
+                        //
                 companionToUpdate.CompanionTypeID = newCompanionTypeid;
                 companionToUpdate.DateIn = companion.DateIn;
                 companionToUpdate.DateOut = companion.DateOut;

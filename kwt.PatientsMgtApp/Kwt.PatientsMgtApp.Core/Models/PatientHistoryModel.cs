@@ -13,6 +13,9 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public string PatientFName { get; set; }
         public string PatientMName { get; set; }
         public string PatientLName { get; set; }
+        public string EnglishPatFName { get; set; }        
+        public string EnglishPatMName { get; set; }        
+        public string EnglishPatLName { get; set; }
         public string KWTphone { get; set; }
         public string USphone { get; set; }
         public string Hospital { get; set; }

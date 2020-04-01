@@ -69,7 +69,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             var companions = _companionRepository.GetCompanions();
             if (companions != null)
             {
-                companions = companions.OrderByDescending(c => c.CreatedDate).ThenBy(co => co.IsActive).ToList();
+                companions = companions.Where(co=>co.IsActive).OrderByDescending(c => c.CreatedDate).ThenBy(co => co.IsActive).ToList();
 
                 if (clearSearch != true)
                 {
@@ -122,8 +122,102 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             return View(companions);
         }
 
+
+        public ActionResult List2(string searchCompanionText, string currentFilter, string sortOrder, int? page, bool? clearSearch)
+        {
+            //
+            var users = UserManager.Users;
+            //
+            int pageNumber = (page ?? 1);
+            //ViewBag.isBeneficiary = isBeneficiary ?? false;
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.DateInSortParm = String.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
+            ViewBag.CidSortParm = String.IsNullOrEmpty(sortOrder) ? "Cid" : "";
+            ViewBag.BeneficiarySortParm = String.IsNullOrEmpty(sortOrder) ? "Beneficiary" : "";
+
+            var companions = _companionRepository.GetCompanions();
+            if (companions != null)
+            {
+                companions = companions.OrderByDescending(c => c.CreatedDate).ThenBy(co => co.IsActive).ToList();
+
+                if (clearSearch != true)
+                {
+                    if (searchCompanionText != null)
+                    {
+                        page = 1;
+                    }
+                    else
+                    {
+                        searchCompanionText = currentFilter;
+                    }
+
+                    ViewBag.CurrentFilter = searchCompanionText;
+                    var result = new List<CompanionModel>();
+                    if (!String.IsNullOrEmpty(searchCompanionText?.Trim()))
+                    {
+                        var term = searchCompanionText.Trim().ToLower();
+                        result = companions
+                            .Where(p =>
+                                   p.CompanionCID.ToLower().Contains(term)
+                                || p.CompanionFName.Trim().ToLower().Contains(term)
+                                || p.CompanionLName.Trim().ToLower().Contains(term)
+                                || (p.CompanionMName != null
+                                    && p.CompanionMName.Trim().ToLower().Contains(term))
+                                || p.Name.Trim().ToLower().Contains(term)
+                            ).ToList();
+                    }
+
+                    if (result?.Count > 0)
+                    {
+                        Success(string.Format("We have <b>{0}</b> returned results from the searched criteria", result.Count),
+                            true);
+                        //return View(result.ToPagedList(pageNumber, PageSize));
+                        return View(result);
+                    }
+                    if (!String.IsNullOrEmpty(searchCompanionText))
+                    {
+                        if (result?.Count == 0)
+                        {
+                            Information(
+                                string.Format(
+                                    "There is no companion in our records with the selected search criteria <b>{0}</b>",
+                                    searchCompanionText), true);
+                        }
+                    }
+                }
+            }
+
+            // return View(companions.ToPagedList(pageNumber, PageSize));
+            return View(companions);
+        }
         [ExceptionHandler]
         //public ActionResult Details(string companionCid)
+
+        // new 2020
+        [HttpGet]
+        public JsonResult GetCompanionsJson(string query)
+
+        {
+            var companions = _companionRepository.GetCompanions();
+                //companions = companions.Where(co => co.IsActive).OrderByDescending(c => c.CreatedDate).ThenBy(co => co.IsActive).ToList();
+            if (!String.IsNullOrEmpty(query))
+                companions = companions?
+                                .Where(p =>
+                                    p.CompanionCID.ToLower().Trim().Contains(query.ToLower().ToString().Trim()) || 
+                                    p.Name.ToLower().ToString().Trim().Contains(query.ToLower().ToString().Trim())
+                                ).OrderByDescending(c => c.CreatedDate).ToList();
+            else
+            {
+                companions = companions.Where(co => co.IsActive).OrderByDescending(c => c.CreatedDate).ToList();
+            }
+            var jsonResult = new JsonResult();
+            jsonResult.MaxJsonLength = Int32.MaxValue;
+            jsonResult.Data = companions;
+            jsonResult.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return jsonResult;
+        }
+        //emd new 2020
         public ActionResult Details(string companionCid, string patientCid)
         {
 
@@ -261,19 +355,44 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             {
                 ValidatePatient(companion, primaryCompanionType, isEdit);
             }
-            if (ModelState.IsValidField("CompanionCID")
-                && companion.CompanionCID?.Trim().Length < 12)
+            ValidateCompanionCid(companion, rgx);
+            ValidateBeneficiary(companion);
+            ValidateIsActive(companion);
+            // if the companion is not Primary and the user select it to be beneficiary
+            ValidateCompanionType(companion, primaryCompanionType);
+        }
+
+        private void ValidateCompanionType(CompanionModel companion, string primaryCompanionType)
+        {
+            if (ModelState.IsValidField("CompanionType"))
             {
-                ModelState.AddModelError("CompanionCID", "The Companion CID should be 12 characters long");
+                if (companion.IsBeneficiary && companion.CompanionType != primaryCompanionType)
+                    ModelState.AddModelError("CompanionType", companion.CompanionType +
+                                                              " Can't be Beneficiary, Only " + primaryCompanionType +
+                                                              " companion who can");
             }
-            if (ModelState.IsValidField("CompanionCID")
-                && companion.CompanionCID != null
-                && !rgx.IsMatch(companion.CompanionCID))
+        }
+
+        private void ValidateIsActive(CompanionModel companion)
+        {
+            if (ModelState.IsValidField("isActive")
+                && companion.IsActive == false
+                && companion.DateOut == null)
             {
-                ModelState.AddModelError("CompanionCID", "The Companion CID should contains only alphanumeric(a-z/0-9) values");
+                ModelState.AddModelError("DateOut", "The companion is not active, so you need to enter the Date out field");
             }
+            if (ModelState.IsValidField("DateOut")
+                && companion.DateOut != null
+                && companion.IsActive)
+            {
+                ModelState.AddModelError("IsActive", "Date out is set, so the companion Active status should be No");
+            }
+        }
+
+        private void ValidateBeneficiary(CompanionModel companion)
+        {
             if (ModelState.IsValidField("IsBeneficiary")
-               && companion.IsBeneficiary == true)
+                && companion.IsBeneficiary == true)
             {
                 if (companion.IBan == null)
                     ModelState.AddModelError("Iban", "The companion is Beneficiary, so you need to enter the Iban field");
@@ -298,28 +417,22 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             {
                 ModelState.AddModelError("IBan", "The companion is Not Beneficiary, so no need to enter the Bank Account field");
             }
-            if (ModelState.IsValidField("isActive")
-                && companion.IsActive == false
-                && companion.DateOut == null)
-            {
-                ModelState.AddModelError("DateOut", "The companion is not active, so you need to enter the Date out field");
-            }
-            if (ModelState.IsValidField("DateOut")
-                && companion.DateOut != null
-                && companion.IsActive)
-            {
-                ModelState.AddModelError("IsActive", "Date out is set, so the companion Active status should be No");
-            }
-            // if the companion is not Primary and the user select it to be beneficiary
-            if (ModelState.IsValidField("CompanionType"))
-            {
-
-                if (companion.IsBeneficiary && companion.CompanionType != primaryCompanionType)
-                    ModelState.AddModelError("CompanionType", companion.CompanionType +
-                        " Can't be Beneficiary, Only " + primaryCompanionType + " companion who can");
-            }
         }
 
+        private void ValidateCompanionCid(CompanionModel companion, Regex rgx)
+        {
+            if (ModelState.IsValidField("CompanionCID")
+                && companion.CompanionCID?.Trim().Length < 12)
+            {
+                ModelState.AddModelError("CompanionCID", "The Companion CID should be 12 characters long");
+            }
+            if (ModelState.IsValidField("CompanionCID")
+                && companion.CompanionCID != null
+                && !rgx.IsMatch(companion.CompanionCID))
+            {
+                ModelState.AddModelError("CompanionCID", "The Companion CID should contains only alphanumeric(a-z/0-9) values");
+            }
+        }
 
         private void ValidatePatient(CompanionModel companion, string primaryCompanionType, bool isEdit = false)
         {

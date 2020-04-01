@@ -11,10 +11,10 @@
     var jsonModel = serializer.Serialize(Model);
 }
 <div class="pt-3 pb-3">
-@if (User.IsInAnyRoles(CrudRoles.CompanionCreateRoles))
-{
-    <a href="@Url.Action("Create", "Companion")" class="k-button"><i class="fa fa-plus" style="color:yellowgreen"></i> New Companion</a>
-}
+    @if (User.IsInAnyRoles(CrudRoles.CompanionCreateRoles))
+    {
+        <a href="@Url.Action("Create", "Companion")" class="k-button"><i class="fa fa-plus" style="color:yellowgreen"></i> New Companion</a>
+    }
 </div>
 
 <div id="companion-data" class="pb-5 pt-5">
@@ -51,31 +51,30 @@
 @section Scripts {
 
     @{ Html.RenderPartial("_DeleteConfirmationjs"); }
-    <script type="text/javascript">
+    @*<script type="text/javascript">
         $("#clear").click(function (e) {
             $("#searchCompanion").val("");
             $("#clearSearch").val(true);
 
         });
-    </script>
+    </script>*@
     <script type="text/javascript">
         var companions = @Html.Raw(jsonModel);
-        console.log("companions",companions);
         var isAdmin =   @Html.Raw(Json.Encode(User.IsInAnyRoles(CrudRoles.CompanionDeleteRoles)));
-        
+
         function getTemplate(id) {
-            
+
             if (isAdmin) {
                 id = String("'"+id+"'");// convert the id into string and add quatation to it ''
                 return '<a href="javascript:confirmDelete('+id+','+'\'id\''+')" id='+id+'> <i class="fa fa-times fa-2x" style="color: lightcoral"></i></a>';
             }
-            
+
         }
         $('document').ready(function () {
             $("#content").css("visibility", "visible");
 
-            $("#companionsList").kendoGrid({
-                toolbar: "<p class='alert alert-info'>This is the list of all Companion we have in our records, active and non active</p>",
+          var grid=  $("#companionsList").kendoGrid({
+                toolbar: "<p class='alert alert-info'>This is the list of active companions we have in our records. For non active companions, use search box to find the companion</p>",
                 height: 750,
                 groupable: true,
                 sortable: true,
@@ -132,8 +131,69 @@
                 dataSource: {
                     data: companions
                 }
-            });
+          }).data("kendoGrid");
             $(".loader").css("display", "none");
+
+            //new 2020
+
+            function ajaxCall(q){
+                $.ajax({
+                    url: "@Url.Action("GetCompanionsJson")",
+                    type: "GET",
+                    contentType: "application/json",
+                    data: { "query": q },
+                    dataType: "json",
+                    beforeSend: function() {
+
+                        $(".loader").css("display", "block");
+                    },
+                    success: function (results) {
+                        //$("#searchPayment").keyup(function () {
+                        grid.dataSource.data( results );
+                        grid.refresh();
+                        $(".loader").css("display", "none");
+                    },
+
+                    error: function (error) {
+                        alert(error);
+                    }
+                });
+            }
+            function onSearch(e) {
+                debugger;
+                e.preventDefault();
+                var q = $("#searchCompanion").val();
+                if(q){
+                    q = q.toString();
+                    ajaxCall(q);
+                }
+
+            }
+            function onClear(e) {
+                debugger;
+                var query = $("#searchCompanion").val();
+                e.preventDefault();
+                if(query){
+                    $("#searchCompanion").val("");
+                    ajaxCall();
+                }
+
+                //  });
+            }
+            $("#btnSearch").kendoButton({
+                click: onSearch
+            });
+            $("#clear").kendoButton({
+                click: onClear
+            });
+            $('#searchCompanion').on('keydown', function(e) {
+                //debugger;
+                if (e.which == 13) {
+                    // e.preventDefault();
+                    onSearch(e);
+                }
+            });
+            // end new 2020
         });
     </script>
 }

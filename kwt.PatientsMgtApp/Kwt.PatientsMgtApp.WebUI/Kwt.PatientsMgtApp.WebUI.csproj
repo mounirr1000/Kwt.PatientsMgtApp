@@ -37,6 +37,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -274,6 +275,7 @@
     <Compile Include="Infrastructure\CrudRoles.cs" />
     <Compile Include="Infrastructure\ExtensionMethods.cs" />
     <Compile Include="Infrastructure\HtmlHelpers.cs" />
+    <Compile Include="Infrastructure\JavaScriptConvert.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\FileViewModel.cs" />
     <Compile Include="Models\HomeViewModels.cs" />
@@ -442,6 +444,7 @@
     <Content Include="fonts\fontawesome-webfont.woff" />
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="ClassDiagram1.cd" />
     <None Include="Reports\PatientDataSet.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>

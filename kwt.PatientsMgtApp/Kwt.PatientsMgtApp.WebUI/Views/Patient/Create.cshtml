@@ -57,6 +57,31 @@
                             @Html.ValidationMessageFor(model => model.PatientLName, "", new { @class = "k-error-colored" })
                         </div>
                     </li>
+                    @* english name *@
+                    <li class="col-md-4">
+                        
+                        @Html.LabelFor(model => model.EnglishPatFName, new { @class = "" })
+                        @Html.TextBoxFor(model => model.EnglishPatFName, new { @class = "k-textbox", style = "width: 100%;" })
+                        <div>
+                            @Html.ValidationMessageFor(model => model.EnglishPatFName, "", new { @class = "k-error-colored" })
+                        </div>
+                    </li>
+                    <li class="col-md-4">
+                        
+                        @Html.LabelFor(model => model.EnglishPatMName, new { @class = "" })
+                        @Html.TextBoxFor(model => model.EnglishPatMName, new { @class = "k-textbox", style = "width: 100%;" })
+                        <div>
+                            @Html.ValidationMessageFor(model => model.EnglishPatMName, "", new { @class = "k-error-colored" })
+                        </div>
+                    </li>
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.EnglishPatLName, new { @class = "" })
+                        @Html.TextBoxFor(model => model.EnglishPatLName, new { @class = "k-textbox", style = "width: 100%;" })
+                        <div>
+                            @Html.ValidationMessageFor(model => model.EnglishPatLName, "", new { @class = "k-error-colored" })
+                        </div>
+                    </li>
+                    @*  *@
                     <li class="col-md-4">
                         @Html.LabelFor(model => model.KWTPhone, new { @class = "" })
                         @Html.TextBoxFor(model => model.KWTPhone, new { @class = "k-textbox", style = "width: 100%;" })

@@ -1187,7 +1187,11 @@ tbody:empty:before {
         color: #f00;
         text-decoration: line-through;
       }
-
+.isVoided {
+        font-weight: bold;
+        color: #787878;
+        text-decoration: line-through wavy #787878;
+      }
 .isRejectedVoucher {
         font-weight: bold;
         color: #000;

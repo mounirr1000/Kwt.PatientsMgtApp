@@ -51,6 +51,9 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public Nullable<bool> IsBlocked { get; set; }
         public Nullable<bool> isDead { get; set; }
         public Nullable<System.DateTime> DeathDate { get; set; }
+        public string EnglishPatFName { get; set; }
+        public string EnglishPatMName { get; set; }
+        public string EnglishPatLName { get; set; }
     
         public virtual Agency Agency { get; set; }
         public virtual Bank Bank { get; set; }

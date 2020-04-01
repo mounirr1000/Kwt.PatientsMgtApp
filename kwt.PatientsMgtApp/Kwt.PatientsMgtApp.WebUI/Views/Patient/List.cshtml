@@ -26,127 +26,186 @@
     </div>
 }
 
-@*@Ajax.ActionLink("","","",new AjaxOptions() {});*@
-<div id="patient-data" class="pb-5 pt-5">
-    @if (Model.Any())
-    {
+    @*@Ajax.ActionLink("","","",new AjaxOptions() {});*@
+    <div id="patient-data" class="pb-5 pt-5">
+        @if (Model.Any())
+        {
 
-        <div class="pb-3">
-            @{ Html.RenderPartial("_PatientSearchForm"); }
-        </div>
-        <div class="loader"></div>
-        <div id="content" style="visibility: hidden;">
-            <div id="patientList"></div>
+            <div class="pb-3">
+                @{ Html.RenderPartial("_PatientSearchForm"); }
+            </div>
+            <div class="loader"></div>
+            <div id="content" style="visibility: hidden;">
+                <div id="patientList"></div>
 
 
-        </div>
-    }
-    else
-    {
-        <div class="text-info">
-            There is no patient in our records
-            @if (Request.QueryString["searchPatientText"] != null)
-    {
-                <span> that contains :&nbsp;<b> @Request.QueryString["searchPatientText"]</b></span>
-                <br />@Html.ActionLink("back to list", "List", "Patient", new { @class = "k-button" });
-    }
-        </div>
-    }
-</div>
-
-@section DeleteConfirm{
-
-    @{ Html.RenderPartial("_DeleteConfirmationModel"); }
-
-}
-
-@section Scripts {
-
-    @{ Html.RenderPartial("_DeleteConfirmationjs"); }
-    <script type="text/javascript">
-        $("#clear").click(function(e) {
-            $("#searchPatient").val("");
-            $("#clearSearch").val(true);
-            //e.preventDefault();
-        });
-    </script>
-    <script type="text/javascript">
-        var patients = @Html.Raw(jsonModel);
-        console.log(patients);
-        $('document').ready(function() {
-            $("#content").css("visibility", "visible");
-            var isAdmin =   @Html.Raw(Json.Encode(User.IsInAnyRoles(CrudRoles.PatientDeleteRoles)));
-
-            function getTemplate(patientCid) {
-                if (isAdmin) {
-                    patientCid = String("'"+patientCid+"'");// convert the id into string and add quatation to it ''
-                    return '<a href="javascript:confirmDelete('+patientCid+','+'\'patientCid\''+')" id='+patientCid+'> <i class="fa fa-times fa-2x" style="color: lightcoral"></i></a>';
-                }
-                return '';
-            }
-            $("#patientList").kendoGrid({
-                toolbar: "<p class='alert alert-info'>This is the list of all patient we have in our records, active and non active</p>",
-                height: 550,
-                groupable: true,
-                sortable: true,
-                resizable: true,
-                //filterable: true
-                pageable: {
-                    pageSize: 15,
-                    alwaysVisible: false
-                },
-                columns: [
-                    {
-                        field: "PatientCID",
-                        title: "CID",
-                        template: "<a href='@Url.Action("Details", "Patient")?PatientCid=#= PatientCID#'>#= PatientCID #</a>"
-                    },
-                    {
-                        field: "Name",
-                        title: "Name"
-                    },
-                    {
-                        field: "Hospital",
-                        title: "Hospital"
-                    },
-                    {
-                        field: "Doctor",
-                        title: "Doctor"
-                    },
-                    {
-                        field: "Specialty",
-                        title: "Specialty"
-                    },
-                    {
-                        field: "FirstApptDAte",
-                        title: "Start Treatment",
-                        template: "#= kendo.toString(kendo.parseDate(FirstApptDAte, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
-                    },
-                    {
-                        field: "EndTreatDate",
-                        title: "End Treatment",
-                        template: "#if(EndTreatDate==null){# #: '' # #}else{##: kendo.toString(kendo.parseDate(EndTreatDate, 'yyyy-MM-dd'), 'MM/dd/yyyy')##}#"
-                    },
-                    {
-                        field: "IsActive",
-                        title: "Status",
-                        template: "#if(IsActive==true){#<i class='badge badge-success'>Active</i>#}" +
-                            "else{#<i class='badge badge-info'>Not Active</i>#}#"
+            </div>
                     }
-                    ,{
-                        field: "PatientCID",
-                        title: "Delete",
-                        template: getTemplate('#=PatientCID#'),
-                        hidden: !isAdmin
+                    else
+                    {
+                        <div class="text-info">
+                            There is no patient in our records
+                            @if (Request.QueryString["searchPatientText"] != null)
+                            {
+                                <span> that contains :&nbsp;<b> @Request.QueryString["searchPatientText"]</b></span>
+                                <br />@Html.ActionLink("back to list", "List", "Patient", new { @class = "k-button" });
+                            }
+                        </div>
+                    }
+    </div>
+
+    @section DeleteConfirm{
+
+        @{ Html.RenderPartial("_DeleteConfirmationModel"); }
+
+    }
+
+    @section Scripts {
+
+        @{ Html.RenderPartial("_DeleteConfirmationjs"); }
+        <script type="text/javascript">
+            //$("#clear").click(function(e) {
+              // // $("#searchPatient").val("");
+              //  $("#clearSearch").val(true);
+               // //e.preventDefault();
+            //});
+        </script>
+        <script type="text/javascript">
+            var patients = @Html.Raw(jsonModel);
+            $('document').ready(function() {
+                $("#content").css("visibility", "visible");
+                var isAdmin =   @Html.Raw(Json.Encode(User.IsInAnyRoles(CrudRoles.PatientDeleteRoles)));
+
+                function getTemplate(patientCid) {
+                    if (isAdmin) {
+                        patientCid = String("'"+patientCid+"'");// convert the id into string and add quatation to it ''
+                        return '<a href="javascript:confirmDelete('+patientCid+','+'\'patientCid\''+')" id='+patientCid+'> <i class="fa fa-times fa-2x" style="color: lightcoral"></i></a>';
+                    }
+                    return '';
+                }
+                var grid =     $("#patientList").kendoGrid({
+                    toolbar: "<p class='alert alert-info'>This is the list of active patients we have in our records. For non active patients, use search box to find a patient</p>",
+                    height: 550,
+                    groupable: true,
+                    sortable: true,
+                    resizable: true,
+                    //filterable: true
+                    pageable: {
+                        pageSize: 15,
+                        alwaysVisible: false
+                    },
+                    columns: [
+                        {
+                            field: "PatientCID",
+                            title: "CID",
+                            template: "<a href='@Url.Action("Details", "Patient")?PatientCid=#= PatientCID#'>#= PatientCID #</a>"
+                        },
+                        {
+                            field: "Name",
+                            title: "Name"
+                        },
+                        {
+                            field: "Hospital",
+                            title: "Hospital"
+                        },
+                        {
+                            field: "Doctor",
+                            title: "Doctor"
+                        },
+                        {
+                            field: "Specialty",
+                            title: "Specialty"
+                        },
+                        {
+                            field: "FirstApptDAte",
+                            title: "Start Treatment",
+                            template: "#= kendo.toString(kendo.parseDate(FirstApptDAte, 'yyyy-MM-dd'), 'MM/dd/yyyy') #"
+                        },
+                        {
+                            field: "EndTreatDate",
+                            title: "End Treatment",
+                            template: "#if(EndTreatDate==null){# #: '' # #}else{##: kendo.toString(kendo.parseDate(EndTreatDate, 'yyyy-MM-dd'), 'MM/dd/yyyy')##}#"
+                        },
+                        {
+                            field: "IsActive",
+                            title: "Status",
+                            template: "#if(IsActive==true){#<i class='badge badge-success'>Active</i>#}" +
+                                "else{#<i class='badge badge-info'>Not Active</i>#}#"
+                        }
+                        ,{
+                            field: "PatientCID",
+                            title: "Delete",
+                            template: getTemplate('#=PatientCID#'),
+                            hidden: !isAdmin
+                        }
+
+                    ],
+                    dataSource: {
+                        data: patients
+                    }
+                }).data("kendoGrid");
+
+                $(".loader").css("display", "none");
+                //new 2020
+
+                function ajaxCall(q){
+                    $.ajax({
+                        url: "@Url.Action("GetPatientsJson")",
+                        type: "GET",
+                    contentType: "application/json",
+                    data: { "query": q },
+                    dataType: "json",
+                    beforeSend: function() {
+
+                        $(".loader").css("display", "block");
+                    },
+                    success: function (results) {
+                        //$("#searchPayment").keyup(function () {
+                        grid.dataSource.data( results );
+                        grid.refresh();
+                        $(".loader").css("display", "none");
+                    },
+
+                    error: function (error) {
+                        alert(error);
+                    }
+                });
+                }
+                function onSearch(e) {
+                    debugger;
+                    e.preventDefault();
+                    var q = $("#searchPatient").val();
+                    if(q){
+                        q = q.toString();
+                        ajaxCall(q);
                     }
                     
-                ],
-                dataSource: {
-                    data: patients
                 }
+                function onClear(e) {
+                    debugger;
+                    var query = $("#searchPatient").val();
+                    e.preventDefault();
+                    if(query){
+                        $("#searchPatient").val("");
+                        ajaxCall();
+                    }
+                    
+                    //  });
+                }
+                $("#btnSearch").kendoButton({
+                    click: onSearch
+                });
+                $("#clear").kendoButton({
+                    click: onClear
+                });
+                $('#searchPatient').on('keydown', function(e) {
+                    //debugger;
+                    if (e.which == 13) {
+                        // e.preventDefault();
+                        onSearch(e);
+                    }
+                });
+                // end new 2020
             });
-            
-            $(".loader").css("display", "none");
-        });
-    </script>
-}
+        </script>
+    }

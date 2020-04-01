@@ -156,10 +156,23 @@
                                 }
                                 else
                                 {
-                                    <text>No Companion</text>
-                                }
+                                    <text>لا مرافق اول </text>
+}
                             </td>
                             <td style="font-weight:bold;">المرافق الاول</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                @if (Model.SecondaryCompanion != null)
+                                {
+                                    @Model.SecondaryCompanion.Name
+                                }
+                                else
+                                {
+                                    <text>  لا مرافق ثاني</text>
+}
+                            </td>
+                            <td style="font-weight:bold;">المرافق الثاني</td>
                         </tr>
                     </table>
                 </div>
@@ -211,7 +224,7 @@
                         <div class="houseletter" style="text-align: justify ; font-size: 18pt;">
                             <div class="m-3" style="width: 90%;">
                                 <p>This is to certify that</p>
-                                <p style="font-weight: bold">@Model.Name</p>
+                                <p style="font-weight: bold">@Model.EnglishName</p>
                                 <p>is a Kuwaiti patient, at</p>
                                 <p style="font-weight: bold">@Model.Hospital</p>
                                 <p>, undergoing medical treatment under our auspice since</p>
@@ -219,11 +232,11 @@
                             </div>
                             <div class="m-3" style="width: 90%;">
                                 <p>Patient </p>
-                                <p style="font-weight: bold">@Model.PatientFName</p>
+                                <p style="font-weight: bold">@Model.EnglishPatFName</p>
                                 @if (Model.PrimaryCompanion != null)
                             {
                                     <p>and his/her companion</p>
-                                    <p style="font-weight: bold">@Model.PrimaryCompanion.Name</p>
+                                    <p style="font-weight: bold">@Model.PrimaryCompanion.EnglishName</p>
                             }
 
                                 <p>Receive(s) monthly living allowances of
@@ -290,7 +303,7 @@
                         <div class="houseletter" style="text-align: justify ; font-size: 18pt;">
                             <div class="m-3" style="width: 90%;">
                                 <p>This is to certify that</p>
-                                <p style="font-weight: bold">@Model.Name</p>
+                                <p style="font-weight: bold">@Model.EnglishName</p>
                                 <p>is a Kuwaiti patient, at</p>
                                 <p style="font-weight: bold">@Model.Hospital</p>
                                 <p>, undergoing medical treatment under our auspice since</p>
@@ -304,11 +317,11 @@
                             </div>
                             <div class="m-3" style="width: 90%;">
                                 <p>Patient </p>
-                                <p style="font-weight: bold">@Model.PatientFName</p>
+                                <p style="font-weight: bold">@Model.EnglishPatFName</p>
                                 @if (Model.PrimaryCompanion != null)
                                 {
                                     <p>and his/her companion</p>
-                                    <p style="font-weight: bold">@Model.PrimaryCompanion.Name</p>
+                                    <p style="font-weight: bold">@Model.PrimaryCompanion.EnglishName</p>
                                 }
 
                                 <p>Receive(s) monthly living allowances of
@@ -430,6 +443,19 @@
                                 }
                             </td>
                             <td style="font-weight:bold;">المرافق الاول</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                @if (Model.SecondaryCompanion != null)
+                                {
+                                    @Model.SecondaryCompanion.Name
+                                }
+                                else
+                                {
+                                    <text>  لا مرافق ثاني</text>
+                                }
+                            </td>
+                            <td style="font-weight:bold;">المرافق الثاني</td>
                         </tr>
                     </table>
                 </div>

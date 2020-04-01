@@ -47,7 +47,31 @@
                         @Html.TextBoxFor(model => model.CompanionLName, new { @class = "k-textbox", style = "width: 100%;" })
                         <div>@Html.ValidationMessageFor(model => model.CompanionLName, "", new { @class = "text-danger" })</div>
                     </li>
+                    @* english name *@
+                    <li class="col-md-4">
 
+                        @Html.LabelFor(model => model.EnglishComFName, new { @class = "" })
+                        @Html.TextBoxFor(model => model.EnglishComFName, new { @class = "k-textbox", style = "width: 100%;" })
+                        <div>
+                            @Html.ValidationMessageFor(model => model.EnglishComFName, "", new { @class = "k-error-colored" })
+                        </div>
+                    </li>
+                    <li class="col-md-4">
+
+                        @Html.LabelFor(model => model.EnglishComMName, new { @class = "" })
+                        @Html.TextBoxFor(model => model.EnglishComMName, new { @class = "k-textbox", style = "width: 100%;" })
+                        <div>
+                            @Html.ValidationMessageFor(model => model.EnglishComMName, "", new { @class = "k-error-colored" })
+                        </div>
+                    </li>
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.EnglishComLName, new { @class = "" })
+                        @Html.TextBoxFor(model => model.EnglishComLName, new { @class = "k-textbox", style = "width: 100%;" })
+                        <div>
+                            @Html.ValidationMessageFor(model => model.EnglishComLName, "", new { @class = "k-error-colored" })
+                        </div>
+                    </li>
+                    @*  *@
                     <li class="col-md-4">
                         <small class="text-sm-left text-info">Please Type CID, You can't copy paste</small>
                         @Html.LabelFor(model => model.PatientCID, new { @class = "" })
@@ -96,7 +120,7 @@
                 </ul>
             </fieldset>
 
-            @if (User.IsInAnyRoles("Admin", "Manager", "Auditor"))
+            @if (User.IsInAnyRoles("Super Admin", "Admin", "Manager", "Auditor", "Editor"))
             {
                 <button data-toggle="collapse" data-target="#companionBaninfo"><i></i> Companion Bank Info</button>
                 <fieldset id="companionBaninfo" class="collapse">

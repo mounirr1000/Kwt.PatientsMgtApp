@@ -28,6 +28,9 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public Nullable<bool> IsBeneficiary { get; set; }
         public Nullable<bool> IsActive { get; set; }
         public string Notes { get; set; }
+        public string EnglishComFName { get; set; }
+        public string EnglishComMName { get; set; }
+        public string EnglishComLName { get; set; }
     
         public virtual Companion Companion { get; set; }
         public virtual Patient Patient { get; set; }

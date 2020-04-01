@@ -135,9 +135,9 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 PatientMName = p.Patient.PatientMName,
                 //BeneficiaryFName = p.Beneficiary.BeneficiaryFName,
                 //BeneficiaryLName = p.Beneficiary.BeneficiaryLName,
-               // BeneficiaryMName = p.Beneficiary.BeneficiaryMName,
+                // BeneficiaryMName = p.Beneficiary.BeneficiaryMName,
                 //BeneficiaryBank = _domainObjectRepository.Get<Bank>(b=>b.BankName==p.Beneficiary.BankName).BankName,
-               // BeneficiaryIBan = p.Beneficiary.IBan,
+                // BeneficiaryIBan = p.Beneficiary.IBan,
                 CompanionCID = p.CompanionCID,
                 //CompanionFName = p.Companion.CompanionFName,
                 //CompanionLName = p.Companion.CompanionLName,
@@ -180,7 +180,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 BeneficiaryBank = p.BankName,// payment.Beneficiary != null ? _domainObjectRepository.Get<Bank>(b => b.BankID == payment.Beneficiary.BankID)?.BankName: "";
                 BeneficiaryIBan = p.IBan,// payment.Beneficiary?.IBan;
                 BankCode = p.BankCode,
-            //end new
+                //end new
+                IsActive = p.Patient.IsActive ?? false,
             // new 
             PaymentDeductionObject = p.PaymentDeductions.Select(pd => new PaymentDeductionModel()
                 {
@@ -1235,6 +1236,9 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 var paymentHistory = _domainObjectRepository.Get<PaymentHistory>(p => p.PaymentID == pay.PaymentID);
                 pay.IsVoid = true;
                 pay.IsDeleted = true;
+                pay.TotalDue = null;
+                pay.TotalCorrection = null;
+                pay.FinalAmountAfterCorrection = null;
                 _domainObjectRepository.Update<Payment>(pay);
                 payment.IsVoid = pay.IsVoid;
                 if (paymentHistory!=null)

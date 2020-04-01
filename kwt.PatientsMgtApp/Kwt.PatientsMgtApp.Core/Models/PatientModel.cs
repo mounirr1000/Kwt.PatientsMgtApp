@@ -32,7 +32,16 @@ namespace Kwt.PatientsMgtApp.Core.Models
         [Required]
         public string PatientLName { get; set; }
 
+        [DisplayName("English First Name")]
+        public string EnglishPatFName { get; set; }
+        [DisplayName("English Middle Name")]
+        public string EnglishPatMName { get; set; }
+        [DisplayName("English Last Name")]
+        public string EnglishPatLName { get; set; }
+
         public string Name { get { return this.PatientFName + " " + this.PatientMName + " " + this.PatientLName; } }
+
+        public string EnglishName { get { return this.EnglishPatFName + " " + this.EnglishPatMName + " " + this.EnglishPatLName; } }
 
         [DisplayName("Kuwait Phone#")]
         [Phone]
@@ -139,6 +148,8 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public List<CompanionModel> Companions { get; set; }
 
         public CompanionModel PrimaryCompanion { get { return Companions != null ? Companions.Where(c => c.CompanionType == "Primary" && c.JustBeneficiary != true && c.DateOut == null && c.IsActive == true)?.FirstOrDefault() : null; } }
+
+        public CompanionModel SecondaryCompanion { get { return Companions != null ? Companions.Where(c => c.CompanionType == "Secondary" && c.JustBeneficiary != true && c.DateOut == null && c.IsActive == true)?.FirstOrDefault() : null; } }
         public BeneficiaryModel Beneficiary { get; set; }
 
         public  List<CompanionHistoryModel> CompanionHistories { get; set; }

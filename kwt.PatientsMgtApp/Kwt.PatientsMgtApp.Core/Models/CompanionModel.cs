@@ -27,7 +27,16 @@ namespace Kwt.PatientsMgtApp.Core.Models
          DisplayName("Last Name")]
         public string CompanionLName { get; set; }
 
+        [DisplayName("English First Name")]
+        public string EnglishComFName { get; set; }
+        [DisplayName(" English Middle Name")]
+        public string EnglishComMName { get; set; }
+        [DisplayName("English Last Name")]
+        public string EnglishComLName { get; set; }
+
         public string Name { get { return this.CompanionFName + " " + this.CompanionMName + " " + this.CompanionLName; } }
+
+        public string EnglishName { get { return this.EnglishComFName + " " + this.EnglishComMName + " " + this.EnglishComLName; } }
 
         [Required(ErrorMessage = "Patient Civil Id is required"),
          DisplayName("Patient Civil Id")]

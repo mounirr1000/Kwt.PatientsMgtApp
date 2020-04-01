@@ -67,6 +67,9 @@
           <Property Name="IsBeneficiary" Type="bit" />
           <Property Name="IsActive" Type="bit" />
           <Property Name="Notes" Type="nvarchar" MaxLength="250" />
+          <Property Name="EnglishComFName" Type="nvarchar" MaxLength="50" />
+          <Property Name="EnglishComMName" Type="nvarchar" MaxLength="50" />
+          <Property Name="EnglishComLName" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Companions">
           <Key>
@@ -92,6 +95,9 @@
           <Property Name="IsBeneficiary" Type="bit" />
           <Property Name="CompanionTypeID" Type="int" />
           <Property Name="justBeneficiary" Type="bit" />
+          <Property Name="EnglishComFName" Type="nvarchar" MaxLength="50" />
+          <Property Name="EnglishComMName" Type="nvarchar" MaxLength="50" />
+          <Property Name="EnglishComLName" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="CompanionTypes">
           <Key>
@@ -157,6 +163,9 @@
           <Property Name="PrimaryCompanionCid" Type="nvarchar" MaxLength="12" />
           <Property Name="isDead" Type="bit" />
           <Property Name="DeathDate" Type="date" />
+          <Property Name="EnglishPatFName" Type="nvarchar" MaxLength="50" />
+          <Property Name="EnglishPatMName" Type="nvarchar" MaxLength="50" />
+          <Property Name="EnglishPatLName" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Patients">
           <Key>
@@ -185,10 +194,13 @@
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="ModifiedBy" Type="nvarchar" MaxLength="50" />
           <Property Name="ModifiedDate" Type="datetime" />
-          <Property Name="AuthorizedDate" Type="date" />
           <Property Name="IsBlocked" Type="bit" />
+          <Property Name="AuthorizedDate" Type="date" />
           <Property Name="isDead" Type="bit" />
           <Property Name="DeathDate" Type="date" />
+          <Property Name="EnglishPatFName" Type="nvarchar" MaxLength="50" />
+          <Property Name="EnglishPatMName" Type="nvarchar" MaxLength="50" />
+          <Property Name="EnglishPatLName" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="PaymentDeductions">
           <Key>
@@ -386,6 +398,324 @@
           <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
           <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
         </EntityType>
+        <Association Name=" FK_CompanionHistories_Companions_withCompositKey">
+          <End Role="Companions" Type="Self.Companions" Multiplicity="0..1" />
+          <End Role="CompanionHistories" Type="Self.CompanionHistories" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Companions">
+              <PropertyRef Name="CompanionCID" />
+              <PropertyRef Name="PatientCID" />
+            </Principal>
+            <Dependent Role="CompanionHistories">
+              <PropertyRef Name="CompanionCID" />
+              <PropertyRef Name="PatientCID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name=" FK_CompanionHistories_Patients">
+          <End Role="Patients" Type="Self.Patients" Multiplicity="0..1" />
+          <End Role="CompanionHistories" Type="Self.CompanionHistories" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patients">
+              <PropertyRef Name="PatientCID" />
+            </Principal>
+            <Dependent Role="CompanionHistories">
+              <PropertyRef Name="PatientCID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name=" FK_Companions_Banks">
+          <End Role="Banks" Type="Self.Banks" Multiplicity="0..1" />
+          <End Role="Companions" Type="Self.Companions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Banks">
+              <PropertyRef Name="BankID" />
+            </Principal>
+            <Dependent Role="Companions">
+              <PropertyRef Name="BankID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name=" FK_Companions_CompanionTypes">
+          <End Role="CompanionTypes" Type="Self.CompanionTypes" Multiplicity="0..1" />
+          <End Role="Companions" Type="Self.Companions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CompanionTypes">
+              <PropertyRef Name="CompanionTypeID" />
+            </Principal>
+            <Dependent Role="Companions">
+              <PropertyRef Name="CompanionTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name=" FK_Companions_Patients">
+          <End Role="Patients" Type="Self.Patients" Multiplicity="1" />
+          <End Role="Companions" Type="Self.Companions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patients">
+              <PropertyRef Name="PatientCID" />
+            </Principal>
+            <Dependent Role="Companions">
+              <PropertyRef Name="PatientCID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name=" FK_PatientHistories_Patients">
+          <End Role="Patients" Type="Self.Patients" Multiplicity="1" />
+          <End Role="PatientHistories" Type="Self.PatientHistories" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patients">
+              <PropertyRef Name="PatientCID" />
+            </Principal>
+            <Dependent Role="PatientHistories">
+              <PropertyRef Name="PatientCID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name=" FK_Patients_Agencies">
+          <End Role="Agencies" Type="Self.Agencies" Multiplicity="1" />
+          <End Role="Patients" Type="Self.Patients" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agencies">
+              <PropertyRef Name="AgencyID" />
+            </Principal>
+            <Dependent Role="Patients">
+              <PropertyRef Name="AgencyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name=" FK_Patients_Banks">
+          <End Role="Banks" Type="Self.Banks" Multiplicity="0..1" />
+          <End Role="Patients" Type="Self.Patients" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Banks">
+              <PropertyRef Name="BankID" />
+            </Principal>
+            <Dependent Role="Patients">
+              <PropertyRef Name="BankID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name=" FK_Patients_Doctors">
+          <End Role="Doctors" Type="Self.Doctors" Multiplicity="1" />
+          <End Role="Patients" Type="Self.Patients" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Doctors">
+              <PropertyRef Name="DoctorID" />
+            </Principal>
+            <Dependent Role="Patients">
+              <PropertyRef Name="DoctorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name=" FK_Patients_Hospitals">
+          <End Role="Hospitals" Type="Self.Hospitals" Multiplicity="0..1" />
+          <End Role="Patients" Type="Self.Patients" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Hospitals">
+              <PropertyRef Name="HospitalID" />
+            </Principal>
+            <Dependent Role="Patients">
+              <PropertyRef Name="HospitalID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name=" FK_Patients_Specialties">
+          <End Role="Specialties" Type="Self.Specialties" Multiplicity="0..1" />
+          <End Role="Patients" Type="Self.Patients" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Specialties">
+              <PropertyRef Name="SpecialtyId" />
+            </Principal>
+            <Dependent Role="Patients">
+              <PropertyRef Name="SpecialtyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name=" FK_PaymentDeductions_Beneficiaries">
+          <End Role="Beneficiaries" Type="Self.Beneficiaries" Multiplicity="0..1" />
+          <End Role="PaymentDeductions" Type="Self.PaymentDeductions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Beneficiaries">
+              <PropertyRef Name="BeneficiaryID" />
+            </Principal>
+            <Dependent Role="PaymentDeductions">
+              <PropertyRef Name="BeneficiaryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name=" FK_PaymentDeductions_Companions">
+          <End Role="Companions" Type="Self.Companions" Multiplicity="0..1" />
+          <End Role="PaymentDeductions" Type="Self.PaymentDeductions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Companions">
+              <PropertyRef Name="CompanionCID" />
+              <PropertyRef Name="PatientCID" />
+            </Principal>
+            <Dependent Role="PaymentDeductions">
+              <PropertyRef Name="CompanionCID" />
+              <PropertyRef Name="PatientCID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name=" FK_PaymentDeductions_DeductionReasons">
+          <End Role="DeductionReasons" Type="Self.DeductionReasons" Multiplicity="0..1" />
+          <End Role="PaymentDeductions" Type="Self.PaymentDeductions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DeductionReasons">
+              <PropertyRef Name="ReasonId" />
+            </Principal>
+            <Dependent Role="PaymentDeductions">
+              <PropertyRef Name="ReasonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name=" FK_PaymentDeductions_Patients">
+          <End Role="Patients" Type="Self.Patients" Multiplicity="0..1" />
+          <End Role="PaymentDeductions" Type="Self.PaymentDeductions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patients">
+              <PropertyRef Name="PatientCID" />
+            </Principal>
+            <Dependent Role="PaymentDeductions">
+              <PropertyRef Name="PatientCID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name=" FK_PaymentDeductions_Payments">
+          <End Role="Payments" Type="Self.Payments" Multiplicity="1" />
+          <End Role="PaymentDeductions" Type="Self.PaymentDeductions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Payments">
+              <PropertyRef Name="PaymentID" />
+            </Principal>
+            <Dependent Role="PaymentDeductions">
+              <PropertyRef Name="PaymentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name=" FK_PaymentDeductions_PayRates">
+          <End Role="PayRates" Type="Self.PayRates" Multiplicity="0..1" />
+          <End Role="PaymentDeductions" Type="Self.PaymentDeductions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PayRates">
+              <PropertyRef Name="PayRateID" />
+            </Principal>
+            <Dependent Role="PaymentDeductions">
+              <PropertyRef Name="PayRateID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name=" FK_Payments_AdjustmentReasons">
+          <End Role="AdjustmentReasons" Type="Self.AdjustmentReasons" Multiplicity="0..1" />
+          <End Role="Payments" Type="Self.Payments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AdjustmentReasons">
+              <PropertyRef Name="AdjustmentReasonID" />
+            </Principal>
+            <Dependent Role="Payments">
+              <PropertyRef Name="AdjustmentReasonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name=" FK_Payments_Beneficiaries">
+          <End Role="Beneficiaries" Type="Self.Beneficiaries" Multiplicity="0..1" />
+          <End Role="Payments" Type="Self.Payments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Beneficiaries">
+              <PropertyRef Name="BeneficiaryID" />
+            </Principal>
+            <Dependent Role="Payments">
+              <PropertyRef Name="BeneficiaryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name=" FK_Payments_Companions">
+          <End Role="Companions" Type="Self.Companions" Multiplicity="0..1" />
+          <End Role="Payments" Type="Self.Payments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Companions">
+              <PropertyRef Name="CompanionCID" />
+              <PropertyRef Name="PatientCID" />
+            </Principal>
+            <Dependent Role="Payments">
+              <PropertyRef Name="CompanionCID" />
+              <PropertyRef Name="PatientCID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name=" FK_Payments_Patients">
+          <End Role="Patients" Type="Self.Patients" Multiplicity="0..1" />
+          <End Role="Payments" Type="Self.Payments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Patients">
+              <PropertyRef Name="PatientCID" />
+            </Principal>
+            <Dependent Role="Payments">
+              <PropertyRef Name="PatientCID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name=" FK_Payments_PaymentTypes">
+          <End Role="PaymentTypes" Type="Self.PaymentTypes" Multiplicity="0..1" />
+          <End Role="Payments" Type="Self.Payments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PaymentTypes">
+              <PropertyRef Name="PaymentTypeId" />
+            </Principal>
+            <Dependent Role="Payments">
+              <PropertyRef Name="PaymentTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name=" FK_Payments_PayRates">
+          <End Role="PayRates" Type="Self.PayRates" Multiplicity="0..1" />
+          <End Role="Payments" Type="Self.Payments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PayRates">
+              <PropertyRef Name="PayRateID" />
+            </Principal>
+            <Dependent Role="Payments">
+              <PropertyRef Name="PayRateID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name=" FK_PaymentsHistory_Payments">
+          <End Role="Payments" Type="Self.Payments" Multiplicity="1" />
+          <End Role="PaymentHistories" Type="Self.PaymentHistories" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Payments">
+              <PropertyRef Name="PaymentID" />
+            </Principal>
+            <Dependent Role="PaymentHistories">
+              <PropertyRef Name="PaymentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name=" FK_RejectedPayments_Payments">
+          <End Role="Payments" Type="Self.Payments" Multiplicity="1" />
+          <End Role="RejectedPayments" Type="Self.RejectedPayments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Payments">
+              <PropertyRef Name="PaymentID" />
+            </Principal>
+            <Dependent Role="RejectedPayments">
+              <PropertyRef Name="PaymentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name=" FK_RejectedPayments_RejectionReasons">
+          <End Role="RejectionReasons" Type="Self.RejectionReasons" Multiplicity="1" />
+          <End Role="RejectedPayments" Type="Self.RejectedPayments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RejectionReasons">
+              <PropertyRef Name="RejectionReasonID" />
+            </Principal>
+            <Dependent Role="RejectedPayments">
+              <PropertyRef Name="RejectionReasonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_CompanionHistories_Companions_withCompositKey">
           <End Role="Companions" Type="Self.Companions" Multiplicity="0..1" />
           <End Role="CompanionHistories" Type="Self.CompanionHistories" Multiplicity="*" />
@@ -778,6 +1108,110 @@
           <EntitySet Name="Specialties" EntityType="Self.Specialties" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRoles" EntityType="Self.UserRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name=" FK_CompanionHistories_Companions_withCompositKey" Association="Self. FK_CompanionHistories_Companions_withCompositKey">
+            <End Role="Companions" EntitySet="Companions" />
+            <End Role="CompanionHistories" EntitySet="CompanionHistories" />
+          </AssociationSet>
+          <AssociationSet Name=" FK_CompanionHistories_Patients" Association="Self. FK_CompanionHistories_Patients">
+            <End Role="Patients" EntitySet="Patients" />
+            <End Role="CompanionHistories" EntitySet="CompanionHistories" />
+          </AssociationSet>
+          <AssociationSet Name=" FK_Companions_Banks" Association="Self. FK_Companions_Banks">
+            <End Role="Banks" EntitySet="Banks" />
+            <End Role="Companions" EntitySet="Companions" />
+          </AssociationSet>
+          <AssociationSet Name=" FK_Companions_CompanionTypes" Association="Self. FK_Companions_CompanionTypes">
+            <End Role="CompanionTypes" EntitySet="CompanionTypes" />
+            <End Role="Companions" EntitySet="Companions" />
+          </AssociationSet>
+          <AssociationSet Name=" FK_Companions_Patients" Association="Self. FK_Companions_Patients">
+            <End Role="Patients" EntitySet="Patients" />
+            <End Role="Companions" EntitySet="Companions" />
+          </AssociationSet>
+          <AssociationSet Name=" FK_PatientHistories_Patients" Association="Self. FK_PatientHistories_Patients">
+            <End Role="Patients" EntitySet="Patients" />
+            <End Role="PatientHistories" EntitySet="PatientHistories" />
+          </AssociationSet>
+          <AssociationSet Name=" FK_Patients_Agencies" Association="Self. FK_Patients_Agencies">
+            <End Role="Agencies" EntitySet="Agencies" />
+            <End Role="Patients" EntitySet="Patients" />
+          </AssociationSet>
+          <AssociationSet Name=" FK_Patients_Banks" Association="Self. FK_Patients_Banks">
+            <End Role="Banks" EntitySet="Banks" />
+            <End Role="Patients" EntitySet="Patients" />
+          </AssociationSet>
+          <AssociationSet Name=" FK_Patients_Doctors" Association="Self. FK_Patients_Doctors">
+            <End Role="Doctors" EntitySet="Doctors" />
+            <End Role="Patients" EntitySet="Patients" />
+          </AssociationSet>
+          <AssociationSet Name=" FK_Patients_Hospitals" Association="Self. FK_Patients_Hospitals">
+            <End Role="Hospitals" EntitySet="Hospitals" />
+            <End Role="Patients" EntitySet="Patients" />
+          </AssociationSet>
+          <AssociationSet Name=" FK_Patients_Specialties" Association="Self. FK_Patients_Specialties">
+            <End Role="Specialties" EntitySet="Specialties" />
+            <End Role="Patients" EntitySet="Patients" />
+          </AssociationSet>
+          <AssociationSet Name=" FK_PaymentDeductions_Beneficiaries" Association="Self. FK_PaymentDeductions_Beneficiaries">
+            <End Role="Beneficiaries" EntitySet="Beneficiaries" />
+            <End Role="PaymentDeductions" EntitySet="PaymentDeductions" />
+          </AssociationSet>
+          <AssociationSet Name=" FK_PaymentDeductions_Companions" Association="Self. FK_PaymentDeductions_Companions">
+            <End Role="Companions" EntitySet="Companions" />
+            <End Role="PaymentDeductions" EntitySet="PaymentDeductions" />
+          </AssociationSet>
+          <AssociationSet Name=" FK_PaymentDeductions_DeductionReasons" Association="Self. FK_PaymentDeductions_DeductionReasons">
+            <End Role="DeductionReasons" EntitySet="DeductionReasons" />
+            <End Role="PaymentDeductions" EntitySet="PaymentDeductions" />
+          </AssociationSet>
+          <AssociationSet Name=" FK_PaymentDeductions_Patients" Association="Self. FK_PaymentDeductions_Patients">
+            <End Role="Patients" EntitySet="Patients" />
+            <End Role="PaymentDeductions" EntitySet="PaymentDeductions" />
+          </AssociationSet>
+          <AssociationSet Name=" FK_PaymentDeductions_Payments" Association="Self. FK_PaymentDeductions_Payments">
+            <End Role="Payments" EntitySet="Payments" />
+            <End Role="PaymentDeductions" EntitySet="PaymentDeductions" />
+          </AssociationSet>
+          <AssociationSet Name=" FK_PaymentDeductions_PayRates" Association="Self. FK_PaymentDeductions_PayRates">
+            <End Role="PayRates" EntitySet="PayRates" />
+            <End Role="PaymentDeductions" EntitySet="PaymentDeductions" />
+          </AssociationSet>
+          <AssociationSet Name=" FK_Payments_AdjustmentReasons" Association="Self. FK_Payments_AdjustmentReasons">
+            <End Role="AdjustmentReasons" EntitySet="AdjustmentReasons" />
+            <End Role="Payments" EntitySet="Payments" />
+          </AssociationSet>
+          <AssociationSet Name=" FK_Payments_Beneficiaries" Association="Self. FK_Payments_Beneficiaries">
+            <End Role="Beneficiaries" EntitySet="Beneficiaries" />
+            <End Role="Payments" EntitySet="Payments" />
+          </AssociationSet>
+          <AssociationSet Name=" FK_Payments_Companions" Association="Self. FK_Payments_Companions">
+            <End Role="Companions" EntitySet="Companions" />
+            <End Role="Payments" EntitySet="Payments" />
+          </AssociationSet>
+          <AssociationSet Name=" FK_Payments_Patients" Association="Self. FK_Payments_Patients">
+            <End Role="Patients" EntitySet="Patients" />
+            <End Role="Payments" EntitySet="Payments" />
+          </AssociationSet>
+          <AssociationSet Name=" FK_Payments_PaymentTypes" Association="Self. FK_Payments_PaymentTypes">
+            <End Role="PaymentTypes" EntitySet="PaymentTypes" />
+            <End Role="Payments" EntitySet="Payments" />
+          </AssociationSet>
+          <AssociationSet Name=" FK_Payments_PayRates" Association="Self. FK_Payments_PayRates">
+            <End Role="PayRates" EntitySet="PayRates" />
+            <End Role="Payments" EntitySet="Payments" />
+          </AssociationSet>
+          <AssociationSet Name=" FK_PaymentsHistory_Payments" Association="Self. FK_PaymentsHistory_Payments">
+            <End Role="Payments" EntitySet="Payments" />
+            <End Role="PaymentHistories" EntitySet="PaymentHistories" />
+          </AssociationSet>
+          <AssociationSet Name=" FK_RejectedPayments_Payments" Association="Self. FK_RejectedPayments_Payments">
+            <End Role="Payments" EntitySet="Payments" />
+            <End Role="RejectedPayments" EntitySet="RejectedPayments" />
+          </AssociationSet>
+          <AssociationSet Name=" FK_RejectedPayments_RejectionReasons" Association="Self. FK_RejectedPayments_RejectionReasons">
+            <End Role="RejectionReasons" EntitySet="RejectionReasons" />
+            <End Role="RejectedPayments" EntitySet="RejectedPayments" />
+          </AssociationSet>
           <AssociationSet Name="FK_CompanionHistories_Companions_withCompositKey" Association="Self.FK_CompanionHistories_Companions_withCompositKey">
             <End Role="Companions" EntitySet="Companions" />
             <End Role="CompanionHistories" EntitySet="CompanionHistories" />
@@ -942,6 +1376,9 @@
           <Property Name="Notes" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Companion" Relationship="Self.FK_CompanionHistories_Companions_withCompositKey" FromRole="CompanionHistories" ToRole="Companions" />
           <NavigationProperty Name="Patient" Relationship="Self.FK_CompanionHistories_Patients" FromRole="CompanionHistories" ToRole="Patients" />
+          <Property Name="EnglishComFName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EnglishComMName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EnglishComLName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Companion">
           <Key>
@@ -973,6 +1410,9 @@
           <NavigationProperty Name="Payments" Relationship="Self.FK_Payments_Companions" FromRole="Companions" ToRole="Payments" />
           <NavigationProperty Name="PaymentDeductions" Relationship="PatientsMgtModel.FK_PaymentDeductions_Companions" FromRole="Companion" ToRole="PaymentDeduction" />
           <Property Name="justBeneficiary" Type="Boolean" />
+          <Property Name="EnglishComFName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EnglishComMName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EnglishComLName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="CompanionType">
           <Key>
@@ -1035,6 +1475,9 @@
           <NavigationProperty Name="Patient" Relationship="PatientsMgtModel.FK_PatientHistories_Patients" FromRole="PatientHistory" ToRole="Patient" />
           <Property Name="isDead" Type="Boolean" />
           <Property Name="DeathDate" Type="DateTime" Precision="0" />
+          <Property Name="EnglishPatFName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EnglishPatMName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EnglishPatLName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Patient">
           <Key>
@@ -1077,6 +1520,9 @@
           <Property Name="IsBlocked" Type="Boolean" />
           <Property Name="isDead" Type="Boolean" />
           <Property Name="DeathDate" Type="DateTime" Precision="0" />
+          <Property Name="EnglishPatFName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EnglishPatMName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EnglishPatLName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Payment">
           <Key>
@@ -1948,6 +2394,9 @@
           <EntitySetMapping Name="CompanionHistories">
             <EntityTypeMapping TypeName="PatientsMgtModel.CompanionHistory">
               <MappingFragment StoreEntitySet="CompanionHistories">
+                <ScalarProperty Name="EnglishComLName" ColumnName="EnglishComLName" />
+                <ScalarProperty Name="EnglishComMName" ColumnName="EnglishComMName" />
+                <ScalarProperty Name="EnglishComFName" ColumnName="EnglishComFName" />
                 <ScalarProperty Name="HistoryID" ColumnName="HistoryID" />
                 <ScalarProperty Name="CompanionCID" ColumnName="CompanionCID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -1968,6 +2417,9 @@
           <EntitySetMapping Name="Companions">
             <EntityTypeMapping TypeName="PatientsMgtModel.Companion">
               <MappingFragment StoreEntitySet="Companions">
+                <ScalarProperty Name="EnglishComLName" ColumnName="EnglishComLName" />
+                <ScalarProperty Name="EnglishComMName" ColumnName="EnglishComMName" />
+                <ScalarProperty Name="EnglishComFName" ColumnName="EnglishComFName" />
                 <ScalarProperty Name="justBeneficiary" ColumnName="justBeneficiary" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="CompanionCID" ColumnName="CompanionCID" />
@@ -2028,6 +2480,9 @@
           <EntitySetMapping Name="PatientHistories">
             <EntityTypeMapping TypeName="PatientsMgtModel.PatientHistory">
               <MappingFragment StoreEntitySet="PatientHistories">
+                <ScalarProperty Name="EnglishPatLName" ColumnName="EnglishPatLName" />
+                <ScalarProperty Name="EnglishPatMName" ColumnName="EnglishPatMName" />
+                <ScalarProperty Name="EnglishPatFName" ColumnName="EnglishPatFName" />
                 <ScalarProperty Name="DeathDate" ColumnName="DeathDate" />
                 <ScalarProperty Name="isDead" ColumnName="isDead" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -2056,6 +2511,9 @@
           <EntitySetMapping Name="Patients">
             <EntityTypeMapping TypeName="PatientsMgtModel.Patient">
               <MappingFragment StoreEntitySet="Patients">
+                <ScalarProperty Name="EnglishPatLName" ColumnName="EnglishPatLName" />
+                <ScalarProperty Name="EnglishPatMName" ColumnName="EnglishPatMName" />
+                <ScalarProperty Name="EnglishPatFName" ColumnName="EnglishPatFName" />
                 <ScalarProperty Name="DeathDate" ColumnName="DeathDate" />
                 <ScalarProperty Name="isDead" ColumnName="isDead" />
                 <ScalarProperty Name="IsBlocked" ColumnName="IsBlocked" />
