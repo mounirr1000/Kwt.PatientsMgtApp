@@ -29,8 +29,11 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
 
         List<PatientReportModel> GetPatientsReport(string patientCid = null, string hospital = null,
             string doctor = null, Nullable<bool> status = null, string speciality = null, DateTime? startDate = null,
-            DateTime? endDate = null, Nullable<bool> isDead = null, Nullable<DateTime> authorizedDate = null);
+            DateTime? endDate = null, Nullable<bool> isDead = null, Nullable<DateTime> authorizedDate = null, string agency = null);
 
+        PatientModel GetPatientObject();
 
+        //new Patient Extension
+        void CreatePatientExtension(PatientModel patient);
     }
 }

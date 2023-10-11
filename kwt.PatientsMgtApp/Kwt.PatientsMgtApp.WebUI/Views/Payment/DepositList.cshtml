@@ -1,0 +1,290 @@
+﻿@using Kwt.PatientsMgtApp.WebUI.Infrastructure
+@model List<Kwt.PatientsMgtApp.Core.Models.DepositAccountModel>
+@{
+    ViewBag.Title = "Deposit";
+}
+
+<h2>Deposit List</h2>
+
+@{
+    var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+    serializer.MaxJsonLength = Int32.MaxValue;
+    var jsonModel = serializer.Serialize(Model);
+}
+<div class="pt-3 pb-3">
+    <a href="@Url.Action("NewDeposit", "Payment")" class="k-button"><i class="fa fa-money" style="color: yellowgreen"></i> New Deposit</a>
+</div>
+<div class="row pb-3">
+    <div class="col-md-4" style="padding:0;">
+        <input class=k-textbox type=text id="txtSearchString" style="width: 100%" placeholder="Payee ID / Name." />
+    </div>
+    <div class="col-md-8">
+        <button type="submit" class="k-button" id="btnSearch"><i class="fa fa-search" style="color: yellowgreen"></i> Search</button>
+        <button type="submit" class="k-button k-notification-button" id="btnClear"><i class="fa fa-times" style="color: lightblue"></i> Clear</button>
+    </div>
+</div>
+
+<div id="dialog" style="display: none">
+</div>
+<div class="loader"></div>
+
+<div id="depositList"></div>
+
+
+@section DeleteConfirm{
+
+    @{ Html.RenderPartial("_DeleteConfirmationModel"); }
+}
+
+@section Scripts {
+    @{ Html.RenderPartial("_DeleteConfirmationjs"); }
+
+    <script type="text/javascript">
+
+        $('document').ready(function () {
+            $("#depositList").css("visibility", "visible");
+
+            var depositList = @Html.Raw(jsonModel);
+            console.log(depositList);
+            var isAdmin =   @Html.Raw(Json.Encode(User.IsInAnyRoles(CrudRoles.AdminCrudRoles)));
+            var isAccountant =   @Html.Raw(Json.Encode(User.IsInAnyRoles(CrudRoles.PaymentDeleteRoles)));
+            var isAuditor =  @Html.Raw(Json.Encode(User.IsInAnyRoles(CrudRoles.PaymentApprovalRoles)));
+
+            function getTemplate(Id, StatusId, text,payrollMethodId) {
+                if (isAdmin) {
+                    return '<div style="text-align: center;"><a href="javascript:approvePayroll('+Id+','+StatusId+','+payrollMethodId+')" id='+Id+'> '+text+'</a></div>';
+                }
+                return '';
+            }
+            function getVoidTemplate(paymentId) {
+                if (isAccountant) {
+                    return '<div style="text-align: center;"><a href="javascript:confirmDelete('+paymentId+','+'\'paymentId\''+')" id='+paymentId+'> <i class="fa fa-times fa-2x" style="color: lightcoral"></i></a></div>';
+                }
+                return '';
+            }
+            var depositGird=  $("#depositList").kendoGrid({
+                resizable: true,
+                height: 550,
+                //groupable: true,
+                sortable: true,
+                //  toolbar: "<p class='alert alert-info'>List of all Employees in our records</p>",
+                pageable: {
+                    pageSize: 20,
+                    alwaysVisible: false,
+                    pageSizes: [5, 10, 15, "all"]
+                },
+                columns: [
+                     {
+                         field: "DepositID",
+                         title: "DepositID ID",
+                         template: "<a href='@Url.Action("DepositDetails", "Payment")?depositId=#= DepositID#'>#= DepositID #</a>"
+
+                     },{
+                         field: "AmountDeposited",
+                         title: "Amount",
+
+                     },{
+                         field: "PayeeName",
+                         title: "Payee",
+
+                     } ,{
+                         field: "Descriptions",
+                         title: "Descriptions",
+
+                     } ,{
+                         field: "DepositType",
+                         title: "Type",
+
+                     } ,{
+                         field: "DepositDepartment",
+                         title: "Department",
+
+                     } ,{
+                         field: "Agency",
+                         title: "Agency",
+
+                     }
+                    ,{
+                        field: "DepositID",
+                        title: "Delete",
+                        template: '<div style="text-align: center;"><a href="javascript:deleteDeposit(#=DepositID#)"> Delete</a></div>',
+                    }
+
+
+                ],
+                dataSource: {
+
+                    data: depositList,
+                    //filter: [
+                    //  { field: "PayrollStatusID", operator: "eq", value: 1 },
+                    //]
+                }
+            }).data("kendoGrid");
+
+
+            function refreshPayrollList(q){
+                $.ajax({
+                    url: "@Url.Action("GetPayrollsJson")",
+                    type: "GET",
+                    contentType: "application/json",
+                    data: { "query": q },
+                    dataType: "json",
+                    beforeSend: function() {
+
+                        $(".loader").css("display", "block");
+                    },
+                    success: function (results) {
+                        switch(q) {
+                            case "entered":
+                                enteredGird.dataSource.data( results );
+                                enteredGird.refresh();
+                                break;
+                            case "approved":
+                                approvedGird.dataSource.data( results );
+                                approvedGird.refresh();
+                                break;
+                            case "authorized":
+                                authorizedGird.dataSource.data( results );
+                                authorizedGird.refresh();
+                                break;
+                            case "paid":
+                                paidGird.dataSource.data( results );
+                                paidGird.refresh();
+                                break;
+                            case "reconciled":
+                                reconciledGird.dataSource.data( results );
+                                reconciledGird.refresh();
+                                break;
+                        }
+                        $(".loader").css("display", "none");
+                    },
+
+                    error: function (error) {
+                        alert(error);
+                    }
+                })
+
+            }
+            
+            $(".loader").css("display", "none");
+
+           
+        });
+
+    </script>
+
+    <script type="text/javascript">
+        function deleteDeposit(id){
+
+            $.ajax({
+                url: "@Url.Action("DeleteDepositJson")",
+                type: "GET",
+            contentType: "application/json",
+            data: { "id": id},
+            dataType: "json",
+            beforeSend: function() {
+
+                $(".loader").css("display", "block");
+            },
+            success: function (results) {
+                //
+                debugger;
+                var grid=  $("#depositList").data("kendoGrid");
+                grid.dataSource.data(results);
+                grid.refresh();
+                $(".loader").css("display", "none");
+            },
+
+            error: function (error) {
+                alert(error);
+            },
+                })
+
+        };
+    </script>
+<script type="text/javascript">
+        //// search payroll
+
+        function onSearch(e) {
+            debugger;
+            e.preventDefault();
+            var q = $("#txtSearchString").val();
+            if(q){
+                q = q.toString();
+                ajaxSerachEmpCall(q);
+            }
+        }
+        function onClear(e) {
+            debugger;
+            var query = $("#txtSearchString").val();
+            e.preventDefault();
+            if(query){
+                $("#txtSearchString").val("");
+                ajaxSerachEmpCall("");
+            }
+
+            //  });
+        }
+        $("#btnSearch").kendoButton({
+            click: onSearch
+        });
+        $("#btnClear").kendoButton({
+            click: onClear
+        });
+        $('#txtSearchString').on('keydown', function(e) {
+            //debugger;
+            if (e.which == 13) {
+                // e.preventDefault();
+                onSearch(e);
+            }
+        });
+        function ajaxSerachEmpCall(q){
+            $.ajax({
+                url: "@Url.Action("SearchDepositJson")",
+                type: "GET",
+                contentType: "application/json",
+                data: { "query": q },
+                dataType: "json",
+                beforeSend: function() {
+
+                    $(".loader").css("display", "block");
+                },
+                success: function (results) {
+                    var grid=  $("#depositList").data("kendoGrid");
+                    grid.dataSource.data( results );
+                    grid.refresh();                    
+                    $(".loader").css("display", "none");
+                },
+
+                error: function (error) {
+                    alert(error);
+                }
+            });
+        };
+        function onSearch(e) {
+            debugger;
+            e.preventDefault();
+            var q = $("#txtSearchString").val();
+            if(q){
+                q = q.toString();
+                ajaxSerachEmpCall(q);
+            }
+        }
+        function onClear(e) {
+            debugger;
+            var query = $("#txtSearchString").val();
+            e.preventDefault();
+            if(query){
+                $("#txtSearchString").val("");
+                ajaxSerachEmpCall("");
+            }
+
+            //  });
+        }
+        ////
+</script>
+}
+
+
+
+

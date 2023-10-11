@@ -1,0 +1,198 @@
+﻿@model Kwt.PatientsMgtApp.WebUI.Models.EmployeesPaymentViewModel
+@{
+    ViewBag.Title = "Employee Regular Pay";
+}
+@{
+    var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+    serializer.MaxJsonLength = Int32.MaxValue;
+    var jsonModel = serializer.Serialize(Model);
+
+}
+
+<h2>Employee Regular Pay</h2>
+
+<div class="row pb-3">
+    <div class="col-md-4">
+        <a href="@Url.Action("Payrolls")" class="k-button"><i class="fa fa-arrow-left" style="color: lightblue"></i> Payroll List</a>
+    </div>
+    <div class="col-md-4">
+        <a href="@Url.Action("NewEmployee", "Payment")" class="k-button"><i class="fa fa-plus" style="color: yellowgreen"></i> New Employee</a>
+    </div>
+</div>
+<div class="form-group">
+    @using (Html.BeginForm("List", "Patient", FormMethod.Get))
+    {
+        <div class="row">
+            <input type="hidden" name="clearSearch" id="clearSearch" value="false" />
+
+            <div class="row">
+
+                <div class="col-md-4">
+                    @Html.TextBox("searchEmployeeText", ViewBag.CurrentFilter as string, new { id = "searchEmployee", @class = "k-textbox", placeholder = "Search Employee...", style = "width:100%" })
+                </div>
+
+                <div class="col-md-8">
+                    <button type="submit" class="k-button" id="btnSearch"><i class="fa fa-search" style="color: yellowgreen"></i> Search</button>
+
+                    <button type="submit" class="k-button k-notification-button" id="clear"><i class="fa fa-times" style="color: lightblue"></i> Clear</button>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
+@*<div class="loader"></div>*@
+<div id="content">
+    
+    @using (Html.BeginForm("EmployeeRegular", "Payment", FormMethod.Post))
+    {
+        <div class="p-3">
+            <input type="hidden" id="EmployeeSelecedIds" name="EmployeeSelecedIds" />            
+            <button type="submit" class="k-button" id="btnSubmitIds"><i class="fa fa-send" style="color: yellowgreen"></i> Submit</button>            
+        </div>
+    }
+    <div id="employeeList"></div>
+</div>
+
+@section Scripts {
+
+    <script type="text/javascript">
+        $('document').ready(function () {
+            var employees = @Html.Raw(jsonModel);
+            var grid = $("#employeeList").kendoGrid({
+                // toolbar: "<p class='alert alert-info'>This is the list of active patients we have in our records. For non active patients, use search box to find a patient</p>",
+                height: 550,
+                // groupable: true,
+                sortable: true,
+                resizable: true,
+                //filterable: true
+                pageable: {
+                    pageSize: 15,
+                    alwaysVisible: false
+                },
+                //editable: true,
+               // selectable: "multiple", //either one or  
+                //navigatable: true ,
+                
+                columns: [
+                    {
+                        field: "EmployeeID",
+                        title: "Employee ID",
+                        template: "<a href='@Url.Action("EmployeeDetails", "Payment")?employeeId=#= EmployeeID#'>#= EmployeeID #</a>"
+                    },{
+                        field: "EmployeeName",
+                        title: "Name",
+                    },{
+                        field: "Address",
+                        title: "Address",
+                    },{
+                        field: "Title?.Title1",
+                        title: "Title",
+                    },
+                     //{ template: '#=dirtyField(data,"Discontinued")#<input type="checkbox" #= Discontinued ? \'checked="checked"\' : "" # class="chkbx k-checkbox" />', width: 110 },
+                     //{ selectable: true, width: "50px" },
+                    // { template: '<input type="checkbox" class="chkbx" />', width: 110, editable: function(e){ return false; } },
+                    //  { command: "destroy", title: "&nbsp;", width: 100 },
+                    { title: "<input id='chkAll' class='checkAllCls' type='checkbox'/>",
+                        width: "35px",
+                        template: "<input type='checkbox' class='check-box-inner' />",
+                        filterable: false
+                    },
+
+                ],
+                dataSource: {
+                    data: employees.EmployeeList
+                }
+            }).data("kendoGrid");
+            $("#employeeList .k-grid-content").on("change", "input.check-box-inner", function(e) {
+                var grid = $("#employeeList").data("kendoGrid");                              
+                var rowElement = this;
+                var row = $(rowElement);
+                //
+                var  selectedRow = $(this).closest("tr");
+                //
+               
+                if (row.is(':checked')) {
+                    row.closest('tr').addClass('k-state-selected'); 
+                    onCheckboxChecked(selectedRow);
+                    e.stopPropagation();
+                } else {                    
+                    row.closest('tr').removeClass('k-state-selected');
+                    onCheckboxUnchecked(selectedRow);
+                    e.stopPropagation();
+                }
+            });
+            $(".checkAllCls").on("click", function () {
+                var ele = this;
+                var state = $(ele).is(':checked');
+                if (state == true) {
+                    $('.check-box-inner').prop('checked', true).closest('tr').addClass('k-state-selected');
+                    onSelectAllChange();
+                }
+                else {
+                    $('.check-box-inner').prop('checked', false).closest('tr').removeClass('k-state-selected');
+                    onDeselectAllChange();
+                }
+            });
+            var selectedIds =[];
+            function onCheckboxChecked(row) {
+                var grid = $("#employeeList").data("kendoGrid");   
+               // var selectedItem = grid.dataItem(grid.select());
+                var dataItem = grid.dataItem(row);                
+                if(!selectedIds.includes(dataItem.EmployeeID)){
+                    selectedIds.push(dataItem.EmployeeID);
+                }
+                console.log(selectedIds);
+            }
+            function onCheckboxUnchecked(row) {
+                
+                var grid = $("#employeeList").data("kendoGrid");   
+                // var selectedItem = grid.dataItem(grid.select());
+                var dataItem = grid.dataItem(row);              
+                if(selectedIds.includes(dataItem.EmployeeID)){
+                    const index = selectedIds.indexOf(dataItem.EmployeeID);
+                    if (index > -1) {
+                        selectedIds.splice(index, 1);
+                    }
+                }
+                console.log(selectedIds);
+            }
+            function onSelectAllChange(){
+                console.log(selectedIds);
+                $( "tr.k-state-selected" ).each(function( index ) {
+                  //  debugger;
+                    var row = $(this);
+                    var grid = $("#employeeList").data("kendoGrid");   
+                    // var selectedItem = grid.dataItem(grid.select());
+                    var dataItem = grid.dataItem(row);              
+                    if(!selectedIds.includes(dataItem.EmployeeID)){
+                        selectedIds.push(dataItem.EmployeeID);
+                    }
+                    
+                });
+                console.log(selectedIds);
+            }
+            function onDeselectAllChange(){
+                console.log(selectedIds);
+                selectedIds=[];
+            }
+
+            $("#btnSubmitIds").click(function(){
+                debugger;                
+                //for(i=0;i<selectedIds.length;i++){                    
+                //        $("#EmployeeSelecedIds["+i+"]").val(selectedIds[i]);                   
+                //}
+                
+               $("#EmployeeSelecedIds").val(selectedIds);
+              //  $("#EmployeeSelecedIds").val(JSON.stringify(selectedIds));
+                console.log($("#EmployeeSelecedIds").val());
+            })
+            
+            $(".loader").css("display", "none");
+
+        });
+    </script>
+}
+
+

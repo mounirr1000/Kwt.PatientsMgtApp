@@ -1,0 +1,152 @@
+﻿@using Kwt.PatientsMgtApp.WebUI.Infrastructure
+@model Kwt.PatientsMgtApp.Core.Models.DepositAccountModel
+@{
+    ViewBag.Title = "Deposit Details";
+}
+
+<h2>Deposit Details</h2>
+<div class="mt-3">
+    <p>
+        <a href="@Url.Action("DepositList")" class="k-button"><i class="fa fa-arrow-left" style="color: lightblue"></i> Back to List</a>
+        @if (User.IsInAnyRoles(CrudRoles.PaymentUpdateRoles) || User.IsInAnyRoles(CrudRoles.PaymentApprovalRoles))
+        {
+            if (User.IsInAnyRoles(CrudRoles.PaymentUpdateRoles))
+            {
+                @*if (Model.IsVoid != true)
+                    {
+                        <a href="@Url.Action("Edit", new {paymentId=Model.Id})" class="k-button"><i class="fa fa-pencil" style="color: blueviolet"></i> Edit</a>
+                    }*@
+                <a href="@Url.Action("EditDeposit", new {depositId=Model.DepositID})" class="k-button"><i class="fa fa-pencil" style="color: blueviolet"></i> Edit</a>
+            }
+
+        }
+
+    </p>
+</div>
+<div class="loader"></div>
+<div id="contentPayrollDetail" style="display:none">
+
+    <button data-toggle="collapse" data-target="#payrollDetail">
+        <i></i> Payroll Details
+    </button>
+
+    <fieldset id="payrollDetail" class="collapse show">
+        <legend>Payroll Details</legend>
+        <ul class="fieldlist form-row">            
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.DepositID, new { @class = "" })
+                @Html.TextBoxFor(model => model.DepositID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.DepositTitle, new { @class = "" })
+                @Html.TextBoxFor(model => model.DepositTitle, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.DepositDate, new { @class = "" })
+                @Html.TextBoxFor(model => model.DepositDate, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.AccountName, new { @class = "" })
+                @Html.TextBoxFor(model => model.AccountName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.Agency, new { @class = "" })
+                @Html.TextBoxFor(model => model.Agency, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+        </ul>
+    </fieldset>
+    <button data-toggle="collapse" data-target="#payrollPayee">
+        <i></i> Payroll Payee
+    </button>
+    <fieldset id="payrollPayee" class="collapse show">
+        <legend>Payroll Payee</legend>
+        <ul class="fieldlist form-row">
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.PayeeName, new { @class = "" })
+                @Html.TextBoxFor(model => model.PayeeName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.AmountDeposited, new { @class = "" })
+                @Html.TextBoxFor(model => model.AmountDeposited, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+       
+
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.DepositDepartment, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.DepositDepartment, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.DepositType, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.DepositType, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.Descriptions, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.Descriptions, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+        </ul>
+    </fieldset>
+    <button data-toggle="collapse" data-target="#payrollPayee">
+        <i></i> Deposit Audit Info
+    </button>
+    <fieldset id="payrollPayee" class="collapse show">
+        <legend>Deposit Audit</legend>
+        <ul class="fieldlist form-row">
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.StartDate, new { @class = "" })
+                @Html.TextBoxFor(model => model.StartDate, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.EndDate, new { @class = "" })
+                @Html.TextBoxFor(model => model.EndDate, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+
+
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.CreatedBy, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.CreatedBy, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.CreatedDate, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.CreatedDate, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+           
+        </ul>
+    </fieldset>
+   
+
+
+</div>
+
+
+
+@section Scripts{
+    <script type="text/javascript">
+        var deposit = @Html.Raw(Json.Encode(Model));
+        console.log("deposit ",deposit);
+        $('document').ready(function() {
+            //class="btn btn-block mb-2 text-uppercase text-info"
+            $('#contentPayrollDetail button').addClass('btn btn-block mb-2 text-uppercase text-white bg-info');
+            //fa fa-angle-double-down pull-left
+            $('#contentPayrollDetail button i').addClass('fa fa-angle-double-down pull-left');
+            $("#contentPayrollDetail").css("visibility", "visible");
+            $(".loader").css("display", "none");
+            $("#contentPayrollDetail").css("display", "block");
+            $('#contentPayrollDetail button').click(function() {
+
+                var $this = this;
+                var caret = $($this).find('i');
+                if ($(caret).hasClass('fa-angle-double-down'))
+                    $(caret).removeClass('fa-angle-double-down').addClass("fa-angle-double-up");
+                else
+                    $(caret).removeClass('fa-angle-double-up').addClass("fa-angle-double-down");
+
+            });
+           
+        });
+    </script>
+
+
+    
+}

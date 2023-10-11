@@ -1,0 +1,50 @@
+﻿@model Kwt.PatientsMgtApp.Core.Models.AccountModel
+@using Kwt.PatientsMgtApp.WebUI.Infrastructure
+
+@using (Html.BeginCollectionItem("Accounts"))
+{
+
+    <li class="col-md-8">
+        @Html.LabelFor(model => model.AccountName, new { @class = "" })
+        @Html.DropDownListFor(model => model.PayrollAccountID, new List<SelectListItem>(Model.PayrollAccounts.Select(a => new SelectListItem()
+           {
+               Text = a.Description,
+               Value = a.PayAccountID.ToString()
+           }).ToList()), "Select Account...", new { style = "width:100%" })
+
+    </li>
+    <li class="editor-field col-md-4">
+        @Html.LabelFor(model => model.Descriptions, new { @class = "" })
+        @Html.TextBoxFor(model => model.Descriptions, new { @class = "k-textbox", style = "width: 100%;", })
+        <div>
+            @Html.ValidationMessageFor(model => model.Descriptions, "", new { @class = "k-error-colored" })
+        </div>
+    </li>
+        <li class="editor-field col-md-4">
+            @Html.LabelFor(model => model.Amount, new { @class = "" })
+            @Html.TextBoxFor(model => model.Amount, new { @class = "k-textbox", style = "width: 100%;",  })
+            <div>
+                @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "k-error-colored" })
+            </div>
+        </li>
+        <li class="editor-field col-md-4">
+            @Html.LabelFor(model => model.Discount, new { @class = "" })
+            @Html.TextBoxFor(model => model.Discount, new { @class = "k-textbox", style = "width: 100%;",  })
+            <div>
+                @Html.ValidationMessageFor(model => model.Discount, "", new { @class = "k-error-colored" })
+            </div>
+        </li>
+        <li class="editor-field col-md-4">
+            <label>Discount Type</label>
+            @Html.DropDownListFor(model => model.DiscountTypeId, new List<SelectListItem>(Model.DiscountTypes.Select(a => new SelectListItem()
+               {
+                   Text = a.DiscountType1,
+                   Value = a.DiscountTypeId.ToString()
+               }).ToList()), "Select Discount Type...", new { style = "width:100%" })
+            <div>
+                @Html.ValidationMessageFor(model => model.Discount, "", new { @class = "k-error-colored" })
+            </div>
+        </li>
+                        @*<a href="#" onclick="$(this).parent().remove();">Delete</a>*@
+}
+

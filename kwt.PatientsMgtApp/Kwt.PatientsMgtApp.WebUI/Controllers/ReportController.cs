@@ -20,7 +20,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
 
         public ActionResult List()
         {
-            return View("Patient");
+            return View();
         }
         public ActionResult Patient()
         {
@@ -34,6 +34,14 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         }
 
         public ActionResult PaymentReference()
+        {
+            return View();
+        }
+        public ActionResult PayrollReport()
+        {
+            return View();
+        }
+        public ActionResult DepositReport()
         {
             return View();
         }

@@ -29,5 +29,10 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public string CreatedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
         public string ModifiedBy { get; set; }
+        public string IsDead { get; set; }
+        public Nullable<System.DateTime> DeathDate { get; set; }
+        public Nullable<System.DateTime> AuthorizedDate { get; set; }
+        public string EnglishName { get; set; }
+
     }
 }

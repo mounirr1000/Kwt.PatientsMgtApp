@@ -115,10 +115,6 @@
       <Project>{d65bc5e4-9d66-4986-928d-bdbf09290b56}</Project>
       <Name>Kwt.PatientsMgtApp.DataAccess.SQL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Kwt.PatientsMgtApp.WebUI\Kwt.PatientsMgtApp.WebUI.csproj">
-      <Project>{F6680818-8728-44D5-894F-ACC14C588FA5}</Project>
-      <Name>Kwt.PatientsMgtApp.WebUI</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Kwt.PatientsMgtAppt.PersistenceDB\Kwt.PatientsMgtApp.PersistenceDB.csproj">
       <Project>{1b7ada94-ab71-4ca4-a61e-035edbe8f2c3}</Project>
       <Name>Kwt.PatientsMgtApp.PersistenceDB</Name>

@@ -144,7 +144,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             if (patients != null)
             {
                 // filter just active patients
-                patients = patients.Where(p => p.IsActive).ToList();
+                patients = patients.Where(p => p.IsActive).OrderByDescending(c => c.CreatedDate).ToList();
                 if (clearSearch != true)
                 {
                     if (searchPatientText != null)
@@ -201,12 +201,12 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             if (!String.IsNullOrEmpty(query))
                 patients = patients?
                                 .Where(p =>
-                                    p.PatientCID.ToLower().Trim().Contains(query.ToLower().Trim()) || 
+                                    p.PatientCID.ToLower().Trim().Contains(query.ToLower().Trim()) ||
                                     p.Name.ToLower().ToString().Trim().Contains(query.ToLower().Trim())
                                 ).OrderByDescending(c => c.CreatedDate).ToList();
             else
             {
-                patients = patients.Where(p => p.IsActive).ToList();
+                patients = patients.Where(p => p.IsActive).OrderByDescending(c => c.CreatedDate).ToList();
             }
             var jsonResult = new JsonResult();
             jsonResult.MaxJsonLength = Int32.MaxValue;
@@ -223,6 +223,12 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
 
             if (patient != null)
             {
+                patient.PatientFiles = new PatientFileModel[] {
+                    GetFolders(patient.PatientCID, patient.Name,PatientFolders.PatientInfo).PatientFile,
+                    GetFolders(patient.PatientCID, patient.Name,PatientFolders.Appointments).PatientFile,
+                 };
+                //patient.PatientFile = GetFolders(patient.PatientCID, patient.Name,"PATIENT INFO").PatientFile;
+
                 return View(patient);
             }
             else
@@ -236,12 +242,12 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         [CustomAuthorize(Roles = CrudRoles.PatientCreateRolesForAutorizeAttribute)]
         public ActionResult Create()
         {
-            PatientModel patient = new PatientModel();
-            patient.Agencies = _patientManagmentRepository.GetAgencies();
-            patient.Banks = _patientManagmentRepository.GetBanks();
-            patient.Hospitals = _patientManagmentRepository.GetHospitals();
-            patient.Doctors = _patientManagmentRepository.GetDoctors();
-            patient.Sepcialities = _patientManagmentRepository.GetSpecialities();
+            PatientModel patient = _patientRepository.GetPatientObject();// new PatientModel();
+            //patient.Agencies = _patientManagmentRepository.GetAgencies();
+            //patient.Banks = _patientManagmentRepository.GetBanks();
+            //patient.Hospitals = _patientManagmentRepository.GetHospitals();
+            //patient.Doctors = _patientManagmentRepository.GetDoctors();
+            //patient.Sepcialities = _patientManagmentRepository.GetSpecialities();
             return View(patient);
         }
         [ExceptionHandler]
@@ -257,8 +263,12 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             if (ModelState.IsValid)
             {
 
+
                 patient.CreatedBy = User.Identity.Name;
                 _patientRepository.AddPatient(patient);
+                // new implelemtation for file creating during patinent creations
+                CreatePatientFiles(patient);
+                // end new
                 Success(string.Format("Patient with Civil ID <b>{0}</b> was successfully added.", patient.PatientCID), true);
                 if (patient.HasCompanion)
                 {
@@ -309,19 +319,53 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             {
                 ModelState.AddModelError("BankName", "The patient is Beneficiary, so you need to enter the Bank Name field");
             }
-            //if (ModelState.IsValidField("IsBeneficiary")
-            //    && patient.IsBeneficiary == false
-            //    && patient.BankName != null)
-            //{
-            //    ModelState.AddModelError("BankName", "The patient is Not Beneficiary, so no need to enter the Bank Name field");
-            //}
+
             if (ModelState.IsValidField("isActive")
                 && patient.IsActive == false
                 && patient.EndTreatDate == null)
             {
                 ModelState.AddModelError("EndTreatDate", "The patient is not active, so you need to enter the end treatment date");
             }
+            // Patient extension
+            if (ModelState.IsValidField("HasExtension")
+                && patient.HasExtension == true
+                && (patient.PatientExtension.ExtensionEndDate == null || patient.PatientExtension.ExtensionStartDate == null || patient.PatientExtesionFile == null))
+            {
+                ModelState.AddModelError("HasExtension", "The patient has extension, make sure you add extension start date, extension end date & you upload the extension document");
+            }
+        }
 
+        private void CreatePatientFiles(PatientModel patient)
+        {
+            var patientName = patient.PatientFName + " " + patient.PatientMName + " " + patient.PatientLName;
+            if (patient.PatientPasportFile != null)
+            {
+                var pat = GetFolders(patient.PatientCID, patientName, PatientFolders.PatientInfo);
+                Upload(patient.PatientPasportFile, pat.PatientFile.FolderPath, pat.PatientFile.FolderName);
+            }
+            if (patient.PatientFirstApointmentFile != null)
+            {
+                var pat = GetFolders(patient.PatientCID, patientName, PatientFolders.Appointments);
+                Upload(patient.PatientFirstApointmentFile, pat.PatientFile.FolderPath, pat.PatientFile.FolderName);
+            }
+            if (patient.PatientEndTreatmentFile != null)
+            {
+                var pat = GetFolders(patient.PatientCID, patientName, PatientFolders.Appointments);
+                Upload(patient.PatientEndTreatmentFile, pat.PatientFile.FolderPath, pat.PatientFile.FolderName);
+            }
+            //new patient extensions
+            if (patient.PatientExtesionFile != null)
+            {
+                var pat = GetFolders(patient.PatientCID, patientName, PatientFolders.Extensions);
+                Upload(patient.PatientExtesionFile, pat.PatientFile.FolderPath, pat.PatientFile.FolderName);
+                //new Patient Extension
+                var inputFileName = Path.GetFileName(patient.PatientExtesionFile[0]?.FileName);
+                var path = @pat.PatientFile.FolderPath;
+                string uploadFilePathAndName = Path.Combine(path, inputFileName);
+                patient.ExtensionDocLink = uploadFilePathAndName;
+                patient.ExtensionFileName = inputFileName;
+                _patientRepository.CreatePatientExtension(patient);
+            }
         }
         [ExceptionHandler]
 
@@ -330,12 +374,29 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         public ActionResult Edit(string patientCid)
         {
             var patient = _patientRepository.GetPatient(patientCid);
-            patient.Agencies = _patientManagmentRepository.GetAgencies();
-            patient.Banks = _patientManagmentRepository.GetBanks();
-            patient.Hospitals = _patientManagmentRepository.GetHospitals();
-            patient.Doctors = _patientManagmentRepository.GetDoctors();
-            patient.Sepcialities = _patientManagmentRepository.GetSpecialities();
-            return View(patient);
+            if (patient != null)
+            {
+                patient.Agencies = _patientManagmentRepository.GetAgencies();
+                patient.Banks = _patientManagmentRepository.GetBanks();
+                patient.Hospitals = _patientManagmentRepository.GetHospitals();
+                patient.Doctors = _patientManagmentRepository.GetDoctors();
+                patient.Sepcialities = _patientManagmentRepository.GetSpecialities();
+                patient.PatientFiles = new PatientFileModel[] {
+                    GetFolders(patient.PatientCID, patient.Name,PatientFolders.PatientInfo).PatientFile,
+                    GetFolders(patient.PatientCID, patient.Name,PatientFolders.Appointments).PatientFile,
+                    // new for extensions
+                    GetFolders(patient.PatientCID,patient.Name,PatientFolders.Extensions).PatientFile
+
+            };
+                //patient extension
+                patient.HasExtension = patient.PatientExtension != null;
+                return View(patient);
+            }
+            Information(string.Format("Patient with Civil ID <b>{0}</b> Does Not exist in our records.", patientCid), true);
+            return RedirectToAction("List");
+
+
+
         }
         [HttpPost]
         [ExceptionHandler]
@@ -361,7 +422,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                 && patient.IsDead == true
                 && (patient.DeathDate == null || patient.EndTreatDate == null))
             {
-                if(patient.DeathDate == null)
+                if (patient.DeathDate == null)
                     ModelState.AddModelError("DeathDate", "The patient is Dead, so you need to enter the Death Date field");
                 if (patient.EndTreatDate == null)
                     ModelState.AddModelError("EndTreatDate", "The patient is Dead, so you need to enter the End Treat Date field");
@@ -373,6 +434,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             {
                 patient.ModifiedBy = User.Identity.Name;
                 _patientRepository.UpdatePatient(patient);
+                CreatePatientFiles(patient);
                 Success(string.Format("Patient with Civil ID <b>{0}</b> was successfully updated.", patient.PatientCID), true);
                 return RedirectToAction("Details", "Patient", new { patientCid = patient.PatientCID });
             }
@@ -384,6 +446,12 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                 patient.Hospitals = _patientManagmentRepository.GetHospitals();
                 patient.Doctors = _patientManagmentRepository.GetDoctors();
                 patient.Sepcialities = _patientManagmentRepository.GetSpecialities();
+                patient.PatientFiles = new PatientFileModel[] {
+                    GetFolders(patient.PatientCID, patient.Name,PatientFolders.PatientInfo).PatientFile,
+                    GetFolders(patient.PatientCID, patient.Name,PatientFolders.Appointments).PatientFile,
+                    // new for extensions
+                    GetFolders(patient.PatientCID,patient.Name,PatientFolders.Extensions).PatientFile
+            };
                 return View(patient);
             }
         }
@@ -466,7 +534,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         public ActionResult AddPatientBooks(string patientCid)
         {
             var patients = _patientRepository.GetActivePatients();
-                
+
             if (patients != null)
             {
                 var cids = patients.Select(pcid => pcid.PatientCID).ToList();
@@ -515,9 +583,12 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
 
         public ActionResult GetPatientFolders(string patientCid, string patientName)
         {
+            //GetFolders(patientCid, patientName);
             //GetDirectories (string path, string searchPattern, System.IO.SearchOption searchOption);
             var appSettings = ConfigurationManager.AppSettings;
-            string sharedPath = appSettings["SharedFolderLink"]??"";
+            string sharedPath = appSettings["SharedFolderLink"] ?? "";
+            // replace the next line with sharedPath from appSetting in configfile.
+            //string sharedForlder = @"C:\Users\mouni\Desktop\shared";// @sharedPath;
             string sharedForlder = @sharedPath;
             string searchPattern = "" + patientCid + "*";
             var fileViewModel = new FileViewModel();
@@ -552,16 +623,71 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                 }
             }
             //Uncoment the next lines once the implementation is approved by Hasbaoui
-            //else
-            //{
-            //    CreatePatientFolders(patientCid, patientName, sharedForlder);
-            //  return  RedirectToAction("GetPatientFolders", new {patientCid = patientCid, patientName = patientName });
-            //}
+            else
+            {
+                CreatePatientFolders(patientCid, patientName, sharedForlder);
+                return RedirectToAction("GetPatientFolders", new { patientCid = patientCid, patientName = patientName });
+            }
             fileViewModel.PatientCid = patientCid;
             fileViewModel.PatientName = patientName;
             return View(fileViewModel);
         }
 
+        // new for file creation during new patient
+        private PatientModel GetFolders(string patientCid, string patientName, string fName = null)
+        {
+            //string sharedForlder = @"C:\Users\mouni\Desktop\shared";// @sharedPath;
+            var appSettings = ConfigurationManager.AppSettings;
+            string sharedPath = appSettings["SharedFolderLink"] ?? "";
+            string sharedForlder =  @sharedPath;
+            string searchPattern = "" + patientCid + "*";
+            var patientModel = new PatientModel();
+            patientModel.PatientFile = new PatientFileModel();
+            string[] directoriesPaths = Directory.GetDirectories(sharedForlder, searchPattern);
+            // string[] filePaths = Directory.GetFiles(@"C:\Users\mouni\Desktop\2860128700414- MOHAMMAD JAMAL ABDULLAH AL-FARHAN");
+            if (directoriesPaths.Length == 0)
+            {
+                CreatePatientFolders(patientCid, patientName, sharedForlder);
+                directoriesPaths = Directory.GetDirectories(sharedForlder, searchPattern);
+            }
+            string[] patientDirectoriesPaths = Directory.GetDirectories(directoriesPaths[0]);
+            if (patientDirectoriesPaths.Length > 0)
+            {
+                patientModel.PatientFile.FoldersPath = patientDirectoriesPaths;
+                var foldersName = ExtractNames(patientDirectoriesPaths);
+                // new patient extension
+                // when we trying to get the patient extension and the patient doesnt have the folder already created, we create one
+                if (fName != null)
+                    if (fName == PatientFolders.Extensions || fName == PatientFolders.ExtensionsHistory)
+                    {
+                        if (!foldersName.Contains("\\"+fName))
+                        {
+                            // create this folder
+                            CreatePatientSpecificFolder(patientCid, patientName, directoriesPaths[0], fName);
+                        }
+                    }
+                
+                patientModel.PatientFile.FoldersName = foldersName;
+                foreach (var path in patientDirectoriesPaths)
+                {
+                    int lastIndex = path.LastIndexOf(@"\");
+                    string folderName = path.Substring(lastIndex + 1);// path.Substring(lastIndex, path.Length - (lastIndex));// exp: "PATIENT INFO"
+                    if (fName != null && folderName.Equals(fName, StringComparison.OrdinalIgnoreCase))
+                    {
+
+                        patientModel.PatientFile.FolderName = folderName;
+                        patientModel.PatientFile.FolderPath = path;
+                        string[] filePaths = Directory.GetFiles(path);
+                        var fileNames = ExtractNames(filePaths);
+                        patientModel.PatientFile.FilesPath = filePaths;
+                        patientModel.PatientFile.FilesName = fileNames;
+                        return patientModel;
+                    }
+                }
+            }
+
+            return patientModel;
+        }
         [HttpPost]
         public ActionResult Upload(HttpPostedFileBase[] patientFiles, string folderPath, string foldername)
         {
@@ -574,7 +700,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                     {
                         string path = @folderPath;// @"C:\Users\mouni\Desktop\shared";
                                                   //string path = Server.MapPath("~/Uploads/");
-                        if (!Directory.Exists(path))
+                        if (path != null && !Directory.Exists(path))
                         {
                             Directory.CreateDirectory(path);
                         }
@@ -587,8 +713,10 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                 }
             }
 
-            return RedirectToAction("GetPatientFiles", new { patientFolderPath = folderPath, folderName= foldername, uploadState= ViewBag.UploadState });
+            return RedirectToAction("GetPatientFiles", new { patientFolderPath = folderPath, folderName = foldername, uploadState = ViewBag.UploadState });
         }
+
+
         private static string[] ExtractNames(string[] directoriesPaths)
         {
             string[] foldersName = new string[directoriesPaths.Length];
@@ -606,27 +734,14 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             return foldersName;
         }
 
-        public ActionResult GetPatientFiles(string patientFolderPath, string folderName, string  uploadState, string patientCid , string patientName )
+        public ActionResult GetPatientFiles(string patientFolderPath, string folderName, string uploadState, string patientCid, string patientName)
         {
             //GetDirectories (string path, string searchPattern, System.IO.SearchOption searchOption);
             //ViewBag.pageTitle = folderName;
             string[] filePaths = Directory.GetFiles(patientFolderPath);
             var fileNames = ExtractNames(filePaths);
             var fileViewModel = new FileViewModel();
-            //bool[] emptyFolders = new bool[filePaths.Length];
-            //int i = 0;
-            //foreach (var path    in filePaths)
-            //{
-            //    if (!path.IsNullOrWhiteSpace()&& path.Length > 0)
-            //    {
-            //        emptyFolders[i++] = true;
-            //    }
-            //    else 
-            //    {
-            //        emptyFolders[i++] = false;
-            //    }
-            //}
-            //fileViewModel.IsFolderEmpty = emptyFolders;
+
             fileViewModel.FilesPath = filePaths;
             fileViewModel.FilesName = fileNames;
             fileViewModel.FolderName = folderName;
@@ -655,9 +770,15 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             }
             try
             {
-                
+
                 var createdDirectory = Directory.CreateDirectory(path);
                 var patientFolderPath = createdDirectory.FullName;
+
+                //new for extension
+                //var exesitingDirectories=Directory.GetDirectories(path);
+                //var folderNames = ExtractNames(exesitingDirectories);
+                //var isExtensionFolderExist = folderNames.Contains("EXTENSIONS");
+
 
                 Directory.CreateDirectory(@patientFolderPath + @"\" + PatientFolders.Allowances);
                 Directory.CreateDirectory(@patientFolderPath + @"\" + PatientFolders.Appointments);
@@ -670,14 +791,31 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                 Directory.CreateDirectory(@patientFolderPath + @"\" + PatientFolders.PatientInfo);
                 Directory.CreateDirectory(@patientFolderPath + @"\" + PatientFolders.ProgressReports);
                 Directory.CreateDirectory(@patientFolderPath + @"\" + PatientFolders.TicketingTransportation);
+                //new create extension folder
+                Directory.CreateDirectory(@patientFolderPath + @"\" + PatientFolders.Extensions);
+                Directory.CreateDirectory(@patientFolderPath + @"\" + PatientFolders.ExtensionsHistory);
             }
             catch (Exception e)
             {
                 Danger(string.Format("An Error accured while trying to create patient folders, Try Again...!"), true);
             }
-            
+
 
         }
-       
+
+        //new create extension folder
+        private void CreatePatientSpecificFolder(string patientCid, string patientName, string folderPath, string folderName)
+        {
+            var path = @folderPath ;
+            try
+            {
+                string subdir = path + @"\" + folderName;
+                Directory.CreateDirectory(subdir);
+            }
+            catch (Exception e)
+            {
+                Danger(string.Format("An Error accured while trying to create patient folders, Try Again...!"), true);
+            }
+        }
     }
 }

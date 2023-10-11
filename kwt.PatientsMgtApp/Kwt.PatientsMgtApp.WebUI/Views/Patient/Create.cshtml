@@ -6,7 +6,7 @@
 }
 
 
-@using (Html.BeginForm("Create", "Patient", FormMethod.Post, new { @class = ".k-form", id = "patientForm" }))
+@using (Html.BeginForm("Create", "Patient", FormMethod.Post, new { @class = ".k-form", id = "patientForm", enctype = "multipart/form-data" }))
 {
     <div class="mt-3">
         <p>
@@ -34,6 +34,21 @@
                             @Html.ValidationMessageFor(model => model.PatientCID, "", new { @class = "k-error-colored" })
                         </div>
                     </li>
+
+                    @* new implementation 5/24/2020 have uplaod functionality to shared folder during patient creation *@
+                    <li class="col-md-8">
+                        <small class="text-sm-left text-info">&nbsp;</small>
+                        <label for="PatientPasportFile">Upload Patient Passport</label>
+                        @Html.TextBoxFor(model => model.PatientPasportFile, "", new { @type = "file", @multiple = "multiple", style="display:none" })
+                        <button class="addPasportFile">Add Files</button>
+                        <label id="PatientPasportFileUploadedFiles"></label>
+                        <div>
+                            @Html.ValidationMessageFor(model => model.PatientPasportFile, "", new { @class = "text-danger" })
+                        </div>
+                        @*<input name="PatientPasportFile" required   type="file" aria-label="files" />*@
+                    </li>
+                    @*  end of new implemetation *@
+
                     <li class="col-md-4">
                         <small class="text-sm-left text-info">&nbsp;</small>
                         @Html.LabelFor(model => model.PatientFName, new { @class = "" })
@@ -51,6 +66,7 @@
                         </div>
                     </li>
                     <li class="col-md-4">
+                        <small class="text-sm-left text-info">&nbsp;</small>
                         @Html.LabelFor(model => model.PatientLName, new { @class = "" })
                         @Html.TextBoxFor(model => model.PatientLName, new { @class = "k-textbox", style = "width: 100%;" })
                         <div>
@@ -59,7 +75,7 @@
                     </li>
                     @* english name *@
                     <li class="col-md-4">
-                        
+
                         @Html.LabelFor(model => model.EnglishPatFName, new { @class = "" })
                         @Html.TextBoxFor(model => model.EnglishPatFName, new { @class = "k-textbox", style = "width: 100%;" })
                         <div>
@@ -67,7 +83,7 @@
                         </div>
                     </li>
                     <li class="col-md-4">
-                        
+
                         @Html.LabelFor(model => model.EnglishPatMName, new { @class = "" })
                         @Html.TextBoxFor(model => model.EnglishPatMName, new { @class = "k-textbox", style = "width: 100%;" })
                         <div>
@@ -114,6 +130,7 @@
                             @Html.ValidationMessageFor(model => model.HasCompanion, "", new { @class = "k-error-colored" })
                         </div>
                     </li>
+
                 </ul>
             </fieldset>
             <button data-target="#dignosisDetails" data-toggle="collapse"><i></i> Dignosis Details</button>
@@ -224,18 +241,40 @@
             <fieldset id="treatmentDetails" class="collapse">
                 <legend></legend>
                 <ul class="fieldlist row">
-                    <li class="col-md-3">
+                    <li class="col-md-4">
                         @Html.LabelFor(model => model.FirstApptDAte, new { @class = "" })
                         @Html.TextBoxFor(model => model.FirstApptDAte, "{0:MM/dd/yyyy}", new { @class = "", style = "width: 60%" })
                         <div>
                             @Html.ValidationMessageFor(model => model.FirstApptDAte, "", new { @class = "k-error-colored" })
                         </div>
                     </li>
-                    <li class="col-md-3">
+                    <li class="col-md-8">
+
+                        <label for="PatientEndTreatmentFile">Upload Patient First Appointment Doc </label>
+                        <button class="addFirstApointmentFile">Add Files</button>
+                        @Html.TextBoxFor(model => model.PatientFirstApointmentFile, "", new { @type = "file", @multiple = "multiple", style = "display: none;" })
+                        <label id="PatientFirstApointmentFileUploadedFiles"></label>
+                        <div>
+                            @Html.ValidationMessageFor(model => model.PatientFirstApointmentFile, "", new { @class = "text-danger" })
+                            @*<input name="PatientFirstApointmentFile"  required  type="file" aria-label="files" />*@
+                        </div>
+                    </li>
+                    <li class="col-md-4">
                         @Html.LabelFor(model => model.EndTreatDate, new { @class = "" })
                         @Html.TextBoxFor(model => model.EndTreatDate, "{0:MM/dd/yyyy}", new { @class = "", style = "width: 60%" })
                         <div>
                             @Html.ValidationMessageFor(model => model.EndTreatDate, "", new { @class = "k-error-colored" })
+                        </div>
+                    </li>
+                    <li class="col-md-8">
+
+                        <label for="PatientEndTreatmentFile">Upload Patient End Treatment Doc </label>
+                        @Html.TextBoxFor(model => model.PatientEndTreatmentFile, "", new { @type = "file", @multiple = "multiple", style = "display: none;" })
+                        <button class="addEndTreatmentFile">Add Files</button>
+                        <label id="PatientEndTreatmentFileUploadedFiles"></label>
+                        <div>
+                            @Html.ValidationMessageFor(model => model.PatientEndTreatmentFile, "", new { @class = "text-danger" })
+                            @*<input name="PatientEndTreatmentFile" required  type="file" aria-label="files" />*@
                         </div>
                     </li>
                     <li class="col-md-3">
@@ -290,7 +329,7 @@
 
             $("#KWTPhone").kendoMaskedTextBox({
                 mask: "0000000000"
-                      
+
             });
             $("#PatientCID").kendoMaskedTextBox({
                 mask: "AAAAAAAAAAAA",
@@ -370,6 +409,90 @@
                 }
             });
             $(".loader").css("display", "none");
+
+            // new implelemtation for file upload during patient creation
+
+            function refreshAccountList(accountNumber,payAccountID,amount,descriptions,discount,payrollID){
+                debugger;
+                // return new Promise(function (resolve, reject) {
+                // alert();
+                $.ajax({
+                    url: "@Url.Action("UploadPatientFileJson")",
+                    type: "GET",
+                    contentType: "application/json",
+                    data: {
+                        "accountNumber": accountNumber,
+                        "payAccountID": payAccountID,
+                        "amount": amount,
+                        "descriptions": descriptions,
+                        "discount": discount,
+                        "payrollID": payrollID,
+                    },
+                    dataType: "json",
+                    beforeSend: function() {
+
+                        $(".loader").css("display", "block");
+                    },
+                    success: function (results) {
+                        accountGird.dataSource.data( results.Accounts );
+                        accountGird.refresh();
+                        $("#Amount").val(results.TotalAmount)
+                        $(".loader").css("display", "none");
+                    },
+
+                    error: function (error) {
+                        alert("Account was not updated successfully due to ",error.statusText);
+                    }
+                })
+
+            }
+
+            // file uploades                        
+            $('.addEndTreatmentFile').on('click', function() { 
+                $('#PatientEndTreatmentFile').click();
+                return false;
+            });
+            $("#PatientEndTreatmentFile").change(function(){
+                var files =$(this)[0].files; 
+                var selectedFiles="";
+                for (var i = 0; i < files.length; ++i) {
+                    var name = files.item(i).name;
+                    selectedFiles += name +" | "; 
+                    
+                }                 
+                $('#PatientEndTreatmentFileUploadedFiles').text(selectedFiles);
+            });
+
+            $('.addFirstApointmentFile').on('click', function() { 
+                $('#PatientFirstApointmentFile').click();
+                return false;
+            });
+            $("#PatientFirstApointmentFile").change(function(){
+                var files =$(this)[0].files; 
+                var selectedFiles="";
+                for (var i = 0; i < files.length; ++i) {
+                    var name = files.item(i).name;
+                    selectedFiles += name +" | "; 
+                    
+                }                 
+                $('#PatientFirstApointmentFileUploadedFiles').text(selectedFiles);
+            });
+
+            $('.addPasportFile').on('click', function() { 
+                $('#PatientPasportFile').click();
+                return false;
+            });
+            $("#PatientPasportFile").change(function(){
+                var files =$(this)[0].files; 
+                var selectedFiles="";
+                for (var i = 0; i < files.length; ++i) {
+                    var name = files.item(i).name;
+                    selectedFiles += name +" | "; 
+                    
+                }                 
+                $('#PatientPasportFileUploadedFiles').text(selectedFiles);
+            });
+            //
         });
     </script>
 

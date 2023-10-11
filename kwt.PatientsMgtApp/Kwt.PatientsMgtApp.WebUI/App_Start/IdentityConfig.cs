@@ -11,6 +11,8 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Kwt.PatientsMgtApp.WebUI.Models;
+using System.Net.Mail;
+using System.Configuration;
 
 namespace Kwt.PatientsMgtApp.WebUI
 {
@@ -19,7 +21,12 @@ namespace Kwt.PatientsMgtApp.WebUI
         public Task SendAsync(IdentityMessage message)
         {
             // Plug in your email service here to send an email.
-            return Task.FromResult(0);
+            SmtpClient client = new SmtpClient();
+            return client.SendMailAsync(ConfigurationManager.AppSettings["SupportEmailAddr"],
+                                        message.Destination,
+                                        message.Subject,
+                                        message.Body);
+           // return Task.FromResult(0);
         }
     }
 

@@ -157,7 +157,7 @@
                                 else
                                 {
                                     <text>لا مرافق اول </text>
-}
+                                }
                             </td>
                             <td style="font-weight:bold;">المرافق الاول</td>
                         </tr>
@@ -170,7 +170,7 @@
                                 else
                                 {
                                     <text>  لا مرافق ثاني</text>
-}
+                                }
                             </td>
                             <td style="font-weight:bold;">المرافق الثاني</td>
                         </tr>
@@ -201,7 +201,7 @@
             </div>
         </div>
         <div id="houseRent" class="col-md-12" style="margin:30px;display:none; font-family: TimesNewRoman;">
-            
+
             <div class="row">
                 <div class="col-md-12" style="text-align:center;">
                     <img src="~/Content/Images/Kuwait_embassyLogo.png" style="width: 120px" />
@@ -234,259 +234,289 @@
                                 <p>Patient </p>
                                 <p style="font-weight: bold">@Model.EnglishPatFName</p>
                                 @if (Model.PrimaryCompanion != null)
-                            {
-                                    <p>and his/her companion</p>
+                                {
+                                    <p>and his/her companion(s)</p>
                                     <p style="font-weight: bold">@Model.PrimaryCompanion.EnglishName</p>
-                            }
+                                    if (@Model.SecondaryCompanion != null)
+                                    {
+                                        <p style="font-weight: bold">&nbsp;& @Model.SecondaryCompanion.EnglishName</p>
+                                    }
 
-                                <p>Receive(s) monthly living allowances of
-                                <p style="font-weight: bold;"> $9,928.80</p> as long as the patient is undergoing our authorized treatment only.
-                                </p>
+                                }
 
-                            </div>
-                            <div class="m-3" style="width: 90%;">
                                 <p>
-                                    This information was released upon their request and for whatever purpose it might serve with no legal or financial obligation on the Embassy.
-                                </p>
-                            </div>
-                            <div class="m-3" style="width: 90%;text-indent: 100px;">
-                                <p style="">
-                                    If you need further inquiries, please don’t hesitate to contact us at the above
-                                </p>
-                            </div>
-                            <div class="m-3" style="width: 90%;text-indent: 300px;">
-                                <p style="font-weight: bold">
-                                    Sincerely yours,
-                                </p>
-                            </div>
-                            <div class="m-3" style="width: 90%; font-weight: bold; text-align: center">
-                                <p style="display: block; margin-bottom: 0;">
-                                    Dr. FAISAL SALEH
-                                </p>
-                                <p>Head of Kuwait health office - Washington DC</p>
+                                    Receive(s) monthly living allowances of
+                                    @if (Model.PrimaryCompanion == null)
+                                    {
+                                    <p style="font-weight: bold;"> $7,465.80</p>
+                                    }
+                                    else
+                                    {
+                                        <p style="font-weight: bold;"> $9,928.80</p>
+                                    }
 
+                                    as long as the patient is undergoing our authorized treatment only.
+                                    </p>
+
+                                </div>
+                                <div class="m-3" style="width: 90%;">
+                                    <p>
+                                        This information was released upon their request and for whatever purpose it might serve with no legal or financial obligation on the Embassy.
+                                    </p>
+                                </div>
+                                <div class="m-3" style="width: 90%;text-indent: 100px;">
+                                    <p style="">
+                                        If you need further inquiries, please don’t hesitate to contact us at the above
+                                    </p>
+                                </div>
+                                <div class="m-3" style="width: 90%;text-indent: 300px;">
+                                    <p style="font-weight: bold">
+                                        Sincerely yours,
+                                    </p>
+                                </div>
+                                <div class="m-3" style="width: 90%; font-weight: bold; text-align: center">
+                                    <p style="display: block; margin-bottom: 0;">
+                                        Dr. FAISAL SALEH
+                                    </p>
+                                    <p>Head of Kuwait health office - Washington DC</p>
+
+                                </div>
+                                <div class="m-3" style="width: 90%; font-weight: bold; text-align: left;">
+                                    <p style="display: block;margin-bottom: 0; text-decoration: underline;font-size: 20px; margin-top: 30px;">
+                                        Rental Letter
+                                    </p>
+                                </div>
                             </div>
-                            <div class="m-3" style="width: 90%; font-weight: bold; text-align: left;">
-                                <p style="display: block;margin-bottom: 0; text-decoration: underline;font-size: 20px; margin-top: 30px;">
-                                    Rental Letter
-                                </p>
-                            </div>
+                            <div style="clear: both;"></div>
                         </div>
-                        <div style="clear: both;"></div>
                     </div>
-                </div>
-                <div class="col-md-12"></div>
-                <div class="col-md-12"></div>
-            </div>
-        </div>
-        <div id="immigrationLetter" class="col-md-12" style="margin:30px; display:none;font-family: TimesNewRoman;">
-            
-            <div class="row">
-                <div class="col-md-12" style="text-align:center;">
-                    <img src="~/Content/Images/Kuwait_embassyLogo.png" style="width: 120px" />
-                </div>
-                <div class="col-md-12" style="width: 100%">
-                    <h3 style="text-transform: uppercase; text-align: center;">Embassy Of The State of Kuwait Health Division</h3>
-
-                    <div class="pull-left" style="width: 100%">
-                        <p style="text-align: center; margin: 0">4301 Connecticut Avenue, N.W. · Suite 330 · Washington, D.C. 20008 </p>
-                        <p style="text-align: center; margin: 0">Telephone: (202) 686-4304 Fax: (202) 686-4308 or (202) 686-0092</p>
-                    </div>
-                    <div style="text-align: right; width: 90%">
-                        <div style="font-weight: bold; font-size: 20pt;">@DateTime.Now.ToShortDateString()</div>
-                        <div style="clear: both;"></div>
-                        <div style="font-weight: bold; font-size: 20pt; width: 100%; text-decoration: underline;">
-                            <p style="text-align: center; font-style:   italic;  margin-bottom: 0;  width: 100%;">TO WHOM IT MAY CONCERN</p>
-                            <p style="text-align: center; margin-bottom: 0; width: 100%;">@Model.PatientCID</p>
-                        </div>
-                        <div style="clear: both;"></div>
-                        <div class="houseletter" style="text-align: justify ; font-size: 18pt;">
-                            <div class="m-3" style="width: 90%;">
-                                <p>This is to certify that</p>
-                                <p style="font-weight: bold">@Model.EnglishName</p>
-                                <p>is a Kuwaiti patient, at</p>
-                                <p style="font-weight: bold">@Model.Hospital</p>
-                                <p>, undergoing medical treatment under our auspice since</p>
-                                <p style="font-weight: bold">@Model.FirstApptDAteFormatted</p>
-                                @if (Model.AuthorizedDate != null)
-                                {
-                                    <p style="text-transform: capitalize">Until</p>
-                                    <p style="font-weight: bold; text-decoration: underline ">@Model.AuthorizedDate <p>.</p></p>
-                                }
-                                
-                            </div>
-                            <div class="m-3" style="width: 90%;">
-                                <p>Patient </p>
-                                <p style="font-weight: bold">@Model.EnglishPatFName</p>
-                                @if (Model.PrimaryCompanion != null)
-                                {
-                                    <p>and his/her companion</p>
-                                    <p style="font-weight: bold">@Model.PrimaryCompanion.EnglishName</p>
-                                }
-
-                                <p>Receive(s) monthly living allowances of
-                                <p style="font-weight: bold;"> $7,402.70</p> as long as the patient is undergoing our authorized treatment only.
-                                </p>
-
-                            </div>
-                            <div class="m-3" style="width: 90%;">
-                                <p>
-                                    This information was released upon their request and for whatever purpose it might serve with no legal or financial obligation on the Embassy.
-                                </p>
-                            </div>
-                            <div class="m-3" style="width: 90%;text-indent: 90px;">
-                                <p style="">
-                                    If you need further inquiries, please don’t hesitate to contact us at the above
-                                </p>
-                            </div>
-                            <div class="m-3" style="width: 90%;text-indent: 300px;">
-                                <p style="font-weight: bold">
-                                    Sincerely yours,
-                                </p>
-                            </div>
-                            <div class="m-3" style="width: 90%; font-weight: bold; text-align: center">
-                                <p style="display: block; margin-bottom: 0;">
-                                    Dr. FAISAL SALEH
-                                </p>
-                                <p>Head of Kuwait health office - Washington DC</p>
-
-                            </div>
-                            <div class="m-3" style="width: 90%; font-weight: bold; text-align: left;">
-                                <p style="display: block;margin-bottom: 0; text-decoration: underline;font-size: 20px; margin-top: 30px;">
-                                    immigartion Letter
-                                </p>
-                            </div>
-                        </div>
-                        <div style="clear: both;"></div>
-                    </div>
-                </div>
-                <div class="col-md-12"></div>
-                <div class="col-md-12"></div>
-            </div>
-        </div>
-        <div id="companionLetter" class="col-md-12" style="margin:30px; display:none;">
-            <div class="row">
-                <div class="col-md-12" style="text-align:center;">
-                    <img src="~/Content/Images/Kuwait_embassyLogo.png" style="width: 120px" />
-                </div>
-                <div class="col-md-12">
-                    <h3 style="text-transform: uppercase; text-align: center; color: black !important">Embassy Of The State of Kuwait Health Division</h3>
-
-                    <div class="pull-left" style="width: 100%">
-                        <p style="text-align: center; margin: 0">4301 Connecticut Avenue, N.W. · Suite 330 · Washington, D.C. 20008 </p>
-                        <p style="text-align: center;margin: 0">Telephone: (202) 686-4304   Fax: (202) 686-4308 or (202) 686-0092</p>
-                    </div>
-
-                    <div style="text-align: left; width: 100%">
-                        <div style="font-weight: bold; font-size: 20pt;">@DateTime.Now.ToShortDateString()</div>
-                        <div style="clear: both;"></div>
-                        <div style="font-weight: bold; font-size: 20pt; width: 100%;">
-                            <p style="text-align: right; margin-bottom: 0; float: right; width: 50%;">السيد مدير ادارة العلاج بالخارج </p>
-                            <p style="text-align: center; margin-bottom: 0; width: 50%;">المحترم</p>
-                        </div>
-                        <div style="font-size: 20pt;  width: 100%;">
-                            <p style="text-align: right; margin-bottom: 0;float: right; width: 50%;">تحية طيبة وبعد ...</p>
-                        </div>
-                        <div style="clear: both;"></div>
-                        <div class="m-3" style="text-decoration: underline; font-weight: bold; font-size: 20pt; width: 100%;text-align: center;">الموضوع : استبدال/ اضافة  مرافــق</div>
-                        <div style="clear: both;"></div>
-                    </div>
-                    <table class="table table-bordered" style="text-align: right;">
-
-                        <tr>
-                            @*<td>Patient Name</td>*@
-                            <td>@Model.Name</td>
-                            <td style="font-weight:bold;">اسم المريض</td>
-                        </tr>
-                        <tr>
-                            @*<td>Patient CID</td>*@
-                            <td>@Model.PatientCID</td>
-                            <td style="font-weight:bold;">الرقم المدني</td>
-                        </tr>
-                        <tr>
-                            @*<td>Hospital</td>*@
-                            <td>@Model.Hospital</td>
-                            <td style="font-weight:bold;">اسم المستشفى</td>
-                        </tr>
-                        <tr>
-                            @*<td>Appointment Date</td>*@
-                            <td>@Model.FirstApptDAteLongArabicFormatted</td>
-                            <td style="font-weight:bold;">تاريخ بدء العلاج</td>
-                        </tr>
-                        <tr>
-                            @*<td>End Treatment</td>*@
-                            <td>@Model.EndTreatDateLongArabicFormatted</td>
-                            <td style="font-weight:bold;">تاريخ انتهاء العلاج</td>
-                        </tr>
-                        <tr>
-                            @*<td>Authorized Date</td>*@
-                            <td>@Model.AuthorizedDateLongArabicFormatted</td>
-                            <td style="font-weight:bold;">تاريخ انتهاء التغطية</td>
-                        </tr>
-                        <tr>
-                            @*<td>Treatment period</td>*@
-                            <td>@Model.TreatmentPeriod</td>
-                            <td style="font-weight:bold;">مدة العلاج بالايام</td>
-                        </tr>
-                        <tr>
-                            @*<td>Primary Companion</td>*@
-                            @*<td>@Model.Companions.Where(c=>c.CompanionType=="Primary").Select(co=>co.Name).SingleOrDefault()</td>*@
-
-                            <td>
-                                @if (Model.PrimaryCompanion != null)
-                                {
-                                    @Model.PrimaryCompanion.Name
-                                }
-                                else
-                                {
-                                    <text>No Companion</text>
-                                }
-                            </td>
-                            <td style="font-weight:bold;">المرافق الاول</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                @if (Model.SecondaryCompanion != null)
-                                {
-                                    @Model.SecondaryCompanion.Name
-                                }
-                                else
-                                {
-                                    <text>  لا مرافق ثاني</text>
-                                }
-                            </td>
-                            <td style="font-weight:bold;">المرافق الثاني</td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="col-md-12">
-                    <br />
-                    <label for="CompanionLetterNotes" id="CompanionLetterLabelForNote" style="text-decoration: underline; font-weight: bold;">Letter Note:</label>
-                    <textarea class="k-textbox" cols="120" data-val="true" data-val-maxlength="The field Notes must be a string or array type with a maximum length of '250'."
-                              data-val-maxlength-max="250" id="CompanionLetterNotes" name="CompanionLetterNotes"
-                              rows="2" style="width: 100%; text-align: right;"></textarea>
-                </div>
-
-                <div class="col-md-12">
-                    <div class="m-3 pull-right">
-                        <u style="text-decoration: none; font-weight: bold; font-size: 20pt;">ولكم فائق الاحترام</u>
-                    </div>
-                    @*<div class="p-3 m-3 pull-right"><u style="text-decoration: none; font-weight: bold; font-size: 20pt;">مرفق كتاب طلب</u>
-                        </div>*@
-
-                    <div class="m-3 pull-left">
-                        <u style="text-decoration: none; font-weight: bold; font-size: 20pt;">رئيس المكتب الصحي- واشنطن</u>
-                    </div>
-                </div>
-                <div class="col-md-12">
-                    <div class="m-3" style="text-align:right;"><span style="text-decoration:none; font-weight: bold; font-size: 20pt;">مرفق كتاب طلب</span></div>
+                    <div class="col-md-12"></div>
+                    <div class="col-md-12"></div>
                 </div>
             </div>
-        </div>
-        <div id="pledgeLetter" class="col-md-12" style="margin:30px; display:none;">
-            <h3 style="text-transform:uppercase; text-align:center;">pledge letter</h3>
-        </div>
-    </div>
+            <div id="immigrationLetter" class="col-md-12" style="margin:30px; display:none;font-family: TimesNewRoman;">
+
+                <div class="row">
+                    <div class="col-md-12" style="text-align:center;">
+                        <img src="~/Content/Images/Kuwait_embassyLogo.png" style="width: 120px" />
+                    </div>
+                    <div class="col-md-12" style="width: 100%">
+                        <h3 style="text-transform: uppercase; text-align: center;">Embassy Of The State of Kuwait Health Division</h3>
+
+                        <div class="pull-left" style="width: 100%">
+                            <p style="text-align: center; margin: 0">4301 Connecticut Avenue, N.W. · Suite 330 · Washington, D.C. 20008 </p>
+                            <p style="text-align: center; margin: 0">Telephone: (202) 686-4304 Fax: (202) 686-4308 or (202) 686-0092</p>
+                        </div>
+                        <div style="text-align: right; width: 90%">
+                            <div style="font-weight: bold; font-size: 20pt;">@DateTime.Now.ToShortDateString()</div>
+                            <div style="clear: both;"></div>
+                            <div style="font-weight: bold; font-size: 20pt; width: 100%; text-decoration: underline;">
+                                <p style="text-align: center; font-style:   italic;  margin-bottom: 0;  width: 100%;">TO WHOM IT MAY CONCERN</p>
+                                <p style="text-align: center; margin-bottom: 0; width: 100%;">@Model.PatientCID</p>
+                            </div>
+                            <div style="clear: both;"></div>
+                            <div class="houseletter" style="text-align: justify ; font-size: 18pt;">
+                                <div class="m-3" style="width: 90%;">
+                                    <p>This is to certify that</p>
+                                    <p style="font-weight: bold">@Model.EnglishName</p>
+                                    <p>is a Kuwaiti patient, at</p>
+                                    <p style="font-weight: bold">@Model.Hospital</p>
+                                    <p>, undergoing medical treatment under our auspice since</p>
+                                    <p style="font-weight: bold">@Model.FirstApptDAteFormatted</p>
+                                    @if (Model.AuthorizedDate != null)
+                                    {
+                                        <p style="text-transform: capitalize">Until</p>
+                                        <p style="font-weight: bold;">@Model.AuthorizedDateFormatted<p>.</p></p>
+                                    }
+
+                                </div>
+                                <div class="m-3" style="width: 90%;">
+                                    <p>Patient </p>
+                                    <p style="font-weight: bold">@Model.EnglishPatFName</p>
+                                    @if (Model.PrimaryCompanion != null)
+                                    {
+                                        <p>and his/her companion(s)</p>
+                                        <p style="font-weight: bold">@Model.PrimaryCompanion.EnglishName</p>
+                                        if (@Model.SecondaryCompanion != null)
+                                        {
+                                            <p style="font-weight: bold">&nbsp;& @Model.SecondaryCompanion.EnglishName</p>
+                                        }
+                                    }
+
+                                    <p>
+                                        Receive(s) monthly living allowances of
+                                        @if (Model.PrimaryCompanion == null)
+                                        {
+                                        <p style="font-weight: bold;"> $7,465.80</p>
+                                        }
+                                        else
+                                        {
+                                            <p style="font-weight: bold;"> $9,928.80</p>
+                                        }
+                                        @*<p style="font-weight: bold;"> $7,402.70</p>*@
+
+                                        as long as the patient is undergoing our authorized treatment only.
+                                        </p>
+
+                                    </div>
+                                    <div class="m-3" style="width: 90%;">
+                                        <p>
+                                            This information was released upon their request and for whatever purpose it might serve with no legal or financial obligation on the Embassy.
+                                        </p>
+                                    </div>
+                                    <div class="m-3" style="width: 90%;text-indent: 90px;">
+                                        <p style="">
+                                            If you need further inquiries, please don’t hesitate to contact us at the above
+                                        </p>
+                                    </div>
+                                    <div class="m-3" style="width: 90%;text-indent: 300px;">
+                                        <p style="font-weight: bold">
+                                            Sincerely yours,
+                                        </p>
+                                    </div>
+                                    <div class="m-3" style="width: 90%; font-weight: bold; text-align: center">
+                                        <p style="display: block; margin-bottom: 0;">
+                                            Dr. FAISAL SALEH
+                                        </p>
+                                        <p>Head of Kuwait health office - Washington DC</p>
+
+                                    </div>
+                                    <div class="m-3" style="width: 90%; font-weight: bold; text-align: left;">
+                                        <p style="display: block;margin-bottom: 0; text-decoration: underline;font-size: 20px; margin-top: 30px;">
+                                            immigartion Letter
+                                        </p>
+                                    </div>
+                                </div>
+                                <div style="clear: both;"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+                        <div class="col-md-12"></div>
+                    </div>
+                </div>
+                <div id="companionLetter" class="col-md-12" style="margin:30px; display:none;">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:center;">
+                            <img src="~/Content/Images/Kuwait_embassyLogo.png" style="width: 120px" />
+                        </div>
+                        <div class="col-md-12">
+                            <h3 style="text-transform: uppercase; text-align: center; color: black !important">Embassy Of The State of Kuwait Health Division</h3>
+
+                            <div class="pull-left" style="width: 100%">
+                                <p style="text-align: center; margin: 0">4301 Connecticut Avenue, N.W. · Suite 330 · Washington, D.C. 20008 </p>
+                                <p style="text-align: center;margin: 0">Telephone: (202) 686-4304   Fax: (202) 686-4308 or (202) 686-0092</p>
+                            </div>
+
+                            <div style="text-align: left; width: 100%">
+                                <div style="font-weight: bold; font-size: 20pt;">@DateTime.Now.ToShortDateString()</div>
+                                <div style="clear: both;"></div>
+                                <div style="font-weight: bold; font-size: 20pt; width: 100%;">
+                                    <p style="text-align: right; margin-bottom: 0; float: right; width: 50%;">السيد مدير ادارة العلاج بالخارج </p>
+                                    <p style="text-align: center; margin-bottom: 0; width: 50%;">المحترم</p>
+                                </div>
+                                <div style="font-size: 20pt;  width: 100%;">
+                                    <p style="text-align: right; margin-bottom: 0;float: right; width: 50%;">تحية طيبة وبعد ...</p>
+                                </div>
+                                <div style="clear: both;"></div>
+                                <div class="m-3" style="text-decoration: underline; font-weight: bold; font-size: 20pt; width: 100%;text-align: center;">الموضوع : استبدال/ اضافة  مرافــق</div>
+                                <div style="clear: both;"></div>
+                            </div>
+                            <table class="table table-bordered" style="text-align: right;">
+
+                                <tr>
+                                    @*<td>Patient Name</td>*@
+                                    <td>@Model.Name</td>
+                                    <td style="font-weight:bold;">اسم المريض</td>
+                                </tr>
+                                <tr>
+                                    @*<td>Patient CID</td>*@
+                                    <td>@Model.PatientCID</td>
+                                    <td style="font-weight:bold;">الرقم المدني</td>
+                                </tr>
+                                <tr>
+                                    @*<td>Hospital</td>*@
+                                    <td>@Model.Hospital</td>
+                                    <td style="font-weight:bold;">اسم المستشفى</td>
+                                </tr>
+                                <tr>
+                                    @*<td>Appointment Date</td>*@
+                                    <td>@Model.FirstApptDAteLongArabicFormatted</td>
+                                    <td style="font-weight:bold;">تاريخ بدء العلاج</td>
+                                </tr>
+                                <tr>
+                                    @*<td>End Treatment</td>*@
+                                    <td>@Model.EndTreatDateLongArabicFormatted</td>
+                                    <td style="font-weight:bold;">تاريخ انتهاء العلاج</td>
+                                </tr>
+                                <tr>
+                                    @*<td>Authorized Date</td>*@
+                                    <td>@Model.AuthorizedDateLongArabicFormatted</td>
+                                    <td style="font-weight:bold;">تاريخ انتهاء التغطية</td>
+                                </tr>
+                                <tr>
+                                    @*<td>Treatment period</td>*@
+                                    <td>@Model.TreatmentPeriod</td>
+                                    <td style="font-weight:bold;">مدة العلاج بالايام</td>
+                                </tr>
+                                <tr>
+                                    @*<td>Primary Companion</td>*@
+                                    @*<td>@Model.Companions.Where(c=>c.CompanionType=="Primary").Select(co=>co.Name).SingleOrDefault()</td>*@
+
+                                    <td>
+                                        @if (Model.PrimaryCompanion != null)
+                                        {
+                                            @Model.PrimaryCompanion.Name
+                                        }
+                                        else
+                                        {
+                                            <text>No Companion</text>
+                                        }
+                                    </td>
+                                    <td style="font-weight:bold;">المرافق الاول</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @if (Model.SecondaryCompanion != null)
+                                        {
+                                            @Model.SecondaryCompanion.Name
+                                        }
+                                        else
+                                        {
+                                            <text>  لا مرافق ثاني</text>
+                                        }
+                                    </td>
+                                    <td style="font-weight:bold;">المرافق الثاني</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-12">
+                            <br />
+                            <label for="CompanionLetterNotes" id="CompanionLetterLabelForNote" style="text-decoration: underline; font-weight: bold;">Letter Note:</label>
+                            <textarea class="k-textbox" cols="120" data-val="true" data-val-maxlength="The field Notes must be a string or array type with a maximum length of '250'."
+                                      data-val-maxlength-max="250" id="CompanionLetterNotes" name="CompanionLetterNotes"
+                                      rows="2" style="width: 100%; text-align: right;"></textarea>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="m-3 pull-right">
+                                <u style="text-decoration: none; font-weight: bold; font-size: 20pt;">ولكم فائق الاحترام</u>
+                            </div>
+                            @*<div class="p-3 m-3 pull-right"><u style="text-decoration: none; font-weight: bold; font-size: 20pt;">مرفق كتاب طلب</u>
+                                </div>*@
+
+                            <div class="m-3 pull-left">
+                                <u style="text-decoration: none; font-weight: bold; font-size: 20pt;">رئيس المكتب الصحي- واشنطن</u>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="m-3" style="text-align:right;"><span style="text-decoration:none; font-weight: bold; font-size: 20pt;">مرفق كتاب طلب</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="pledgeLetter" class="col-md-12" style="margin:30px; display:none;">
+                    <h3 style="text-transform:uppercase; text-align:center;">pledge letter</h3>
+                </div>
+            </div>
 }
 
 
@@ -498,7 +528,7 @@
             $(".k-widget").removeClass("input-validation-error");
         });
         var model = @Html.Raw(Json.Encode(Model));
-        console.log("model ",model);
+        console.log("model test ",model);
         var patientCids = @Html.Raw(Json.Encode(patientList));
         console.log(patientCids);
 

@@ -1,0 +1,186 @@
+﻿@model Kwt.PatientsMgtApp.Core.Models.DepositAccountModel
+@{
+    ViewBag.Title = "New Deposit";
+}
+
+<h2>Deposit Portal</h2>
+
+@using (Html.BeginForm("NewDeposit", "Payment", FormMethod.Post, new { @class = ".k-form" }))
+{
+    <div class="mt-3">
+        <p>
+            <a href="@Url.Action("DepositList")" class="k-button"><i class="fa fa-arrow-left" style="color: lightblue"></i> Deposit List</a>
+            <button type="submit" class="k-button"><i class="fa fa-save" style="color: blueviolet"></i> Save</button>
+        </p>
+    </div>
+
+
+    @Html.AntiForgeryToken()
+    <div>
+        @(Html.Kendo().DatePicker().Name("datepicker"))       
+    </div>
+   
+
+    <div class="form-horizontal">
+
+        @Html.ValidationSummary(false, "", new { @class = "k-error-colored ml-3" })
+        <div id="newPayroll" style="visibility:hidden">
+            <button data-target="#payrollDetails" data-toggle="collapse"><i></i> Payroll Details</button>
+            <fieldset id="payrollDetails" class="collapse show">
+                <legend></legend>
+                <ul class="fieldlist row">
+                   
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.AmountDeposited, htmlAttributes: new { @class = "" })
+                        @Html.EditorFor(model => model.AmountDeposited, new { @class = "", style = "width: 100%;", title = "Text to show" })
+                        <div>
+                            @Html.ValidationMessageFor(model => model.AmountDeposited, "", new { @class = "k-error-colored" })
+                        </div>
+                    </li>
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.AgencyID, new { @class = "" })
+                        @Html.DropDownListFor(model => model.AgencyID, new List<SelectListItem>(Model.Agencies.Select(a => new SelectListItem()
+                           {
+                               Text = a.AgencyName,
+                               Value = a.AgencyID.ToString()
+                           }).ToList()), "Select Agency...", new { style = "width:100%" })
+                        <div>
+                            @Html.ValidationMessageFor(model => model.AgencyID, "", new { @class = "k-error-colored" })
+                        </div>
+                    </li>
+
+                    
+
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.DepositTitle, htmlAttributes: new { @class = "" })
+                        @Html.EditorFor(model => model.DepositTitle, new { @class = "", style = "width: 100%;", title = "Text to show" })
+                        <div>
+                            @Html.ValidationMessageFor(model => model.DepositTitle, "", new { @class = "k-error-colored" })
+                        </div>
+                    </li>
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.DepositDate, htmlAttributes: new { @class = "" })
+                        @Html.EditorFor(model => model.DepositDate, new { @class = "", style = "width: 100%;", title = "Text to show" })
+                        <div>
+                            @Html.ValidationMessageFor(model => model.DepositDate, "", new { @class = "k-error-colored" })
+                        </div>
+                    </li>
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "" })
+                        @Html.EditorFor(model => model.StartDate, new { @class = "", style = "width: 100%;", title = "Text to show" })
+                        <div>
+                            @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "k-error-colored" })
+                        </div>
+                    </li>
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "" })
+                        @Html.EditorFor(model => model.EndDate, new { @class = "", style = "width: 100%;", title = "Text to show" })
+                        <div>
+                            @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "k-error-colored" })
+                        </div>
+                    </li>
+                </ul>
+            </fieldset>
+            <button data-target="#payrollPayee" data-toggle="collapse"><i></i> Payroll Payee</button>
+            <fieldset id="payrollPayee" class="collapse show">
+                <legend></legend>
+                <ul class="fieldlist row">
+                    <li class="col-md-8">
+                        @Html.LabelFor(model => model.DepositTypeID, new { @class = "" })
+                        @Html.DropDownListFor(model => model.DepositTypeID, new List<SelectListItem>(Model.DepositTypes.Select(a => new SelectListItem()
+                        {
+                            Text = a.DepositType1,
+                            Value = a.DepositTypeID.ToString()
+                        }).ToList()), "Select Deposit Type...", new { style = "width:100%" })
+                    </li>
+                    <li class="col-md-8">
+                        @Html.LabelFor(model => model.DepositDepartmentID, new { @class = "" })
+                        @Html.DropDownListFor(model => model.DepositDepartmentID, new List<SelectListItem>(Model.DepositDepartments.Select(a => new SelectListItem()
+                       {
+                           Text = a.DepositDepartment,
+                           Value = a.DepositDepartmentID.ToString()
+                       }).ToList()), "Select Deposit Department...", new { style = "width:100%" })
+                    </li>
+                    <li class="col-md-8">
+                        @Html.LabelFor(model => model.PayeeID, new { @class = "" })
+                        @Html.DropDownListFor(model => model.PayeeID, new List<SelectListItem>(Model.PayeeList.Select(a => new SelectListItem()
+                       {
+                           Text = a.PayeeName,
+                           Value = a.PayeeID.ToString()
+                       }).ToList()), "Select Payee...", new { style = "width:100%" })
+                    </li>
+                    <li class="col-md-8">
+                        @Html.LabelFor(model => model.AccountID, new { @class = "" })
+                        @Html.DropDownListFor(model => model.AccountID, new List<SelectListItem>(Model.PayrollAccounts.Select(a => new SelectListItem()
+                       {
+                           Text = a.Description,
+                           Value = a.PayAccountID.ToString()
+                       }).ToList()), "Select Account...", new { style = "width:100%" })
+                    </li>
+                    <li class="col-md-8">
+                        @Html.LabelFor(model => model.Descriptions, new { @class = "" })
+                        @Html.TextAreaFor(model => model.Descriptions, new { @class = "", style = "width: 100%;", title = "Text to show" })
+                        <div>
+                            @Html.ValidationMessageFor(model => model.Descriptions, "", new { @class = "k-error-colored" })
+                        </div>
+                    </li>
+
+                </ul>
+            </fieldset>           
+        </div>
+        <div class="mt-3">
+            <p>
+                <a href="@Url.Action("DepositList")" class="k-button"><i class="fa fa-arrow-left" style="color: lightblue"></i> Back to List</a>
+                <button type="submit" class="k-button"><i class="fa fa-save" style="color: blueviolet"></i> Save</button>
+            </p>
+        </div>
+
+    </div>
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+
+
+       
+
+        $(document).ready(function () {          
+            
+            $("#DepositDate, #StartDate, #EndDate").kendoDatePicker({
+
+            });
+            $('#PayrollMethodId[value="2"]').attr('checked',true);
+            $.validator.setDefaults({ ignore: '' });
+
+            $("#AgencyID, #PayeeID, #AccountID, #DepositTypeID, #DepositDepartmentID").kendoDropDownList();
+
+            var object =   @Html.Raw(Json.Encode(Model));
+            var payeeList = @Html.Raw(Json.Encode(Model.PayeeList));
+
+            //console.log(object);
+            //console.log(payeeList);
+            $("#newPayroll").css("visibility", "visible");
+            $('#newPayroll button').addClass('btn btn-block mb-2 text-uppercase text-white bg-info');
+            $('#newPayroll button i').addClass('fa fa-angle-double-down pull-left');
+            $('#newPayroll button').click(function (e) {
+                e.preventDefault();
+                var $this = this;
+                var caret = $($this).find('i');
+                if ($(caret).hasClass('fa-angle-double-down'))
+                    $(caret).removeClass('fa-angle-double-down').addClass("fa-angle-double-up");
+                else
+                    $(caret).removeClass('fa-angle-double-up').addClass("fa-angle-double-down");
+            });
+
+            // if there is a validation error, collapsed fields should be opened
+
+            
+            
+            $(".loader").css("display", "none");
+        });
+    </script>
+
+
+}

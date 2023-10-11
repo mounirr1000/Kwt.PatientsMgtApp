@@ -17,7 +17,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Models
         public SubMenu SubMenu { get; set; }
     }
 
-    public class Menu
+    public class TopMenu
     {
         public List<MenuItems> MenuItem { get; set; }
     }

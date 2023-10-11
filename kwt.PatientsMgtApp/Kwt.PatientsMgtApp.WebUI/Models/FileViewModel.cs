@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Kwt.PatientsMgtApp.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -24,5 +25,10 @@ namespace Kwt.PatientsMgtApp.WebUI.Models
         public string[] FoldersPath { get; set; }
 
         public string[] FoldersName { get; set; }
+    }
+    public class DataWithConfirmation
+    {
+        public List<PaymentModel> Payments { get; set; }
+        public bool Confirmation { get; set; }
     }
 }

@@ -82,14 +82,14 @@ address {
     margin: 0 0 1.5em;
 }
 
-pre {
+/*pre {
     display: inline-block;
     font-family: "Courier 10 Pitch", Courier, monospace;
     color: #ddca7e;
     background: #282c34;
     padding: .5em .8em;
     border-radius: .2em;
-}
+}*/
 
 code,
 kbd,
@@ -288,7 +288,7 @@ select, textarea {
     padding: 0.375rem 0.75rem;
 }
 
-fieldset {
+fieldset, .fieldset {
     border: 1px groove #ddd !important;
     padding: 0 1.4em 1.4em 1.4em !important;
     margin: 0 0 1.5em 0 !important;
@@ -481,7 +481,7 @@ header {
     margin: 0;
     font-size: 20px;
     color: #fff;
-    background-color: #A4A747;
+    background-color: #C8102E;
 }
 
 .left {
@@ -537,7 +537,7 @@ table {
 
 .k-dropdown {
     width: 100%;
-    padding-bottom: .5em;
+    /*padding-bottom: .5em;*/
 }
 
 /*td {
@@ -588,7 +588,7 @@ table {
     }
 
 .panel-default > .panel-heading.org-bar {
-    background-color: #0A6FA0;
+    background-color: #00965E;
     padding: 1em;
 }
 
@@ -597,7 +597,11 @@ table {
         text-decoration: none;
         font-size: x-large;
     }
-
+    .panel-default > .panel-heading.org-bar a:hover {
+        color: darkblue;
+        font-size: x-large;
+    }
+    
 .org-bar .panel-body {
     padding: 5px;
 }
@@ -671,7 +675,7 @@ table {
     top: 50%;
     z-index: 1;
     border: 16px solid #f3f3f3; /* Light grey */
-    border-top: 16px solid #A4A747; /* Blue */
+    border-top: 16px solid #00965E; 
     border-radius: 50%;
     width: 60px;
     height: 60px;
@@ -707,7 +711,7 @@ table {
 
     .fieldlist label {
         display: block;
-        padding-bottom: 1em;
+        /*padding-bottom: 1em;*/
         font-weight: bold;
         text-transform: uppercase;
         font-size: 12px;
@@ -747,7 +751,9 @@ tr .k-header {
 }
 
 .k-grid-header .k-header > .k-link {
-    color: white !important;
+    /*color: white !important;*/
+    color: #656565 !important;
+    background-color: #f6f6f6;
 }
 
 thead tr th {
@@ -849,7 +855,7 @@ thead tr th {
     margin-right: auto;
     margin-left: auto;
     border: 12px solid transparent;
-    border-bottom-color: #A4A747;
+    border-bottom-color: #000000;
 }
 
 .login input[type="submit"] {
@@ -859,7 +865,7 @@ thead tr th {
 }
 
 .login-header {
-    background: #A4A747;
+    background: #C8102E;
     padding: 20px;
     font-size: 1.2em;
     font-weight: normal;
@@ -905,14 +911,14 @@ thead tr th {
     }
 
 .login input[type="submit"] {
-    background: #A4A747;
+    background: #00965E;
     border-color: transparent;
     color: #fff;
     cursor: pointer;
 }
 
     .login input[type="submit"]:hover {
-        background: #A4A747;
+        background: #00965E;
     }
 
     /* Buttons' focus effect */
@@ -1090,6 +1096,7 @@ thead tr th {
     font-size: 14px;
     color: #444;
 }
+
 #voucherPrintBody .fieldlist div {
     padding-bottom: 1em;
     font-weight: bold;
@@ -1098,105 +1105,211 @@ thead tr th {
     color: #444;
     padding: 0 0 1em 0;
 }
+
 tbody:empty:before {
-    content:'NO DATA';
-    display:table-cell;
-    padding:0.5em;
+    content: 'NO DATA';
+    display: table-cell;
+    padding: 0.5em;
+}
+/*======================Payroll voucher Print=========================*/
+#payrollAccountsVoucherPrint tr .k-header {
+    background: transparent !important;
+    color: black !important;
+}
+#payrollAccountsVoucherPrint .k-grid-content {
+   overflow-y: auto;
+}#payrollAccountsVoucherPrint div.k-grid-header {
+  padding-right: 0 !important;
 }
 /*=====media print=====*/
 @media print {
     @page {
-    size: auto;
-  }
-  .col-md-4,  .col-md-12 {
-    float: left;
-  }
-  .col-md-12 {
-    width: 100%;
-  }
- 
-  .col-md-4 {
-    width: 22.33333333%;
-      
-  }
- 
-  .hidden-xs {
-    display: block !important;
-  }
-  table.hidden-xs {
-    display: table;
-  }
-  tr.hidden-xs {
-    display: table-row !important;
-  }
-  th.hidden-xs,
-  td.hidden-xs {
-    display: table-cell !important;
-  }
-  .hidden-xs.hidden-print {
-    display: none !important;
-  }
- 
-  table.visible-md {
-    display: table;
-  }
-  tr.visible-md {
-    display: table-row !important;
-  }
-  th.visible-md,
-  td.visible-md {
-    display: table-cell !important;
-  }
+        size: auto;
+    }
+
+    .col-md-4, .col-md-12 {
+        float: left;
+    }
+
+    .col-md-12 {
+        width: 100%;
+    }
+
+    .col-md-4 {
+        width: 22.33333333%;
+    }
+
+    .hidden-xs {
+        display: block !important;
+    }
+
+    table.hidden-xs {
+        display: table;
+    }
+
+    tr.hidden-xs {
+        display: table-row !important;
+    }
+
+    th.hidden-xs,
+    td.hidden-xs {
+        display: table-cell !important;
+    }
+
+    .hidden-xs.hidden-print {
+        display: none !important;
+    }
+
+    table.visible-md {
+        display: table;
+    }
+
+    tr.visible-md {
+        display: table-row !important;
+    }
+
+    th.visible-md,
+    td.visible-md {
+        display: table-cell !important;
+    }
 }
 
 /*=================sub Menu=============================*/
 
 .dropdown {
     position: relative;
-  display: inline-block;
+    display: inline-block;
 }
+
 .dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f1f1f1;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
+    display: none;
+    position: absolute;
+    background-color: #46413B;
+    min-width: 230px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    font-size: medium;
 }
 
-/* Links inside the dropdown */
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
+    /* Links inside the dropdown */
+    .dropdown-content a {
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+.dropdownlink {
+    color: white;
 }
 
+.dsiabledLink {
+}
+
+.dropdown-submenu {
+    position: relative;
+}
+
+    .dropdown-submenu .dropdown-menu {
+        top: 0;
+        left: 100%;
+        margin-top: -1px;
+        background-color: #46413B;
+        min-width: 180px;
+    }
+
+#paySubmenu {
+    padding: 0;
+}
 /* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #ddd;}
+.dropdown-content a:hover {
+    background-color: #ddd;
+    color: black;
+}
 
 /* Show the dropdown menu on hover */
-.dropdown:hover .dropdown-content {display: block;}
+.dropdown:hover .dropdown-content {
+    display: block;
+}
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
-.dropdown:hover .dropbtn {background-color: #3e8e41;}
+.dropdown:hover .dropbtn {
+    background-color: #3e8e41;
+}
+/*================================ Payment SubMenus=================*/
+.submenupatient {
+    background: url(Images/css-sprite-submenu2.png) no-repeat -0px -3px;
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+}
 
+.submenuworker {
+    background: url(Images/css-sprite-submenu2.png) no-repeat -0px -30px;
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+}
+
+.submenucheck {
+    background: url(Images/css-sprite-submenu2.png) no-repeat -0px -57px;
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+}
+
+.submenupayroll {
+    background: url('Images/css-sprite-submenu2.png') no-repeat -0px -84px;
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+}
+
+.dropdown-content a:hover {
+    background-color: #ffffff;
+    color: #46413B !important;
+}
+/*================================  SubPay SubMenus=================*/
+.regularPaySubmenu {
+    width: 24px;
+    height: 24px;
+    background: url('Images/css_sprites-pay_submenu.png') -3px -3px;
+}
+
+.bonusPaySubmenu {
+    width: 24px;
+    height: 24px;
+    background: url('Images/css_sprites-pay_submenu.png') -3px -33px;
+}
+
+.overtimePaySubmenu {
+    width: 24px;
+    height: 24px;
+    background: url('Images/css_sprites-pay_submenu.png') -3px -63px;
+}
+
+.serverancePaySubmenu {
+    width: 24px;
+    height: 24px;
+    background: url('Images/css_sprites-pay_submenu.png') -3px -93px;
+}
 /*===================== css for payment that is rejected================*/
 .isRejected {
-        font-weight: bold;
-        color: #f00;
-        text-decoration: line-through;
-      }
+    font-weight: bold;
+    color: #f00;
+    text-decoration: line-through;
+}
+
 .isVoided {
-        font-weight: bold;
-        color: #787878;
-        text-decoration: line-through wavy #787878;
-      }
+    font-weight: bold;
+    color: #787878;
+    text-decoration: line-through wavy #787878;
+}
+
 .isRejectedVoucher {
-        font-weight: bold;
-        color: #000;
-        text-decoration: line-through;
-      }
+    font-weight: bold;
+    color: #000;
+    text-decoration: line-through;
+}
 
 .hidden {
     visibility: hidden;
@@ -1205,4 +1318,299 @@ tbody:empty:before {
 /*===============================patient books====================*/
 .houseletter p {
     display: inline;
+}
+
+/*======================================tggle btn in payments tabe================*/
+.btn-group-toggle .btn:not(:disabled):not(.disabled).active, .btn-group-toggle .btn:not(:disabled):not(.disabled):active, .show > .btn.dropdown-toggle {
+    color: #fff;
+    background-color: #2196F3;
+    border-color: #2196F3;
+}
+
+/* non selected btn css */
+.btn-group-toggle .btn {
+    color: #fff;
+    background-color: #b7b7b7;
+    border-color: #6c757d;
+}
+/*================================Employee Regular payment=================*/
+#employeeList .k-state-selected {
+    background-color: #f00;
+    color: #fff;
+    border-color: #f00;
+}
+
+#employeeList a {
+    color: darkslateblue;
+}
+
+
+/*===================================Kendo drop down styling==========================*/
+
+
+/*==================================Print Check style=====================*/
+
+@font-face {
+    font-family: 'MicrEncoding-ZEDJ';
+    src: url('../fonts/MicrEncoding-ZEDJ.ttf') format('truetype');
+}
+
+.Cheque, .ChequeDetails {
+    /*position: absolute;*/
+    background-color: #ffffdd;
+    width: 54em;
+    height: 20em;
+    border: .2em solid blue;
+    margin: 1em;
+    padding: .5em;
+    color: black;
+    position: absolute;
+}
+
+.ChequeDetails{
+    top: 500px;
+    height: 30em;
+    border: unset;
+}
+
+    pre {
+        /*all:unset;*/
+        display: inline-block;
+        /*font-family: "Courier 10 Pitch", Courier, monospace;*/      
+        height: 10em;
+        /*width: 50%;*/
+        font-size: .7em;
+        font-weight: bold;
+        font-family: arial;
+        overflow: hidden;
+    }
+
+    .Cheque .Cheque_Number_Date {
+        float: right;
+        width: 59%;
+    }
+
+        .Cheque .Cheque_Number_Date #Cheque_Number {
+            float: right;
+        }
+
+
+        .Cheque .Cheque_Number_Date #Cheque_Date {
+            font-size: 1em;
+            position: absolute;
+            right: 96px;
+            top: 74px;
+        }
+
+        .Cheque .Cheque_Number_Date #Cheque_Date_Insert {
+            height: 1.2em;
+            border-bottom: 1px solid black;
+            width: 15em;
+            font-size: .8em;
+            float: right;
+        }
+
+    .Cheque #Cheque_PayTo, #Cheque_PayToOrderOf {
+        text-transform: uppercase;
+        font-size: .6em;
+        float: left;
+        width: 5em;
+        height: 5em;
+    }
+
+    .Cheque #Cheque_Payee_Name, #Cheque_Payee_NameAdress, #Cheque_Payee_NameCity {
+        height: 1.1em;
+        width: 19em;
+        /*border-bottom: 1px solid black;*/
+        float: left;
+    }
+
+    .Cheque #Cheque_Payee_Name {
+        width: 100%;
+    }
+
+    .Cheque #Cheque_Payee_NameAdress {
+        width: 100%;
+    }
+
+    .Cheque #Cheque_Payee_NameCity {
+        width: 19em;
+    }
+
+    .Cheque #Cheque_DollarSign {
+        height: 1.2em;
+        /*border: 1px solid black;*/
+        width: 5em;
+        float: right;
+        text-align: right;
+        padding-right: .2em;
+    }
+
+    .Cheque #Cheque_Alphamount {
+        height: 1.2em;
+        width: 35em;
+        border-bottom: 1px solid black;
+        font-size: 1em;
+        float: left;
+        text-transform: capitalize;
+    }
+
+    .Cheque #Cheque_MemoSign {
+        font-size: .6em;
+        float: left;
+        width: 5em;
+        height: 5em;
+        text-transform: uppercase;
+    }
+
+    .Cheque #Cheque_MemoPlaceholder {
+        height: 1.2em;
+        border-bottom: 1px solid black;
+        width: 31.2em;
+        font-size: .8em;
+        float: left;
+        padding-left: .2em;
+    }
+
+    .Cheque #Cheque_Signature {
+        height: 1.2em;
+        border-bottom: 1px solid black;
+        width: 20em;
+        font-size: .8em;
+        position: absolute;
+        right: 23px;
+    }
+
+    /*.Cheque #Cheque_Signature::before {
+            content: " - Remember this";
+        }*/
+
+    .Cheque #Cheque_AccountNumber {
+        font-family: 'MicrEncoding-ZEDJ';
+        font-size: 2em;
+        position: absolute;
+        bottom: -8px;
+        right: 200px;
+    }
+/*=============================*/
+#checkContent {
+    border: 1px solid blue;
+}
+
+
+
+.checkDate {
+    left: 600px;
+    top: 30px;
+}
+
+.checkName {
+    left: 30px;
+    top: 50px;
+}
+
+.checkAmount {
+    left: 600px;
+    top: 45px;
+}
+
+.checkAmountText {
+    left: 30px;
+    top: 83px;
+}
+
+.checkAddress {
+    left: 30px;
+    top: 98px;
+}
+
+.checkAddressCity {
+    left: 30px;
+    top: 120px;
+}
+
+.checkDescription {
+    left: 20px;
+    top: 185px;
+}
+
+.checkAccountNumber {
+    font-family: 'MicrEncoding-ZEDJ';
+    font-size: 2em;
+    left: 300px;
+    top: 305px;
+}
+
+
+/*===================================================================*/
+.editor-field{
+    padding-bottom:1.5em;
+}
+
+/*=================================Calander Display==================*/
+#cal_display {
+    line-height: 1;
+    background: url('Images/bg-cal.png') 0 0 no-repeat;
+    /*background-image: url('Images/bg-cal.png');*/
+    width: 99px;
+    height: 97px;
+    position: relative;
+    margin-right: -20px;
+    color: #fff;
+    text-decoration: none;
+    float: right;
+    text-transform: uppercase;
+    left: 200px;
+    top: 4px;
+}
+#cal_m, #cal_y {
+    font-size: 14px;
+    position: absolute;
+    top: 18px;
+    text-shadow: 1px 1px 1px #333;
+}
+#cal_m {
+    left: 9px;
+}
+#cal_m, #cal_y {
+    font-size: 14px;
+    position: absolute;
+    top: 18px;
+    text-shadow: 1px 1px 1px #333;
+}
+#cal_y {
+    right: 21px;
+}
+#cal_d, #cal_w {
+    width: 77px;
+    position: absolute;
+    right: 18px;
+    color: #1e2022;
+    text-align: center;
+    text-shadow: 1px 1px 1px #fff;
+}
+#cal_d {
+    font-size: 36px;
+    top: 32px;
+    font-weight: 700;
+    line-height: 36px;
+}
+#cal_d, #cal_w {
+    width: 77px;
+    position: absolute;
+    right: 18px;
+    color: #1e2022;
+    text-align: center;
+    text-shadow: 1px 1px 1px #fff;
+}
+#cal_w {
+    font-size: 18px;
+    top: 65px;
+}
+
+
+/*================patient extension=============*/
+#PatientEdit > #ExtensionDocs > button:hover:enabled{
+  
+  color: white;   
 }

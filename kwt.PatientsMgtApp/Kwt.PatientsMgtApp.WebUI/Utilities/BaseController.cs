@@ -10,7 +10,46 @@ namespace Kwt.PatientsMgtApp.WebUI.Utilities
     public class BaseController : Controller
     {
 
+        protected override void OnActionExecuted(ActionExecutedContext filterContext)
+        {
+            if (User != null)
+            {
+                var context = new ApplicationDbContext();
+                var username = User.Identity.Name;
 
+                if (!string.IsNullOrEmpty(username))
+                {
+                    var user = context.Users.SingleOrDefault(u => u.Email == username || u.UserName == username);
+                    if (user != null)
+                    {
+                        string fullName = string.Concat(new string[] { user.FirstName, " ", user.LastName });
+                        if (fullName.Length > 0)
+                        {
+                            ViewData.Add("FullName", fullName);
+                            Session["FullName"] = fullName;
+                        }
+                        else
+                        {
+                            ViewData.Add("FullName", user.Email);
+                            Session["FullName"] = user.Email;
+                        }
+                            
+                    }
+                    else
+                    {
+                        ViewData.Add("FullName", username);
+                        Session["FullName"] = username;
+                    }
+
+
+                }
+
+            }
+            base.OnActionExecuted(filterContext);
+        }
+
+
+        //
         public BaseController()
         {
             IntialiseMenu();
@@ -54,18 +93,21 @@ namespace Kwt.PatientsMgtApp.WebUI.Utilities
         private void IntialiseMenu()
         {
             string[] items = new[] { "Home", "Patient", "Companion", "Payment", "Report", "Admin" };
-            string[] subitems = new[] { "Patient", "Folder2", "Folder3", "Folder4", "Folder5", "Folder6" };
-            string[] subitemsActionName = new[] { "Index", "Folder2", "Folder3", "Folder4", "Folder5", "Folder6" };
-            //string[] icons = new[] { "home", "address-book", "user-friends", "dollar", "file-text", "cogs" };
+            string[] subitems = new[] { "Patient", "Employee", "Others", "Payrolls" };
+            string[] subPayitems = new[] { "Regular", "Bonus", "Overtime", "Severance" };
+            string[] subitemsActionName = new[] { "List", "EmployeePayments", "OthersPayments", "Payrolls" };
+            string[] subPayitemsActionName = new[] { "EmployeeRegular", "EmployeeBonus", "EmployeeOvertime", "EmployeeSeverance" };
+            string[] subMenuIcons = new[] { "submenupatient", "submenuworker", "submenucheck", "submenupayroll" };
+            string[] subMenuPayIcons = new[] { "regularPaySubmenu", "bonusPaySubmenu", "overtimePaySubmenu", "serverancePaySubmenu" };
             string[] icons = new[] { "houseMenu", "patientMenu", "support", "cashMenu", "planningMenu", "adminMenu" };
             string[] colors = new[] { "coral", "", "", "yellowgreen", "deeppink", "grey" };
-            Menu menu = new Menu();
+            TopMenu menu = new TopMenu();
             menu.MenuItem = new List<MenuItems>(items.Length);
             for (int i = 0; i < items.Length; i++)
             {
                 var menuItem = new MenuItems();
                 menuItem.MenuId = (i + 1);
-                menuItem.IconName= icons[i];
+                menuItem.IconName = icons[i];
                 menuItem.Color = colors[i];
                 if (items[i] == "Home")
                 {
@@ -78,22 +120,54 @@ namespace Kwt.PatientsMgtApp.WebUI.Utilities
                     menuItem.ActionName = "List";
                 }
                 //new 
-                if (items[i] == "Patient")
+                if (items[i] == "Payment")
                 {
-                    
-                    SubMenu  subMenu = new SubMenu();
+
+                    SubMenu subMenu = new SubMenu();
                     subMenu.MenuItem = new List<MenuItems>(subitems.Length);
+                    //for (int j = 0; j < subitems.Length; j++)
+                    //{
+                    //    var subMenuItem = new MenuItems();
+                    //    subMenuItem.MenuId = (j + 1);
+                    //    subMenuItem.IconName = subMenuIcons[j];
+                    //    subMenuItem.Color = colors[j];
+                    //    subMenuItem.ControllerName = items[i];// that is payment controller
+                    //    subMenuItem.MenuName = subitems[j] + " Payments";
+                    //    subMenuItem.ActionName = subitemsActionName[j];
+                    //    subMenu.MenuItem.Add(subMenuItem);
+
+                    //}
                     for (int j = 0; j < subitems.Length; j++)
                     {
                         var subMenuItem = new MenuItems();
+                        if (subitems[j] == "Employee")
+                        {
+                            SubMenu subPayMenu = new SubMenu();
+                            subPayMenu.MenuItem = new List<MenuItems>(subPayitems.Length);
+                            for (int m = 0; m < subPayitems.Length; m++)
+                            {
+                                var subPayMenuItem = new MenuItems();
+                                subPayMenuItem.MenuId = (m + 1);
+                                subPayMenuItem.IconName = subMenuPayIcons[m];
+                                //subPayMenuItem.Color = colors[m];
+                                subPayMenuItem.ControllerName = items[i];// that is payment controller
+                                subPayMenuItem.MenuName = subPayitems[m] + " Pay";
+                                subPayMenuItem.ActionName = subPayitemsActionName[m];
+                                subPayMenu.MenuItem.Add(subPayMenuItem);
+                            }
+                            subMenuItem.SubMenu = subPayMenu;
+                            //subPayMenu.MenuItem;
+                        }
+
                         subMenuItem.MenuId = (j + 1);
-                        subMenuItem.IconName = icons[j];
+                        subMenuItem.IconName = subMenuIcons[j];
                         subMenuItem.Color = colors[j];
-                        subMenuItem.ControllerName = subitems[0];
-                        subMenuItem.MenuName = subitems[j] + "s";
+                        subMenuItem.ControllerName = items[i];// that is payment controller
+                        //subMenuItem.MenuName = subitems[j] != "Payrolls" ? subitems[j] + " Payments" : subitems[j];
+                        subMenuItem.MenuName = subitems[j] != "Payrolls" ? (subitems[j] != "Employee" ? subitems[j] + " Payments": subitems[j] + "s") : subitems[j];
                         subMenuItem.ActionName = subitemsActionName[j];
                         subMenu.MenuItem.Add(subMenuItem);
-                       
+
                     }
 
                     menuItem.SubMenu = subMenu;

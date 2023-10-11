@@ -22,6 +22,30 @@
 
                 </li>
                 <li>
+                    @Html.LabelFor(model => model.FirstName, new { @class = "" })
+                    @Html.TextBoxFor(model => model.FirstName, new { @class = "k-textbox", style = "width: 100%;" })
+                    <div>
+                        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "k-error-colored" })
+                    </div>
+
+                </li>
+                <li>
+                    @Html.LabelFor(model => model.MiddleName, new { @class = "" })
+                    @Html.TextBoxFor(model => model.MiddleName, new { @class = "k-textbox", style = "width: 100%;" })
+                    <div>
+                        @Html.ValidationMessageFor(model => model.MiddleName, "", new { @class = "k-error-colored" })
+                    </div>
+
+                </li>
+                <li>
+                    @Html.LabelFor(model => model.LastName, new { @class = "" })
+                    @Html.TextBoxFor(model => model.LastName, new { @class = "k-textbox", style = "width: 100%;" })
+                    <div>
+                        @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "k-error-colored" })
+                    </div>
+
+                </li>
+                <li>
                     @Html.LabelFor(model => model.Password, new {@class = ""})
                     @Html.TextBoxFor(model => model.Password, new {@class = "k-textbox", style = "width: 100%;", type="Password"})
                     <div>

@@ -7,7 +7,7 @@
     $('document').ready(function () {
 
         var patientdata = @Html.Raw(Json.Encode(patient));
-        console.log(patientdata);
+       // console.log(patientdata);
         var patientInfo = [];
         patientInfo.push(patientdata);
         var isAdmin =   @Html.Raw(Json.Encode(User.IsInRole("Admin")));

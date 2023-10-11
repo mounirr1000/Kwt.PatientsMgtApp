@@ -17,6 +17,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
         readonly IDoctorRepository _doctorRepository = new DoctorRepository();
         readonly IHospitalRepository _hospitalRepository = new HospitalRepository();
         readonly ISpecialityRepository _specialityRepository = new SpecialityRepository();
+        readonly IAgencyRepository _agencyRepository = new AgencyRepository();
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -49,6 +50,13 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                 SpecialityList.DataValueField = "Speciality";
                 SpecialityList.DataBind();
                 SpecialityList.Items.Insert(0, emptyItem);
+
+                AgencyList.DataSource = _agencyRepository.GetAgencies();
+                AgencyList.DataBind();
+                AgencyList.DataTextField = "AgencyName";
+                AgencyList.DataValueField = "AgencyName";
+                AgencyList.DataBind();
+                AgencyList.Items.Insert(0, emptyItem);
 
                 IDictionary<string, bool?> isActive = new Dictionary<string, bool?>();
                 isActive.Add("----Select----", null);
@@ -100,7 +108,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
             }
 
             //GenerateReport(PatientCid.Text,Doctor.Text,Speciality.Text,Hospital.Text,Status.Checked);
-            GenerateReport(PatientCid.Text, DoctorList.SelectedValue, SpecialityList.SelectedValue, HospitalList.SelectedValue, selectedActive, null, null, selectedDeatStatus);
+            GenerateReport(PatientCid.Text, DoctorList.SelectedValue, SpecialityList.SelectedValue, HospitalList.SelectedValue, selectedActive, null, null, selectedDeatStatus,null,AgencyList.SelectedValue);
         }
         protected void Clear_Click(object sender, EventArgs e)
         {
@@ -120,11 +128,12 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
                                     string specialityTxt = null, string hospitalTxt = null,
                                     bool? statusCheck = null, DateTime? startDateTxt = null,
                                     DateTime? endDateTxt = null, bool? isDead = null,
-                                    DateTime? authDate = null)
+                                    DateTime? authDate = null, string agencyTxt=null)
         {
             var patientId = string.IsNullOrEmpty(patientCid) ? null : patientCid;
             var doctor = string.IsNullOrEmpty(doctorTxt) ? null : doctorTxt;
             var speciality = string.IsNullOrEmpty(specialityTxt) ? null : specialityTxt;
+            var agency = string.IsNullOrEmpty(agencyTxt) ? null : agencyTxt;
             var hospital = string.IsNullOrEmpty(hospitalTxt) ? null : hospitalTxt;
             var status = statusCheck;//Convert.ToBoolean(statusCheck);//!statusCheck.HasValue || statusCheck.Value==false ? null : statusCheck;
             var isDeadValue = isDead;//(isDead==false ||isDead==null)? false:true;
@@ -142,18 +151,18 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports
             {
 
                 patients = _patientRepository.GetPatientsReport(patientId, hospital, doctor, status,
-                                                            speciality, startDate, endDate, isDeadValue);
+                                                            speciality, startDate, endDate, isDeadValue,null, agency);
             }
             // esle get last 30 days entered patients
             else
             {
                 startDate = DateTime.Now.AddDays(-30).Date;
                 endDate = DateTime.Now.Date;
-                if (patientId != null || hospital != null || doctor != null || status != null || speciality != null || isDeadValue != null|| authorizedDate != null)
+                if (patientId != null || hospital != null || doctor != null || status != null || speciality != null || isDeadValue != null|| authorizedDate != null || agency != null)
                 {
-                    patients = _patientRepository.GetPatientsReport(patientId, hospital, doctor, status, speciality, null, null, isDeadValue, authorizedDate);
+                    patients = _patientRepository.GetPatientsReport(patientId, hospital, doctor, status, speciality, null, null, isDeadValue, authorizedDate,agency);
                 }
-                else patients = _patientRepository.GetPatientsReport(patientId, hospital, doctor, status, speciality, startDate, endDate, isDeadValue, authorizedDate);
+                else patients = _patientRepository.GetPatientsReport(patientId, hospital, doctor, status, speciality, startDate, endDate, isDeadValue, authorizedDate, agency);
             }
 
             Message.Text = null;

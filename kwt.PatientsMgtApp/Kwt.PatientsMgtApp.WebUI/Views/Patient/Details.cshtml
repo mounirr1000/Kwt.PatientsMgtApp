@@ -11,7 +11,7 @@
         @if (User.IsInAnyRoles(CrudRoles.PatientUpdateRoles))
         {
             <a href="@Url.Action("Edit", new {patientCid = Model.PatientCID})" class="k-button"><i class="fa fa-pencil" style="color: blueviolet"></i> Edit</a>
-            
+
         }
         @if (User.IsInAnyRoles(CrudRoles.PatientCrudRoles))
         {
@@ -25,217 +25,168 @@
 <div class="loader"></div>
 <div id="contentPatientDetail" style="visibility: hidden;">
     <button data-target="#panelbarPatient" data-toggle="collapse"><i></i> Patient Information</button>
+
     <fieldset id="panelbarPatient" class="collapse show">
-        <legend></legend>
 
-        <h3>Patient Information</h3>
-        <ul>
-            <li>
-                <table id="patientinfo">
-
-                    <thead>
-                        <tr>
-                            <th>
-                                Patient CID
-                            </th>
-                            <th>
-                                Name
-                            </th>
-
-                            <th>
-                                KU Phone
-                            </th>
-                            <th>
-                                US Phone
-                            </th>
-                            <th>
-                                Start Date
-                            </th>
-                            <th>
-                                End Date
-                            </th>
-                            <th>
-                                Status
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                @Model.PatientCID
-                            </td>
-                            <td>
-                                @Model.Name
-                            </td>
-                            <td>
-                                @Model.KWTPhone
-                            </td>
-                            <td>
-                                @Model.USPhone
-                            </td>
-                            <td>
-                                @Model.FirstApptDAteFormatted
-                            </td>
-                            <td>
-                                @Model.EndTreatDateFormatted
-                            </td>
-                            <td>
-                                @if (Model.IsActive)
-                                {
-                                    <span style="color: yellowgreen"> Active</span>
-                                }
-                                else
-                                {<span style="color: lightcoral"> Not Active</span>}
-                            </td>
-                        </tr>
-                    </tbody>
-
-                </table>
+        <ul class="fieldlist form-row">
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.PatientCID, new { @class = "" })
+                @Html.TextBoxFor(model => model.PatientCID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
             </li>
-        </ul>
 
-        <h3>Medical Information</h3>
-        <ul>
-            <li>
-                <table id="patientDiseaseInfo">
-
-                    <thead>
-                        <tr>
-
-                            <th>
-                                Hospital
-                            </th>
-                            <th>
-                                Doctor
-                            </th>
-                            <th>
-                                Specilty
-                            </th>
-                            <th>
-                                Dignosis
-                            </th>
-                            <th>
-                                Agency
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-
-                            <td>
-                                @Model.Hospital
-                            </td>
-                            <td>
-                                @Model.Doctor
-                            </td>
-                            <td>
-                                @Model.Specialty
-                            </td>
-                            <td>
-                                @Model.Diagnosis
-                            </td>
-                            <td>
-                                @Model.Agency
-                            </td>
-                        </tr>
-                    </tbody>
-
-                </table>
+            <li class="col-md-8">
+                @Html.LabelFor(model => model.PatientPasportFile, new { @class = "" })
+                @if (Model.PatientFiles[0].FilesPath.Length > 0)
+                {
+                    <label style="width: 100%; display:block">
+                        @for (int x = 0; x < @Model.PatientFiles[0].FilesPath.Length; x++)
+                        {
+                            <a style="width: 100%;" href="@Url.Action("Download", "Patient",  new { link = @Model.PatientFiles[0].FilesPath[x], filename=@Model.PatientFiles[0].FilesName[x]})">@Model.PatientFiles[0].FilesName[x]</a>
+                            <span>|</span>
+                        }
+                    </label>
+                }
+                else
+                {
+                    <label> No files found</label>
+                }
             </li>
-        </ul>
 
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.Name, new { @class = "" })
+                @Html.TextBoxFor(model => model.Name, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            @*<li class="col-md-3">
+                        @Html.LabelFor(model => model.KWTPhone, new { @class = "" })
+                        @Html.TextBoxFor(model => model.KWTPhone, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                </li>*@
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.USPhone, new { @class = "" })
+                @Html.TextBoxFor(model => model.USPhone, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.FirstApptDAte, new { @class = "" })
+                @Html.TextBoxFor(model => model.FirstApptDAteFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.EndTreatDate, new { @class = "" })
+                @Html.TextBoxFor(model => model.EndTreatDateFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-8">
+                @Html.LabelFor(model => model.PatientFirstApointmentFile, new { @class = "" })
+                @if (Model.PatientFiles[1].FilesPath.Length > 0)
+                {
+                    <label style="width: 100%; display:block">
+                        @for (int x = 0; x < @Model.PatientFiles[1].FilesPath.Length; x++)
+                        {
+                            <a href="@Url.Action("Download", "Patient",  new { link = @Model.PatientFiles[1].FilesPath[x], filename=@Model.PatientFiles[1].FilesName[x]} )">@Model.PatientFiles[1].FilesName[x]</a>
+                            <span>|</span>
+                        }
+                    </label>
+                }
+                else
+                {
+                    <label> No files found</label>
+                }
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.IsActive, new { @class = "" })
+                @Html.TextBoxFor(model => model.IsActive, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+
+            <li class="col-md-6">
+                @Html.LabelFor(model => model.Hospital, new { @class = "" })
+                @Html.TextBoxFor(model => model.Hospital, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.Doctor, new { @class = "" })
+                @Html.TextBoxFor(model => model.Doctor, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-6">
+                @Html.LabelFor(model => model.Specialty, new { @class = "" })
+                @Html.TextBoxFor(model => model.Specialty, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-6">
+                @Html.LabelFor(model => model.Diagnosis, new { @class = "" })
+                @Html.TextAreaFor(model => model.Diagnosis, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.Agency, new { @class = "" })
+                @Html.TextBoxFor(model => model.Agency, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+
+
+        </ul>
 
     </fieldset>
     <button data-target="#panelbarCompanion" data-toggle="collapse"><i></i> Companions Information</button>
     <fieldset id="panelbarCompanion" class="collapse">
-        <legend></legend>
-        <h3>Priamary Companions Information</h3>
-        <ul>
-
-            @if (Model.Companions.Any(c => c.CompanionType == "Primary"))
+        <ul class="fieldlist form-row">
+            @foreach (var companion in Model.Companions.Where(c => c.CompanionType == "Primary"))
             {
-                <li>
-                    <table id="patientCompanionInfo">
+                if (Model.Companions.Any(c => c.CompanionType == "Primary"))
+                {
 
-                        <thead>
-                            <tr>
-                                <th>
-                                    Companion CID
-                                </th>
-                                <th>
-                                    Name
-                                </th>
-                                <th>
-                                    Status
-                                </th>
-                                <th>
-                                    Is Beneficiary
-                                </th>
-                                <th>
-                                    Date In
-                                </th>
-                                <th>
-                                    Date Out
-                                </th>
-                                <th>
-                                    Notes
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var companion in Model.Companions.Where(c => c.CompanionType == "Primary"))
-                            {
-                                <tr>
-                                    <td>
-                                        <a href='@Url.Action("Details", "Companion")?CompanionCid=@companion.CompanionCID&PatientCid=@Model.PatientCID'>@companion.CompanionCID</a>
-                                    </td>
-                                    <td>
-                                        @companion.Name
-                                    </td>
-                                    <td>
+                    <li class="col-md-3">
+                        @Html.LabelFor(model => companion.CompanionCID, new { @class = "" })
+                        <a href='@Url.Action("Details", "Companion")?CompanionCid=@companion.CompanionCID&PatientCid=@Model.PatientCID' class="k-textbox edit" style="width: 100%;">@companion.CompanionCID</a>
+                    </li>
+                    <li class="col-md-3">
+                        @Html.LabelFor(model => companion.Name, new { @class = "" })
+                        @Html.TextBoxFor(model => companion.Name, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                    </li>
+                    if (companion.IsActive)
+                    {
+                        <li class="col-md-3">
+                            @Html.LabelFor(model => companion.IsActive, new { @class = "" })
+                            <span style="color: yellowgreen; cursor:default" class="k-textbox edit" readonly="readonly"> Active</span>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="col-md-3">
+                            @Html.LabelFor(model => companion.IsActive, new { @class = "" })
+                            <span style="color: lightcoral; cursor:default" class="k-textbox edit" readonly="readonly"> Not Active</span>
+                        </li>
+                    }
+                    if (companion.IsBeneficiary)
+                    {
+                        <li class="col-md-3">
+                            @Html.LabelFor(model => companion.IsBeneficiary, new { @class = "" })
+                            <span style="color: yellowgreen; cursor:default;" class="k-textbox edit" readonly="readonly"> Beneficiary</span>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="col-md-3">
+                            @Html.LabelFor(model => companion.IsBeneficiary, new { @class = "" })
+                            <span style="color: lightcoral; cursor:default;" class="k-textbox edit" readonly="readonly"> Not Beneficiary</span>
+                        </li>
+                    }
+                    <li class="col-md-3">
+                        @Html.LabelFor(model => companion.DateIn, new { @class = "" })
+                        @Html.TextBoxFor(model => companion.DateInFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                    </li>
+                    <li class="col-md-3">
+                        @Html.LabelFor(model => companion.DateOut, new { @class = "" })
+                        @Html.TextBoxFor(model => companion.DateOutFormatted, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                    </li>
+                    <li class="col-md-3">
+                        @Html.LabelFor(model => companion.Notes, new { @class = "" })
+                        @Html.TextAreaFor(model => companion.Notes, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                    </li>
+                }
+                else
+                {
+                    <li class="col-md-6">
+                        No primary companion found in our records for this patient
+                    </li>
 
-                                        @if (companion.IsActive)
-                                        {
-                                            <span style="color: yellowgreen"> Active</span>
-                                        }
-                                        else
-                                        {
-                                            <span style="color: lightcoral"> Not Active</span>
-                                        }
-                                    </td>
-                                    <td>
-                                        @if (companion.IsBeneficiary)
-                                        {
-                                            <span style="color: yellowgreen"> Beneficiary</span>
-                                        }
-                                        else
-                                        {
-                                            <span style="color: lightcoral"> Not Beneficiary</span>
-                                        }
-                                    </td>
-                                    <td>
-                                        @companion.DateInFormatted
-                                    </td>
-                                    <td>
-                                        @companion.DateOutFormatted
-                                    </td>
-                                    <td>
-                                        @companion.Notes
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-
-                    </table>
-                </li>
+                }
             }
-            else
-            {
-                <li>
-                    No primary companion found in our records for this patient
-                </li>
 
-            }
 
         </ul>
 
@@ -547,7 +498,8 @@
 
         $('document').ready(function () {
             $("#contentPatientDetail").css("visibility", "visible");
-
+            var patient = @Html.Raw(Json.Encode(Model));
+            console.log("patient>=",patient);
             $('#contentPatientDetail button').addClass('btn btn-block mb-2 text-uppercase text-white bg-info');
             //fa fa-angle-double-down pull-left
             $('#contentPatientDetail button i').addClass('fa fa-angle-double-down pull-left');
@@ -570,17 +522,9 @@
             $("#panelbarPatientHistory").kendoPanelBar();
 
 
-            $("#patientinfo").kendoGrid({
-                height: 150,
-                //groupable: true,
-                //sortable: true
-            });
 
-            $("#patientDiseaseInfo").kendoGrid({
-                height: 150,
-                //groupable: true,
-                //sortable: true
-            });
+
+
             $("#patientCompanionInfo, #patientSecondaryCompanionInfo").kendoGrid({
                 height: 350,
                 scrollable: {

@@ -28,18 +28,18 @@ namespace Kwt.PatientsMgtApp.WebUI.Infrastructure
             var url = new UrlHelper(HttpContext.Current.Request.RequestContext);
 
             //sb.AppendFormat("<a {0} href=\"{1}\"><i class=\"fa fa-{3}\" style=\"color:{4}\"></i> {2}</a>", (currentControllerName.Equals(controllerName, StringComparison.CurrentCultureIgnoreCase)
-            sb.AppendFormat("<a {0} href=\"{1}\"><div class=\"{3}\" style=\"float:left\"></div>&nbsp {2}</a>", (currentControllerName.Equals(controllerName, StringComparison.CurrentCultureIgnoreCase)
+            sb.AppendFormat("<a {0} href=\"{1}\" id=\"{4}\"><div class=\"{3}\" style=\"float:left\"></div>&nbsp {2}</a>", (currentControllerName.Equals(controllerName, StringComparison.CurrentCultureIgnoreCase)
                                                     //&&
                                                     //currentActionName.Equals(actionName, StringComparison.CurrentCultureIgnoreCase)
                                                     ? " class=\"k-link k-state-active\"" :
                                                       " class=\"k-link\""),
-                                                      url.Action(actionName, controllerName), name, iconName);
+                                                      url.Action(actionName, controllerName), name, iconName, controllerName);
 
             //new 8-3-2019
 
-            //if (name == "Patients" && subMenu != null)
+            //if (name == "Payments" && subMenu != null)
             //{
-            //    sb.AppendFormat("<div   class=\"dropdown\">");
+            //    sb.AppendFormat("<div   class=\"dropdown\" style=\"display:inline;\">");
             //    sb.AppendFormat("<div {0} ", ("class=\"dropdown-content\">"));
             //    foreach (var menu in subMenu.MenuItem)
             //    {
@@ -56,7 +56,66 @@ namespace Kwt.PatientsMgtApp.WebUI.Infrastructure
             //    sb.Append("</div>");
             //    sb.AppendFormat("</div>");
             //}
+            if (name == "Payments" && subMenu != null)
+            {
+                sb.AppendFormat("<div   class=\"dropdown\" style=\"display:inline;\">");
+                sb.AppendFormat("<div {0} ", ("class=\"dropdown-content\">"));
+                foreach (var menu in subMenu.MenuItem)
+                {
 
+
+                    //sb.AppendFormat("<a {0} href=\"{1}\"><div class=\"{3}\" style=\"float:left\"></div>&nbsp {2}</a>", (currentControllerName.Equals(menu.ControllerName, StringComparison.CurrentCultureIgnoreCase)
+                    //                                    &&
+                    //                                    currentActionName.Equals(menu.ActionName, StringComparison.CurrentCultureIgnoreCase)
+                    //                                    ? " class=\"k-link k-state-active\"" :
+                    //                                      " class=\"dropdownlink\""),
+                    //                                      url.Action(menu.ActionName, menu.ControllerName), menu.MenuName, menu.IconName);
+
+
+
+                   // if (menu.MenuName == "Employee Payments")
+                    if (menu.MenuName == "Employees")
+                    {
+                        sb.AppendFormat("<div {0} ", ("class=\"dropdown-submenu\">"));
+                        sb.AppendFormat("<a {0} href=\"{1}\" id=\"employeePay\"><div class=\"{3}\" style=\"float:left\" ></div>&nbsp {2} <span class=\"caret\"></span></a>", (currentControllerName.Equals(menu.ControllerName, StringComparison.CurrentCultureIgnoreCase)
+                                                            &&
+                                                            currentActionName.Equals(menu.ActionName, StringComparison.CurrentCultureIgnoreCase)
+                                                            ? " class=\"k-link k-state-active\"" :
+                                                              " class=\"dropdownlink\""),
+                                                              url.Action(menu.ActionName, menu.ControllerName), menu.MenuName, menu.IconName);
+                        sb.AppendFormat("<div   class=\"dropdown-menu\" id=\"paySubmenu\">");
+
+                        foreach (var menuPay in menu?.SubMenu?.MenuItem)
+                        {
+                            // sb.AppendFormat("<div {0} ", ("class=\"\">"));
+                            sb.AppendFormat("<a {0} href=\"{1}\"><div class=\"{3}\" style=\"float:left\"></div>&nbsp {2}</a>", (currentControllerName.Equals(menuPay.ControllerName, StringComparison.CurrentCultureIgnoreCase)
+                                                            &&
+                                                            currentActionName.Equals(menuPay.ActionName, StringComparison.CurrentCultureIgnoreCase)
+                                                            ? " class=\"k-link k-state-active\"" :
+                                                              " class=\"dropdownlink\""),
+                                                              url.Action(menuPay.ActionName, menuPay.ControllerName), menuPay.MenuName, menuPay.IconName);
+                            //   sb.Append("</div>");
+                        }
+
+                        sb.AppendFormat("</div>");
+
+                        sb.AppendFormat("</div>");
+                    }
+                    else
+                    {
+                        sb.AppendFormat("<a {0} href=\"{1}\"><div class=\"{3}\" style=\"float:left\"></div>&nbsp {2}</a>", (currentControllerName.Equals(menu.ControllerName, StringComparison.CurrentCultureIgnoreCase)
+                                                            &&
+                                                            currentActionName.Equals(menu.ActionName, StringComparison.CurrentCultureIgnoreCase)
+                                                            ? " class=\"k-link k-state-active\"" :
+                                                              " class=\"dropdownlink\""),
+                                                              url.Action(menu.ActionName, menu.ControllerName), menu.MenuName, menu.IconName);
+                    }
+
+                }
+                sb.Append("</div>");
+                sb.AppendFormat("</div>");
+
+            }
             // end new
             sb.Append("</li>");
             return new MvcHtmlString(sb.ToString());
@@ -116,6 +175,58 @@ namespace Kwt.PatientsMgtApp.WebUI.Infrastructure
                 return (string)routeValues["action"];
 
             return string.Empty;
+        }
+        public static IDisposable BeginCollectionItem<TModel>(this HtmlHelper<TModel> html, string collectionName)
+        {
+            //string itemIndex = Guid.NewGuid().ToString();
+            string itemIndex = GetCollectionItemIndex(collectionName);
+            string collectionItemName = String.Format("{0}[{1}]", collectionName, itemIndex);
+
+            TagBuilder indexField = new TagBuilder("input");
+                 indexField.MergeAttributes(new Dictionary<string, string>() {
+                { "name", String.Format("{0}.Index", collectionName) },
+                { "value", itemIndex },
+                { "type", "hidden" },
+                { "autocomplete", "off" }
+            });
+
+            html.ViewContext.Writer.WriteLine(indexField.ToString(TagRenderMode.SelfClosing));
+            return new CollectionItemNamePrefixScope(html.ViewData.TemplateInfo, collectionItemName);
+        }
+        private static string GetCollectionItemIndex(string collectionIndexFieldName)
+        {
+            Queue<string> previousIndices = (Queue<string>)HttpContext.Current.Items[collectionIndexFieldName];
+            if (previousIndices == null)
+            {
+                HttpContext.Current.Items[collectionIndexFieldName] = previousIndices = new Queue<string>();
+
+                string previousIndicesValues = HttpContext.Current.Request[collectionIndexFieldName];
+                if (!String.IsNullOrWhiteSpace(previousIndicesValues))
+                {
+                    foreach (string index in previousIndicesValues.Split(','))
+                        previousIndices.Enqueue(index);
+                }
+            }
+
+            return previousIndices.Count > 0 ? previousIndices.Dequeue() : Guid.NewGuid().ToString();
+        }
+        private class CollectionItemNamePrefixScope : IDisposable
+        {
+            private readonly TemplateInfo _templateInfo;
+            private readonly string _previousPrefix;
+
+            public CollectionItemNamePrefixScope(TemplateInfo templateInfo, string collectionItemName)
+            {
+                this._templateInfo = templateInfo;
+
+                _previousPrefix = templateInfo.HtmlFieldPrefix;
+                templateInfo.HtmlFieldPrefix = collectionItemName;
+            }
+
+            public void Dispose()
+            {
+                _templateInfo.HtmlFieldPrefix = _previousPrefix;
+            }
         }
     }
 }

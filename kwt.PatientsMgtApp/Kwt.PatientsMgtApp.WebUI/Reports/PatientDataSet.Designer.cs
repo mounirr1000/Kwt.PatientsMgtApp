@@ -329,6 +329,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             
             private global::System.Data.DataColumn columnAuthorizedDate;
             
+            private global::System.Data.DataColumn columnEnglishName;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public GetPatientListReport_SPDataTable() {
@@ -564,6 +566,14 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn EnglishNameColumn {
+                get {
+                    return this.columnEnglishName;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -623,7 +633,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
                         string ModifiedBy, 
                         string IsDead, 
                         System.DateTime DeathDate, 
-                        System.DateTime AuthorizedDate) {
+                        System.DateTime AuthorizedDate, 
+                        string EnglishName) {
                 GetPatientListReport_SPRow rowGetPatientListReport_SPRow = ((GetPatientListReport_SPRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
@@ -650,7 +661,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
                         ModifiedBy,
                         IsDead,
                         DeathDate,
-                        AuthorizedDate};
+                        AuthorizedDate,
+                        EnglishName};
                 rowGetPatientListReport_SPRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowGetPatientListReport_SPRow);
                 return rowGetPatientListReport_SPRow;
@@ -705,6 +717,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
                 this.columnIsDead = base.Columns["IsDead"];
                 this.columnDeathDate = base.Columns["DeathDate"];
                 this.columnAuthorizedDate = base.Columns["AuthorizedDate"];
+                this.columnEnglishName = base.Columns["EnglishName"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -760,6 +773,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
                 base.Columns.Add(this.columnDeathDate);
                 this.columnAuthorizedDate = new global::System.Data.DataColumn("AuthorizedDate", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnAuthorizedDate);
+                this.columnEnglishName = new global::System.Data.DataColumn("EnglishName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnEnglishName);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnPatientCID}, true));
                 this.columnid.AutoIncrement = true;
@@ -792,6 +807,8 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
                 this.columnModifiedBy.MaxLength = 50;
                 this.columnIsDead.ReadOnly = true;
                 this.columnIsDead.MaxLength = 3;
+                this.columnEnglishName.ReadOnly = true;
+                this.columnEnglishName.MaxLength = 152;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1324,6 +1341,22 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string EnglishName {
+                get {
+                    try {
+                        return ((string)(this[this.tableGetPatientListReport_SP.EnglishNameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'EnglishName\' in table \'GetPatientListReport_SP\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableGetPatientListReport_SP.EnglishNameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsNameNull() {
                 return this.IsNull(this.tableGetPatientListReport_SP.NameColumn);
             }
@@ -1585,6 +1618,18 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
             public void SetAuthorizedDateNull() {
                 this[this.tableGetPatientListReport_SP.AuthorizedDateColumn] = global::System.Convert.DBNull;
             }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsEnglishNameNull() {
+                return this.IsNull(this.tableGetPatientListReport_SP.EnglishNameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetEnglishNameNull() {
+                this[this.tableGetPatientListReport_SP.EnglishNameColumn] = global::System.Convert.DBNull;
+            }
         }
         
         /// <summary>
@@ -1771,6 +1816,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports.PatientDataSetTableAdapters {
             tableMapping.ColumnMappings.Add("IsDead", "IsDead");
             tableMapping.ColumnMappings.Add("DeathDate", "DeathDate");
             tableMapping.ColumnMappings.Add("AuthorizedDate", "AuthorizedDate");
+            tableMapping.ColumnMappings.Add("EnglishName", "EnglishName");
             this._adapter.TableMappings.Add(tableMapping);
         }
         
@@ -1799,13 +1845,14 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports.PatientDataSetTableAdapters {
             this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@endDate", global::System.Data.SqlDbType.Date, 3, global::System.Data.ParameterDirection.Input, 10, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@isDead", global::System.Data.SqlDbType.Bit, 1, global::System.Data.ParameterDirection.Input, 1, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@authorizedDate", global::System.Data.SqlDbType.Date, 3, global::System.Data.ParameterDirection.Input, 10, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@agency", global::System.Data.SqlDbType.NVarChar, 12, global::System.Data.ParameterDirection.Input, 0, 0, null, global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, true)]
-        public virtual int Fill(PatientDataSet.GetPatientListReport_SPDataTable dataTable, string pCid, string hospital, string doctor, global::System.Nullable<bool> status, string speciality, global::System.Nullable<global::System.DateTime> startDate, global::System.Nullable<global::System.DateTime> endDate, global::System.Nullable<bool> isDead, global::System.Nullable<global::System.DateTime> authorizedDate) {
+        public virtual int Fill(PatientDataSet.GetPatientListReport_SPDataTable dataTable, string pCid, string hospital, string doctor, global::System.Nullable<bool> status, string speciality, global::System.Nullable<global::System.DateTime> startDate, global::System.Nullable<global::System.DateTime> endDate, global::System.Nullable<bool> isDead, global::System.Nullable<global::System.DateTime> authorizedDate, string agency) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
             if ((pCid == null)) {
                 this.Adapter.SelectCommand.Parameters[1].Value = global::System.DBNull.Value;
@@ -1860,6 +1907,12 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports.PatientDataSetTableAdapters {
             }
             else {
                 this.Adapter.SelectCommand.Parameters[9].Value = global::System.DBNull.Value;
+            }
+            if ((agency == null)) {
+                this.Adapter.SelectCommand.Parameters[10].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[10].Value = ((string)(agency));
             }
             if ((this.ClearBeforeFill == true)) {
                 dataTable.Clear();
@@ -1872,7 +1925,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports.PatientDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
-        public virtual PatientDataSet.GetPatientListReport_SPDataTable GetPatientListData(string pCid, string hospital, string doctor, global::System.Nullable<bool> status, string speciality, global::System.Nullable<global::System.DateTime> startDate, global::System.Nullable<global::System.DateTime> endDate, global::System.Nullable<bool> isDead, global::System.Nullable<global::System.DateTime> authorizedDate) {
+        public virtual PatientDataSet.GetPatientListReport_SPDataTable GetPatientListData(string pCid, string hospital, string doctor, global::System.Nullable<bool> status, string speciality, global::System.Nullable<global::System.DateTime> startDate, global::System.Nullable<global::System.DateTime> endDate, global::System.Nullable<bool> isDead, global::System.Nullable<global::System.DateTime> authorizedDate, string agency) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
             if ((pCid == null)) {
                 this.Adapter.SelectCommand.Parameters[1].Value = global::System.DBNull.Value;
@@ -1927,6 +1980,12 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports.PatientDataSetTableAdapters {
             }
             else {
                 this.Adapter.SelectCommand.Parameters[9].Value = global::System.DBNull.Value;
+            }
+            if ((agency == null)) {
+                this.Adapter.SelectCommand.Parameters[10].Value = global::System.DBNull.Value;
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[10].Value = ((string)(agency));
             }
             PatientDataSet.GetPatientListReport_SPDataTable dataTable = new PatientDataSet.GetPatientListReport_SPDataTable();
             this.Adapter.Fill(dataTable);

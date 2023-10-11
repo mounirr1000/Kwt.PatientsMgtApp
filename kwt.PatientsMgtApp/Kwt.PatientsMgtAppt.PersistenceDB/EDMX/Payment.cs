@@ -57,6 +57,7 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public string BankName { get; set; }
         public string BankCode { get; set; }
         public string IBan { get; set; }
+        public Nullable<bool> SMSConfirmation { get; set; }
     
         public virtual Beneficiary Beneficiary { get; set; }
         public virtual Companion Companion { get; set; }

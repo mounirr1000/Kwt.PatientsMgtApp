@@ -13,6 +13,18 @@ using Kwt.PatientsMgtApp.WebUI.Infrastructure;
 using Kwt.PatientsMgtApp.WebUI.Models;
 using Kwt.PatientsMgtApp.WebUI.Utilities;
 using PagedList;
+using System.Text;
+using Microsoft.Security.Application;
+using System.IO;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using iText.Html2pdf;
+using iTextSharp.tool.xml;
+using System.Web.UI;
+using iTextSharp.text.html.simpleparser;
+using TheArtOfDev.HtmlRenderer.PdfSharp;
+using Rotativa;
+using System.Configuration;
 
 namespace Kwt.PatientsMgtApp.WebUI.Controllers
 {
@@ -21,31 +33,38 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
     [HandleError(ExceptionType = typeof(PatientsMgtException), View = "ExceptionHandler")]
     public class PaymentController : BaseController
     {
-        private const int PageSize = 2;
+        // private const int PageSize = 2;
         // GET: Patient
         private readonly IPaymentRepository _paymentRepository;
         private readonly IBeneficiaryRepository _beneficiaryRepository;
         private readonly IPayRateRepository _payRateRepository;
-        // private readonly IPaymentDeductionRepository _paymentDeductionRepository;
+        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IPayrollRepository _payrollRepository;
+        private readonly IDepositRepository _depositRepository;
+        private readonly IPatientExtensionRepository _petientExtensionRepository;
         public PaymentController()
         {
             _paymentRepository = new PaymentRepository();
             _beneficiaryRepository = new BeneficiaryRepository();
             _payRateRepository = new PayRateRepository();
-            //   _paymentDeductionRepository = new PaymentDeductionRepository();
+            _employeeRepository = new EmployeeRepository();
+            _payrollRepository = new PayrollRepository();
+            _depositRepository = new DepositRepository();
+            _petientExtensionRepository = new PatientExtensionRepository();
 
         }
+        #region Patient Payment
+
         // GET: Companion
         public ActionResult List(string searchpaymentText, string currentFilter, int? page, bool? clearSearch)
         {
             int pageNumber = (page ?? 1);
-            //ViewBag.isBeneficiary = isBeneficiary ?? false;
-            //ViewBag.CurrentSort = sortOrder;
-            //ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            //ViewBag.DateInSortParm = String.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
-            //ViewBag.CidSortParm = String.IsNullOrEmpty(sortOrder) ? "Cid" : "";
-            //ViewBag.BeneficiarySortParm = String.IsNullOrEmpty(sortOrder) ? "Beneficiary" : "";
 
+            //testing sending messages using eztextingManager class
+            // EZTextingManager.SendMessages();
+            //EZTextingManager.SendSms("5714570919", "Hi there, this is a test from eztexting");
+
+            //
             var payments = _paymentRepository.GetPayments();
 
             if (payments != null)
@@ -54,7 +73,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
 
                 // get only last 30 days payments to avoid loading too many anneccessary payments
 
-                payments = payments.Where(p => p.IsActive ==true)
+                payments = payments.Where(p => p.IsActive == true)
                                    .Where(p => p.CreatedDate >= DateTime.Now.AddDays(-60))
                                    .OrderByDescending(c => c.CreatedDate).ToList();
 
@@ -143,11 +162,11 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
         [HttpGet]
         public JsonResult GetPaymentsBetweenTwoDatesJson(string date1, string date2)
         {
-            var payments = new List<PaymentModel>() ;
-            if (!String.IsNullOrEmpty(date1)&& !String.IsNullOrEmpty(date2))
+            var payments = new List<PaymentModel>();
+            if (!String.IsNullOrEmpty(date1) && !String.IsNullOrEmpty(date2))
             {
                 payments = _paymentRepository.GetPayments();
-                DateTime d1 ;
+                DateTime d1;
                 DateTime d2;
                 DateTime.TryParse(date1, out d1);
                 DateTime.TryParse(date2, out d2);
@@ -156,7 +175,7 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                                     p.PaymentDate >= d1 && p.PaymentDate <= d2
                                 ).OrderByDescending(c => c.CreatedDate).ToList();
             }
-                
+
             var jsonResult = new JsonResult();
             jsonResult.MaxJsonLength = Int32.MaxValue;
             jsonResult.Data = payments;
@@ -200,25 +219,65 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
 
         [ExceptionHandler]
         [CustomAuthorize(Roles = CrudRoles.PaymentApprovalRolesForAutorizeAttribute)]
-        public JsonResult RefreshPaymentListAfterApproval(int? paymentId)
+        public JsonResult RefreshPaymentListAfterApproval(int? paymentId, string selectedPaymentListId)
         {
             PaymentModel payment = null;
+            bool sentSuccess = false;
             if (paymentId != null)
             {
                 var id = paymentId ?? 0;
                 payment = _paymentRepository.GetPaymentById(id);
                 if (payment != null)
                 {
-                    payment.IsApproved = true;
+
+
                     //Edit(payment);
+
+                    // when the payment is approved, send an sms message to the patient about the amount to be paid to him/her
+                    StringBuilder message = new StringBuilder();
+                    var patientPhone = payment.PatientPhone;
+                    var patientCid = payment.PatientCID;
+                    var paymentAmount = payment.TotalDue;
+                    var startDate = payment.PaymentStartDateFormatted;
+                    var endDate = payment.PaymentEndDateFormatted;
+                    var paymentDate = payment.PaymentDateFormatted;
+                    message.Append(" Greetings, ");
+                    message.Append(paymentAmount + " KD");
+                    message.Append(" will be sent on " + paymentDate + " to Kuwait for Civil# ");
+                    message.Append(patientCid);
+                    message.Append(" for the period From " + startDate);
+                    message.Append(" To " + endDate);
+
+                    sentSuccess = EZTextingManager.SendMessages("Kuwait Health Office", message.ToString(), patientPhone);
+                    if (sentSuccess)
+                    {
+                        payment.SMSConfirmation = true;
+                    }
+                    else
+                    {
+                        payment.SMSConfirmation = false;
+                    }
+                    payment.IsApproved = true;
                     _paymentRepository.UpdateApprovedPayment(payment);
+
                 }
             }
+            var data = new DataWithConfirmation();
             var payments = _paymentRepository.GetPayments();
-            var unApprovedPayment = payments.Where(p => p.IsApproved != true).OrderByDescending(p => p.CreatedDate).ToList();
+            if (payments != null)
+                payments = payments.Where(p => p.CreatedDate >= DateTime.Now.AddDays(-60)).ToList();
+            var unApprovedPayment = payments.OrderByDescending(p => p.CreatedDate).ToList();
+            if (selectedPaymentListId == "2")// only get unapproved payment
+                unApprovedPayment = unApprovedPayment.Where(p => p.IsApproved != true).OrderByDescending(p => p.CreatedDate).ToList();
+            else if (selectedPaymentListId == "1")// only approved payment
+                unApprovedPayment = unApprovedPayment.Where(p => p.IsApproved == true).OrderByDescending(p => p.CreatedDate).ToList();
+
+            data.Payments = unApprovedPayment;
+            data.Confirmation = sentSuccess;
             var jsonResult = new JsonResult();// Json(payments.Where(p => p.IsApproved == false), JsonRequestBehavior.AllowGet);
             jsonResult.MaxJsonLength = Int32.MaxValue;
-            jsonResult.Data = unApprovedPayment;
+            //jsonResult.Data = unApprovedPayment;
+            jsonResult.Data = data;
             jsonResult.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
             return jsonResult;
         }
@@ -341,7 +400,13 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
                         "The patient with CID <b>{0}</b> is Not Active, You cannot add a payment to this patient",
                         patientCid), true);
             }
-
+            // patient extension
+            payment.SelectedPatientExtensionCID = patientCid;
+            if (!String.IsNullOrEmpty(patientCid) &&
+                (payment.PatientCID != null))
+                payment.Patientfiles = new PatientFileModel[] {
+                    GetFolders(payment.PatientCID, payment.PatientFName,PatientFolders.Extensions).PatientFile,
+                 };
             return View(payment);
         }
         [ExceptionHandler]
@@ -355,8 +420,26 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             if (ModelState.IsValid)
             {
                 payment.CreatedBy = User.Identity.Name;
-                _paymentRepository.AddPayment(payment);
-                Success(string.Format("Payment for Patient with Civil ID <b>{0}</b> was successfully added.", payment.PatientCID), true);
+                var voucherId = _paymentRepository.AddPayment(payment);
+                if (voucherId > 0)
+                {
+                    Success(string.Format("Payment for Patient with Civil ID <b>{0}</b> was successfully added.", payment.PatientCID), true);
+
+                    //patient extension
+                    //create patient extension history and mark patient extension as paid
+                    if (payment.PatientExtension != null)
+                    {
+                        UpdatePatientExtensionAndCreateHistory(payment.PatientExtension);
+                        // then delete the file from the folder providing the file path stored in extension table
+                        DeletePatientExtensionFile(payment.PatientExtension.ExtensionDocLink, payment.PatientExtension.FileName, payment);
+                    }
+
+                }
+                else
+                {
+                    Danger(string.Format("An Error Has Accured while creating the payment, The Payment was not created Successfully contact your Admin!"), true);
+                }
+
                 return RedirectToAction("List");
             }
 
@@ -746,6 +829,923 @@ namespace Kwt.PatientsMgtApp.WebUI.Controllers
             }
 
         }
+        #endregion
+
+
+        #region Employee CRUD Operations
+        public ActionResult NewEmployee()
+        {
+            var employee = _employeeRepository.GetEmployeeObject();
+            return View(employee);
+
+        }
+
+        [HttpPost]
+        public ActionResult NewEmployee(EmployeeModel employee)
+        {
+
+            if (ModelState.IsValid)
+            {
+                employee.CreatedBy = User.Identity.Name;
+                //try
+                //{
+                _employeeRepository.AddEmployee(employee);
+                //}
+                //catch (NullReferenceException e)
+                //{
+                //var error = e.Message;
+                //}
+                Success(string.Format("Employee <b>{0}</b> was successfully added.", employee.EmployeeFName + " " + employee.EmployeeLName), true);
+                return RedirectToAction("EmployeeList");
+            }
+            else
+            {
+                var emp = _employeeRepository.GetEmployeeObject();
+                employee.BonusTypes = emp.BonusTypes;
+                employee.EmployeeInsurances = emp.EmployeeInsurances;
+                employee.InsuranceOptions = emp.InsuranceOptions;
+                employee.InsuranceTypes = emp.InsuranceTypes;
+                employee.TaxCategories = emp.TaxCategories;
+                employee.SocialStatuses = emp.SocialStatuses;
+                employee.PayrollAccounts = emp.PayrollAccounts;
+                employee.TitleTypes = emp.TitleTypes;
+                return View(employee);
+            }
+
+        }
+        public ActionResult EditEmployee(int employeeId)
+        {
+            var employee = _employeeRepository.GetEmployee(employeeId);
+
+            if (employee != null)
+            {
+                var emp = _employeeRepository.GetEmployeeObject();
+                employee.BonusTypes = emp.BonusTypes;
+                // employee.EmployeeInsurances = emp.EmployeeInsurances;
+                employee.InsuranceOptions = emp.InsuranceOptions;
+                employee.InsuranceTypes = emp.InsuranceTypes;
+                employee.TaxCategories = emp.TaxCategories;
+                employee.SocialStatuses = emp.SocialStatuses;
+                employee.PayrollAccounts = emp.PayrollAccounts;
+                employee.TitleTypes = emp.TitleTypes;
+                return View(employee);
+            }
+            else
+            {
+                Information(string.Format("Employee with Id <b>{0}</b> Does Not exist in our records.", employeeId), true);
+                return RedirectToAction("EmployeeList");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult EditEmployee(EmployeeModel employee)
+        {
+            try
+            {
+                _employeeRepository.UpdateEmployee(employee);
+                Success(string.Format("Employee <b>{0}</b> was successfully updated.", employee.EmployeeFName + " " + employee.EmployeeLName), true);
+            }
+            catch (Exception ex)
+            {
+                Danger(string.Format("An error accurs during updated <b>{0}</b> Please fix the issue to update.", ex.Message), true);
+            }
+            return RedirectToAction("EmployeeList"); //View();
+        }
+        public ActionResult EmployeeDetails(int employeeId)
+        {
+            var employee = _employeeRepository.GetEmployee(employeeId);
+
+            if (employee != null)
+            {
+                var emp = _employeeRepository.GetEmployeeObject();
+                employee.BonusTypes = emp.BonusTypes;
+                // employee.EmployeeInsurances = emp.EmployeeInsurances;
+                employee.InsuranceOptions = emp.InsuranceOptions;
+                employee.InsuranceTypes = emp.InsuranceTypes;
+                employee.TaxCategories = emp.TaxCategories;
+                employee.SocialStatuses = emp.SocialStatuses;
+                employee.PayrollAccounts = emp.PayrollAccounts;
+                employee.TitleTypes = emp.TitleTypes;
+                return View(employee);
+            }
+            else
+            {
+                Information(string.Format("Employee with Id <b>{0}</b> Does Not exist in our records.", employeeId), true);
+                return RedirectToAction("EmployeeList");
+            }
+        }
+        public ActionResult DeleteEmployee()
+        {
+            return View();
+        }
+        public ActionResult EmployeeList()
+        {
+            var emps = _employeeRepository.GetEmployees();
+            return View(emps);
+        }
+
+        [HttpGet]
+        public JsonResult GetEmployeeListJson(string query)
+        {
+            var emps = _employeeRepository.GetEmployees();
+            //if (!String.IsNullOrEmpty(query))
+            //{
+            //    emps = emps?.Where(p =>
+            //                                      p.EmployeeID.ToString().Contains(query) ||
+            //                                      p.EmployeeName.ToLower().Contains(query.ToLower()) ||
+            //                                      p.Title.Title1.ToLower().Contains(query.ToLower())
+            //                                      ).OrderBy(c => c.EmployeeID).ThenByDescending(e => e.EmployeeName).ToList();
+            //}
+
+            //else
+            //{
+            //    emps = emps.OrderBy(c => c.EmployeeID).ThenByDescending(e => e.EmployeeName).ToList();
+            //}
+            var jsonResult = new JsonResult();
+            jsonResult.MaxJsonLength = Int32.MaxValue;
+            jsonResult.Data = emps;
+            jsonResult.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return jsonResult;
+        }
+        #endregion
+
+
+        #region Employees payments
+        public ActionResult EmployeePayments()
+        {
+            return RedirectToAction("EmployeeList");// View();
+        }
+        public ActionResult EmployeeRegular()
+        {
+            var emps = _employeeRepository.GetEmployees();
+            var employeesViewModel = new EmployeesPaymentViewModel();
+            employeesViewModel.EmployeeList = emps;
+            return View(employeesViewModel);
+        }
+
+        [HttpPost]
+        public ActionResult EmployeeRegular(EmployeesPaymentViewModel employeesModel)
+        {
+            List<int> TagIds = employeesModel.EmployeeSelecedIds?.Split(',').Select(int.Parse).ToList();
+            var emps = _employeeRepository.GetEmployees();
+            employeesModel.EmployeeList = emps;
+
+            List<EmployeeModel> selectedEmployees = emps.Where(x => TagIds.Contains(x.EmployeeID)).ToList();
+
+            // createRegularPayroll
+            if (selectedEmployees.Count > 0)
+            {
+                foreach (var emp in selectedEmployees)
+                {
+                    emp.CreatedBy = (string)Session["FullName"];// User.Identity.Name;
+                }
+                _employeeRepository.CreateEmployeeRegularPayment(selectedEmployees);
+                // if (payRollList.Count > 0)
+                //{
+                Success(string.Format("The Regual Payments were successfully submitted"), true);
+                //}
+            }
+
+            return RedirectToAction("Payrolls");
+        }
+
+        #endregion
+
+
+        #region Others payments
+        public ActionResult OthersPayments()
+        {
+            return View();
+        }
+        #endregion
+
+        #region Payrolls
+        public ActionResult Payrolls()
+        {
+            var payroll = _payrollRepository.GetPayrollList();
+            return View(payroll);
+        }
+        [HttpGet]
+        public ActionResult NewPayroll()
+        {
+            var payrollObject = _payrollRepository.GetPayrollObject();
+            return View(payrollObject);
+        }
+        [HttpPost]
+        public ActionResult NewPayroll(PayrollModel payroll)
+        {
+            if (ModelState.IsValid)
+            {
+
+                payroll.CreatedBy = (string)Session["FullName"];// ViewData.ContainsKey("FullName")? (string) ViewData["FullName"]: User.Identity.Name;
+                payroll.PaymentEnteredBy = (string)Session["FullName"];// ViewData.ContainsKey("FullName") ? (string)ViewData["FullName"] : User.Identity.Name;
+                payroll.PaymentCreatedBy = (string)Session["FullName"];// ViewData.ContainsKey("FullName") ? (string)ViewData["FullName"] : User.Identity.Name;
+                _payrollRepository.NewPayroll(payroll);
+                return View("Payrolls");
+            }
+            else
+            {
+                var payrollObject = _payrollRepository.GetPayrollObject();
+                payroll.Accounts = payrollObject.Accounts;
+                payroll.PayeeList = payrollObject.PayeeList;
+                payroll.Agencies = payrollObject.Agencies;
+                payroll.PayrollModethodList = payrollObject.PayrollModethodList;
+                return View(payroll);
+            }
+
+
+        }
+        public JsonResult GetPayrollsJson(string query)
+        {
+            var payroll = _payrollRepository.GetPayrollList();
+            switch (query)
+            {
+                case "entered":
+                    payroll = payroll?
+                                .Where(p =>
+                                    p.PayrollStatusID == 1
+                                ).OrderByDescending(c => c.TransactionID).ToList();
+                    break;
+                case "approved":
+                    payroll = payroll?
+                                .Where(p =>
+                                    p.PayrollStatusID == 2
+                                ).OrderByDescending(c => c.TransactionID).ToList();
+                    break;
+                case "authorized":
+                    payroll = payroll?
+                                .Where(p =>
+                                    p.PayrollStatusID == 3
+                                ).OrderByDescending(c => c.TransactionID).ToList();
+                    break;
+                case "paid":
+                    payroll = payroll?
+                                .Where(p =>
+                                    p.PayrollStatusID == 4
+                                ).OrderByDescending(c => c.TransactionID).ToList();
+                    break;
+                case "reconciled":
+                    payroll = payroll?
+                                .Where(p =>
+                                    p.PayrollStatusID == 5
+                                ).OrderByDescending(c => c.TransactionID).ToList();
+                    break;
+                default:
+                    payroll = payroll.OrderByDescending(c => c.TransactionID).ToList();
+                    break;
+            }
+
+            var jsonResult = new JsonResult();
+            jsonResult.MaxJsonLength = Int32.MaxValue;
+            jsonResult.Data = payroll;
+            jsonResult.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return jsonResult;
+        }
+        public JsonResult SearchPayrollsJson(string query, string selectedList)
+        {
+            var payroll = _payrollRepository.GetPayrollList();
+            switch (selectedList)
+            {
+                case "entered":
+                    payroll = payroll?.Where(p => p.PayrollStatusID == 1).OrderByDescending(c => c.TransactionID).ToList();
+                    break;
+                case "approved":
+                    payroll = payroll?.Where(p => p.PayrollStatusID == 2).OrderByDescending(c => c.TransactionID).ToList();
+                    break;
+                case "authorized":
+                    payroll = payroll?.Where(p => p.PayrollStatusID == 3).OrderByDescending(c => c.TransactionID).ToList();
+                    break;
+                case "paid":
+                    payroll = payroll?.Where(p => p.PayrollStatusID == 4).OrderByDescending(c => c.TransactionID).ToList();
+                    break;
+                case "reconciled":
+                    payroll = payroll?.Where(p => p.PayrollStatusID == 5).OrderByDescending(c => c.TransactionID).ToList();
+                    break;
+                default:
+                    payroll = payroll.OrderByDescending(c => c.TransactionID).ToList();
+                    break;
+            }
+            if (!string.IsNullOrEmpty(query))
+                payroll = payroll?
+                            .Where(p => (p.TransactionID.ToString().Contains(query.Trim()) ||
+                                         p.PayeeID != null ? p.PayeeID.ToString().Contains(query.Trim()) : p.EmployeeID.ToString().Contains(query.Trim()) ||
+                                         p.PaymentEnteredBy.Trim().ToLower().ToString().Contains(query.Trim().ToLower()) ||
+                                         p.PayeeName.ToLower().Trim().ToString().Contains(query.Trim().ToLower()))
+                                         ).OrderByDescending(c => c.TransactionID).ToList();
+            var jsonResult = new JsonResult();
+            jsonResult.MaxJsonLength = Int32.MaxValue;
+            jsonResult.Data = payroll;
+            jsonResult.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return jsonResult;
+        }
+        public JsonResult ApprovePayrollJson(int id, int payrollStatusId)
+        {
+            var pay = _payrollRepository.GetPayroll(id);
+            pay.UpdatedBy = (string)Session["FullName"];// User.Identity.Name; 
+
+            // generate check when the payrollstatus is 3
+            //if (payrollStatusId == 3)
+            //  Export(GenerateCheckHTML(pay.Amount.ToString(), NumberToWords((int)pay.Amount), pay.PayeeName, pay.Payee.PayeeStreetAddress, pay.Descriptions, DateTime.Now.Date.ToString()));
+            //
+            _payrollRepository.UpdatePayrollStatus(pay, payrollStatusId);
+            var payroll = _payrollRepository.GetPayrollList();
+
+            var jsonResult = new JsonResult();
+            jsonResult.MaxJsonLength = Int32.MaxValue;
+            jsonResult.Data = payroll.Where(p => p.PayrollStatusID == payrollStatusId).ToList();
+            jsonResult.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return jsonResult;
+        }
+
+        [HttpPost]
+        public JsonResult ApproveSelectedPayrollJson(int[] selectedIds, int payrollStatusId)
+        {
+            _payrollRepository.UpdatePayrollsStatus(selectedIds, payrollStatusId, (string)Session["FullName"]);
+            var payroll = _payrollRepository.GetPayrollList();
+
+            var jsonResult = new JsonResult();
+            jsonResult.MaxJsonLength = Int32.MaxValue;
+            jsonResult.Data = payroll.Where(p => p.PayrollStatusID == payrollStatusId).ToList();
+            jsonResult.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return jsonResult;
+        }
+        public JsonResult ResetPayrollJson(int id, int payrollStatusId)
+        {
+            var pay = _payrollRepository.GetPayroll(id);
+
+            _payrollRepository.ResetPayroll(pay, payrollStatusId);
+            var payroll = _payrollRepository.GetPayrollList();
+            var jsonResult = new JsonResult();
+            jsonResult.MaxJsonLength = Int32.MaxValue;
+            jsonResult.Data = payroll.Where(p => p.PayrollStatusID == payrollStatusId).ToList();
+            jsonResult.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return jsonResult;
+        }
+        public JsonResult DeletePayrollJson(int id, int payrollStatusId)
+        {
+
+            _payrollRepository.DeletePayroll(id);
+            var payroll = _payrollRepository.GetPayrollList();
+            var jsonResult = new JsonResult();
+            jsonResult.MaxJsonLength = Int32.MaxValue;
+            jsonResult.Data = payroll.Where(p => p.PayrollStatusID == payrollStatusId).ToList();
+            jsonResult.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return jsonResult;
+        }
+
+        public JsonResult UpdatedPayrollAccountJson(int accountNumber, int payAccountID, decimal amount, string descriptions,
+                                                    decimal discount, int payrollID, int discountTypeId, string discountTypeName)
+        {
+            AccountModel account = new AccountModel()
+            {
+                PayrollAccountID = payAccountID,
+                AccountNumber = accountNumber,
+                Amount = amount,
+                Descriptions = Sanitizer.GetSafeHtmlFragment(descriptions),
+                Discount = discount,
+                PayrollID = payrollID,
+                DiscountTypeId = discountTypeId,
+                DiscountTypeName = discountTypeName
+            };
+            var updatedAccount = _payrollRepository.UpdatePayrollAccount(account);
+            var accounts = _payrollRepository.GetPayrollAccountList(account.PayrollID ?? 0);
+            account.Accounts = accounts;
+            account.TotalAmount = updatedAccount.TotalAmount;
+            var jsonResult = new JsonResult();
+            jsonResult.MaxJsonLength = Int32.MaxValue;
+            jsonResult.Data = account;
+            jsonResult.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return jsonResult;
+        }
+        public JsonResult DeletePayrollAccountJson(int accountNumber, int payrollId)
+        {
+
+            _payrollRepository.DeletePayrollAccount(accountNumber);
+            var accounts = _payrollRepository.GetPayrollAccountList(payrollId);
+            var jsonResult = new JsonResult();
+            jsonResult.MaxJsonLength = Int32.MaxValue;
+            jsonResult.Data = accounts;
+            jsonResult.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return jsonResult;
+        }
+        public ActionResult PayrollDetails(int payrollId)
+        {
+            var payroll = _payrollRepository.GetPayroll(payrollId);
+            return View(payroll);
+        }
+
+        public ActionResult EditPayroll(int payrollId)
+        {
+            var payroll = _payrollRepository.GetPayroll(payrollId);
+            return View(payroll);
+        }
+
+        [HttpPost]
+        public ActionResult EditPayroll(PayrollModel payroll)
+        {
+            if (ModelState.IsValid)
+            {
+
+                payroll.PaymentModifiedBy = (string)Session["FullName"];// ViewData.ContainsKey("FullName")? (string) ViewData["FullName"]: User.Identity.Name;                                
+                _payrollRepository.UpdatePayroll(payroll);
+                return View("Payrolls");
+            }
+            else
+            {
+                return View(payroll);
+            }
+        }
+        public ActionResult AccountEntryRow()
+        {
+            var account = _payrollRepository.GetPayrollObject();
+
+            return PartialView("_NewPayrollAccountEntryEditor", account.Account);
+        }
+
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult Export(string GridHtml)
+        {
+            GridHtml = GenerateCheckHTML("3212", "three thousand twelve", "Hamid", "6161 edsall rd Alexandria va", "this a test check", "09/09/2020");
+            //using (MemoryStream stream = new System.IO.MemoryStream())
+            //{
+            //    StringReader sr = new StringReader(GridHtml);
+            //    Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 100f, 0f);
+            //    PdfWriter writer = PdfWriter.GetInstance(pdfDoc, stream);
+            //    pdfDoc.Open();
+            //    XMLWorkerHelper.GetInstance().ParseXHtml(writer, pdfDoc, sr);
+            //    pdfDoc.Close();
+
+            //    return File(stream.ToArray(), "application/pdf", "Check.pdf");
+            //}
+
+
+            int voucherNumber = 44;
+            var a = new ViewAsPdf();
+
+            a.ViewName = "_PrintedCheck";
+            a.Model = _payrollRepository.GetPayroll(voucherNumber);
+            var pdfBytes = a.BuildFile(ControllerContext);
+
+            // Optionally save the PDF to server in a proper IIS location.
+            //var fileName = string.Format("Check_{0}.pdf", voucherNumber);
+            //var path = Server.MapPath("~/App_Data/" + fileName);
+            //System.IO.File.WriteAllBytes(path, pdfBytes);
+
+            // return ActionResult
+            MemoryStream ms = new MemoryStream(pdfBytes);
+            return File(ms.ToArray(), "application/pdf", "Check.pdf");
+            // return new FileStreamResult(ms, "application/pdf");
+            //int payrollId = 44;
+            //var report = new Rotativa.ActionAsPdf("PayrollDetails", new { payrollId =payrollId});
+            //return report;
+        }
+
+        public ActionResult ExportPrintedCheckToPdf(int voucherNumber)
+        {
+            var payroll = _payrollRepository.GetPayroll(voucherNumber);
+            payroll.AlphaAmount = NumWordsWrapper((double)payroll.Amount);
+            payroll.CheckAndAccountNumberFormat = "C" + voucherNumber + "C  A054001204A  001921530454C";
+            var a = new ViewAsPdf();
+            a.ViewName = "_PrintedCheck";
+            a.Model = payroll;
+            var pdfBytes = a.BuildFile(ControllerContext);
+            MemoryStream ms = new MemoryStream(pdfBytes);
+            // use the next line to open the partial view instead of dlownload it
+
+            //return new FileStreamResult(ms, "application/pdf");
+            return new FileStreamResult(ms, "application/pdf")
+            {
+                FileDownloadName = "Check_" + voucherNumber + "_.pdf",
+            };
+            //use the next line to download pdf
+            //return File(ms.ToArray(), "application/pdf", "Check_"+ voucherNumber + "_.pdf");
+
+        }
+        public PartialViewResult PrintedCheck()
+        {
+            //var payroll = _payrollRepository.GetPayroll(PayrollId);
+            //payroll.AlphaAmount = NumWordsWrapper((double)payroll.Amount);
+            return PartialView("_PrintedCheck");
+        }
+        public PartialViewResult PrintedCheckTest(int PayrollId)
+        {
+            var payroll = _payrollRepository.GetPayroll(PayrollId);
+            payroll.AlphaAmount = NumWordsWrapper((double)payroll.Amount);
+            payroll.CheckAndAccountNumberFormat = "C" + PayrollId + "C  A054001204A  001921530454C";
+
+            return PartialView("_PrintedCheck", payroll);
+        }
+        private string GenerateCheckHTML(string amount, string amountText, string payeeName, string payeeAddress, string description, string Date)
+        {
+            StringBuilder st = new StringBuilder();
+            st.Append("<div class='check checkDate'>");
+            st.Append(Date);
+            st.Append("</div>");
+            st.Append("<div  class='check checkName'>");
+            st.Append(payeeName);
+            st.Append("</div>");
+            st.Append("<div  class='check checkAmount'> ");
+            st.Append(amount);
+            st.Append("</div>");
+            st.Append("<div  class='check checkAmountText'>");
+            st.Append(amountText);
+            st.Append("</div>");
+            st.Append("<div  class='check checkAddress'>");
+            st.Append(payeeAddress);
+            st.Append("</div>");
+            st.Append("<div  class='check checkDescription'>");
+            st.Append(description);
+            st.Append("</div>");
+            return st.ToString();
+        }
+        private static string NumberToWords(int number)
+        {
+            if (number == 0)
+                return "zero";
+
+            if (number < 0)
+                return "minus " + NumberToWords(Math.Abs(number));
+
+            string words = "";
+
+            if ((number / 1000000) > 0)
+            {
+                words += NumberToWords(number / 1000000) + " million ";
+                number %= 1000000;
+            }
+
+            if ((number / 1000) > 0)
+            {
+                words += NumberToWords(number / 1000) + " thousand ";
+                number %= 1000;
+            }
+
+            if ((number / 100) > 0)
+            {
+                words += NumberToWords(number / 100) + " hundred ";
+                number %= 100;
+            }
+
+            if (number > 0)
+            {
+                if (words != "")
+                    words += "and ";
+
+                var unitsMap = new[] { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen" };
+                var tensMap = new[] { "zero", "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety" };
+
+                if (number < 20)
+                    words += unitsMap[number];
+                else
+                {
+                    words += tensMap[number / 10];
+                    if ((number % 10) > 0)
+                        words += "-" + unitsMap[number % 10];
+                }
+            }
+
+            return words;
+        }
+        static String NumWordsWrapper(double n)
+        {
+            string words = "";
+            double intPart;
+            double decPart = 0;
+            if (n == 0)
+                return "zero";
+            try
+            {
+                string[] splitter = n.ToString().Split('.');
+                intPart = double.Parse(splitter[0]);
+                decPart = double.Parse(splitter[1]);
+            }
+            catch
+            {
+                intPart = n;
+            }
+
+            words = NumWords(intPart);
+
+            if (decPart > 0)
+            {
+                if (words != "")
+                    words += " and ";
+                int counter = decPart.ToString().Length;
+                switch (counter)
+                {
+                    //case 1: words += NumWords(decPart) + " tenths"; break;
+                    //case 2: words += NumWords(decPart) + " hundredths"; break;
+                    //case 3: words += NumWords(decPart) + " thousandths"; break;
+                    //case 4: words += NumWords(decPart) + " ten-thousandths"; break;
+                    //case 5: words += NumWords(decPart) + " hundred-thousandths"; break;
+                    //case 6: words += NumWords(decPart) + " millionths"; break;
+                    //case 7: words += NumWords(decPart) + " ten-millionths"; break;
+                    case 1: words += decPart + " tenths"; break;
+                    case 2: words += decPart + "/100 Cents"; break;
+
+                }
+            }
+            return words;
+        }
+
+        static String NumWords(double n) //converts double to words
+        {
+            string[] numbersArr = new string[] { "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen" };
+            string[] tensArr = new string[] { "twenty", "thirty", "fourty", "fifty", "sixty", "seventy", "eighty", "ninty" };
+            string[] suffixesArr = new string[] { "thousand", "million", "billion", "trillion", "quadrillion", "quintillion", "sextillion", "septillion", "octillion", "nonillion", "decillion", "undecillion", "duodecillion", "tredecillion", "Quattuordecillion", "Quindecillion", "Sexdecillion", "Septdecillion", "Octodecillion", "Novemdecillion", "Vigintillion" };
+            string words = "";
+
+            bool tens = false;
+
+            if (n < 0)
+            {
+                words += "negative ";
+                n *= -1;
+            }
+
+            int power = (suffixesArr.Length + 1) * 3;
+
+            while (power > 3)
+            {
+                double pow = Math.Pow(10, power);
+                if (n >= pow)
+                {
+                    if (n % pow > 0)
+                    {
+                        words += NumWords(Math.Floor(n / pow)) + " " + suffixesArr[(power / 3) - 1] + ", ";
+                    }
+                    else if (n % pow == 0)
+                    {
+                        words += NumWords(Math.Floor(n / pow)) + " " + suffixesArr[(power / 3) - 1];
+                    }
+                    n %= pow;
+                }
+                power -= 3;
+            }
+            if (n >= 1000)
+            {
+                if (n % 1000 > 0) words += NumWords(Math.Floor(n / 1000)) + " thousand, ";
+                else words += NumWords(Math.Floor(n / 1000)) + " thousand";
+                n %= 1000;
+            }
+            if (0 <= n && n <= 999)
+            {
+                if ((int)n / 100 > 0)
+                {
+                    words += NumWords(Math.Floor(n / 100)) + " hundred";
+                    n %= 100;
+                }
+                if ((int)n / 10 > 1)
+                {
+                    if (words != "")
+                        words += " ";
+                    words += tensArr[(int)n / 10 - 2];
+                    tens = true;
+                    n %= 10;
+                }
+
+                if (n < 20 && n > 0)
+                {
+                    if (words != "" && tens == false)
+                        words += " ";
+                    words += (tens ? "-" + numbersArr[(int)n - 1] : numbersArr[(int)n - 1]);
+                    n -= Math.Floor(n);
+                }
+            }
+
+            return words;
+
+        }
+        #endregion
+
+        #region Deposit Account
+        public ActionResult DepositList()
+        {
+            var payroll = _depositRepository.GetDepositList();
+            return View(payroll);
+        }
+
+        [HttpGet]
+        public ActionResult NewDeposit()
+        {
+            var deposit = _depositRepository.GetDepositObject();
+            return View(deposit);
+        }
+        [HttpPost]
+        public ActionResult NewDeposit(DepositAccountModel depositAccount)
+        {
+            depositAccount.CreatedBy = (string)Session["FullName"];// ViewData.ContainsKey("FullName")? (string) ViewData["FullName"]: User.Identity.Name;
+            _depositRepository.NewDeposit(depositAccount);
+            return RedirectToAction("DepositList");
+        }
+
+        [HttpGet]
+        public ActionResult EditDeposit(int depositId)
+        {
+            var deposit = _depositRepository.GetDeposit(depositId);
+            return View(deposit);
+        }
+        [HttpPost]
+        public ActionResult EditDeposit(DepositAccountModel deposit)
+        {
+            _depositRepository.UpdateDeposit(deposit);
+            return RedirectToAction("DepositList");
+        }
+        public ActionResult DeleteDeposit(int depositId)
+        {
+            _depositRepository.DeleteDeposit(depositId);
+            return RedirectToAction("DepositList");
+        }
+        public JsonResult DeleteDepositJson(int id)
+        {
+
+            _depositRepository.DeleteDeposit(id);
+            var deposit = _depositRepository.GetDepositList();
+            var jsonResult = new JsonResult();
+            jsonResult.MaxJsonLength = Int32.MaxValue;
+            jsonResult.Data = deposit.ToList();
+            jsonResult.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return jsonResult;
+        }
+        public ActionResult DepositDetails(int depositId)
+        {
+            var deposit = _depositRepository.GetDeposit(depositId);
+            return View(deposit);
+        }
+        public JsonResult SearchDepositJson(string query)
+        {
+            var deposit = _depositRepository.GetDepositList();
+
+            if (!string.IsNullOrEmpty(query))
+                deposit = deposit?
+                            .Where(d => (d.DepositID.ToString().Contains(query.Trim()) ||
+                                          d.PayeeID.ToString().Contains(query.Trim()) ||
+                                          d.AmountDeposited.ToString().Contains(query.Trim()) ||
+                                         d.DepositDepartment.Trim().ToLower().ToString().Contains(query.Trim().ToLower()) ||
+                                         d.DepositType.Trim().ToLower().ToString().Contains(query.Trim().ToLower()) ||
+                                         d.PayeeName.ToLower().Trim().ToString().Contains(query.Trim().ToLower()))
+                                         ).OrderByDescending(c => c.DepositID).ToList();
+            var jsonResult = new JsonResult();
+            jsonResult.MaxJsonLength = Int32.MaxValue;
+            jsonResult.Data = deposit;
+            jsonResult.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return jsonResult;
+        }
+        #endregion
+
+        #region Patient Extension List 
+
+        private List<PatientExtensionModel> GetPatientExtesionList()
+        {
+            var extansions = _petientExtensionRepository.GetExtensionList();
+
+            return extansions;
+
+        }
+
+        private PatientModel GetFolders(string patientCid, string patientName, string fName = null)
+        {
+            //string sharedForlder = @"C:\Users\mouni\Desktop\shared";// @sharedPath;
+            var appSettings = ConfigurationManager.AppSettings;
+            string sharedPath = appSettings["SharedFolderLink"] ?? "";
+            string sharedForlder = @sharedPath;
+            string searchPattern = "" + patientCid + "*";
+            var patientModel = new PatientModel();
+            patientModel.PatientFile = new PatientFileModel();
+            string[] directoriesPaths = Directory.GetDirectories(sharedForlder, searchPattern);
+            // string[] filePaths = Directory.GetFiles(@"C:\Users\mouni\Desktop\2860128700414- MOHAMMAD JAMAL ABDULLAH AL-FARHAN");
+            directoriesPaths = Directory.GetDirectories(sharedForlder, searchPattern);
+            string[] patientDirectoriesPaths = Directory.GetDirectories(directoriesPaths[0]);
+            if (patientDirectoriesPaths.Length > 0)
+            {
+
+                patientModel.PatientFile.FoldersPath = patientDirectoriesPaths;
+                var foldersName = ExtractNames(patientDirectoriesPaths);
+                // new patient extension
+                // when we trying to get the patient extension and the patient doesnt have the folder already created, we create one
+                if (fName != null)
+                    if (fName == PatientFolders.Extensions || fName == PatientFolders.ExtensionsHistory)
+                    {
+                        if (!foldersName.Contains("\\" + fName))
+                        {
+                            // create this folder
+                            CreatePatientSpecificFolder(patientCid, patientName, directoriesPaths[0], fName);
+                        }
+                    }
+                patientModel.PatientFile.FoldersName = foldersName;
+                foreach (var path in patientDirectoriesPaths)
+                {
+                    int lastIndex = path.LastIndexOf(@"\");
+                    string folderName = path.Substring(lastIndex + 1);// path.Substring(lastIndex, path.Length - (lastIndex));// exp: "PATIENT INFO"
+                    if (fName != null && folderName.Equals(fName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        patientModel.PatientFile.FolderName = folderName;
+                        patientModel.PatientFile.FolderPath = path;
+                        string[] filePaths = Directory.GetFiles(path);
+                        var fileNames = ExtractNames(filePaths);
+                        patientModel.PatientFile.FilesPath = filePaths;
+                        patientModel.PatientFile.FilesName = fileNames;
+                        return patientModel;
+                    }
+                }
+            }
+
+            return patientModel;
+        }
+        private static string[] ExtractNames(string[] directoriesPaths)
+        {
+            string[] foldersName = new string[directoriesPaths.Length];
+
+            int i = 0;
+            foreach (var path in directoriesPaths)
+            {
+                int lastIndex = path.LastIndexOf(@"\");
+
+                string folderName = path.Substring(lastIndex, path.Length - (lastIndex));
+                //int firstIndex = folderName.LastIndexOf(@"\");
+                foldersName[i] = folderName;//.Substring(firstIndex, folderName.Length );
+                i++;
+            }
+            return foldersName;
+        }
+        public FileResult Download(string link, string filename)
+        {
+            byte[] fileBytes = System.IO.File.ReadAllBytes(link);
+            string fileName = filename;
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
+        }
+
+        public void Upload(HttpPostedFileBase file, string folderPath, string foldername)
+        {
+            //Checking file is available to save.  
+            if (file != null)
+            {
+                string path = @folderPath;// @"C:\Users\mouni\Desktop\shared";
+                                          //string path = Server.MapPath("~/Uploads/");
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                var inputFileName = Path.GetFileName(file.FileName);
+                string uploadFilePathAndName = Path.Combine(path, inputFileName);
+                file.SaveAs(uploadFilePathAndName);
+                // postedFile.SaveAs(path + Path.GetFileName(postedFile.FileName));
+            }
+        }
+
+        private void UpdatePatientExtensionAndCreateHistory(PatientExtensionModel patExt)
+        {
+            patExt.IsPaid = true;
+            _petientExtensionRepository.UpdatePatientExtension(patExt);
+            //once the payment is done to the patient, the patient extension become a history, and the document transfered from extension folder,
+            //to extension history
+            //  Upload();
+        }
+        public void CopyFile(string source, string destination)
+        {
+
+            try
+            {
+                System.IO.File.Copy(source, destination);
+
+
+            }
+            catch (Exception ex) { };
+        }
+        private void DeletePatientExtensionFile(string filePath, string fileName, PaymentModel payment)
+        {
+            // before deleting the file from the folder we need to recreate the file in Extension  history
+            var destinationFile = "";
+            destinationFile = GetPatientExtensionHistoryFilePath(payment) + @"\" + payment.PatientExtension.FileName;
+            CopyFile(@filePath, @destinationFile);
+            System.IO.File.Delete(@filePath);
+
+        }
+
+        private string GetPatientExtensionHistoryFilePath(PaymentModel payment)
+        {
+            var folderPath = "";
+            var patientFile = GetFolders(payment.PatientCID, payment.PatientFullName, PatientFolders.ExtensionsHistory).PatientFile;
+            folderPath = patientFile.FolderPath;
+            return folderPath;
+        }
+        //new create extension folder
+        private void CreatePatientSpecificFolder(string patientCid, string patientName, string folderPath, string folderName)
+        {
+            var path = @folderPath;
+            try
+            {
+                string subdir = path + @"\" + folderName;
+                Directory.CreateDirectory(subdir);
+            }
+            catch (Exception e)
+            {
+                Danger(string.Format("An Error accured while trying to create patient folders, Try Again...!"), true);
+            }
+        }
+        #endregion
+
 
     }
 }

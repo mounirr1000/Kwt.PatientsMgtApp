@@ -27,6 +27,9 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 UserID = u.UserID,
                 UserName = u.UserName,
                 PhoneNumber = u.PhoneNumber,
+                MiddleName=u.MiddleName,
+                FirstName=u.FirstName,
+                LastName=u.LastName
                 //UserRoles = u.UserRoles.Select(r => new UserRolesModel()
                 //{
                 //    RoleId = r.RoleId

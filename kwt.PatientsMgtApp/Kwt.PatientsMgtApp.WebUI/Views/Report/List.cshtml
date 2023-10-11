@@ -3,13 +3,24 @@
     ViewBag.Title = "Reports List";
 }
 
-<div class="pt-3 pb-3">
-    <a href="@Url.Action("Patient", "Report")" class="k-button"><i class="fa fa-book" style="color: yellowgreen"></i> Patient Report</a>
-    <a href="@Url.Action("Payment", "Report")" class="k-button"><i class="fa fa-bookmark-o" style="color:yellowgreen"></i> Payment Report</a>
+<div class="pt-3 pb-3 row">
+
+    <div class="k-button col-md-4 " style="width:370px;height:370px">
+        <a href="@Url.Action("Patient", "Report")" class="k-button" style="width:100%;height:100%; " ><div style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);"><i class="fa fa-bar-chart" aria-hidden="true"></i> Patient Report</div></a>
+    </div>
+    <div class="k-button col-md-4" style="width:370px;height:370px">
+        <a href="@Url.Action("Payment", "Report")" class="k-button" style="width:100%;height:100%;"><div style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);"><i class="fa fa-bar-chart" aria-hidden="true"></i> Payment Report</div></a>
+    </div>
+    <div  class="k-button col-md-4" style="width:370px;height:370px">
+        <a href="@Url.Action("PayrollReport", "Report")" class="k-button" style="width:100%;height:100%;"><div style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);"><i class="fa fa-bar-chart" aria-hidden="true"></i> Payroll Report</div></a>
+    </div>
+    <div class="k-button col-md-4" style="width:370px;height:370px">
+        <a href="@Url.Action("DepositReport", "Report")" class="k-button" style="width:100%;height:100%;"><div style="position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);"><i class="fa fa-bar-chart" aria-hidden="true"></i> Deposit Report</div></a>
+    </div>
 </div>
 @*<div class="p-2">
-    @Html.ActionLink("Patient Report", "Patient", null, new {@class="btn btn-info"})
-</div>
-<div class="p-2">
-    @Html.ActionLink("Payment Report", "Payment", null, new { @class = "btn btn-info" })
-</div>*@
+        @Html.ActionLink("Patient Report", "Patient", null, new {@class="btn btn-info"})
+    </div>
+    <div class="p-2">
+        @Html.ActionLink("Payment Report", "Payment", null, new { @class = "btn btn-info" })
+    </div>*@

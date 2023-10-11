@@ -41,5 +41,7 @@ namespace Kwt.PatientsMgtApp.Core
         public const string PatientInfo = "PATIENT INFO";
         public const string ProgressReports = "PROGRESS REPORTS";
         public const string TicketingTransportation = "TICKETING & TRANSPORTATION";
+        public const string Extensions = "EXTENSIONS";
+        public const string ExtensionsHistory = "EXTENSIONS HISTORY";
     }
 }

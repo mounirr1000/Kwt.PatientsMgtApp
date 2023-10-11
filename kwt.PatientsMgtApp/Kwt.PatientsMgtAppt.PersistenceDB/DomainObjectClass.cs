@@ -11,14 +11,14 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
     //IAuditObject
     public partial class Agency : IDomainObject
     {
-            public int Id
-            {
-                get { return this.AgencyID; } 
+        public int Id
+        {
+            get { return this.AgencyID; }
 
-                set { this.AgencyID = value; }
-            }
-        
+            set { this.AgencyID = value; }
         }
+
+    }
 
     public partial class Bank : IDomainObject
     {
@@ -31,7 +31,7 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
     }
     public partial class ExceptionLogger : IDomainObject
     {
-        
+
     }
     public partial class Beneficiary : IDomainObject
     {
@@ -147,7 +147,7 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
 
     public partial class Patient : IDomainObject, IAuditObject
     {
-        
+
     }
 
     public partial class Payment : IDomainObject, IAuditObject
@@ -213,16 +213,490 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
     }
     public partial class User : IDomainObject
     {
-       
+
     }
     //public partial class UserRole : IDomainObject
     //{
-       
+
     //}
 
     public partial class PatientHistory : IDomainObject
     {
 
+    }
+    // new payment app
+    public partial class WirePayroll : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.WireNumber;
+            }
+
+            set
+            {
+                this.WireNumber = value;
+            }
+        }
+    }
+    public partial class Title : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.Id;
+            }
+
+            set
+            {
+                this.Id = value;
+            }
+        }
+    }
+    public partial class Salary : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.SalaryID; // this.Id;
+            }
+
+            set
+            {
+                this.Id = this.SalaryID;//value;
+            }
+        }
+    }
+    public partial class PayrollType : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.PayrollTypeID;
+            }
+
+            set
+            {
+                this.PayrollTypeID = value;
+            }
+        }
+    }
+    public partial class PayrollStatu : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.PayrollStatusID;
+            }
+
+            set
+            {
+                this.PayrollStatusID = value;
+            }
+        }
+    }
+    public partial class PayrollMethod : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.PayrollMethodId;
+            }
+
+            set
+            {
+                this.PayrollMethodId = value;
+            }
+        }
+    }
+    public partial class Payroll : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.TransactionID;
+            }
+
+            set
+            {
+                this.TransactionID = value;
+            }
+        }
+    }
+    public partial class PayeesType : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.PayeeTypeID;
+            }
+
+            set
+            {
+                this.PayeeTypeID = value;
+            }
+        }
+    }
+    public partial class Payee : IDomainObject
+    {
+        public int Id
+        {
+            get { return this.PayeeID; }
+
+            set { this.PayeeID = value; }
+        }
+    }
+    public partial class Employee : IDomainObject
+    {
+        public int Id
+        {
+            get { return this.EmployeeID; }
+
+            set { this.EmployeeID = value; }
+        }
+    }
+    public partial class DepartmentManager : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.Id;
+            }
+
+            set
+            {
+                this.Id = value;
+            }
+        }
+    }
+    public partial class DepartmentEmployee : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.Id;
+            }
+
+            set
+            {
+                this.Id = value;
+            }
+        }
+    }
+    public partial class Department : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.Id;
+            }
+
+            set
+            {
+                this.Id = value;
+            }
+        }
+    }
+    public partial class CheckPayroll : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.CheckNumber;
+            }
+
+            set
+            {
+                this.CheckNumber = value;
+            }
+        }
+    }
+    public partial class Account : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.AccountNumber;
+            }
+
+            set
+            {
+                this.AccountNumber = value;
+            }
+        }
+    }
+
+    public partial class Bonus : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.BonusID;
+            }
+
+            set
+            {
+                this.Id = this.BonusID;// = value;
+            }
+        }
+    }
+    public partial class EmployeeInsurance : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.InsuranceID;
+            }
+
+            set
+            {
+                this.InsuranceID = value;
+            }
+        }
+    }
+    public partial class Overtime : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.OvertimeID;
+            }
+
+            set
+            {
+                this.OvertimeID = value;
+            }
+        }
+    }
+    public partial class EmployeeAccountType : IDomainObject
+    {
+
+    }
+    public partial class TaxCategory : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.Id;
+            }
+
+            set
+            {
+                this.Id = value;
+            }
+        }
+    }
+    public partial class InsuranceOption : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.Id;
+            }
+
+            set
+            {
+                this.Id = value;
+            }
+        }
+    }
+    public partial class InsuranceType : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.Id;
+            }
+
+            set
+            {
+                this.Id = value;
+            }
+        }
+    }
+    public partial class BonuseType : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.Id;
+            }
+
+            set
+            {
+                this.Id = value;
+            }
+        }
+    }
+    public partial class PayrollAccount : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.PayAccountID;
+            }
+
+            set
+            {
+                this.PayAccountID = value;
+            }
+        }
+    }
+    public partial class SocialStatus : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.SocialStatusID;
+            }
+
+            set
+            {
+                this.SocialStatusID = value;
+            }
+        }
+    }
+    public partial class TitleType : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.TitleTypeId;
+            }
+
+            set
+            {
+                this.TitleTypeId = value;
+            }
+        }
+    }
+    public partial class DiscountType : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.DiscountTypeId;
+            }
+
+            set
+            {
+                this.DiscountTypeId = value;
+            }
+        }
+    }
+    public partial class DepositType : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.DepositTypeID;
+            }
+
+            set
+            {
+                this.DepositTypeID = value;
+            }
+        }
+    }
+    public partial class DepositDepartment : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.DepositDepartmentID;
+            }
+
+            set
+            {
+                this.DepositDepartmentID = value;
+            }
+        }
+    }
+    public partial class DepositAccount : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.DepositID;
+            }
+
+            set
+            {
+                this.DepositID = value;
+            }
+        }
+    }
+    public partial class BudgetTransaction : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.ID;
+            }
+
+            set
+            {
+                this.ID = value;
+            }
+        }
+    }
+    public partial class PatientExtension : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.ExtensionId;
+            }
+
+            set
+            {
+                this.ExtensionId = value;
+            }
+        }
+    }
+    public partial class PatientExtensionHistory : IDomainObject
+    {
+        public int Id
+        {
+            get
+            {
+                return this.ExtensionHistoryId;
+            }
+
+            set
+            {
+                this.ExtensionHistoryId = value;
+            }
+        }
     }
 }
 

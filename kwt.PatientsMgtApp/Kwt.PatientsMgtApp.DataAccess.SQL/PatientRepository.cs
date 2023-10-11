@@ -15,13 +15,16 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
     public class PatientRepository : IPatientRepository
     {
         private readonly IDomainObjectRepository _domainObjectRepository;
-
+        private readonly IPatientManagmentRepository _patientManagmentRepository;
+        private readonly IPatientExtensionRepository _patientExtensionRepository;
         public PatientRepository()
         {
             _domainObjectRepository = new DomainObjectRepository();
+            _patientManagmentRepository = new PatientManagmentRepository();
+            _patientExtensionRepository = new PatientExtensionRepository();
         }
 
-        public List<PatientReportModel> GetPatientsReport(string patientCid = null, string hospital = null, string doctor = null, Nullable<bool> status = null, string speciality = null, DateTime? startDate = null, DateTime? endDate = null, Nullable<bool> isDead = null, Nullable<DateTime> authorizedDate = null)
+        public List<PatientReportModel> GetPatientsReport(string patientCid = null, string hospital = null, string doctor = null, Nullable<bool> status = null, string speciality = null, DateTime? startDate = null, DateTime? endDate = null, Nullable<bool> isDead = null, Nullable<DateTime> authorizedDate = null, string agency = null)
         {
             Dictionary<string, object> parms = new Dictionary<string, object>();
             parms.Add("pCid", patientCid);
@@ -33,10 +36,27 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             parms.Add("endDate", endDate);
             parms.Add("isDead", isDead);
             parms.Add("authorizedDate", authorizedDate);
-
+            parms.Add("agency", agency);
             //pCidParameter, hospitalParameter, doctorParameter, statusParameter, specialityParameter
             return _domainObjectRepository.ExecuteProcedure<PatientReportModel>("GetPatientListReport_SP", parms, false);
 
+        }
+
+        public PatientModel GetPatientObject()
+        {
+
+            return new PatientModel()
+            {
+                Agencies = _patientManagmentRepository.GetAgencies(),
+                Banks = _patientManagmentRepository.GetBanks(),
+                Hospitals = _patientManagmentRepository.GetHospitals(),
+                Doctors = _patientManagmentRepository.GetDoctors(),
+                Sepcialities = _patientManagmentRepository.GetSpecialities(),
+                PatientFile = new PatientFileModel()
+                {
+
+                }
+            };
         }
         public List<PatientModel> GetPatients()
         {
@@ -64,7 +84,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 EnglishPatLName = m.EnglishPatLName,
                 EnglishPatMName = m.EnglishPatMName,
                 //
-                
+
                 PatientCID = m.PatientCID,
                 USPhone = m.USphone,
                 CreatedBy = m.CreatedBy,
@@ -255,7 +275,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         {
 
             var p = _domainObjectRepository.Get<Patient>(e => e.PatientCID == patientcid,
-                                            new[] { "Bank", "Agency", "Doctor", "Hospital", "Specialty", "Payments", "Companions", "CompanionHistories", "PatientHistories", "PaymentDeductions" });
+                                            new[] { "Bank", "Agency", "Doctor", "Hospital", "Specialty", "Payments", "Companions", "CompanionHistories", "PatientHistories", "PaymentDeductions", "PatientExtensions" });
             if (p != null)
             {
                 return new PatientModel()
@@ -429,11 +449,40 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                         //
                         PrimaryCompanionCid = ph.PrimaryCompanionCid
                     }).ToList(),
-                    BookTypes = new BookTypeRepository().GetBookTypeList()?.Where(b=>b.BookTypeID!=5).ToList(),// we are removing pledge letter with booktype id 5
+                    BookTypes = new BookTypeRepository().GetBookTypeList()?.Where(b => b.BookTypeID != 5).ToList(),// we are removing pledge letter with booktype id 5
                     AuthorizedDate = p.AuthorizedDate,
                     IsBlocked = p.IsBlocked,
                     DeathDate = p.DeathDate,
-                    IsDead = p.isDead ?? false
+                    IsDead = p.isDead ?? false,
+                    PatientFile = new PatientFileModel()
+                    {
+
+                    },
+                    PatientExtensions = p.PatientExtensions.Select(ext => new PatientExtensionModel()
+                    {
+                        CreatedDate = ext.CreatedDate,
+                        ExtensionDocLink = ext.ExtensionDocLink,
+                        ExtensionEndDate = ext.ExtensionEndDate,
+                        ExtensionId = ext.ExtensionId,
+                        ExtensionStartDate = ext.ExtensionStartDate,
+                        IsPaid = ext.IsPaid,
+                        ModifiedDate = ext.ModifiedDate,
+                        PatientCID = ext.PatientCID,
+                        FileName=ext.FileName
+                    }).ToList(),
+                    PatientExtension = p.PatientExtensions.Select(ext => new PatientExtensionModel()
+                    {
+                        CreatedDate = ext.CreatedDate,
+                        ExtensionDocLink = ext.ExtensionDocLink,
+                        ExtensionEndDate = ext.ExtensionEndDate,
+                        ExtensionId = ext.ExtensionId,
+                        ExtensionStartDate = ext.ExtensionStartDate,
+                        IsPaid = ext.IsPaid,
+                        ModifiedDate = ext.ModifiedDate,
+                        PatientCID = ext.PatientCID,
+                        FileName = ext.FileName
+                    }).Where(ext => ext.IsPaid != true).OrderByDescending(ex => ex.CreatedDate).FirstOrDefault(),
+
                 };
             }
             return null;
@@ -671,7 +720,14 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 }
             }
         }
-
+        public void CreatePatientExtension(PatientModel patient)
+        {
+            // new Update patient extensions 
+            patient.PatientExtension.PatientCID = patient.PatientCID;
+            patient.PatientExtension.ExtensionDocLink = patient.ExtensionDocLink;
+            patient.PatientExtension.FileName = patient.ExtensionFileName;
+            _patientExtensionRepository.AddExtension(patient.PatientExtension);
+        }
         public PatientModel UpdatePatient(PatientModel patient)
         {
 
@@ -719,6 +775,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 if (p.IsActive == true)
                 {
                     CreateOrUpDateBeneficiary(p);
+                    
                 }
 
                 if (dataChanged
@@ -764,6 +821,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             return patient;
         }
 
+
+        
         private bool CheckIfIsActiveAndDateOutHasChanged(Patient oldpPatientData, PatientModel newPatientData)
         {
             // we only do an insert into history patient when the patient become inactive where he/she was active
@@ -803,9 +862,9 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     IsActive = companion.IsActive,
                     IsBeneficiary = companion.IsBeneficiary,
                     Name = companion.CompanionFName + " " + companion.CompanionMName + " " + companion.CompanionLName,
-                    EnglishComFName=companion.EnglishComFName,
-                    EnglishComLName=companion.EnglishComLName,
-                    EnglishComMName=companion.EnglishComMName,
+                    EnglishComFName = companion.EnglishComFName,
+                    EnglishComLName = companion.EnglishComLName,
+                    EnglishComMName = companion.EnglishComMName,
                     Notes = companion.Notes,
                     CompanionType = companion.CompanionTypeID == (int)Enums.CompanionType.Primary ? "Primary" : "Secondary"
                 };

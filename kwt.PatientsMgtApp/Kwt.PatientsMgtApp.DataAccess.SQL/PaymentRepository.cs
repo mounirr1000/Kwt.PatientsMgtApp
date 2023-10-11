@@ -15,6 +15,9 @@ using Kwt.PatientsMgtApp.Core;
 using Kwt.PatientsMgtApp.Core.Models;
 using Kwt.PatientsMgtApp.PersistenceDB.EDMX;
 using System.Web;
+using System.Data.SqlClient;
+using System.Data;
+
 namespace Kwt.PatientsMgtApp.DataAccess.SQL
 {
     public class PaymentRepository : IPaymentRepository
@@ -28,6 +31,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
         private readonly IRejectionReasonRepository _rejectionReasonRepository;
         private readonly IPaymentTypeRepository _paymentTypeRepository;
         private readonly IAdjustmentReasonRepository _adjustmentReasonRepository;
+        private readonly IPatientExtensionRepository _patientExtensionRepository;
         public PaymentRepository()
         {
             _domainObjectRepository = new DomainObjectRepository();
@@ -39,6 +43,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             _rejectionReasonRepository = new RejectionReasonRepository();
             _paymentTypeRepository = new PaymentTypeRepository();
             _adjustmentReasonRepository = new AdjustmentReasonRepository();
+            _patientExtensionRepository = new PatientExtensionRepository();
         }
 
 
@@ -182,6 +187,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 BankCode = p.BankCode,
                 //end new
                 IsActive = p.Patient.IsActive ?? false,
+                SMSConfirmation=p.SMSConfirmation,
             // new 
             PaymentDeductionObject = p.PaymentDeductions.Select(pd => new PaymentDeductionModel()
                 {
@@ -281,7 +287,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             PaymentModel payment = new PaymentModel();
             var ben = _beneficiaryRepository.GetBeneficiary(patientCid);
             var patient = _patientRepository.GetPatient(patientCid);
-            var companion = _companionRepository.GetCompanion(ben?.CompanionCID);
+            var companion = _companionRepository.GetCompanion(ben?.CompanionCID, ben?.PatientCID);
             if (patient != null)
             {
                 payment.IsActive = patient.IsActive;
@@ -362,6 +368,9 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 payment.RejectedPaymentList = rejectedPayments;//payment.Payments?.Where(p=>p.IsRejected==true).ToList();
                 // end new 07/13/2019
             }
+            // patient Extension
+            payment.PatientExtensionList = _patientExtensionRepository.GetOpenExtensionList();
+            payment.PatientExtension = _patientExtensionRepository.GetPatientExtensionByCID(patientCid);
             return payment;
         }
 
@@ -370,6 +379,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             PaymentModel payment = new PaymentModel();
             var patients = _domainObjectRepository.Filter<Patient>(p => p.IsActive == true).ToList();
             payment.ActivePatientCidList = patients?.Select(pa => pa.PatientCID).ToList();
+            // patient Extension
+            payment.PatientExtensionList = _patientExtensionRepository.GetOpenExtensionList();
             return payment;
         }
 
@@ -381,11 +392,18 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             PaymentModel pay = new PaymentModel();
             if (payment != null)
             {
-                var lastPayment = this.
-                            GetPaymentsByPatientCid(payment?.PatientCID)?
-                            .OrderByDescending(p => p.PaymentDate)
-                            .SkipWhile(py => py.PaymentID == payment.PaymentID)
-                            .FirstOrDefault();
+                var patientPayments = GetPaymentsByPatientCid(payment?.PatientCID);
+                // last payment means the payment made just before this one we are editting not just last payment of the whole payments made to patient
+                var lastPayment = patientPayments?
+                          .OrderByDescending(p => p.PaymentDate)
+                          .SkipWhile(py => py.PaymentEndDate >= payment.EndDate)
+                          .FirstOrDefault();
+                // get the last payment that is not the one being edited
+                //var lastPayment = this.
+                //            GetPaymentsByPatientCid(payment?.PatientCID)?
+                //            .OrderByDescending(p => p.PaymentDate)
+                //            .SkipWhile(py => py.PaymentID == payment.PaymentID)
+                //            .FirstOrDefault();
 
                 var pa = payment.Patient;
                 var c = payment.Companion;
@@ -423,8 +441,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                         PatientEndDate = pd.PatientEndDate,
                         PatientStartDate = pd.PatientStartDate,
                         //
-                        LastPaymentStartDate = lastPayment?.PaymentStartDate,
-                        LastPaymentEndDate = lastPayment?.PaymentEndDate,
+                        LastPaymentStartDate = lastPayment?.PaymentStartDate ?? payment?.StartDate,
+                        LastPaymentEndDate = lastPayment?.PaymentEndDate ?? payment?.EndDate,
                         //
                         //new 
                         PatientDeductionRate = pd.PatientDeductionRate,
@@ -457,6 +475,13 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                             pay.PaymentDeductionObject.LastPaymentEndDate = lastPayment?.PaymentEndDate;
                         }
 
+                    }
+                    //new 06/08/2020
+                    //in case no history payment, and we still want to make deduction we make last payment is the current payment.
+                    else
+                    {
+                        pay.PaymentDeductionObject.LastPaymentStartDate = payment?.StartDate;
+                        pay.PaymentDeductionObject.LastPaymentEndDate = payment?.EndDate;
                     }
                 }
                 // PaymentModel pay = new PaymentModel();
@@ -509,6 +534,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 // new
                 pay.IsVoid = payment.IsVoid;
                 pay.IsDeleted = payment.IsDeleted;
+                pay.PatientPhone = payment.Patient.USphone;
+                //pay.FinalAmount = payment.TotalDue ?? payment.FinalAmountAfterCorrection;
                 pay.PaymentDeductions = payment.PaymentDeductions?.Select(pd => new PaymentDeductionModel()
                 {
                     PatientDeduction = pd.PDeduction,
@@ -640,6 +667,8 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                     CompanionRate = ph.CompanionRate,
                     PatientRate = ph.PatientRate,
                 }).ToList();
+
+                
                 return pay;
             }
 
@@ -667,8 +696,10 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
 
             return payments;
         }
-        public void AddPayment(PaymentModel payment)
+        public int AddPayment(PaymentModel payment)
         {
+
+            int voucherId = 0;
             //start date and end date payment difference should be positive
             if (payment?.PaymentEndDate != null && payment?.PaymentStartDate != null)
             {
@@ -797,23 +828,40 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                             }
                         }
                         // new 8/9/2019 create paymentHistory with any new payment
-
                         CreatePaymentHistory(createdPayment);
+                        voucherId = createdPayment.PaymentID;
                         //
                     }
 
                     scope.Complete();
                 }
+                catch (Exception e)
+                {
+                    voucherId = 0;
+                    throw new PatientsMgtException(1, "error", "Add new Payment", "An Error Has Accured: "+ e.Message);
+                }
                 finally
                 {
+                   
+                    
                     scope.Dispose();
-
+                    // reseed identity column in payments table in case an exception was thrown and the payment was  not created
+                    //since the voucher number which is the identity column is important for business requirement
+                    ReseedIdentityColumnInPaymentsTable("Payments", "PaymentID");
                 }
 
             }
-
+            return voucherId;
         }
 
+        private void ReseedIdentityColumnInPaymentsTable(string tableName, string IdentityColumn)
+        {
+            var parms = new SqlParameter[] {
+                new SqlParameter {ParameterName= "@TableName",Value=tableName,Direction=ParameterDirection.Input },
+                new SqlParameter { ParameterName= "@IdentityColumn",Value=IdentityColumn,Direction=ParameterDirection.Input },
+            };        
+            _domainObjectRepository.ExecuteProcedure("ReseedIdentity_SP @TableName, @IdentityColumn", parms);
+        }
         private void CreatePaymentHistory(Payment p)
         {
             PaymentHistory payHistory = new PaymentHistory()
@@ -874,6 +922,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             if (paymentToUpdate != null)
             {
                 paymentToUpdate.IsApproved = payment.IsApproved;
+                paymentToUpdate.SMSConfirmation = payment.SMSConfirmation;
                 ////Todo This is a temp fix for updating the Payment
                 //PatientsMgtEntities dbContext = new PatientsMgtEntities();
                 //var entry = dbContext.Entry(paymentToUpdate);
@@ -1239,6 +1288,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
                 pay.TotalDue = null;
                 pay.TotalCorrection = null;
                 pay.FinalAmountAfterCorrection = null;
+                pay.IsApproved = true;
                 _domainObjectRepository.Update<Payment>(pay);
                 payment.IsVoid = pay.IsVoid;
                 if (paymentHistory!=null)

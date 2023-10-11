@@ -40,11 +40,17 @@
 
                                 <asp:TextBox ID="EndDate" runat="server"></asp:TextBox>
                             </li>
-                             <li class="editor-field col-md-3">
+                              <li class="editor-field col-md-3">
 
-                                <label class="" for="AuthorizedDate">Authorized Date</label>
+                                <label class="" for="AuthorizedDate">Start Authorized Date</label>
 
                                 <asp:TextBox ID="AuthorizedDate" runat="server"></asp:TextBox>
+                            </li>
+                            <li class="editor-field col-md-3">
+
+                                <label class="" for="AuthorizedDate2">End Authorized Date</label>
+
+                                <asp:TextBox ID="AuthorizedDate2" runat="server"></asp:TextBox>
                             </li>
                             <li class="editor-field col-md-3">
 
@@ -80,6 +86,11 @@
 
                                 <label class="" for="SpecialityList">Speciality</label>
                                 <asp:DropDownList ID="SpecialityList" runat="server" Width="100%"></asp:DropDownList>
+                            </li>
+                            <li class="editor-field col-md-3">
+
+                                <label class="" for="AgencyList">Agency</label>
+                                <asp:DropDownList ID="AgencyList" runat="server" Width="100%"></asp:DropDownList>
                             </li>
                             <li class="editor-field col-md-6">
                                 <label class="">&nbsp;</label>
@@ -125,7 +136,7 @@
             $("#PatientCid").kendoMaskedTextBox({
                 mask: "AAAAAAAAAAAA"
             });
-            $("#StartDate, #EndDate, #AuthorizedDate").kendoDatePicker();
+            $("#StartDate, #EndDate, #AuthorizedDate, #AuthorizedDate2").kendoDatePicker();
             //$("#DoctorList, #HospitalList, #SpecialityList").kendoDropDownList({
 
             //});

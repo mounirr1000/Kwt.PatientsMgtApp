@@ -52,7 +52,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DomainObjectClass.cs" />
+    <Compile Include="EDMX\Account.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\AccountType.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
     <Compile Include="EDMX\AdjustmentReason.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\AgenciesAccount.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
     <Compile Include="EDMX\Agency.cs">
@@ -64,7 +73,19 @@
     <Compile Include="EDMX\Beneficiary.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
+    <Compile Include="EDMX\Bonus.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\BonuseType.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
     <Compile Include="EDMX\BookType.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\BudgetTransaction.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\CheckPayroll.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
     <Compile Include="EDMX\Companion.cs">
@@ -79,10 +100,43 @@
     <Compile Include="EDMX\DeductionReason.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
+    <Compile Include="EDMX\Department.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\DepartmentEmployee.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\DepartmentManager.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\DepositAccount.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\DepositDepartment.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\DepositType.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\DiscountType.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
     <Compile Include="EDMX\Doctor.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
+    <Compile Include="EDMX\Employee.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\EmployeeAccountType.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\EmployeeInsurance.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
     <Compile Include="EDMX\ExceptionLogger.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\GetDepositReport_SP_Result.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
     <Compile Include="EDMX\GetNextPaymentPatientList_SP_Result.cs">
@@ -94,13 +148,31 @@
     <Compile Include="EDMX\GetPaymentListReport_SP_Result.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
+    <Compile Include="EDMX\GetPayrollReport_SP_Result.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
     <Compile Include="EDMX\GetStatisticalPaymentReport_SP_Result.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
     <Compile Include="EDMX\Hospital.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
+    <Compile Include="EDMX\InsuranceOption.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\InsuranceType.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\Overtime.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
     <Compile Include="EDMX\Patient.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\PatientExtension.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\PatientExtensionHistory.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
     <Compile Include="EDMX\PatientHistory.cs">
@@ -121,6 +193,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>PatientMgt.edmx</DependentUpon>
     </Compile>
+    <Compile Include="EDMX\Payee.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\PayeesType.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
     <Compile Include="EDMX\Payment.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
@@ -136,6 +214,21 @@
     <Compile Include="EDMX\PayRate.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
+    <Compile Include="EDMX\Payroll.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\PayrollAccount.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\PayrollMethod.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\PayrollStatu.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\PayrollType.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
     <Compile Include="EDMX\RejectedPayment.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
@@ -145,16 +238,40 @@
     <Compile Include="EDMX\Role.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
+    <Compile Include="EDMX\Salary.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\SalaryDeduction.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\SalaryIncrement.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\SocialStatus.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
     <Compile Include="EDMX\Specialty.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
     <Compile Include="EDMX\StatisticalPaymentReport_FN_Result.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
+    <Compile Include="EDMX\TaxCategory.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\Title.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\TitleType.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
     <Compile Include="EDMX\User.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
     <Compile Include="EDMX\UserRole.cs">
+      <DependentUpon>PatientMgt.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EDMX\WirePayroll.cs">
       <DependentUpon>PatientMgt.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

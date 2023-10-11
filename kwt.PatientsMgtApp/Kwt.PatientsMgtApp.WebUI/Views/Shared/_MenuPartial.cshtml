@@ -6,13 +6,13 @@
 
     if (ViewBag.MenuItems != null)
     {
-        Session["MenuItems"] = (Menu) ViewBag.MenuItems;
+        Session["MenuItems"] = (TopMenu)ViewBag.MenuItems;
     }
     else
     {
         ViewBag.MenuItems = Session["MenuItems"];
     }
-    var menu = (Menu)ViewBag.MenuItems ?? new Menu();
+    var menu = (TopMenu)ViewBag.MenuItems ?? new TopMenu();
 }
 <header>
     <div class="row logoSearch">
@@ -41,16 +41,20 @@
                     <button type="submit" style="position: absolute;
                              width: 12%; height: 100%;
                              right: 0px; top: 0px;
-                             z-index: 1; background: #ffc107; cursor: pointer;
+                             z-index: 1; background: #00965E; cursor: pointer;
                              border: none;padding: 0;">
                         <i class="fa fa-search"></i>
                     </button>
                     <input id="patientCids" type="text" name="patientCid" class="k-textbox" placeholder="Search a Patient..." style="width: 100%;" />
+                    
                 </div>
-
+                
             }
+            
         </div>
-
+        <div id="cal_display" class="left">
+            <span id="cal_m"></span><span id="cal_y"></span><span id="cal_d"></span><span id="cal_w"></span>
+        </div>
     </div>
     <div id="header-menu" class="row">
         <div class="col-md-12">
@@ -95,12 +99,12 @@
                                         {
                                             if (User.IsInAnyRoles(CrudRoles.PaymentCrudRoles))
                                             {
-                                                @Html.ListItemAction(item.MenuName, item.ActionName, item.ControllerName, item.IconName, item.Color)
+                                                @Html.ListItemAction(item.MenuName, item.ActionName, item.ControllerName, item.IconName, item.Color, item.SubMenu)
                                             }
                                         }
                                         else
                                         {
-                                            
+
                                             @Html.ListItemAction(item.MenuName, item.ActionName, item.ControllerName, item.IconName, item.Color)
                                         }
 
@@ -116,7 +120,7 @@
                                 }
                             }
                             //
-                            
+
                         }
                     }
                 }
@@ -129,3 +133,4 @@
 {
     Html.RenderPartial("_PatientDetailsSearched", (object)Model);
 }
+

@@ -6,7 +6,7 @@
 }
 
 
-@using (Html.BeginForm("Edit", "Patient", FormMethod.Post, new { @class = "k-form", id = "PatientEdit" }))
+@using (Html.BeginForm("Edit", "Patient", FormMethod.Post, new { @class = "k-form", id = "PatientEdit", enctype = "multipart/form-data" }))
 {
 
     <div class="mt-3 row">
@@ -54,11 +54,39 @@
         @Html.ValidationSummary(false, "", new { @class = "k-error-colored" })
         @Html.HiddenFor(model => model.PatientCID)
         @Html.HiddenFor(model => model.Id)
+
+
         <div id="patientEdit" style="visibility:hidden;">
             <button data-toggle="collapse" data-target="#patientDetail"><i></i> Patient Details</button>
             <fieldset id="patientDetail" class="collapse show">
                 <legend></legend>
                 <ul class="fieldlist row">
+                    @* new implementation 5/24/2020 have uplaod functionality to shared folder during patient creation *@
+                    <li class="col-md-10">
+                        <small class="text-sm-left text-info">&nbsp;</small>
+                        <label for="PatientPasportFile">Upload Patient Passport</label>
+                        @Html.TextBoxFor(model => model.PatientPasportFile, "", new { @type = "file", @multiple = "multiple", style = "display:none" })
+                        <button class="addPasportFile">Add Files</button>
+                        <label id="PatientPasportFileUploadedFiles"></label>
+                        <div>
+                            @Html.ValidationMessageFor(model => model.PatientPasportFile, "", new { @class = "text-danger" })
+                        </div>
+                        @if (Model.PatientFiles[0].FilesPath.Length > 0)
+                        {
+                            for (int x = 0; x < @Model.PatientFiles[0].FilesPath.Length; x++)
+                            {
+                                <label style="width: 100%; display:block">
+                                    <a style="width: 100%;" href="@Url.Action("Download", "Patient",  new { link = @Model.PatientFiles[0].FilesPath[x], filename=@Model.PatientFiles[0].FilesName[x]})">@Model.PatientFiles[0].FilesName[x]</a>
+                                </label>
+                            }
+                        }
+                        else
+                        {
+                            <label> No files found</label>
+                        }
+
+                    </li>
+                    @*  end of new implemetation *@
                     <li class="col-md-4">
                         @Html.LabelFor(model => model.PatientFName, new { @class = "" })
                         @Html.TextBoxFor(model => model.PatientFName, new { @class = "k-textbox", style = "width: 100%;" })
@@ -167,9 +195,31 @@
                     }
                     else
                     {
+                        @*<li class="col-md-6">
+                                 @Html.LabelFor(model => model.Hospital, new { @class = "" })
+                                 @Html.TextBoxFor(model => model.Hospital, new { @class = "k-textbox", style = "width: 90%;" })
+                             </li>
+                             <li class="col-md-6">
+                                 @Html.LabelFor(model => model.Specialty, new { @class = "" })
+                                 @Html.DropDownListFor(model => model.Specialty, new List<SelectListItem>(Model.Sepcialities.Select(a => new SelectListItem()
+                            {
+                                Text = a.Speciality,
+                                Value = a.Speciality
+                            }).ToList()), "", new { style = "width:50%" })
+                                 @Html.ValidationMessageFor(model => model.Specialty, "", new { @class = "k-error-colored" })
+                             </li>
+                             <li class="col-md-6">
+                                 @Html.LabelFor(model => model.Doctor, new { @class = "" })
+                                 @Html.TextBoxFor(model => model.Doctor, new { @class = "k-textbox", style = "width: 50%;" })
+                             </li>*@
                         <li class="col-md-6">
                             @Html.LabelFor(model => model.Hospital, new { @class = "" })
-                            @Html.TextBoxFor(model => model.Hospital, new { @class = "k-textbox", style = "width: 90%;" })
+                            @Html.DropDownListFor(model => model.Hospital, new List<SelectListItem>(Model.Hospitals.Select(a => new SelectListItem()
+                       {
+                           Text = a.HospitalName,
+                           Value = a.HospitalName
+                       }).ToList()), "", new { style = "width:90%" })
+                            @Html.ValidationMessageFor(model => model.Hospital, "", new { @class = "k-error-colored" })
                         </li>
                         <li class="col-md-6">
                             @Html.LabelFor(model => model.Specialty, new { @class = "" })
@@ -182,7 +232,12 @@
                         </li>
                         <li class="col-md-6">
                             @Html.LabelFor(model => model.Doctor, new { @class = "" })
-                            @Html.TextBoxFor(model => model.Doctor, new { @class = "k-textbox", style = "width: 50%;" })
+                            @Html.DropDownListFor(model => model.Doctor, new List<SelectListItem>(Model.Doctors.Select(a => new SelectListItem()
+                       {
+                           Text = a.DoctorName,
+                           Value = a.DoctorName
+                       }).ToList()), "", new { style = "width:50%" })
+                            @Html.ValidationMessageFor(model => model.Doctor, "", new { @class = "k-error-colored" })
                         </li>
                     }
 
@@ -251,10 +306,31 @@
                         @Html.TextBoxFor(model => model.FirstApptDAte, "{0:MM/dd/yyyy}", new { @class = "", style = "width: 60%" })
                         @Html.ValidationMessageFor(model => model.FirstApptDAte, "", new { @class = "k-error-colored" })
                     </li>
+                    <li class="col-md-8">
+                        <label for="PatientEndTreatmentFile">Upload Patient First Appointment Doc </label>
+                        <button class="addFirstApointmentFile">Add Files</button>
+                        @Html.TextBoxFor(model => model.PatientFirstApointmentFile, "", new { @type = "file", @multiple = "multiple", style = "display: none;" })
+                        <label id="PatientFirstApointmentFileUploadedFiles"></label>
+                        <div>
+                            @Html.ValidationMessageFor(model => model.PatientFirstApointmentFile, "", new { @class = "text-danger" })
+                            @*<input name="PatientFirstApointmentFile"  required  type="file" aria-label="files" />*@
+                        </div>
+                    </li>
                     <li class="col-md-3">
                         @Html.LabelFor(model => model.EndTreatDate, new { @class = "" })
                         @Html.TextBoxFor(model => model.EndTreatDate, "{0:MM/dd/yyyy}", new { @class = "", style = "width: 60%" })
                         @Html.ValidationMessageFor(model => model.EndTreatDate, "", new { @class = "k-error-colored" })
+                    </li>
+                    <li class="col-md-8">
+
+                        <label for="PatientEndTreatmentFile">Upload Patient End Treatment Doc </label>
+                        @Html.TextBoxFor(model => model.PatientEndTreatmentFile, "", new { @type = "file", @multiple = "multiple", style = "display: none;" })
+                        <button class="addEndTreatmentFile">Add Files</button>
+                        <label id="PatientEndTreatmentFileUploadedFiles"></label>
+                        <div>
+                            @Html.ValidationMessageFor(model => model.PatientEndTreatmentFile, "", new { @class = "text-danger" })
+                            @*<input name="PatientEndTreatmentFile" required  type="file" aria-label="files" />*@
+                        </div>
                     </li>
                     <li class="col-md-3">
                         @Html.LabelFor(model => model.AuthorizedDate, new { @class = "" })
@@ -292,21 +368,78 @@
                             @Html.LabelFor(model => model.IsDead, new { @class = "" })
                             @Html.EditorFor(model => model.IsDead, new { @class = "form-control", style = "width: 100%" })
                         </li>
-                        <li class="col-md-3">
+                        <li class="col-md-3"id="taggleDeathDate">
                             @Html.LabelFor(model => model.DeathDate, new { @class = "" })
                             @Html.TextBoxFor(model => model.DeathDate, "{0:MM/dd/yyyy}", new { @class = "", style = "width: 60%" })
                             <div>
                                 @Html.ValidationMessageFor(model => model.DeathDate, "", new { @class = "k-error-colored" })
                             </div>
                         </li>
+                        @*xxxxxxxxxxxxxxxxxxxxPatient Extensionsxxxxxxxxxxxxxxxxxxxxxxxxxxxx*@
+
+                        <li class="col-md-3">
+                            @Html.LabelFor(model => model.HasExtension, new { @class = "" })
+                            @Html.EditorFor(model => model.HasExtension, new { @class = "form-control", style = "width: 100%" })
+                        </li>
+                            <li class="col-md-3" id="ExtensionStartDate">
+                                @Html.LabelFor(model => model.PatientExtension.ExtensionStartDate, new { @class = "" })
+                                @Html.TextBoxFor(model => model.PatientExtension.ExtensionStartDate, "{0:MM/dd/yyyy}", new { @class = "", style = "width: 60%" })
+                                <div>
+                                    @Html.ValidationMessageFor(model => model.PatientExtension.ExtensionStartDate, "", new { @class = "k-error-colored" })
+                                </div>
+                            </li>
+                            <li class="col-md-3" id="ExtensionEndDate">
+                                @Html.LabelFor(model => model.PatientExtension.ExtensionEndDate, new { @class = "" })
+                                @Html.TextBoxFor(model => model.PatientExtension.ExtensionEndDate, "{0:MM/dd/yyyy}", new { @class = "", style = "width: 60%" })
+                                <div>
+                                    @Html.ValidationMessageFor(model => model.PatientExtension.ExtensionEndDate, "", new { @class = "k-error-colored" })
+                                </div>
+                            </li>
+                            <li class="col-md-10" id="ExtensionDocs">
+                                <label for="PatientExtesionFile">Upload Patient Extensions</label>
+                                @Html.TextBoxFor(model => model.PatientExtesionFile, "", new { @type = "file", @multiple = "multiple", style = "display:none" })
+                                <button class="addExtensionFile">Add Files</button>
+                                <label id="PatientExtensionFileUploadedFiles"></label>
+                                @if (Model.PatientFiles[2].FilesPath!=null&&Model.PatientFiles[2].FilesPath.Length > 0)
+                                {
+                                    for (int x = 0; x < @Model.PatientFiles[2].FilesPath.Length; x++)
+                                    {
+                                        <label style="width: 100%; display:block">
+                                            <a style="width: 100%;" href="@Url.Action("Download", "Patient",  new { link = @Model.PatientFiles[2].FilesPath[x], filename=@Model.PatientFiles[2].FilesName[x]})">@Model.PatientFiles[2].FilesName[x]</a>
+                                        </label>
+                                    }
+                                }
+                                else
+                                {
+                                    <label> No files found</label>
+                                }
+                            </li>
+
+                            @*xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx*@
+
                     }
+
 
                     <li class="col-md-4">
                         @Html.LabelFor(model => model.Notes, new { @class = "" })
                         @Html.TextAreaFor(model => model.Notes, new { @class = "k-editor-textarea", maxlength = "250", style = "width: 100%" })
                         @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "k-error-colored" })
                     </li>
+                    <li class="col-md-6">
 
+
+                        <label>Patient Appointment Uploaded Files</label>
+                        @if (Model.PatientFiles[1].FilesPath.Length > 0)
+                        {
+                            for (int x = 0; x < @Model.PatientFiles[1].FilesPath.Length; x++)
+                            {
+                                <label style="width: 100%; display:block">
+                                    <a href="@Url.Action("Download", "Patient",  new { link = @Model.PatientFiles[1].FilesPath[x], filename=@Model.PatientFiles[1].FilesName[x]} )">@Model.PatientFiles[1].FilesName[x]</a>
+                                </label>
+                            }
+                        }
+                        
+                    </li>
 
                 </ul>
             </fieldset>
@@ -389,7 +522,7 @@
 
             if (isMedical && isMedical==true) {
                 var formElem = $('#PatientEdit input[type="text"], #Notes');
-                var kendoDropDown = $("#BankName, #Hospital, #Agency, #Doctor");
+                var kendoDropDown = $("#BankName, #Agency");//$("#BankName, #Hospital, #Agency, #Doctor");
                 var kendodatepicker = $("#FirstApptDAte, #AuthorizedDate");
                 var endTreatment = $("#EndTreatDate");
                 var specialty = $("#Specialty");
@@ -415,33 +548,138 @@
                 endTreatment.attr("readonly", false);
                 //endTreatment.css("border", "2px solid lightgreen");
                 specialty.kendoDropDownList();
-                //specialty.css("border", "2px solid lightgreen");
+
+                // new patient extension
+                var extensionEle= $("#PatientExtension_ExtensionStartDate, #PatientExtension_ExtensionEndDate");
+                var extensionDate =$("#ExtensionStartDate, #ExtensionEndDate, #ExtensionDocs");                
+                var exteionDates=extensionEle.kendoDatePicker();
+                var hasExtension = $('#HasExtension').is(':checked')                
+                if(!hasExtension){
+                    $("#PatientExtension_ExtensionStartDate").data("kendoDatePicker").enable(true);
+                    $("#PatientExtension_ExtensionEndDate").data("kendoDatePicker").enable(true);
+                    extensionDate.css("display","none");
+                   
+                }else{
+                    // when the patient has extension that is not paid yet, no extension could be added unless the patient is paid on the extension period
+                    //thus the radio button of the has extension, the extension start date and end date and the extension doc all should be grayed out, 
+                    // user can't modify the data
+                    extensionDate.css("display","block");
+                    $('#HasExtension').prop( "disabled", true );
+                    $('#PatientExtesionFile, #ExtensionDocs button ').prop("disabled",true).addClass("edit");
+                    $("#PatientExtension_ExtensionStartDate").data("kendoDatePicker").enable(false);
+                    $("#PatientExtension_ExtensionEndDate").data("kendoDatePicker").enable(false);
+                   // extensionDate.enable(true);
+                }
+                extensionEle.removeClass("edit").attr("readonly", false);
+                
+                
+                $("#HasExtension").change(function() {
+
+                    if ($('#HasExtension').is(":checked"))
+                    {
+                        extensionDate.css("display","block");
+                  
+                    } else {
+                        extensionDate.css("display","none");
+                        exteionDates.val(null);                  
+                    }
+
+                });
+                // end new patient extension
             }
 
 
             // is dead ipmplementation
-            console.log($('#IsDead').val());
+            //console.log($('#IsDead').val());
             //if ($('#IsDead').val() && $('#IsDead').val() === 'true')
-            if ($('#IsDead').is(":checked"))
-                $('#taggleDeathDate').addClass('visible').removeClass("hidden");
+            if ($('#IsDead').is(":checked")){
+                $('#taggleDeathDate').css("display","block").removeAttr("readonly");
+               // $('#DeathDate').removeAttr("readonly");
+            }
+                
             else {
-                $('#taggleDeathDate').addClass('hidden').removeClass("visible");
+                $('#taggleDeathDate').css("display","none");
+               // $('#DeathDate').attr("readonly", "readonly");
             }
             $('#IsDead').change(function() {
 
-                var isdead = $('#IsDead').val();
+                var isdead = $('#IsDead').is(":checked");
                 console.log(isdead);
-                //if (isdead && isdead === 'true') 
-                if ($('#IsDead').is(":checked"))
+                //if (isdead && isdead === 'true')
+                if (isdead)
                 {
-                    $('#taggleDeathDate').removeClass("hidden").addClass("visible");
-                    //alert(isdead);
+                    $('#taggleDeathDate').css("display","block");
+                 //   $('#DeathDate').removeAttr("readonly");
                 } else {
                     $('#DeathDate').val(null);
-                    $('#taggleDeathDate').removeClass("visible").addClass("hidden");
+                    $('#taggleDeathDate').css("display","none");
+                    //$('#DeathDate').removeAttr("readonly");
                 }
 
             });
+            //
+            // file uploades
+            $('.addEndTreatmentFile').on('click', function() {
+                $('#PatientEndTreatmentFile').click();
+                return false;
+            });
+            $("#PatientEndTreatmentFile").change(function(){
+                var files =$(this)[0].files;
+                var selectedFiles="";
+                for (var i = 0; i < files.length; ++i) {
+                    var name = files.item(i).name;
+                    selectedFiles += name +" | ";
+
+                }
+                $('#PatientEndTreatmentFileUploadedFiles').text(selectedFiles);
+            });
+
+            $('.addFirstApointmentFile').on('click', function() {
+                $('#PatientFirstApointmentFile').click();
+                return false;
+            });
+            $("#PatientFirstApointmentFile").change(function(){
+                var files =$(this)[0].files;
+                var selectedFiles="";
+                for (var i = 0; i < files.length; ++i) {
+                    var name = files.item(i).name;
+                    selectedFiles += name +" | ";
+
+                }
+                $('#PatientFirstApointmentFileUploadedFiles').text(selectedFiles);
+            });
+
+            $('.addPasportFile').on('click', function() {
+                $('#PatientPasportFile').click();
+                return false;
+            });
+            $("#PatientPasportFile").change(function(){
+                var files =$(this)[0].files;
+                var selectedFiles="";
+                for (var i = 0; i < files.length; ++i) {
+                    var name = files.item(i).name;
+                    selectedFiles += name +" | ";
+
+                }
+                $('#PatientPasportFileUploadedFiles').text(selectedFiles);
+            });
+
+            // patient extension
+            $('.addExtensionFile').on('click', function() {
+                $('#PatientExtesionFile').click();
+                return false;
+            });
+            $("#PatientExtesionFile").change(function(){
+                var files =$(this)[0].files;
+                var selectedFiles="";
+                for (var i = 0; i < files.length; ++i) {
+                    var name = files.item(i).name;
+                    selectedFiles += name +" | ";
+
+                }
+                $('#PatientExtensionFileUploadedFiles').text(selectedFiles);
+            });
+            // end patient extension
             //
             $(".loader").css("display", "none");
         });

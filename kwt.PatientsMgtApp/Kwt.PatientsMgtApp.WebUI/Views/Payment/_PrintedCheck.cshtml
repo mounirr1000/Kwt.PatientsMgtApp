@@ -1,0 +1,167 @@
+﻿@using Kwt.PatientsMgtApp.WebUI.Infrastructure
+@model Kwt.PatientsMgtApp.Core.Models.PayrollModel
+@{
+    ViewBag.Title = "PayrollDetails";
+}
+@{
+    Layout = null;
+    int increment = 0;
+    string topIncrement = increment + "em";
+}
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+    <!-- Remove the protocol prefix (i.e., "http:") if hosting on a server instead of from localhost. -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+    <style>
+    </style>
+</head>
+<body>
+    <a href="print">Print Chech</a>
+    <div class="Cheque">
+        <div class="Cheque_Number_Date">
+            <span style="float:left;width: 50%;text-align: center;">
+                <span style="width:100%;font-size: .8em; display:block; text-transform:uppercase">Bank of America</span>
+                <span style="font-size: .5em;height: 2.5em;    display: block;">ACH R/T 054001204</span>
+                <span style="font-size: .5em;    display: block;">15-120/540 &nbsp;DC</span>
+                <span style="font-size: .5em;">8155</span>
+            </span>
+            @if (@Model.CheckPayroll!=null)
+            {
+                <span id="Cheque_Number">Check Number &nbsp;&nbsp;@Model.CheckPayroll.CheckNumber</span><hr style="visibility: hidden;margin-bottom: 1em;">
+            }
+            else
+            {
+                <span id="Cheque_Number">Check Number &nbsp;&nbsp;@Model.CheckNumber</span><hr style="visibility: hidden;margin-bottom: 1em;">
+            }
+           
+            <span id="Cheque_Date">Date &nbsp; @Model.PaymentCreatedDateFormatted</span>
+            @*<div id="Cheque_Date_Insert" contenteditable="">@Model.PaymentCreatedDate</div>*@
+        </div>
+        <div style="width:50%; height: 10.6em;font-size: .7em; font-weight: bold;">
+            <img src="~/Content/Images/Kuwait_embassyLogo.png" style="float: left;margin: 0 0 0 94px;" />
+            <div id="Cheque_Address" contenteditable="" style="float:right; width:18em;margin: 9px 0;">
+                Kuwait Embassy Health Office
+                4301 Connecticut Ave NW #330
+                Washington, DC 20008
+            </div>
+
+        </div>
+        <div>
+            <hr style="visibility:hidden;margin-bottom:.1em;">
+            <span id="Cheque_PayTo">Pay &nbsp;</span>
+            <hr style="visibility:hidden;margin-bottom:-0.1em;">
+            <div id="Cheque_Alphamount" style="" contenteditable=""><div>**** @Model.AlphaAmount ****</div></div> &nbsp; Dollars
+
+            <div id="Cheque_DollarSign" style="" contenteditable=""><span style="float:right">***@Model.AmountFormated***</span></div>
+            <hr style="visibility:hidden;margin-bottom:1.5em;">
+            <span id="Cheque_PayToOrderOf">to the order of &nbsp; &nbsp;</span>
+            <hr style="visibility:hidden;margin-bottom:-0.1em;">
+        </div>
+        <div id="Cheque_Address" style="width:100%">
+            <div id="Cheque_Payee_Name" style="width:50%" contenteditable="">@Model.Payee.PayeeName</div>
+            <div id="Cheque_Payee_Voidsign" style="width: 30%;float: right;font-size: .7em;">VOID AFTER 180 DAYS</div>
+            <div id="Cheque_Payee_NameAdress" style="width:90%" contenteditable="">@Model.Payee.PayeeStreetAddress</div>
+            <div id="Cheque_Payee_NameCity" style="width:90%" contenteditable="">@Model.Payee.CityStateZipAddress</div>
+            <hr style="visibility:hidden;margin-bottom:4.5em;">
+        </div>
+        <div>
+            <span id="Cheque_MemoSign" style="">Memo </span>
+            <div id="Cheque_MemoPlaceholder" style="" contenteditable="">@Model.Descriptions</div>
+            <div id="Cheque_Signature" style="" contenteditable=""></div><i class="fa fa-camera" aria-hidden="true" style="position: absolute;right: 15px;bottom: 79px;"></i>
+            <span style="font-size: .5em;position: absolute; bottom: 60px; right: 106px; color:cornflowerblue">AUTHORIZED SIGNATURE</span>
+            <span style="position: absolute;bottom: 60px;right: 19px;font-size: .5em;">MP</span>
+            <hr style="visibility:hidden;margin-bottom:1.6em;">
+            <div id="Cheque_AccountNumber">@Model.CheckAndAccountNumberFormat</div>
+        </div>
+    </div>
+    <div style="position: absolute;
+    top: 450px;
+    border: dashed 1px black;
+    width: 54em;
+    margin: 1em;
+    padding: 0 .5em;"></div>
+    <div class="ChequeDetails">
+        @{increment += 2;
+            topIncrement = increment + "em";}
+        <span style="position:absolute; top:@topIncrement">KUWAIT EMBASSY HEALTH OFFICE</span>
+        <span style="position:absolute; right:5px;top:@topIncrement">@Model.TransactionID</span>
+        <div>
+            @{increment += 2;
+            topIncrement = increment + "em";}
+            <div id="ChequeDetails_Payeename" style="position:absolute; top:@topIncrement">@Model.Payee.PayeeName</div>
+            @{increment += 2;
+            topIncrement = increment + "em";}
+            <div id="ChequeDetails_Description" style="position:absolute; top:@topIncrement">@Model.Descriptions</div>
+            @{increment += 2;
+            topIncrement = increment + "em";}
+            <div id="ChequeDetails_Startdate" style="position:absolute; top:@topIncrement">DOS:&nbsp;@Model.StartDateFormatted</div>
+            <div id="ChequeDetails_Enddate" style="position:absolute; top:@topIncrement; left:10em;">TO&nbsp;@Model.EndDateFormatted</div>
+            @if (Model.Accounts.Count > 0)
+            {
+                increment += 2;
+                topIncrement = increment + "em";
+                <div id="ChequeDetals_Accountnumber" style="position:absolute; top:@topIncrement; font-weight:bold;">Account</div>
+                <div id="ChequeDetals_Accountnumber" style="position:absolute; top:@topIncrement; left:10em;font-weight:bold;">Description</div>
+                <div id="ChequeDetals_Accountnumber" style="position:absolute; top:@topIncrement; left:30em;font-weight:bold;">Amount</div>
+                <div id="ChequeDetals_Accountnumber" style="position:absolute; top:@topIncrement; left:40em;font-weight:bold;">Discount</div>
+                <div id="ChequeDetals_Accountnumber" style="position:absolute; top:@topIncrement; left:50em;font-weight:bold;">Total</div>
+                increment += 2;
+                topIncrement = increment + "em";
+                foreach (var account in Model.Accounts)
+                {
+                    <span style="position:absolute; top:@topIncrement">@account.AccountNumber</span>
+                    <span style="position:absolute; top:@topIncrement; left:10em">@account.Descriptions</span>
+                    <span style="position:absolute; top:@topIncrement; left:30em">@account.AmountFormated</span>
+                    <span style="position:absolute; top:@topIncrement; left:40em">@account.DiscountDecimalFormat</span>
+                    <span style="position:absolute; top:@topIncrement; left:50em">@account.TotalAmountFormated</span>
+                    increment += 2;
+                    topIncrement = increment + "em";
+                }
+                //increment += 2;
+                //topIncrement = increment + "em";
+                <div id="ChequeDetals_Accountnumber" style="position:absolute; top:@topIncrement; left:40em;font-weight:bold;">Balance</div>
+                <div id="ChequeDetals_Accountnumber" style="position:absolute; top:@topIncrement; left:50em;font-weight:bold;">@Model.AmountFormated</div>
+            }
+            @{increment += 2;
+            topIncrement = increment + "em";}
+            <div id="ChequeDetails_Checknumber" style="position:absolute; top:@topIncrement;font-weight:bold;">Check #: &nbsp;<span style="font-weight:normal;">@Model.TransactionIDFormat</span></div>
+            <div id="chequeDetails_Enteredby" style="position:absolute; top:@topIncrement;left:30em;font-weight:bold;">Entered By: &nbsp;<span style="font-weight:normal;">@Model.PaymentEnteredBy</span></div>
+            @{increment += 2;
+            topIncrement = increment + "em";}
+            <div id="ChequeDetails_Agency" style="position:absolute; top:@topIncrement;font-weight:bold;">Agency: &nbsp;<span style="font-weight:normal;">@Model.Agency.AgencyName &nbsp;</span></div>
+            <div id="chequeDetails_Printedby" style="position:absolute; top:@topIncrement;left:30em;font-weight:bold;">Printed By: &nbsp;<span style="font-weight:normal;">@Model.PaymentPaidBy</span></div>
+            @{increment += 2;
+            topIncrement = increment + "em";}
+            <div id="ChequeDetails_Vouchernumber" style="position:absolute; top:@topIncrement;font-weight:bold;">Voucher #: &nbsp;<span style="font-weight:normal;">@Model.TransactionIDFormat</span></div>
+            <div id="chequeDetails_Counselor" style="position:absolute; top:@topIncrement;left:30em;font-weight:bold;">Health Counselor &nbsp;</div>
+
+        </div>
+
+        @{increment += 2;
+            topIncrement = increment + "em";}
+        <span style="position:absolute; top:@topIncrement">KUWAIT EMBASSY HEALTH OFFICE</span>
+        <span style="position:absolute; right:5px; top:@topIncrement">@Model.TransactionID</span>
+    </div>
+</body>
+</html>
+
+<script type="text/javascript">
+    var payroll = @Html.Raw(Json.Encode(Model));
+    console.log(payroll);
+
+    $(function() {
+        //console.log("start height",$('#Cheque_Alphamount div').height())
+        while( $('#Cheque_Alphamount div').height() >= $('#Cheque_Alphamount').height() ) {
+            $('#Cheque_Alphamount div').css('font-size', (parseFloat($('#Cheque_Alphamount div').css('font-size')) - 1) );
+            //  console.log("font size div",$('#Cheque_Alphamount div').css('font-size'));
+        }
+        //console.log("end height",$('#Cheque_Alphamount div').height())
+        //console.log("height",$('#Cheque_Alphamount').height());
+    });
+
+
+</script>

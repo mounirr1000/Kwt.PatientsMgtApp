@@ -21,7 +21,9 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public int AccessFailedCount { get; set; }
         public bool TwoFactorEnabled { get; set; }
         public bool LockoutEnabled { get; set; }
-
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string MiddleName { get; set; }
         public virtual List<UserRolesModel> UserRoles { get; set; }
     }
 }

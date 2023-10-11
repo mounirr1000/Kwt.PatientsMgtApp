@@ -49,6 +49,15 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
         protected global::System.Web.UI.WebControls.TextBox AuthorizedDate;
         
         /// <summary>
+        /// AuthorizedDate2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox AuthorizedDate2;
+        
+        /// <summary>
         /// IsActiveList control.
         /// </summary>
         /// <remarks>
@@ -101,6 +110,15 @@ namespace Kwt.PatientsMgtApp.WebUI.Reports {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList SpecialityList;
+        
+        /// <summary>
+        /// AgencyList control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList AgencyList;
         
         /// <summary>
         /// LinkSearchButton control.

@@ -1,0 +1,46 @@
+﻿
+@{
+    ViewBag.Title = "DepositReport";
+}
+
+<h2>DepositReport</h2>
+
+<div class="pt-3 pb-3 row">
+    @*<a href="@Url.Action("Patient", "Report")" class="k-button col-md-3"><i class="fa fa-hospital-o" style="color: orange"></i> Patient Report</a>
+    <a href="@Url.Action("Payment", "Report")" class="k-button col-md-3"><i class="fa fa-hospital-o" style="color: orange"></i> Payment Report</a>*@
+    <a href="@Url.Action("List", "Report")" class="k-button col-md-3"><i class="fa fa-hospital-o" style="color: orange"></i> Reports List</a>
+    @*<a href="@Url.Action("PaymentReference", "Report")" class="k-button col-md-3" ><i class="fa fa-plus-circle" style="color:orange"></i> Create Payment Reference</a>*@
+</div>
+
+    <fieldset style="width: 100%; min-width: fit-content;">
+        <legend>Payment Report</legend>
+        <iframe runat="server" id="Reports" src="~/Reports/Deposit.aspx"
+                scrolling="no"
+                style="border: none; width: 1000px; height: 1000px;"
+                onload="this.style.height = this.contentDocument.body.scrollHeight + 'px';
+    this.style.width = this.contentDocument.body.scrollWidth + 'px';"></iframe>
+    </fieldset>
+
+
+
+@section scripts
+{
+    <script type="text/javascript">
+        function autoResize() {
+            debugger;
+            var height = $('#Reports').contentDocument.body.scrollHeight;
+            var width = $('#Reports').contentDocument.body.scrollWidth;
+            if (height)
+                $('#Reports').height(height);
+            else $('#Reports').height("1000px;");
+            if (width)
+                $('#Reports').width(width);
+            else $('#Reports').width("1100px;");
+        }
+        $('#Reports').load(function () {
+            $(this).height($(this).contents().height());
+            $(this).width($(this).contents().width());
+        });
+    </script>
+
+}

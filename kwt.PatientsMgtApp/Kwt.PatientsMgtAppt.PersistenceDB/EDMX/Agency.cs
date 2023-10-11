@@ -18,6 +18,8 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public Agency()
         {
             this.Patients = new HashSet<Patient>();
+            this.Payrolls = new HashSet<Payroll>();
+            this.DepositAccounts = new HashSet<DepositAccount>();
         }
     
         public int AgencyID { get; set; }
@@ -25,5 +27,9 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Patient> Patients { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Payroll> Payrolls { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DepositAccount> DepositAccounts { get; set; }
     }
 }

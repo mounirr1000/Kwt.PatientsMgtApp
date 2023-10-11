@@ -1,0 +1,217 @@
+﻿
+@{
+    var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+    serializer.MaxJsonLength = Int32.MaxValue;
+    var jsonModel = serializer.Serialize(Model);
+
+}
+<div class="modal fade bd-example-modal-lg" id="voucherPrint" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="printVoucher"><i class="fa fa-print" style="color: blueviolet"></i> Print Voucher</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="voucherPrintBody" style="font-size: 22px;">
+                <fieldset>
+                    <legend>Voucher Info</legend>
+
+                    <ul class="fieldlist form-row">
+
+                        <li class="col-md-6">
+                            <label>Printed By</label>
+                            @User.Identity.Name
+                        </li>
+                        <li class="col-md-6">
+                            <label>Printed Date</label>
+                            @DateTime.Now
+                        </li>
+                    </ul>
+                </fieldset>
+
+
+                <fieldset>
+                    <legend>Voucher Details</legend>
+                    <ul class="fieldlist form-row">
+                        <li class="col-md-6">
+                            <label>Voucher #</label>
+                            @Model.TransactionIDFormat
+                        </li>
+                        @if (Model.PayrollMethodId == 1)//wire
+                        {
+                            <li class="col-md-6">
+                                <label>Wire #</label>
+                                @Model.WireNumberFormat
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="col-md-6">
+                                <label>Check #</label>
+                                @Model.CheckNumberFormat
+                            </li>
+                        }
+
+                    </ul>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Payee Info</legend>
+                    @if (Model.PayeeTypeID == 1)
+                    {
+                        <ul class="fieldlist form-row">
+                            <li class="col-md-6">
+                                <label>Payee ID</label>
+                                @Model.EmployeeID
+                            </li>
+                            <li class="col-md-6">
+                                <label>Payee Name</label>
+                                @Model.PayeeName
+                            </li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <ul class="fieldlist form-row">
+                            <li class="col-md-6">
+                                <label>Payee ID</label>
+                                @Model.PayeeID
+                            </li>
+                            <li class="col-md-6">
+                                <label>Payee Name</label>
+                                @Model.PayeeName
+                            </li>
+                            <li class="col-md-6">
+                                <label>Agency</label>
+                                @Model.Agency.AgencyName
+                            </li>
+                        </ul>
+                    }
+                </fieldset>
+
+
+                <fieldset>
+                    <legend>Payment Info</legend>
+                    <div class="fieldlist">
+                        <div class="row">
+                            <div class="col-md-4"><label>Payment Method</label> @Model.PayrollMethod.PayrollMethodName</div>
+                            <div class="col-md-4"><label>Payment Status</label> @Model.PayrollStatu.PayrollStatusName</div>
+                            <div class="col-md-4"><label>Payment Paid Date</label> @Model.PaymentPaidDateDateFormatted</div>
+                            <div class="col-md-4"><label>Payment Paid By</label> @Model.PaymentPaidBy</div>
+                            <div class="col-md-4"><label>Descriptions</label> @Model.Descriptions</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4"><label> Start Date</label> @Model.StartDateFormatted</div>
+                            <div class="col-md-4"><label> End Date</label> @Model.EndDateFormatted</div>
+                            <div class="col-md-4"><label> Entry Date</label> @Model.PaymentEnteredDateFormatted</div>
+                            <div class="col-md-4"><label> Approved Date</label> @Model.PaymentApprovedDateFormatted</div>
+                            <div class="col-md-4"><label> Authorized Date</label> @Model.PaymentAuthorizedDateFormatted</div>
+                            <div class="col-md-4"><label> Reconciled Date</label> @Model.PaymentReconciledDateFormatted</div>
+                        </div>
+
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Payee Info</legend>
+                    <ul class="fieldlist form-row">
+                        <li class="col-md-6"><label>Address</label> @Model.Payee.PayeeStreetAddress</li>
+                        <li class="col-md-6"><label>City, State Zipcode</label> @Model.Payee.CityStateZipAddress</li>
+                        <li class="col-md-6"><label>Bank Account</label> @Model.Payee.PayeeBankAccount</li>
+                        <li class="col-md-6"><label>Bank Name</label> @Model.Payee.PayeeBankName</li>
+                        <li class="col-md-6"><label>Routing Number</label> @Model.Payee.PayeeBankRoutingNumber</li>
+                    </ul>
+                </fieldset>
+                @*<fieldset>
+                    <legend>Accounts Details</legend>
+                    <ul class="form-row">
+                        @foreach (var ac in Model.Accounts)
+                        {
+                            <li class="col-md-4"><label>Account Name</label> @ac.AccountName</li>
+                            <li class="col-md-4"><label>Descriptions</label> @ac.Descriptions</li>
+                            <li class="col-md-4">&nbsp;</li>
+                            <li class="col-md-4"><label>Amount</label> @ac.AmountFormated</li>
+                            <li class="col-md-4"><label>Discount</label> @ac.DiscountDecimalFormat</li>
+                            <li class="col-md-4"><label>Total</label> @ac.TotalAmountFormated</li>
+
+                        }
+                                        <li class="col-md-12">
+                                            <div id="payrollAccounts" class="form-row"></div>
+                                        </li>
+                                    </ul>
+
+                </fieldset>*@
+                <fieldset>
+                    <legend>Accounts Details</legend>
+
+                    <div id="payrollAccountsVoucherPrint" style="font-size:.6em"></div>
+                </fieldset>
+                <fieldset>
+                    <legend>Balance</legend>
+                    <ul class="fieldlist form-row">
+                        <li class="col-md-6"><label>Amount</label> @Model.AmountFormated</li>
+                    </ul>
+                </fieldset>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="printVoucher1"> <i class="fa fa-print" style="color: blueviolet"></i> Print Voucher</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*@Scripts.Render("~/bundles/jquery")*@
+<script type="text/javascript">
+    $('document').ready(function () {
+        var payroll = @Html.Raw(jsonModel);
+        console.log("detail voucher print",payroll);
+        var enteredGird = $("#payrollAccountsVoucherPrint").kendoGrid({
+            resizable: true,
+            noRecords: true,
+            messages: {
+                noRecords: "There is no payments to display"
+            },
+            //pageable: {
+            //    pageSize: 20,
+            //    alwaysVisible: false,
+            //    pageSizes: [5, 10, 15, "all"]
+            //},
+            columns: [
+                {
+                    field: "AccountName",
+                    title: "Account Name",
+                   // width:"100px"
+                },{
+                    field: "Descriptions",
+                    title: "Descriptions",
+                   // width:"130px"
+                },{
+                    field: "AmountFormated",
+                    title: "Amount",
+                    width:"100px"
+                },{
+                    field: "DiscountDecimalFormat",
+                    title: "Discount",
+                    width:"90px"
+                },{
+                    field: "AmountAfterDiscount",
+                    title: "Total",
+                    width:"100px",
+                    format:"{0:c2}",
+                }
+
+
+            ],
+            dataSource: {
+
+                data: payroll.Accounts,
+
+            }
+        }).data("kendoGrid");
+
+    })
+</script>

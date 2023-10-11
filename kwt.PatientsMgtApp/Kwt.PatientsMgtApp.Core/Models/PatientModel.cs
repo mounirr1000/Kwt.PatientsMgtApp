@@ -7,6 +7,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Kwt.PatientsMgtApp.Core.Infrastructure;
+using System.Web;
+
 namespace Kwt.PatientsMgtApp.Core.Models
 {
     public class PatientModel : BaseEntity, IValidatableObject
@@ -192,5 +194,28 @@ namespace Kwt.PatientsMgtApp.Core.Models
         //public Nullable<bool> IsDead { get; set; }
         [DisplayName("Death Date")]
         public Nullable<System.DateTime> DeathDate { get; set; }
+
+        // file uploads while creating new patient
+
+        public PatientFileModel PatientFile { get; set; }
+        public PatientFileModel[] PatientFiles { get; set; }
+        [DisplayName("Patient File Info")]
+        public HttpPostedFileBase[] PatientPasportFile { get; set; }
+        [DisplayName("Patient Appointment File(s)")]
+        public HttpPostedFileBase[] PatientFirstApointmentFile { get; set; }
+        [DisplayName("Patient End Treatment File(s)")]
+        public HttpPostedFileBase[] PatientEndTreatmentFile { get; set; }
+        //[Required(ErrorMessage = "Please select file.")]
+        //[Display(Name = "Browse File")]
+        //public HttpPostedFileBase[] files { get; set; }
+
+        //patient extensions
+        public List<PatientExtensionModel> PatientExtensions { get; set; }
+        public bool HasExtension { get; set; }
+        public PatientExtensionModel PatientExtension { get; set; }
+        [DisplayName("Patient Extension Info")]
+        public HttpPostedFileBase[] PatientExtesionFile { get; set; }
+        public string ExtensionDocLink { get; set; }
+        public string ExtensionFileName { get; set; }
     }
 }

@@ -1,0 +1,451 @@
+﻿@using Kwt.PatientsMgtApp.WebUI.Infrastructure
+@model Kwt.PatientsMgtApp.Core.Models.EmployeeModel
+@{
+    ViewBag.Title = "Employee Details";
+}
+
+<h2>Employee Details</h2>
+
+<div class="mt-3">
+    <p>
+        <a href="@Url.Action("EmployeeList")" class="k-button"><i class="fa fa-arrow-left" style="color: lightblue"></i> Back to List</a>
+        @if (User.IsInAnyRoles(CrudRoles.PaymentUpdateRoles) || User.IsInAnyRoles(CrudRoles.PaymentApprovalRoles))
+        {
+            if (User.IsInAnyRoles(CrudRoles.PaymentUpdateRoles))
+            {
+                <a href="@Url.Action("EditEmployee", new {employeeId=Model.EmployeeID})" class="k-button"><i class="fa fa-pencil" style="color: blueviolet"></i> Edit</a>                
+            }
+            <a href="javascript:window.print()" class="k-button"><i class="fa fa-print" style="color: blueviolet"></i> Print This Page</a>                        
+        }
+
+    </p>
+</div>
+
+<div id="empDetails">
+    
+    <button data-target="#employeeDetails" data-toggle="collapse"><i></i> Personal Info</button>
+    <div id="employeeDetails" class="fieldlist collapse show fieldset">
+        <div class="row">
+            <div class="editor-field col-md-3">
+                @Html.LabelFor(model => model.EmployeeID, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.EmployeeID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+
+            </div>
+            <div class="editor-field col-md-3">
+                @*@Html.LabelFor(model => model.Title.Title1, htmlAttributes: new { @class = "" })*@
+                <label for="Title_TitleTypeId">Job Title</label>
+                @Html.DropDownListFor(model => model.Title.TitleTypeId, new List<SelectListItem>
+                    (Model.TitleTypes.Select(a => new SelectListItem()
+                    {
+                        Text = a.TitleTypeName,
+                        Value = a.TitleTypeId.ToString(),
+                        Selected = a.TitleTypeId == Model.Title.TitleTypeId
+                    }).ToList()), "Select Title Category...", new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+            <div class="editor-field col-md-3">
+                @Html.LabelFor(model => model.HireDate, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.HireDate, new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+            <div class="editor-field col-md-3">
+                @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.EndDate, new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+            <div class="editor-field col-md-3">
+                @Html.LabelFor(model => model.EmployeeFName, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.EmployeeFName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+
+            </div>
+            <div class="editor-field col-md-3">
+                @Html.LabelFor(model => model.EmployeeMName, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.EmployeeMName, new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+            <div class="editor-field col-md-3">
+                @Html.LabelFor(model => model.EmployeeLName, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.EmployeeLName, new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+            <div class="editor-field col-md-3">
+                @Html.LabelFor(model => model.GENDER, htmlAttributes: new { @class = "" })
+                @Html.DropDownListFor(model => model.GENDER, new List<SelectListItem>
+                    (Model.Genders.Select(a => new SelectListItem()
+                    {
+                        Text = a.ToString(),
+                        Value = a.ToString()
+                    }).ToList()), "Select Gender ...", new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+            </div>
+            <div class="editor-field col-md-4">
+                @Html.LabelFor(model => model.DateOfBirth, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.DateOfBirth, new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+            <div class="editor-field col-md-8">
+                @Html.LabelFor(model => model.StreetAddress, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.StreetAddress, new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+            <div class="editor-field col-md-6">
+                @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.City, new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+            <div class="editor-field col-md-4">
+                @Html.LabelFor(model => model.State, htmlAttributes: new { @class = "" })
+                @Html.DropDownListFor(model => model.State, new List<SelectListItem>
+                    (Model.States.Select(a => new SelectListItem()
+                    {
+                        Text = a.ToString(),
+                        Value = a.ToString()
+                    }).ToList()), "Select State ...", new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+            <div class="editor-field col-md-2">
+                @Html.LabelFor(model => model.ZipCode, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.ZipCode, new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+            <div class="editor-field col-md-4">
+                @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.PhoneNumber, new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+            <div class="editor-field col-md-6">
+                @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.Email, new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+
+
+            <div class="editor-field col-md-4">
+                @Html.LabelFor(model => model.SocialStatusID, htmlAttributes: new { @class = "" })
+
+                @Html.DropDownListFor(model => model.SocialStatusID, new List<SelectListItem>
+                    (Model.SocialStatuses.Select(a => new SelectListItem()
+                    {
+                        Text = a.SocialStatusName,
+                        Value = a.SocialStatusID.ToString()
+                    }).ToList()), "Select Marital Status...", new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+            <div class="editor-field col-md-4">
+                @Html.LabelFor(model => model.Nationality, htmlAttributes: new { @class = "" })
+                @Html.DropDownListFor(model => model.Nationality, new List<SelectListItem>
+                    (Model.Nationalties.Select(a => new SelectListItem()
+                    {
+                        Text = a.ToString(),
+                        Value = a.ToString()
+                    }).ToList()), "Select Nationality ...", new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+
+            <div class="editor-field col-md-4">
+                @Html.LabelFor(model => model.ImmigrationStatus, htmlAttributes: new { @class = "" })
+                @Html.DropDownListFor(model => model.ImmigrationStatus, new List<SelectListItem>
+                    (Model.ImmigrationStatuses.Select(a => new SelectListItem()
+                    {
+                        Text = a.ToString(),
+                        Value = a.ToString()
+                    }).ToList()), "Select Immigration Status...", new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+
+            <div class="editor-field col-md-4">
+                @Html.LabelFor(model => model.Education, htmlAttributes: new { @class = "" })
+                @Html.DropDownListFor(model => model.Education, new List<SelectListItem>
+                    (Model.EductaionList.Select(a => new SelectListItem()
+                    {
+                        Text = a.ToString(),
+                        Value = a.ToString()
+                    }).ToList()), "Select Education Level...", new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+            <div class="editor-field col-md-4">
+                @Html.LabelFor(model => model.Training, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.Training, new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+            <div class="editor-field col-md-4">
+                @Html.LabelFor(model => model.Qualification, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.Qualification, new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+            @*<div class="editor-field col-md-4">
+                    @Html.LabelFor(model => model.Photograph, htmlAttributes: new { @class = "" })
+                    @Html.TextBoxFor(model => model.Photograph, new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+                </div>*@
+
+            <div class="editor-field col-md-12">
+                @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "" })
+                @Html.TextAreaFor(model => model.Notes, new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+        </div>
+    </div>
+
+    <button data-target="#employeeSalaryInfo" data-toggle="collapse"><i></i> Salary Info</button>
+    <div id="employeeSalaryInfo" class="fieldlist collapse show fieldset">
+        <div class="row">
+
+            @Html.HiddenFor(model => model.Salary.ExperienceSalary)
+            @Html.HiddenFor(model => model.Salary.ExperienceWithInsuranceSalary)
+            @Html.HiddenFor(model => model.Salary.ExperienceWithTaxSalary)
+            @Html.HiddenFor(model => model.Salary.TotalSalary)
+
+            <div class="editor-field col-md-5">
+                @Html.LabelFor(model => model.Salary.StartingSalary, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.Salary.StartingSalary, new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+            <div class="editor-field col-md-5">
+                @Html.LabelFor(model => model.Salary.Salary1, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.Salary.Salary1, new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+            <div class="editor-field col-md-4">
+                @Html.LabelFor(model => model.Salary.YearlySalaryIncrement, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.Salary.YearlySalaryIncrement, new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+            <div class="editor-field col-md-4">
+                @Html.LabelFor(model => model.TaxCategories, new { @class = "" })
+                @Html.DropDownListFor(model => model.Salary.TaxCategoryID, new List<SelectListItem>
+                    (Model.TaxCategories.Select(a => new SelectListItem()
+                    {
+                        Text = a.TaxCategory1,
+                        Value = a.TaxCategoryID.ToString()
+                    }).ToList()), "Select Tax Category...", new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+
+            </div>
+            <div class="editor-field col-md-4">
+                @Html.LabelFor(model => model.Salary.SalaryPayAccountID, htmlAttributes: new { @class = "" })
+                @Html.DropDownListFor(model => model.Salary.SalaryPayAccountID, new List<SelectListItem>
+                    (Model.PayrollAccounts.Select(a => new SelectListItem()
+                    {
+                        Text = a.Description,
+                        Value = a.PayAccountID.ToString()
+                    }).ToList()), "Select Salary Account...", new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+        </div>
+    </div>
+    <button data-target="#employeeInsuranceInfo" data-toggle="collapse"><i></i> Insurance Info</button>
+    <div id="employeeInsuranceInfo" class="fieldlist collapse show fieldset">
+        <div class="row">
+            <div class="editor-field col-md-4">
+                @Html.LabelFor(model => model.Insurance.BasedSalary, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.Insurance.BasedSalary, new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+            <div class="editor-field col-md-4">
+
+                @Html.LabelFor(model => model.Insurance.InsurancePayAccountID, htmlAttributes: new { @class = "" })
+                @Html.DropDownListFor(model => model.Insurance.InsurancePayAccountID, new List<SelectListItem>
+                    (Model.PayrollAccounts.Select(a => new SelectListItem()
+                    {
+                        Text = a.Description,
+                        Value = a.PayAccountID.ToString()
+                    }).ToList()), "Select Insuarnce Account...", new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+            <div class="editor-field col-md-4"></div>
+            @* Health insuarnce *@
+            <div class="editor-field col-md-4">
+                @Html.LabelFor(model => model.InsuranceTypes, htmlAttributes: new { @class = "" })
+                @Html.DropDownListFor(model => Model.HealthInsurance.InsuranceTypeID, new List<SelectListItem>
+                    (Model.InsuranceTypes.Select(a => new SelectListItem()
+                    {
+                        Text = a.InsuranceType1,
+                        Value = a.InsuranceTypeID.ToString()
+                    }).ToList()), "Select Insurance Type...", new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+            </div>
+            <div class="editor-field col-md-4">
+                @Html.LabelFor(model => model.InsuranceOptions, htmlAttributes: new { @class = "" })
+                @Html.DropDownListFor(model => Model.HealthInsurance.InsuranceOptionID, new List<SelectListItem>
+                    (Model.InsuranceOptions.Select(a => new SelectListItem()
+                    {
+                        Text = a.InsuranceOption1,
+                        Value = a.InsuranceOptionID.ToString()
+                    }).ToList()), "Select Insurance Option...", new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+            </div>
+            <div class="editor-field col-md-4">
+                @Html.LabelFor(model => model.Insurance.InsuranceAmount, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => Model.HealthInsurance.InsuranceAmount, new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+            @* Health insurance *@
+            @* Dental insurance *@
+            <div class="editor-field col-md-4">
+                @Html.LabelFor(model => model.InsuranceTypes, htmlAttributes: new { @class = "" })
+                @Html.DropDownListFor(model => Model.DentalInsurance.InsuranceTypeID, new List<SelectListItem>
+                    (Model.InsuranceTypes.Select(a => new SelectListItem()
+                    {
+                        Text = a.InsuranceType1,
+                        Value = a.InsuranceTypeID.ToString()
+                    }).ToList()), "Select Insurance Type...", new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+            </div>
+            <div class="editor-field col-md-4">
+                @Html.LabelFor(model => model.InsuranceOptions, htmlAttributes: new { @class = "" })
+                @Html.DropDownListFor(model => Model.DentalInsurance.InsuranceOptionID, new List<SelectListItem>
+                    (Model.InsuranceOptions.Select(a => new SelectListItem()
+                    {
+                        Text = a.InsuranceOption1,
+                        Value = a.InsuranceOptionID.ToString()
+                    }).ToList()), "Select Insurance Option...", new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+            </div>
+            <div class="editor-field col-md-4">
+                @Html.LabelFor(model => model.Insurance.InsuranceAmount, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => Model.DentalInsurance.InsuranceAmount, new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+
+        </div>
+    </div>
+    <button data-target="#employeeBonusInfo" data-toggle="collapse"><i></i> Bonus Info</button>
+    <div id="employeeBonusInfo" class="fieldlist collapse show fieldset">
+        <div class="row">
+            <div class="editor-field col-md-4">
+                @Html.LabelFor(model => model.BonusTypes, htmlAttributes: new { @class = "" })
+                @Html.DropDownListFor(model => model.Bonus.BonusTypeID, new List<SelectListItem>
+                    (Model.BonusTypes.Select(a => new SelectListItem()
+                    {
+                        Text = a.BonusType,
+                        Value = a.BonusTypeID.ToString()
+                    }).ToList()), "Select Bonus Types...", new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+            </div>
+            <div class="editor-field col-md-2"></div>
+            <div class="editor-field col-md-4">
+                @Html.LabelFor(model => model.Bonus.BonusPayAccountID, htmlAttributes: new { @class = "" })
+                @Html.DropDownListFor(model => model.Bonus.BonusPayAccountID, new List<SelectListItem>
+                    (Model.PayrollAccounts.Select(a => new SelectListItem()
+                    {
+                        Text = a.Description,
+                        Value = a.PayAccountID.ToString()
+                    }).ToList()), "Select Bonus Account...", new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+
+
+            <div class="editor-field col-md-4">
+                @Html.LabelFor(model => model.Bonus.BonusValue, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.Bonus.BonusValue, new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+            <div class="col-md-2"></div>
+            <div class="editor-field col-md-4">
+                @Html.LabelFor(model => model.Bonus.BonusFinalAmount, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.Bonus.BonusFinalAmount, new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+    <button data-target="#employeeOvertimeInfo" data-toggle="collapse"><i></i> Overtime Info</button>
+    <div id="employeeOvertimeInfo" class="fieldlist collapse show fieldset">
+        <div class="row">
+            <div class="editor-field col-md-4">
+                @Html.LabelFor(model => model.Overtime.OvertimePayAccountID, htmlAttributes: new { @class = "" })
+                @Html.DropDownListFor(model => model.Overtime.OvertimePayAccountID, new List<SelectListItem>
+                    (Model.PayrollAccounts.Select(a => new SelectListItem()
+                    {
+                        Text = a.Description,
+                        Value = a.PayAccountID.ToString()
+                    }).ToList()), "Select Overtime Account...", new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+            <div class="col-md-4"></div>
+            <div class="col-md-4"></div>
+            <div class="editor-field col-md-4">
+                @Html.LabelFor(model => model.Overtime.OvertimeHours, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.Overtime.OvertimeHours, new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+            <div class="col-md-4"></div>
+            <div class="editor-field col-md-4">
+                @Html.LabelFor(model => model.Overtime.CalculatedOverTimeAmount, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.Overtime.CalculatedOverTimeAmount, new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+
+        </div>
+    </div>
+
+    <button data-target="#employeeDeductionInfo" data-toggle="collapse"><i></i> Deduction Info</button>
+    <div id="employeeDeductionInfo" class="fieldlist collapse show fieldset">
+        <div class="row">
+            @Html.HiddenFor(model => model.Deduction.HourlyRate)
+            @Html.HiddenFor(model => model.Deduction.BasedSalary)
+
+
+            <div class="editor-field col-md-4">
+                <label for="DeductionTypes">Hours or Days?</label>
+                @Html.DropDownListFor(model => model.Deduction.DeductionType, new List<SelectListItem>
+                    (Model.Deduction.DeductionTypes.Select(a => new SelectListItem()
+                    {
+                        Text = a.ToString(),
+                        Value = a.ToString()
+                    }).ToList()), "Select Deduction Type...", new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+
+            </div>
+            <div class="col-md-4"></div>
+            <div class="col-md-4"></div>
+            <div class="editor-field col-md-4" id="DeductedDays" style="display:none;">
+                @Html.LabelFor(model => model.Deduction.DeductedDays, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.Deduction.DeductedDays, new { @class = "k-textbox edit", style = "width: 100%" })
+
+            </div>
+            <div class="editor-field col-md-4" id="DeductedHours" style="display:none;">
+                @Html.LabelFor(model => model.Deduction.DeductedHours, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.Deduction.DeductedHours, new { @class = "k-textbox edit", style = "width: 100%" })
+
+            </div>
+            <div class="col-md-4"></div>
+            
+            <div class="editor-field col-md-4">
+                @Html.LabelFor(model => model.Deduction.DeductionAmount, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.Deduction.DeductionAmount, new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script type="text/javascript">
+        // $.validator.setDefaults({ ignore: '' });
+
+        $(document).ready(function () {
+
+
+            $('#empDetails button').addClass('btn btn-block mb-2 text-uppercase text-white bg-info');
+            $('#empDetails button i').addClass('fa fa-angle-double-down pull-left');
+            $('#empDetails button').click(function (e) {
+                e.preventDefault();
+                var $this = this;
+                var caret = $($this).find('i');
+                if ($(caret).hasClass('fa-angle-double-down'))
+                    $(caret).removeClass('fa-angle-double-down').addClass("fa-angle-double-up");
+                else
+                    $(caret).removeClass('fa-angle-double-up').addClass("fa-angle-double-down");
+            });
+            $.validator.setDefaults({ ignore: '' });
+
+            $("#HireDate, #EndDate, #DateOfBirth, #Salary_FromDate, #Salary_ToDate").kendoDatePicker({
+                enable: true
+            });
+        })
+        
+    </script>
+}

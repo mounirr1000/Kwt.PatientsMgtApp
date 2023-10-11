@@ -5,14 +5,20 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/kendo/css")
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/fontawesome")
     <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
 
     <link href="~/Content/hover.css" rel="stylesheet" />
     @*@Styles.Render("~/Content/themes/base/css")*@
-    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
 
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/bootstrap")
+
+    @Scripts.Render("~/bundles/kendoui")
 
 </head>
 <body>
@@ -39,24 +45,22 @@
             <hr />
             <footer class="footer-content">
                 <span class="h6 small">&copy; Kuwait Health Office @DateTime.Now.Year</span>
-                @*<span style="float: right" class="h6 small">
+                <span style="float: right" class="h6 small">
                     <p>
                         Application Developed by <a href="http://www.multiplesolutions.net" target="_blank">MSolution</a>
                         | Icons made by Freepik from <a href="https://www.flaticon.com/" title="Flaticon" target="_blank">flaticon</a>
                     </p>
-                   
 
-                </span>*@
+
+                </span>
             </footer>
         }
 
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/jqueryui")
-    @Scripts.Render("~/bundles/bootstrap")
-
-    @Scripts.Render("~/bundles/kendoui")
+    
+   
+    
     @RenderSection("scripts", required: false)
 
     <script type="text/javascript">
@@ -67,19 +71,93 @@
     @* new 07/08/2019 *@
     @{ Html.RenderPartial("_SearchedPatientjs"); }
     <script type="text/javascript">
-        //$(document).ready(function() {
-        //    function setHeight() {
-        //        var windowHeight = $('html').height();
-        //        console.log("html "+windowHeight);
-        //        $('body').css('height', windowHeight * (-1));
-        //    };
+        $(document).ready(function () {
+            //function setHeight() {
+            //    var windowHeight = $('html').height();
+            //    console.log("html "+windowHeight);
+            //    $('body').css('height', windowHeight);//container body-content
+            //  //  $('.container').css('max-height', windowHeight);
+            //};
 
-        //    setHeight();
+            //setHeight();
 
-        //    $(window).resize(function() {
-        //        setHeight();
-        //    });
-        //});
+            //$(window).resize(function() {
+            //    setHeight();
+            //});
+
+            //var element = $("a[id='Payment'],a[id='employeePay']");
+            var element = $("a[id='Payment']");
+            element.css({
+                "cursor": "default"
+            });
+            element.click(function (event) {
+                event.preventDefault();
+            })
+            
+            //console.log($(".dropdown a"));
+            var controllerName = '@ViewContext.Controller.ValueProvider.GetValue("controller").RawValue';
+            var actionName = '@ViewContext.Controller.ValueProvider.GetValue("action").RawValue';
+            console.log("actionName ", actionName);
+            if (actionName == "EmployeeList")
+                $("a[id='employeePay']").addClass("k-state-active");
+            $(".dropdown-content >a , .dropdown-submenu > a").each(function (index) {
+                $(this).hover(
+                    function () {
+                        $("a[id='Payment']").addClass("k-state-active");
+                    }, function () {
+                        if (controllerName != "Payment")
+                            $("a[id='Payment']").removeClass("k-state-active");
+                    });
+            });
+            $("#paySubmenu > a").each(function (index) {
+                $(this).hover(
+                    function () {
+                        element.addClass("k-state-active");
+                    }, function () {
+                        if (controllerName != "Payment")
+                            element.removeClass("k-state-active");
+                    });
+            });
+            // remove k-state-active from a div when the mouse leave and when action name is not on the list
+            $('#employeePay').mouseleave(function () {
+                if (actionName != "EmployeeRegular" && actionName != "EmployeeBonus" && actionName != "EmployeeOvertime" && actionName != "EmployeeSeverance") {
+                    $(this).removeClass("k-state-active");
+                }
+                if (actionName == "EmployeeList")
+                    $("a[id='employeePay']").addClass("k-state-active");
+            });
+            $('#paySubmenu > a').mouseleave(function () {
+                if (actionName != "EmployeeRegular" && actionName != "EmployeeBonus" && actionName != "EmployeeOvertime" && actionName != "EmployeeSeverance") {
+                    $("#employeePay").removeClass("k-state-active");
+                }
+                if (actionName == "EmployeeList")
+                    $("a[id='employeePay']").addClass("k-state-active");
+            });
+
+            if ($('#paySubmenu > a').hasClass("k-state-active")) {
+                $('#employeePay').addClass("k-state-active");
+            }
+            
+            $('.dropdown-submenu').hover(function (e) {
+                $('#paySubmenu').toggle();
+                e.stopPropagation();
+                e.preventDefault();
+            });
+
+            // calander display code
+            var todayDate = new Date();
+            var year = todayDate.getFullYear();
+            var day = todayDate.getDate();
+           // var month = todayDate.getFullYear();
+            const week = todayDate.toLocaleString('default', { weekday: 'short' });
+            const month = todayDate.toLocaleString('default', { month: 'short' });
+           // console.log(month);
+            $("#cal_m").text(month)
+            $("#cal_y").text(year);
+            $("#cal_d").text(day);
+            $("#cal_w").text(week);
+        });
+
 
     </script>
 </body>

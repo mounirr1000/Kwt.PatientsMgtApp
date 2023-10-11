@@ -1,0 +1,986 @@
+﻿@using Kwt.PatientsMgtApp.WebUI.Infrastructure
+@model List<Kwt.PatientsMgtApp.Core.Models.PayrollModel>
+@{
+    ViewBag.Title = "Payrolls";
+}
+
+<h2>Payrolls</h2>
+
+@{
+    var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+    serializer.MaxJsonLength = Int32.MaxValue;
+    var jsonModel = serializer.Serialize(Model);
+
+}
+<div class="pt-3 pb-3">
+    <a href="@Url.Action("NewPayroll", "Payment")" class="k-button"><i class="fa fa-plus" style="color: yellowgreen"></i> New Voucher</a>
+    <a href="@Url.Action("NewDeposit", "Payment")" class="k-button"><i class="fa fa-money" style="color: yellowgreen"></i> New Deposit</a>
+</div>
+<div class="row pb-3">
+    <div class="col-md-4" style="padding:0;">
+        <input class=k-textbox type=text id="txtSearchString" style="width: 100%" placeholder="Payee ID / Name." />
+    </div>
+    <div class="col-md-8">
+        <button type="submit" class="k-button" id="btnSearch"><i class="fa fa-search" style="color: yellowgreen"></i> Search</button>
+        <button type="submit" class="k-button k-notification-button" id="btnClear"><i class="fa fa-times" style="color: lightblue"></i> Clear</button>
+    </div>
+
+
+</div>
+@*<h3 id="Grid">This a check link</h3>*@
+<div id="dialog" style="display: none">
+</div>
+<div class="loader"></div>
+@* tabs  *@
+<div class="row pb-3">
+    <div class="col-md-4">
+        <button type="submit" class="k-button" id="btnSubmit"><i class="fa fa-check" style="color: yellowgreen"></i> Submit</button>
+    </div>
+</div>
+<div id="tabstrip" style="visibility: hidden;">
+    <ul>
+        <li class="k-state-active" id="entered">
+            Entered
+        </li>
+        <li id="approved">
+            Approved
+        </li>
+        <li id="authorized">
+            Authorized
+        </li>
+        <li id="paid">
+            Paid
+        </li>
+        <li id="reconciled">
+            Reconciled
+        </li>
+    </ul>
+    <div>
+        <div id="payrollsEntered"></div>
+        <div>
+
+        </div>
+    </div>
+    <div>
+        <div id="payrollsApproved"></div>
+    </div>
+    <div>
+        <div id="payrollsAuthorized"></div>
+    </div>
+    <div>
+        <div id="payrollsPaid"></div>
+    </div>
+    <div>
+        <div id="payrollsReconciled"></div>
+    </div>
+
+</div>
+
+@* end tabs *@
+
+
+@section DeleteConfirm{
+
+    @{ Html.RenderPartial("_DeleteConfirmationModel"); }
+}
+
+@section Scripts {
+    @{ Html.RenderPartial("_DeleteConfirmationjs"); }
+
+    <script type="text/javascript">
+
+        $('document').ready(function () {
+            $("#tabstrip").css("visibility", "visible");
+
+            var payroll = @Html.Raw(jsonModel);
+            console.log(payroll);
+            var isAdmin =   @Html.Raw(Json.Encode(User.IsInAnyRoles(CrudRoles.AdminCrudRoles)));
+            var isAccountant =   @Html.Raw(Json.Encode(User.IsInAnyRoles(CrudRoles.PaymentDeleteRoles)));
+            var isAuditor =  @Html.Raw(Json.Encode(User.IsInAnyRoles(CrudRoles.PaymentApprovalRoles)));
+
+            function getTemplate(Id, StatusId, text,payrollMethodId) {
+                if (isAdmin) {
+                    return '<div style="text-align: center;"><a href="javascript:approvePayroll('+Id+','+StatusId+','+payrollMethodId+')" id='+Id+'> '+text+'</a></div>';
+                }
+                return '';
+            }
+            function getVoidTemplate(paymentId) {
+                if (isAccountant) {
+                    return '<div style="text-align: center;"><a href="javascript:confirmDelete('+paymentId+','+'\'paymentId\''+')" id='+paymentId+'> <i class="fa fa-times fa-2x" style="color: lightcoral"></i></a></div>';
+                }
+                return '';
+            }
+            var enteredGird=  $("#payrollsEntered").kendoGrid({
+                resizable: true,
+                height: 550,
+                //groupable: true,
+                sortable: true,
+                //  toolbar: "<p class='alert alert-info'>List of all Employees in our records</p>",
+                pageable: {
+                    pageSize: 20,
+                    alwaysVisible: false,
+                    pageSizes: [5, 10, 15, "all"]
+                },
+                columns: [
+                     {   title: "<input  class='checkAllCls' type='checkbox' id='checkboxAll1' />",
+                         width: "35px",
+                         template: "<input type='checkbox' class='check-box-inner' id='checkbox#=PayrollStatusID#' />",
+                         filterable: false
+                     },
+                    {
+                        field: "TransactionID",
+                        title: "Transaction ID",
+                        template: "<a href='@Url.Action("PayrollDetails", "Payment")?payrollId=#= TransactionID#'>#= TransactionIDFormat #</a>"
+
+                    },{
+                        field: "EmployeeID",
+                        title: "Payee ID",
+                        template: "#if(EmployeeID!=null){# #: EmployeeID # #}else {##: PayeeID ##}#"
+                    },{
+                        field: "PayeeName",
+                        title: "Payee Name",
+                    },{
+                        field: "Amount",
+                        title: "Amount",
+                        format:"{0:c2}"
+                    },{
+                        field: "PayrollMethod.PayrollMethodName",
+                        title: "Method",
+                    },{
+                        field: "PaymentEnteredBy",
+                        title: "Entered By",
+                    }
+                    ,{
+                        field: "TransactionID",
+                        title: "View",
+                        template: "<a href='@Url.Action("PayrollDetails", "Payment")?payrollId=#= TransactionID#'>View</a>"
+                    }
+                    ,{
+                        field: "TransactionID",
+                        title: "Edit",
+                        template: "<a href='@Url.Action("EditPayroll", "Payment")?payrollId=#= TransactionID#'>Edit</a>"
+                    }
+                    ,{
+                        field: "TransactionID",
+                        title: "Delete",
+                        template: '<div style="text-align: center;"><a href="javascript:deletePayroll(#=TransactionID#,1)"> Delete</a></div>',
+                    }
+                    ,{
+                        field: "TransactionID",
+                        title: "Approve",
+                        // template: "<div style='text-align: center;'><a href=\"javascript:approvePayroll('#=TransactionID#')\" id='#= TransactionID#'> Approve</a></div>",
+                        template: getTemplate('#=TransactionID#',1,'Approve','#=PayrollMethodId#'),
+                    }
+
+                ],
+                dataSource: {
+                    dataType: "json",
+                    transport: {
+                        read: "@Url.Action("GetPayrollsJson", "Payment")?query=entered"
+                    },
+                    //data: payroll,
+                    //filter: [
+                    //  { field: "PayrollStatusID", operator: "eq", value: 1 },
+                    //]
+                }
+            }).data("kendoGrid");
+
+            var approvedGird=  $("#payrollsApproved").kendoGrid({
+                resizable: true,
+                height: 550,
+                //groupable: true,
+                sortable: true,
+                //  toolbar: "<p class='alert alert-info'>List of all Employees in our records</p>",
+                pageable: {
+                    pageSize: 20,
+                    alwaysVisible: false,
+                    pageSizes: [5, 10, 15, "all"]
+                },
+                columns: [
+                    {   title: "<input  class='checkAllCls' type='checkbox' id='checkboxAll2' />",
+                        width: "35px",
+                        template: "<input type='checkbox' class='check-box-inner' id='checkbox#=PayrollStatusID#' />",
+                        filterable: false
+                    },{
+                        field: "TransactionID",
+                        title: "Transaction ID",
+                        template: "<a href='@Url.Action("PayrollDetails", "Payment")?payrollId=#= TransactionID#'>#= TransactionIDFormat #</a>"
+
+                    },{
+                        field: "EmployeeID",
+                        title: "Payee ID",
+                        template: "#if(EmployeeID!=null){# #: EmployeeID # #}else {##: PayeeID ##}#"
+                    },{
+                        field: "PayeeName",
+                        title: "Payee Name",
+                    },{
+                        field: "Amount",
+                        title: "Amount",
+                        format:"{0:c2}"
+                    },{
+                        field: "PayrollMethod.PayrollMethodName",
+                        title: "Method",
+                    },{
+                        field: "PaymentApprovedBy",
+                        title: "Approved By",
+                    },{
+                        field: "TransactionID",
+                        title: "View",
+                        template: "<a href='@Url.Action("PayrollDetails", "Payment")?payrollId=#= TransactionID#'>View</a>"
+                    }
+                    ,{
+                        field: "TransactionID",
+                        title: "Edit",
+                        template: "<a href='@Url.Action("EditPayroll", "Payment")?payrollId=#= TransactionID#'>Edit</a>"
+                    }
+                    ,{
+                        field: "TransactionID",
+                        title: "Delete",
+                        template: '<div style="text-align: center;"><a href="javascript:deletePayroll(#=TransactionID#,2)"> Delete</a></div>',
+                    },{
+                        field: "TransactionID",
+                        title: "Reset",
+                        template: '<div style="text-align: center;"><a href="javascript:resetPayroll(#=TransactionID#,2)"> Reset</a></div>',
+                    }
+                    ,{
+                        field: "TransactionID",
+                        title: "Authorize",
+                        template: getTemplate('#=TransactionID#',2,'Authorize','#=PayrollMethodId#'),
+                    }
+
+                ],
+                dataSource: {
+                    data: payroll,
+                    filter: [
+                      // leave data items which are "Beverage" and not "Coffee"
+                      { field: "PayrollStatusID", operator: "eq", value: 2 },
+                      //{ field: "name", operator: "neq", value: "Coffee" }
+                    ]
+                }
+            }).data("kendoGrid");
+
+            var authorizedGird=   $("#payrollsAuthorized").kendoGrid({
+                resizable: true,
+                height: 550,
+                //groupable: true,
+                sortable: true,
+                //  toolbar: "<p class='alert alert-info'>List of all Employees in our records</p>",
+                pageable: {
+                    pageSize: 20,
+                    alwaysVisible: false,
+                    pageSizes: [5, 10, 15, "all"]
+                },
+                columns: [
+                    {   title: "<input  class='checkAllCls' type='checkbox' id='checkboxAll3' />",
+                        width: "35px",
+                        template: "<input type='checkbox' class='check-box-inner' id='checkbox#=PayrollStatusID#' />",
+                        filterable: false
+                    },{
+                        field: "TransactionID",
+                        title: "Transaction ID",
+                        template: "<a href='@Url.Action("PayrollDetails", "Payment")?payrollId=#= TransactionID#'>#= TransactionIDFormat #</a>"
+
+                    },{
+                        field: "EmployeeID",
+                        title: "Payee ID",
+                        template: "#if(EmployeeID!=null){# #: EmployeeID # #}else {##: PayeeID ##}#"
+                    },{
+                        field: "PayeeName",
+                        title: "Payee Name",
+                    },{
+                        field: "Amount",
+                        title: "Amount",
+                        format:"{0:c2}"
+                    },{
+                        field: "PaymentAuthorizedBy",
+                        title: "Authorized By",
+                    },{
+                        field: "PayrollMethod.PayrollMethodName",
+                        title: "Method",
+                    },{
+                        field: "TransactionID",
+                        title: "View",
+                        template: "<a href='@Url.Action("PayrollDetails", "Payment")?payrollId=#= TransactionID#'>View</a>"
+                    }
+                    ,{
+                        field: "TransactionID",
+                        title: "Edit",
+                        template: "<a href='@Url.Action("EditPayroll", "Payment")?payrollId=#= TransactionID#'>Edit</a>"
+                    }
+                    ,{
+                        field: "TransactionID",
+                        title: "Delete",
+                        template: '<div style="text-align: center;"><a href="javascript:deletePayroll(#=TransactionID#,3)"> Delete</a></div>',
+                    },{
+                        field: "TransactionID",
+                        title: "Resete",
+                        template: '<div style="text-align: center;"><a href="javascript:resetPayroll(#=TransactionID#,3)"> Reset</a></div>',
+                    }
+                    ,{
+                        field: "TransactionID",
+                        title: "Pay",
+                        template: getTemplate('#=TransactionID#',3,'Pay','#=PayrollMethodId#'),
+                    }
+
+                ],
+                dataSource: {
+                    data: payroll,
+                    filter: [
+                      // leave data items which are "Beverage" and not "Coffee"
+                      { field: "PayrollStatusID", operator: "eq", value: 3 },
+                      //{ field: "name", operator: "neq", value: "Coffee" }
+                    ]
+                }
+            }).data("kendoGrid");
+
+            var paidGird=  $("#payrollsPaid").kendoGrid({
+                resizable: true,
+                height: 550,
+                //groupable: true,
+                sortable: true,
+                //  toolbar: "<p class='alert alert-info'>List of all Employees in our records</p>",
+                pageable: {
+                    pageSize: 20,
+                    alwaysVisible: false,
+                    pageSizes: [5, 10, 15, "all"]
+                },
+                columns: [
+                    {   title: "<input  class='checkAllCls' type='checkbox' id='checkboxAll4' />",
+                        width: "35px",
+                        template: "<input type='checkbox' class='check-box-inner' id='checkbox#=PayrollStatusID#' />",
+                        filterable: false
+                    },{
+                        field: "TransactionID",
+                        title: "Transaction ID",
+                        template: "<a href='@Url.Action("PayrollDetails", "Payment")?payrollId=#= TransactionID#'>#= TransactionIDFormat #</a>"
+
+                    },{
+                        field: "EmployeeID",
+                        title: "Payee ID",
+                        template: "#if(EmployeeID!=null){# #: EmployeeID # #}else {##: PayeeID ##}#"
+                    },{
+                        field: "PayeeName",
+                        title: "Payee Name",
+                    },{
+                        field: "Amount",
+                        title: "Amount",
+                        format:"{0:c2}"
+                    },{
+                        field: "PaymentPaidBy",
+                        title: "Paid By",
+                    },{
+                        field: "PayrollMethod.PayrollMethodName",
+                        title: "Method",
+                    },
+                    {
+                        field: "WireNumber",
+                        title: "Wire/Check Number",
+                        template: "#if(WireNumber!=null){# #: WireNumberFormat # #}else {##: CheckNumberFormat ##}#"
+                    },{
+                        field: "TransactionID",
+                        title: "View",
+                        template: "<a href='@Url.Action("PayrollDetails", "Payment")?payrollId=#= TransactionID#'>View</a>"
+                    }
+                    ,{
+                        field: "TransactionID",
+                        title: "Edit",
+                        template: "<a href='@Url.Action("EditPayroll", "Payment")?payrollId=#= TransactionID#'>Edit</a>"
+                    }
+                    ,{
+                        field: "TransactionID",
+                        title: "Delete",
+                        template: '<div style="text-align: center;"><a href="javascript:deletePayroll(#=TransactionID#,4)"> Delete</a></div>',
+                    }
+
+                    ,{
+                        field: "TransactionID",
+                        title: "Reconcile",
+                        template: getTemplate('#=TransactionID#',4,'Reconcile','#=PayrollMethodId#'),
+                    }
+
+                ],
+                dataSource: {
+                    data: payroll,
+                    filter: [
+                      // leave data items which are "Beverage" and not "Coffee"
+                      { field: "PayrollStatusID", operator: "eq", value: 4 },
+                      //{ field: "name", operator: "neq", value: "Coffee" }
+                    ]
+                }
+            }).data("kendoGrid");
+
+            var reconciledGird= $("#payrollsReconciled").kendoGrid({
+                resizable: true,
+                height: 550,
+                //groupable: true,
+                sortable: true,
+                //  toolbar: "<p class='alert alert-info'>List of all Employees in our records</p>",
+                pageable: {
+                    pageSize: 20,
+                    alwaysVisible: false,
+                    pageSizes: [5, 10, 15, "all"]
+                },
+                columns: [
+                    {
+                        field: "TransactionID",
+                        title: "Transaction ID",
+                        template: "<a href='@Url.Action("PayrollDetails", "Payment")?payrollId=#= TransactionID#'>#= TransactionIDFormat #</a>"
+
+                    },{
+                        field: "EmployeeID",
+                        title: "Payee ID",
+                        template: "#if(EmployeeID!=null){# #: EmployeeID # #}else {##: PayeeID ##}#"
+
+                    },{
+                        field: "PayeeName",
+                        title: "Payee Name",
+                    },
+                    {
+                        field: "Amount",
+                        title: "Amount",
+                        format:"{0:c2}"
+                    },{
+                        field: "PaymentReconciledBy",
+                        title: "Reconciled By",
+                    },{
+                        field: "PayrollMethod.PayrollMethodName",
+                        title: "Method",
+                    },
+                    {
+                        field: "WireNumber",
+                        title: "Wire/Check Number",
+                        template: "#if(WireNumber!=null){# #: WireNumberFormat # #}else {##: CheckNumberFormat ##}#"
+                    },
+                    {
+                        field: "TransactionID",
+                        title: "View",
+                        template: "<a href='@Url.Action("PayrollDetails", "Payment")?payrollId=#= TransactionID#'>View</a>"
+                    }
+                    ,{
+                        field: "TransactionID",
+                        title: "Edit",
+                        template: "<a href='@Url.Action("EditPayroll", "Payment")?payrollId=#= TransactionID#'>Edit</a>"
+                    }
+                    ,{
+                        field: "TransactionID",
+                        title: "Delete",
+                        template: '<div style="text-align: center;"><a href="javascript:deletePayroll(#=TransactionID#,5)"> Delete</a></div>',
+                    }
+
+                ],
+                dataSource: {
+                    data: payroll,
+                    filter: [
+                      // leave data items which are "Beverage" and not "Coffee"
+                      { field: "PayrollStatusID", operator: "eq", value: 5 },
+                      //{ field: "name", operator: "neq", value: "Coffee" }
+                    ]
+                }
+            }).data("kendoGrid");
+
+
+
+            var  payrollTab= $("#tabstrip").kendoTabStrip({
+                animation:  {
+                    open: {
+                        effects: "fadeIn"
+                    }
+                }
+            }).data('kendoTabStrip');
+            function refreshPayrollList(q){
+                $.ajax({
+                    url: "@Url.Action("GetPayrollsJson")",
+                    type: "GET",
+                    contentType: "application/json",
+                    data: { "query": q },
+                    dataType: "json",
+                    beforeSend: function() {
+
+                        $(".loader").css("display", "block");
+                    },
+                    success: function (results) {
+                        switch(q) {
+                            case "entered":
+                                enteredGird.dataSource.data( results );
+                                enteredGird.refresh();
+                                break;
+                            case "approved":
+                                approvedGird.dataSource.data( results );
+                                approvedGird.refresh();
+                                break;
+                            case "authorized":
+                                authorizedGird.dataSource.data( results );
+                                authorizedGird.refresh();
+                                break;
+                            case "paid":
+                                paidGird.dataSource.data( results );
+                                paidGird.refresh();
+                                break;
+                            case "reconciled":
+                                reconciledGird.dataSource.data( results );
+                                reconciledGird.refresh();
+                                break;
+                        }
+                        $(".loader").css("display", "none");
+                    },
+
+                    error: function (error) {
+                        alert(error);
+                    }
+                })
+
+            }
+
+            $("#tabstrip").on("click", "li", function(e) {
+                var $this = $(this);
+                var selectedId=$this.attr('id');
+                refreshPayrollList(selectedId);
+                if (localStorage.getItem("selectedList") != null)
+                    localStorage.removeItem("selectedList");
+                localStorage.setItem("selectedList", selectedId);
+
+            })
+            if (localStorage.getItem("selectedList") != null)
+                localStorage.removeItem("selectedList");
+            localStorage.setItem("selectedList", "entered");
+            $(".loader").css("display", "none");
+        });
+
+    </script>
+
+    <script type="text/javascript">
+
+        $("#dialog").dialog({
+            autoOpen: false,
+            modal: true,
+            title: "Check Details",
+            width:"960",
+            height:"700"
+        });
+        function approvePayroll(id, payrollStatusId, payrollMethodId){
+
+            $.ajax({
+                url: "@Url.Action("ApprovePayrollJson")",
+                type: "GET",
+                contentType: "application/json",
+                data: { "id": id , "payrollStatusId":payrollStatusId},
+                dataType: "json",
+                beforeSend: function() {
+
+                    $(".loader").css("display", "block");
+                },
+                success: function (results) {
+                    debugger;
+                    var grid=  $("#payrollsEntered").data("kendoGrid");
+                    switch(payrollStatusId) {
+                        case 1:
+                            grid.dataSource.read();
+                            break;
+                        case 2:
+                            grid=  $("#payrollsApproved").data("kendoGrid");
+                            grid.dataSource.data(results);
+                            grid.refresh();
+                            break;
+                        case 3:
+                            grid=  $("#payrollsAuthorized").data("kendoGrid");
+                            grid.dataSource.data(results);
+                            grid.refresh();
+                            break;
+                        case 4:
+                            grid=  $("#payrollsPaid").data("kendoGrid");
+                            grid.dataSource.data(results);
+                            grid.refresh();
+                            break;
+                    }
+                    $(".loader").css("display", "none");
+                },
+
+                error: function (error) {
+                    alert(error);
+                },
+            })
+            //window.location.href = '@Url.Action("ExportPrintedCheckToPdf", "Payment")'+"?voucherNumber=" + id;
+            if(payrollStatusId && payrollStatusId==3 && payrollMethodId ==2){// payrollMethodId check only to print check
+                window.open( '@Url.Action("ExportPrintedCheckToPdf", "Payment")'+"?voucherNumber=" + id, "Check", "height=900,width=900,modal=yes,alwaysRaised=yes");
+            }
+
+            //$.ajax({
+            //    type: "GET",
+            //    url: "/Payment/ExportPrintedCheckToPdf",
+            //    data: { "voucherNumber": id},
+            //    contentType: "application/json; charset=utf-8",
+            //    dataType: "html",
+            //    success: function (response) {
+            //        $('#dialog').html(response);
+            //        $('#dialog').dialog('open');
+            //    },
+            //    failure: function (response) {
+            //        alert(response.responseText);
+            //    },
+            //    error: function (response) {
+            //        alert(response.responseText);
+            //    }
+            //});
+
+        };
+
+        function resetPayroll(id, payrollStatusId){
+
+            $.ajax({
+                url: "@Url.Action("ResetPayrollJson")",
+                type: "GET",
+                contentType: "application/json",
+                data: { "id": id, "payrollStatusId":payrollStatusId },
+                dataType: "json",
+                beforeSend: function() {
+
+                    $(".loader").css("display", "block");
+                },
+                success: function (results) {
+                    //
+                    debugger;
+                    var grid=  $("#payrollsApproved").data("kendoGrid");
+                    switch(payrollStatusId) {
+                        case 2:
+                            grid.dataSource.data(results);
+                            grid.refresh();
+                            break;
+                        case 3://payrollsApproved
+                            grid=  $("#payrollsAuthorized").data("kendoGrid");
+                            grid.dataSource.data(results);
+                            grid.refresh();
+                            break;
+                    }
+                    $(".loader").css("display", "none");
+                },
+
+                error: function (error) {
+                    alert(error);
+                },
+            })
+
+        };
+        function deletePayroll(id, payrollStatusId){
+
+            $.ajax({
+                url: "@Url.Action("DeletePayrollJson")",
+                type: "GET",
+                contentType: "application/json",
+                data: { "id": id, "payrollStatusId":payrollStatusId },
+                dataType: "json",
+                beforeSend: function() {
+
+                    $(".loader").css("display", "block");
+                },
+                success: function (results) {
+                    //
+                    debugger;
+                    var grid=  $("#payrollsEntered").data("kendoGrid");
+                    switch(payrollStatusId) {
+                        case 1:
+                            grid.dataSource.read();
+                            break;
+                        case 2:
+                            grid=  $("#payrollsApproved").data("kendoGrid");
+                            grid.dataSource.data(results);
+                            grid.refresh();
+                            break;
+                        case 3:
+                            grid=  $("#payrollsAuthorized").data("kendoGrid");
+                            grid.dataSource.data(results);
+                            grid.refresh();
+                            break;
+                        case 4:
+                            grid=  $("#payrollsPaid").data("kendoGrid");
+                            grid.dataSource.data(results);
+                            grid.refresh();
+                            break;
+                        case 5:
+                            grid=  $("#payrollsReconciled").data("kendoGrid");
+                            grid.dataSource.data(results);
+                            grid.refresh();
+                            break;
+                    }
+                    $(".loader").css("display", "none");
+                },
+
+                error: function (error) {
+                    alert(error);
+                },
+            })
+
+        };
+    </script>
+
+    <script type="text/javascript">
+        $('document').ready(function () {
+            var selectedIds =[];
+            var payrollStatusId, payrollMethodId ="";
+            $("#tabstrip").on("click", "li", function(e) {
+                selectedIds =[];
+                payrollStatusId, payrollMethodId =""
+            })
+            $(".k-grid-content").on("change", "input.check-box-inner", function(e) {
+                var rowElement = this;
+                var row = $(rowElement);//console.log(data("kendoGrid"));
+                var grid = $("#payrollsEntered").data("kendoGrid");
+                var selectedGridId= $(row).attr('id');//id='checkbox#=PayrollStatusID#'
+                switch(selectedGridId) {
+                    case 'checkbox2':
+                        grid=  $("#payrollsApproved").data("kendoGrid");
+                        break;
+                    case 'checkbox3':
+                        grid=  $("#payrollsAuthorized").data("kendoGrid");
+                        break;
+                    case 'checkbox4':
+                        grid=  $("#payrollsPaid").data("kendoGrid");
+                        break;
+                }
+                var  selectedRow = $(this).closest("tr");
+                if (row.is(':checked')) {
+                    row.closest('tr').addClass('k-state-selected');
+                    onCheckboxChecked(selectedRow,grid);
+                    e.stopPropagation();
+                } else {
+                    row.closest('tr').removeClass('k-state-selected');
+                    onCheckboxUnchecked(selectedRow,grid);
+                    e.stopPropagation();
+                }
+            });
+            $(".checkAllCls").on("click", function () {
+                var grid = $("#payrollsEntered").data("kendoGrid");
+                var selector="#payrollsEntered";
+
+                var selectedGridId= $(this).attr('id');//id='checkbox#=PayrollStatusID#'
+                switch(selectedGridId) {
+                    case 'checkboxAll2':
+                        grid=  $("#payrollsApproved").data("kendoGrid");
+                        selector="#payrollsApproved";
+                        break;
+                    case 'checkboxAll3':
+                        grid=  $("#payrollsAuthorized").data("kendoGrid");
+                        selector="#payrollsAuthorized";
+                        break;
+                    case 'checkboxAll4':
+                        grid=  $("#payrollsPaid").data("kendoGrid");
+                        selector="#payrollsPaid";
+                        break;
+                }
+                var ele = this;
+                var state = $(ele).is(':checked');
+                if (state == true) {
+                    $('.check-box-inner').prop('checked', true).closest('tr').addClass('k-state-selected');
+
+                    onSelectAllChange(grid,selector);
+                }
+                else {
+                    $('.check-box-inner').prop('checked', false).closest('tr').removeClass('k-state-selected');
+                    onDeselectAllChange();
+                }
+            });
+            function onCheckboxChecked(row, selectedGrid) {
+                var grid = selectedGrid;
+                var dataItem = grid.dataItem(row);
+                if(!selectedIds.includes(dataItem.TransactionID)){
+                    selectedIds.push(dataItem.TransactionID);
+                }
+                console.log(dataItem);
+                payrollStatusId =dataItem.PayrollStatusID; payrollMethodId =dataItem.PayrollMethodId
+            }
+            function onCheckboxUnchecked(row, selectedGrid) {
+                var grid = selectedGrid;
+                var dataItem = grid.dataItem(row);
+                if(selectedIds.includes(dataItem.TransactionID)){
+                    const index = selectedIds.indexOf(dataItem.TransactionID);
+                    if (index > -1) {
+                        selectedIds.splice(index, 1);
+                    }
+                }
+                payrollStatusId =dataItem.PayrollStatusID; payrollMethodId =dataItem.PayrollMethodId
+            }
+            function onSelectAllChange(selectedGrid, selector){
+                var grid = selectedGrid;//$("#payrollsEntered").data("kendoGrid");
+                $( ""+selector+" tr.k-state-selected" ).each(function( index ) {
+                    var row = $(this);
+                    var dataItem = grid.dataItem(row);
+                    if(dataItem){
+                        if(!selectedIds.includes(dataItem.TransactionID)){
+                            selectedIds.push(dataItem.TransactionID);
+                        }
+                        payrollStatusId =dataItem.PayrollStatusID; payrollMethodId =dataItem.PayrollMethodId
+                    }
+                });
+            }
+            function onDeselectAllChange(){
+                selectedIds=[];
+                payrollStatusId =""; payrollMethodId ="";
+            }
+
+            function ApproveSelectedPayroll(selectedIds,payrollStatusId){
+                $.ajax({
+                    url: "@Url.Action("ApproveSelectedPayrollJson")",
+                    type: "POST",
+                    //contentType: "application/json",
+                    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                    data: jQuery.param({ selectedIds: selectedIds,
+                        payrollStatusId : payrollStatusId}), // { "selectedIds": selectedIds , "payrollStatusId":payrollStatusId},
+
+                    dataType: "json",
+                    beforeSend: function() {
+
+                        $(".loader").css("display", "block");
+                    },
+                    success: function (results) {
+                        debugger;
+                        var grid=  $("#payrollsEntered").data("kendoGrid");
+                        switch(payrollStatusId) {
+                            case 1:
+                                grid.dataSource.read();
+                                break;
+                            case 2:
+                                grid=  $("#payrollsApproved").data("kendoGrid");
+                                grid.dataSource.data(results);
+                                grid.refresh();
+                                break;
+                            case 3:
+                                grid=  $("#payrollsAuthorized").data("kendoGrid");
+                                grid.dataSource.data(results);
+                                grid.refresh();
+                                break;
+                            case 4:
+                                grid=  $("#payrollsPaid").data("kendoGrid");
+                                grid.dataSource.data(results);
+                                grid.refresh();
+                                break;
+                        }
+                        $(".loader").css("display", "none");
+                    },
+
+                    error: function (error) {
+                        alert(error);
+                    },
+                });
+
+            }
+
+            $("#btnSubmit").click(function () {
+                if(selectedIds && selectedIds.length>0 && payrollStatusId )
+                    ApproveSelectedPayroll(selectedIds,payrollStatusId);
+            });
+        });
+
+    </script>
+
+
+    <script type="text/javascript">
+        //// search payroll
+
+        function onSearch(e) {
+            debugger;
+            e.preventDefault();
+            var q = $("#txtSearchString").val();
+            if(q){
+                q = q.toString();
+                ajaxSerachEmpCall(q,localStorage.getItem("selectedList"));
+            }
+        }
+        function onClear(e) {
+            debugger;
+            var query = $("#txtSearchString").val();
+            e.preventDefault();
+            if(query){
+                $("#txtSearchString").val("");
+                ajaxSerachEmpCall("",localStorage.getItem("selectedList"));
+            }
+
+            //  });
+        }
+        $("#btnSearch").kendoButton({
+            click: onSearch
+        });
+        $("#btnClear").kendoButton({
+            click: onClear
+        });
+        $('#txtSearchString').on('keydown', function(e) {
+            //debugger;
+            if (e.which == 13) {
+                // e.preventDefault();
+                onSearch(e);
+            }
+        });
+        function ajaxSerachEmpCall(q,selectedList){
+            $.ajax({
+                url: "@Url.Action("SearchPayrollsJson")",
+                type: "GET",
+                contentType: "application/json",
+                data: { "query": q,"selectedList":selectedList },
+                dataType: "json",
+                beforeSend: function() {
+
+                    $(".loader").css("display", "block");
+                },
+                success: function (results) {
+                    var grid=  $("#payrollsEntered").data("kendoGrid");
+                    switch(selectedList) {
+                        case "entered":
+                            grid.dataSource.data( results );
+                            grid.refresh();
+                            break;
+                        case "approved":
+                            grid=  $("#payrollsApproved").data("kendoGrid");
+                            grid.dataSource.data( results );
+                            grid.refresh();
+                            break;
+                        case "authorized":
+                            grid=  $("#payrollsAuthorized").data("kendoGrid");
+                            grid.dataSource.data( results );
+                            grid.refresh();
+                            break;
+                        case "paid":
+                            grid=  $("#payrollsPaid").data("kendoGrid");
+                            grid.dataSource.data( results );
+                            grid.refresh();
+                            break;
+                        case "reconciled":
+                            grid=  $("#payrollsReconciled").data("kendoGrid");
+                            grid.dataSource.data( results );
+                            grid.refresh();
+                            break;
+                    }
+                    $(".loader").css("display", "none");
+                },
+
+                error: function (error) {
+                    alert(error);
+                }
+            });
+        };
+        function onSearch(e) {
+            debugger;
+            e.preventDefault();
+            var q = $("#txtSearchString").val();
+            if(q){
+                q = q.toString();
+                ajaxSerachEmpCall(q,localStorage.getItem("selectedList"));
+            }
+        }
+        function onClear(e) {
+            debugger;
+            var query = $("#txtSearchString").val();
+            e.preventDefault();
+            if(query){
+                $("#txtSearchString").val("");
+                ajaxSerachEmpCall("",localStorage.getItem("selectedList"));
+            }
+
+            //  });
+        }
+        ////
+    </script>
+
+   
+}
+
+
+
+

@@ -13,7 +13,7 @@ namespace Kwt.PatientsMgtApp.Core.Models
     {
         public int PaymentID { get; set; }
 
-        public string PaymentIDString { get { return PaymentID != null ? PaymentID.ToString() : ""; } }
+        public string PaymentIDString { get { return  PaymentID.ToString() ; } }
 
         [DataType(DataType.Date)]
         [DisplayName("Payment Date")]
@@ -221,6 +221,8 @@ namespace Kwt.PatientsMgtApp.Core.Models
         public string BankName { get; set; }
         public string BankCode { get; set; }
         public string IBan { get; set; }
+
+        public Nullable<bool> SMSConfirmation { get; set; }
         public string PatientFormatedPhone { get { return FormatPhoneNumber(PatientPhone, ""); } }
 
         //new
@@ -261,5 +263,15 @@ namespace Kwt.PatientsMgtApp.Core.Models
 
             return phoneNum;
         }
+
+
+        // patient Extension
+        [DisplayName("Patients Extension Due List")]
+        public List<PatientExtensionModel> PatientExtensionList { get; set; }
+        public string SelectedPatientExtensionCID { get; set; }
+        public PatientExtensionModel PatientExtension { get; set; }
+
+        public PatientFileModel[] Patientfiles { get; set; }
+
     }
 }

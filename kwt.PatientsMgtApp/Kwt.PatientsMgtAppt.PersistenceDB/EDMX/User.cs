@@ -27,5 +27,8 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public int AccessFailedCount { get; set; }
         public bool TwoFactorEnabled { get; set; }
         public bool LockoutEnabled { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string MiddleName { get; set; }
     }
 }

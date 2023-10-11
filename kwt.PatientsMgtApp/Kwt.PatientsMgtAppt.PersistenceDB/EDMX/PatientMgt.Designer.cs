@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'D:\Kwt Patient Managment App\Kwt.PatientsMgtApp\kwt.PatientsMgtApp\Kwt.PatientsMgtAppt.PersistenceDB\EDMX\PatientMgt.edmx'. 
+﻿// T4 code generation is enabled for model 'D:\colned from Git _ Kwt Patient Managment App\kwt.PatientsMgtApp\Kwt.PatientsMgtAppt.PersistenceDB\EDMX\PatientMgt.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

@@ -22,7 +22,7 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
 
         List<PaymentModel> GetPaymentsByPatientCid(string pacientcid);
         List<PaymentModel> GetPaymentsByCompanionCid(string companioncid);
-        void AddPayment(PaymentModel payment);
+        int AddPayment(PaymentModel payment);
 
         PaymentModel UpdatePayment(PaymentModel payment);
 

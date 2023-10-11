@@ -1,0 +1,183 @@
+﻿@model List<Kwt.PatientsMgtApp.Core.Models.EmployeeModel>
+@{
+    ViewBag.Title = "Employee List";
+}
+
+<h2>Employee List</h2>
+
+@{
+    var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+    serializer.MaxJsonLength = Int32.MaxValue;
+    var jsonModel = serializer.Serialize(Model);
+
+}
+<div class="pt-3 pb-3">
+    <a href="@Url.Action("NewEmployee", "Payment")" class="k-button"><i class="fa fa-plus" style="color: yellowgreen"></i> New Employee</a>
+</div>
+<div class="row pb-3">
+    <div class="col-md-4" style="padding:0;">
+        <input class=k-textbox type=text id="txtSearchString" style="width: 100%" placeholder="Employee# / Name." />
+    </div>
+    <div class="col-md-8">
+        <button type="submit" class="k-button" id="btnSearch"><i class="fa fa-search" style="color: yellowgreen"></i> Search</button>
+        <button type="submit" class="k-button k-notification-button" id="btnClear"><i class="fa fa-times" style="color: lightblue"></i> Clear</button>
+    </div>
+
+</div>
+
+<div class="loader"></div>
+
+<div id="content" style="visibility: hidden;">
+    <div id="employeeList"></div>
+</div>
+
+@section DeleteConfirm{
+
+    @{ Html.RenderPartial("_DeleteConfirmationModel"); }
+}
+
+@section Scripts {
+    @{ Html.RenderPartial("_DeleteConfirmationjs"); }
+    <script type="text/javascript">
+
+        $('document').ready(function () {
+            $("#content").css("visibility", "visible");
+
+            var employees = @Html.Raw(jsonModel);
+            console.log(employees);
+            var grid =  $("#employeeList").kendoGrid({
+                resizable: true,
+                height: 550,
+                //groupable: true,
+                sortable: true,
+                toolbar: "<p class='alert alert-info'>List of all Employees in our records</p>",                       
+                pageable: {
+                    pageSize: 20,
+                    alwaysVisible: false,
+                    pageSizes: [5, 10, 15, "all"]
+                },
+                columns: [{
+                    field: "EmployeeID",
+                    title: "Employee#",                    
+                    template: "<a href='@Url.Action("EmployeeDetails", "Payment")?employeeId=#= EmployeeID#'>#= EmployeeID #</a>"
+
+                },{
+                    field: "EmployeeName",
+                    title: "Name",                                        
+                },{
+                    field: "Address",
+                    title: "Address",                                        
+                },{
+                    field: "Email",
+                    title: "Email",                                        
+                },
+                //,{
+                //    field: "PhoneNumber",
+                //    title: "PhoneNumber",                                        
+                //},
+                {
+                    field: "Title?.Title1",
+                    title: "Title",   
+                    
+                },
+                   
+            ],
+                dataSource: {
+                    data: employees
+                }
+            }).data("kendoGrid");
+
+            function onSearch(e) {
+                debugger;
+                e.preventDefault();
+                var q = $("#txtSearchString").val();
+                if(q){
+                    q = q.toString();
+                    ajaxCall(q);
+                }
+            }
+            function onClear(e) {
+                debugger;
+                var query = $("#txtSearchString").val();
+                e.preventDefault();
+                if(query){
+                    $("#txtSearchString").val("");
+                    ajaxCall();
+                }
+
+                //  });
+            }
+            $("#btnSearch").kendoButton({
+                click: onSearch
+            });
+            $("#btnClear").kendoButton({
+                click: onClear
+            });
+            $('#txtSearchString').on('keydown', function(e) {
+                //debugger;
+                if (e.which == 13) {
+                    // e.preventDefault();
+                    onSearch(e);
+                }
+            });
+            function ajaxCall(q){
+            
+                $.ajax({
+                    url: "@Url.Action("GetEmployeeListJson")",
+                    type: "GET",
+                    contentType: "application/json",
+                    data: { "query": q },
+                    dataType: "json",
+                    beforeSend: function() {
+
+                        $(".loader").css("display", "block");
+                    },
+                    success: function (results) {
+                        //$("#searchPayment").keyup(function () {
+                        if(q)
+                            filteredEmployees=filterArray(results, q);
+                        else 
+                            filteredEmployees=results;
+                        grid.dataSource.data( filteredEmployees );
+                        grid.refresh();
+                        $(".loader").css("display", "none");
+                    },
+
+                    error: function (error) {
+                        console.log(error);
+                        $(".loader").css("display", "none");
+                    }
+                });
+            };
+            function onSearch(e) {
+                debugger;
+                e.preventDefault();
+                var q = $("#txtSearchString").val();
+                if(q){
+                    q = q.toString();                    
+                    ajaxCall(q);
+                }
+            }
+            function onClear(e) {
+                debugger;
+                var query = $("#txtSearchString").val();
+                e.preventDefault();
+                if(query){
+                    $("#txtSearchString").val("");
+                    ajaxCall();
+                }
+
+                //  });
+            }
+            function filterArray(array, value) {
+                debugger;
+                return array.filter((data) =>  (JSON.stringify(data.EmployeeID).toLowerCase().indexOf(value.toLowerCase()) !== -1)
+                                            ||  JSON.stringify(data.EmployeeName).toLowerCase().indexOf(value.toLowerCase()) !== -1);
+            }
+            
+            $(".loader").css("display", "none");
+        });
+    </script>
+   
+
+}

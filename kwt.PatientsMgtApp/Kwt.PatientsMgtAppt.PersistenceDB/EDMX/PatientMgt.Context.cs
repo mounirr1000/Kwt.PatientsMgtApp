@@ -52,8 +52,45 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
         public virtual DbSet<AdjustmentReason> AdjustmentReasons { get; set; }
         public virtual DbSet<PaymentHistory> PaymentHistories { get; set; }
         public virtual DbSet<BookType> BookTypes { get; set; }
+        public virtual DbSet<Account> Accounts { get; set; }
+        public virtual DbSet<CheckPayroll> CheckPayrolls { get; set; }
+        public virtual DbSet<DepartmentEmployee> DepartmentEmployees { get; set; }
+        public virtual DbSet<DepartmentManager> DepartmentManagers { get; set; }
+        public virtual DbSet<Department> Departments { get; set; }
+        public virtual DbSet<Payee> Payees { get; set; }
+        public virtual DbSet<PayeesType> PayeesTypes { get; set; }
+        public virtual DbSet<PayrollMethod> PayrollMethods { get; set; }
+        public virtual DbSet<Payroll> Payrolls { get; set; }
+        public virtual DbSet<PayrollStatu> PayrollStatus { get; set; }
+        public virtual DbSet<PayrollType> PayrollTypes { get; set; }
+        public virtual DbSet<WirePayroll> WirePayrolls { get; set; }
+        public virtual DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<Bonus> Bonuses { get; set; }
+        public virtual DbSet<BonuseType> BonuseTypes { get; set; }
+        public virtual DbSet<EmployeeInsurance> EmployeeInsurances { get; set; }
+        public virtual DbSet<InsuranceOption> InsuranceOptions { get; set; }
+        public virtual DbSet<InsuranceType> InsuranceTypes { get; set; }
+        public virtual DbSet<Overtime> Overtimes { get; set; }
+        public virtual DbSet<SalaryDeduction> SalaryDeductions { get; set; }
+        public virtual DbSet<TaxCategory> TaxCategories { get; set; }
+        public virtual DbSet<AccountType> AccountTypes { get; set; }
+        public virtual DbSet<AgenciesAccount> AgenciesAccounts { get; set; }
+        public virtual DbSet<EmployeeAccountType> EmployeeAccountTypes { get; set; }
+        public virtual DbSet<PayrollAccount> PayrollAccounts { get; set; }
+        public virtual DbSet<SalaryIncrement> SalaryIncrements { get; set; }
+        public virtual DbSet<Title> Titles { get; set; }
+        public virtual DbSet<SocialStatus> SocialStatuses { get; set; }
+        public virtual DbSet<TitleType> TitleTypes { get; set; }
+        public virtual DbSet<Salary> Salaries { get; set; }
+        public virtual DbSet<DiscountType> DiscountTypes { get; set; }
+        public virtual DbSet<BudgetTransaction> BudgetTransactions { get; set; }
+        public virtual DbSet<DepositAccount> DepositAccounts { get; set; }
+        public virtual DbSet<DepositDepartment> DepositDepartments { get; set; }
+        public virtual DbSet<DepositType> DepositTypes { get; set; }
+        public virtual DbSet<PatientExtensionHistory> PatientExtensionHistories { get; set; }
+        public virtual DbSet<PatientExtension> PatientExtensions { get; set; }
     
-        public virtual ObjectResult<GetPatientListReport_SP_Result> GetPatientListReport_SP(string pCid, string hospital, string doctor, Nullable<bool> status, string speciality, Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate, Nullable<bool> isDead, Nullable<System.DateTime> authorizedDate)
+        public virtual ObjectResult<GetPatientListReport_SP_Result> GetPatientListReport_SP(string pCid, string hospital, string doctor, Nullable<bool> status, string speciality, Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate, Nullable<bool> isDead, Nullable<System.DateTime> authorizedDate, Nullable<System.DateTime> authorizedDate2, string agency)
         {
             var pCidParameter = pCid != null ?
                 new ObjectParameter("pCid", pCid) :
@@ -91,7 +128,15 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
                 new ObjectParameter("authorizedDate", authorizedDate) :
                 new ObjectParameter("authorizedDate", typeof(System.DateTime));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetPatientListReport_SP_Result>("GetPatientListReport_SP", pCidParameter, hospitalParameter, doctorParameter, statusParameter, specialityParameter, startDateParameter, endDateParameter, isDeadParameter, authorizedDateParameter);
+            var authorizedDate2Parameter = authorizedDate2.HasValue ?
+                new ObjectParameter("authorizedDate2", authorizedDate2) :
+                new ObjectParameter("authorizedDate2", typeof(System.DateTime));
+    
+            var agencyParameter = agency != null ?
+                new ObjectParameter("agency", agency) :
+                new ObjectParameter("agency", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetPatientListReport_SP_Result>("GetPatientListReport_SP", pCidParameter, hospitalParameter, doctorParameter, statusParameter, specialityParameter, startDateParameter, endDateParameter, isDeadParameter, authorizedDateParameter, authorizedDate2Parameter, agencyParameter);
         }
     
         public virtual ObjectResult<GetPaymentListReport_SP_Result> GetPaymentListReport_SP(string pCid, Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate, Nullable<int> bankId, Nullable<int> reportType)
@@ -169,6 +214,77 @@ namespace Kwt.PatientsMgtApp.PersistenceDB.EDMX
                 new ObjectParameter("agency", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetStatisticalPaymentReport_SP_Result>("GetStatisticalPaymentReport_SP", startDateParameter, endDateParameter, bankIdParameter, agencyParameter);
+        }
+    
+        public virtual int ReseedIdentity_SP(string tableName, string identityColumn)
+        {
+            var tableNameParameter = tableName != null ?
+                new ObjectParameter("TableName", tableName) :
+                new ObjectParameter("TableName", typeof(string));
+    
+            var identityColumnParameter = identityColumn != null ?
+                new ObjectParameter("IdentityColumn", identityColumn) :
+                new ObjectParameter("IdentityColumn", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("ReseedIdentity_SP", tableNameParameter, identityColumnParameter);
+        }
+    
+        public virtual ObjectResult<GetPayrollReport_SP_Result> GetPayrollReport_SP(Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate, Nullable<int> transactionId, Nullable<int> employeeId, Nullable<int> payrollMethodId, Nullable<int> payeeId, Nullable<int> payrollStatus, Nullable<int> reportType)
+        {
+            var startDateParameter = startDate.HasValue ?
+                new ObjectParameter("startDate", startDate) :
+                new ObjectParameter("startDate", typeof(System.DateTime));
+    
+            var endDateParameter = endDate.HasValue ?
+                new ObjectParameter("endDate", endDate) :
+                new ObjectParameter("endDate", typeof(System.DateTime));
+    
+            var transactionIdParameter = transactionId.HasValue ?
+                new ObjectParameter("transactionId", transactionId) :
+                new ObjectParameter("transactionId", typeof(int));
+    
+            var employeeIdParameter = employeeId.HasValue ?
+                new ObjectParameter("employeeId", employeeId) :
+                new ObjectParameter("employeeId", typeof(int));
+    
+            var payrollMethodIdParameter = payrollMethodId.HasValue ?
+                new ObjectParameter("PayrollMethodId", payrollMethodId) :
+                new ObjectParameter("PayrollMethodId", typeof(int));
+    
+            var payeeIdParameter = payeeId.HasValue ?
+                new ObjectParameter("payeeId", payeeId) :
+                new ObjectParameter("payeeId", typeof(int));
+    
+            var payrollStatusParameter = payrollStatus.HasValue ?
+                new ObjectParameter("payrollStatus", payrollStatus) :
+                new ObjectParameter("payrollStatus", typeof(int));
+    
+            var reportTypeParameter = reportType.HasValue ?
+                new ObjectParameter("reportType", reportType) :
+                new ObjectParameter("reportType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetPayrollReport_SP_Result>("GetPayrollReport_SP", startDateParameter, endDateParameter, transactionIdParameter, employeeIdParameter, payrollMethodIdParameter, payeeIdParameter, payrollStatusParameter, reportTypeParameter);
+        }
+    
+        public virtual ObjectResult<GetDepositReport_SP_Result> GetDepositReport_SP(Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate, Nullable<int> payeeId, Nullable<int> reportType)
+        {
+            var startDateParameter = startDate.HasValue ?
+                new ObjectParameter("startDate", startDate) :
+                new ObjectParameter("startDate", typeof(System.DateTime));
+    
+            var endDateParameter = endDate.HasValue ?
+                new ObjectParameter("endDate", endDate) :
+                new ObjectParameter("endDate", typeof(System.DateTime));
+    
+            var payeeIdParameter = payeeId.HasValue ?
+                new ObjectParameter("payeeId", payeeId) :
+                new ObjectParameter("payeeId", typeof(int));
+    
+            var reportTypeParameter = reportType.HasValue ?
+                new ObjectParameter("reportType", reportType) :
+                new ObjectParameter("reportType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDepositReport_SP_Result>("GetDepositReport_SP", startDateParameter, endDateParameter, payeeIdParameter, reportTypeParameter);
         }
     }
 }

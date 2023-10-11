@@ -1,0 +1,551 @@
+﻿@using Kwt.PatientsMgtApp.WebUI.Infrastructure
+@model Kwt.PatientsMgtApp.Core.Models.PayrollModel
+@{
+    ViewBag.Title = "PayrollDetails";
+}
+
+<h2>Payroll Details</h2>
+<div class="mt-3">
+    <p>
+        <a href="@Url.Action("Payrolls")" class="k-button"><i class="fa fa-arrow-left" style="color: lightblue"></i> Back to List</a>
+        @if (User.IsInAnyRoles(CrudRoles.PaymentUpdateRoles) || User.IsInAnyRoles(CrudRoles.PaymentApprovalRoles))
+        {
+            if (User.IsInAnyRoles(CrudRoles.PaymentUpdateRoles))
+            {
+                @*if (Model.IsVoid != true)
+                    {
+                        <a href="@Url.Action("Edit", new {paymentId=Model.Id})" class="k-button"><i class="fa fa-pencil" style="color: blueviolet"></i> Edit</a>
+                    }*@
+
+            }            
+            <a href="javascript:showPayrollVoucher()" class="k-button"><i class="fa fa-eye" style="color: blueviolet"></i> Show Voucher</a>
+            @*<a href="javascript:printPaymentVoucher()" class="k-button"><i class="fa fa-print" style="color: blueviolet"></i> Print Voucher</a>*@
+        }
+
+    </p>
+</div>
+<div class="loader"></div>
+<div id="contentPayrollDetail" style="display:none">
+
+    <button data-toggle="collapse" data-target="#payrollDetail">
+        <i></i> Payroll Details
+    </button>
+
+    <fieldset id="payrollDetail" class="collapse show">
+        <legend>Payroll Details</legend>
+        <ul class="fieldlist form-row">
+            @* new 07-13-2019*@
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.TransactionID, new { @class = "" })
+                @Html.TextBoxFor(model => model.TransactionIDFormat, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+           
+            @*end new *@
+            @if (Model.WireNumber != null)
+            {
+                <li class="col-md-3">
+                    @Html.LabelFor(model => model.WireNumber, new { @class = "" })
+                    @Html.TextBoxFor(model => model.WireNumberFormat, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                </li>
+            }@if (Model.CheckNumber != null)
+            {
+                <li class="col-md-3">
+                    @Html.LabelFor(model => model.CheckNumber, new { @class = "" })
+                    @Html.TextBoxFor(model => model.CheckNumberFormat, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                </li>
+            }
+
+
+
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.Amount, new { @class = "" })
+                @Html.TextBoxFor(model => model.AmountFormated, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+
+
+        </ul>
+    </fieldset>
+    <button data-toggle="collapse" data-target="#payrollPayee">
+        <i></i> Payroll Payee
+    </button>
+    <fieldset id="payrollPayee" class="collapse show">
+        <legend>Payroll Payee</legend>
+        <ul class="fieldlist form-row">
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.PayeeName, new { @class = "" })
+                @Html.TextBoxFor(model => model.PayeeName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.PayeesType.PayeeType, new { @class = "" })
+                @Html.TextBoxFor(model => model.PayeesType.PayeeType, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            @if (Model.Agency != null)
+            {
+                <li class="col-md-3">
+                    @Html.LabelFor(model => model.Agency.AgencyName, new { @class = "" })
+                    @Html.TextBoxFor(model => model.Agency.AgencyName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                </li>
+            }
+            @if (Model.PayeeList != null)
+            {
+                <li class="col-md-6">
+                    @*@Html.LabelFor(model => model.PayeeID, htmlAttributes: new { @class = "" })*@
+                    <label class="" for="PayeeID">Payee </label>
+                    @Html.DropDownListFor(model => model.PayeeID, new List<SelectListItem>(Model.PayeeList.Select(a => new SelectListItem()
+               {
+                   Text = a.PayeeName,
+                   Value = a.PayeeID.ToString()
+               }).ToList()), "N/A", new { @class = "k-textbox edit", style = "width:100%", disabled = "disabled" })
+                </li>
+            }
+
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.PayeeID, htmlAttributes: new { @class = "" })
+                @Html.TextBoxFor(model => model.PayeeID, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            @if (Model.Payee != null)
+            {
+                <li class="col-md-3">
+                    @Html.LabelFor(model => model.Payee.PayeeStreetAddress, htmlAttributes: new { @class = "" })
+                    @Html.TextBoxFor(model => model.Payee.PayeeStreetAddress, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                </li>
+                <li class="col-md-3">
+                    @Html.LabelFor(model => model.Payee.PayeeCity, htmlAttributes: new { @class = "" })
+                    @Html.TextBoxFor(model => model.Payee.PayeeCity, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                </li>
+                <li class="col-md-3">
+                    @Html.LabelFor(model => model.Payee.PayeeState, htmlAttributes: new { @class = "" })
+                    @Html.TextBoxFor(model => model.Payee.PayeeState, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                </li>
+                <li class="col-md-3">
+                    @Html.LabelFor(model => model.Payee.PayeeZipcode, htmlAttributes: new { @class = "" })
+                    @Html.TextBoxFor(model => model.Payee.PayeeZipcode, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                </li>
+                <li class="col-md-3">
+                    @Html.LabelFor(model => model.Payee.PayeeBankName, htmlAttributes: new { @class = "" })
+                    @Html.TextBoxFor(model => model.Payee.PayeeBankName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                </li>
+                <li class="col-md-3">
+                    @Html.LabelFor(model => model.Payee.PayeeBankRoutingNumber, htmlAttributes: new { @class = "" })
+                    @Html.TextBoxFor(model => model.Payee.PayeeBankRoutingNumber, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                </li>
+                <li class="col-md-3">
+                    @Html.LabelFor(model => model.Payee.PayeeBankAccount, htmlAttributes: new { @class = "" })
+                    @Html.TextBoxFor(model => model.Payee.PayeeBankAccount, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                </li>
+                <li class="col-md-3">
+                    @Html.LabelFor(model => model.Payee.PayeeEmail, htmlAttributes: new { @class = "" })
+                    @Html.TextBoxFor(model => model.Payee.PayeeEmail, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                </li>
+                <li class="col-md-3">
+                    @Html.LabelFor(model => model.Payee.PayeePhone, htmlAttributes: new { @class = "" })
+                    @Html.TextBoxFor(model => model.Payee.PayeePhone, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                </li>
+            }
+        </ul>
+    </fieldset>
+
+    <button data-toggle="collapse" data-target="#payrollStatus">
+        <i></i> Payroll Status
+    </button>
+    <fieldset id="payrollStatus" class="collapse show">
+        <legend>Payroll Status</legend>
+        <ul class="fieldlist form-row">
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.PayrollType.PayrollTypeName, new { @class = "" })
+                @Html.TextBoxFor(model => model.PayrollType.PayrollTypeName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.PayrollStatu.PayrollStatusName, new { @class = "" })
+                @Html.TextBoxFor(model => model.PayrollStatu.PayrollStatusName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.PayrollMethod.PayrollMethodName, new { @class = "" })
+                @Html.TextBoxFor(model => model.PayrollMethod.PayrollMethodName, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.Descriptions, new { @class = "" })
+                @Html.TextBoxFor(model => model.Descriptions, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.PaymentEnteredBy, new { @class = "" })
+                @Html.TextBoxFor(model => model.PaymentEnteredBy, new { @class = "k-textbox input-control edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.PaymentEnteredDate, new { @class = "" })
+                @Html.TextBoxFor(model => model.PaymentEnteredDate, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            @if (Model.PaymentApprovedBy!=null)
+            {
+                <li class="col-md-3">
+                    @Html.LabelFor(model => model.PaymentApprovedBy, new { @class = "" })
+                    @Html.TextBoxFor(model => (model.PaymentApprovedBy), new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                </li>
+                <li class="col-md-3">
+                    @Html.LabelFor(model => model.PaymentApprovedDate, new { @class = "" })
+                    @Html.TextBoxFor(model => (model.PaymentApprovedDate), new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                </li>
+            }
+            @if (Model.PaymentAuthorizedBy!=null)
+            {
+                <li class="col-md-3">
+                    @Html.LabelFor(model => model.PaymentAuthorizedBy, new { @class = "" })
+                    @Html.TextBoxFor(model => model.PaymentAuthorizedBy, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                </li>
+                <li class="col-md-3">
+                    @Html.LabelFor(model => model.PaymentAuthorizedDate, new { @class = "" })
+                    @Html.TextBoxFor(model => model.PaymentAuthorizedDate, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+                </li>
+            }
+            
+           
+            
+           @if (Model.PaymentPaidBy!=null)
+           {
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.PaymentPaidBy, new { @class = "" })
+                @Html.TextBoxFor(model => model.PaymentPaidBy, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.PaymentPaidDate, new { @class = "" })
+                @Html.TextBoxFor(model => model.PaymentPaidDate, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+           }
+           @if (Model.PaymentReconciledBy!=null)
+           {
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.PaymentReconciledBy, new { @class = "" })
+                @Html.TextBoxFor(model => model.PaymentReconciledBy, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.PaymentReconciledDate, new { @class = "" })
+                @Html.TextBoxFor(model => model.PaymentReconciledDate, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+           }
+        </ul>
+    </fieldset>
+
+
+    <button data-toggle="collapse" data-target="#payrollAccount">
+        <i></i> Payroll Account
+    </button>
+    <fieldset id="payrollAccount" class="collapse show">
+        <legend>Payroll Accounts</legend>
+        <ul class="fieldlist form-row">
+            <li class="col-md-12">
+                <div id="accountList"></div>
+            </li>
+        </ul>
+    </fieldset>
+    <button data-toggle="collapse" data-target="#payrollAuditInfo">
+        <i></i> Payroll Audit
+    </button>
+    <fieldset id="payrollAuditInfo" class="collapse show">
+        <legend>Payroll Audit</legend>
+        <ul class="fieldlist form-row">
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.PaymentCreatedBy, new { @class = "" })
+                @Html.TextBoxFor(model => model.PaymentCreatedBy, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.PaymentCreatedDate, new { @class = "" })
+                @Html.TextBoxFor(model => model.PaymentCreatedDate, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.PaymentModifiedBy, new { @class = "" })
+                @Html.TextBoxFor(model => model.PaymentModifiedBy, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+            <li class="col-md-3">
+                @Html.LabelFor(model => model.PaymentModifiedDate, new { @class = "" })
+                @Html.TextBoxFor(model => model.PaymentModifiedDate, new { @class = "k-textbox edit", style = "width: 100%;", @readonly = "readonly" })
+            </li>
+        </ul>
+    </fieldset>
+
+
+</div>
+    
+@* add partial view to show details voucher in model popup when view voucher is clicked*@
+@{ Html.RenderPartial("_VoucherDetails",Model); }
+
+@section Scripts{
+<script type="text/javascript">
+        var payroll = @Html.Raw(Json.Encode(Model));
+        console.log("payrollobject ",payroll);
+        $('document').ready(function() {
+            //class="btn btn-block mb-2 text-uppercase text-info"
+            $('#contentPayrollDetail button').addClass('btn btn-block mb-2 text-uppercase text-white bg-info');
+            //fa fa-angle-double-down pull-left
+            $('#contentPayrollDetail button i').addClass('fa fa-angle-double-down pull-left');
+            $("#contentPayrollDetail").css("visibility", "visible");
+            $(".loader").css("display", "none");
+            $("#contentPayrollDetail").css("display", "block");
+            $('#contentPayrollDetail button').click(function() {
+
+                var $this = this;
+                var caret = $($this).find('i');
+                if ($(caret).hasClass('fa-angle-double-down'))
+                    $(caret).removeClass('fa-angle-double-down').addClass("fa-angle-double-up");
+                else
+                    $(caret).removeClass('fa-angle-double-up').addClass("fa-angle-double-down");
+
+            });
+
+            var Model = kendo.data.Model.define({
+                id: "AccountNumber",
+                fields: {
+                    AccountNumber:{editable: false, nullable: false},
+                    AccountName: {type: "string",validation: { required: true }},
+                    Descriptions: {type: "string", validation: {
+                        maxlength:
+                        function(input) {
+                            var isHTML = RegExp.prototype.test.bind(/(<([^>]+)>)/i);
+                            if (input.val().length >250) {
+                                input.attr("data-maxlength-msg", "Max length is 250");
+                                return false;
+                            }
+                            else if(isHTML(input.val())){
+                                input.attr("data-maxlength-msg", "no Html tags is allowed");
+                                return false;
+                            }
+                            return true;
+                        }
+                    }},
+                    Discount: {type: "number",validation: {  min:0}},
+                    PayrollAccountID: {type: "number"},
+                    PayrollID:{type:"number"},
+                    Amount:{type:"number",validation: { required: true , min:0}}
+                }
+            });
+            var accountDataSource = new kendo.data.DataSource({
+                data: payroll.Accounts,
+                schema:{
+                    model:Model
+                },
+                transport: {
+                    read: function (o) {o.success(payroll.Accounts);},
+                    create: function (o) {
+                        o.success(o.data);
+                    },
+                    update: function (o) { o.success(); },
+
+                    destroy: function (o) { o.success(); }
+                },
+            });
+            var selectedAccountId = 0;
+            var selectedDiscountType=0;
+            var selectedDiscountTypetxt= "";
+            var accountsDataSource = new kendo.data.DataSource({
+                data: payroll.Accounts[0].PayrollAccounts
+            });
+            var accountsDiscountTypeDataSource = new kendo.data.DataSource({
+                data: payroll.Accounts[0].DiscountTypes
+            });
+            var accountEditor = function(container, options) {
+                var data=payroll.Accounts[0].PayrollAccounts;
+                $("<input name='" + options.field + "' id='accountKendodropdown' value="+options.model.PayrollAccountID+"> ").appendTo(container).kendoDropDownList({
+                    dataSource: accountsDataSource,
+                    dataTextField: "Description",
+                    dataValueField: "PayAccountID",
+                    change: function () {
+                        selectedAccountId=  parseInt(this.value());
+                        selectedDiscountType=  parseInt(options.model.PayAccountID);
+                        selectedDiscountTypetxt= options.model.DiscountTypeName
+                    }
+                });
+            };
+            var accountDiscountTypeEditor = function(container, options) {
+                var data=payroll.Accounts[0].DiscountTypes;
+                $("<input name='" + options.field + "' id='accountDiscountKendodropdown' value="+options.model.DiscountTypeId+"> ").appendTo(container).kendoDropDownList({
+                    dataSource: accountsDiscountTypeDataSource,
+                    dataTextField: "DiscountType1",
+                    dataValueField: "DiscountTypeId",
+                    change: function () {
+                        debugger;
+                        selectedDiscountType=  parseInt(this.value());
+                        selectedDiscountTypetxt=this.text();
+                        selectedAccountId =parseInt(options.model.PayrollAccountID);
+                    }
+                });
+            };
+            var accountDescripionEditor = function(container, options) {
+                //$("<textarea  name='" + options.field + "'  value="+options.model.Descriptions+"> ").appendTo(container)
+                //$('<textarea data-bind="value: ' + options.field + '" cols="20" rows="4"></textarea>').appendTo(container);
+                $('<textarea name="' + options.field + '" style="width: ' + container.width() + 'px;height:' + container.height() + 'px" class="k-textbox" />').appendTo(container)
+            };
+            function highlightSelectedAccount(name){
+                $("#accountKendodropdown_listbox li").each(function(){
+                    if ($(this).text() === name)
+                    {
+                        $(this).addClass("k-item k-state-focused k-state-selected");
+                    }
+                });
+                $($("span.k-dropdown-wrap.k-state-default > span.k-input")[0]).text(name)
+            }
+
+            var accountGird=  $("#accountList").kendoGrid({
+                resizable: true,
+                height: 350,
+                sortable: true,
+                pageable: {
+                    pageSize: 20,
+                    alwaysVisible: false,
+                    pageSizes: [5, 10, 15, "all"]
+                },
+                columns: [
+                    {
+                        field:"AccountName",
+                        title:"Account",//template:"#=AccountName#",
+                        editor: accountEditor,// template: "#=Category.CategoryName#",
+                        width:"250px"
+                    },
+                    {
+                        field: "Amount",
+                        title: "Amount",
+                        width:"100px",
+                        format:"{0:c2}",
+                    },
+                    {
+                        field: "Descriptions",
+                        title: "Descriptions",
+                        editor:accountDescripionEditor,
+                        width:"200px"
+                    },
+                    {
+                        field: "Discount",
+                        title: "Discount",
+                        width:"100px",
+                        //template: "#if(PaymentDeductionObject!=null){# #: PaymentDeductionObject.TotalDeduction # #}else {##: '0' ##}#"
+                        //template: "#: DiscountDecimalFormat #"
+                        //format:"{0:c2}"DiscountDecimalFormat
+                    },
+                    {
+                        field: "DiscountTypeName",
+                        title: "Discount Type",
+                        width:"130px",
+                        editor:accountDiscountTypeEditor
+                    },
+                    { command: ["edit", "destroy"], title: "&nbsp;", width: "150px" },
+                ],
+                editable: "inline",
+                edit: function(e) {
+                    selectedAccountId=e.model.PayrollAccountID;
+                    highlightSelectedAccount(e.model.AccountName);
+                },
+                remove: function(e) {
+                    deleteAccount(e.model.AccountNumber,e.model.PayrollID);
+                },
+                dataSource: accountDataSource,
+                save: function(e) {
+                    debugger;
+                    var current =$("#accountList").data("kendoGrid").dataItem($(e.container).closest("tr"))
+
+                    if (confirm("Are you really sure that you want to update the data ?"))
+                    {
+                        refreshAccountList(current.AccountNumber,selectedAccountId,current.Amount,current.Descriptions,
+                                           current.Discount,current.PayrollID,selectedDiscountType,selectedDiscountTypetxt);
+                        e.preventDefault();
+                    }
+                },
+            }).data("kendoGrid");
+
+            
+            function refreshAccountList(accountNumber,payAccountID,amount,descriptions,discount,payrollID, discountTypeId,discountTypeName){
+                debugger;
+               
+                $.ajax({
+                    url: "@Url.Action("UpdatedPayrollAccountJson")",
+                    type: "GET",
+                    contentType: "application/json",
+                    data: {
+                        "accountNumber": accountNumber,
+                        "payAccountID": payAccountID,
+                        "amount": amount,
+                        "descriptions": descriptions,
+                        "discount": discount,
+                        "payrollID": payrollID,
+                        "discountTypeId":discountTypeId,
+                        "discountTypeName":discountTypeName
+                    },
+                    dataType: "json",
+                    beforeSend: function() {
+
+                        $(".loader").css("display", "block");
+                    },
+                    success: function (results) {
+                        accountGird.dataSource.data( results.Accounts );
+                        accountGird.refresh();
+                        console.log("results after Accounts update",results);
+                        $("#Amount").val(results.TotalAmount) ;
+                        $("#AmountFormated").val(results.TotalAmountFormated)
+                        $(".loader").css("display", "none");
+                    },
+
+                    error: function (error) {
+                        alert("Account was not updated successfully due to ",error.statusText);
+                    }
+                })
+
+            }
+
+            function deleteAccount(accountNumber,payrollId){
+                $.ajax({
+                    url: "@Url.Action("DeletePayrollAccountJson")",
+                    type: "GET",
+                    contentType: "application/json",
+                    data: {
+                        "accountNumber": accountNumber,
+                        "payrollId": payrollId,
+                    },
+                    dataType: "json",
+                    beforeSend: function() {
+
+                        $(".loader").css("display", "block");
+                    },
+                    success: function (results) {
+                        accountGird.dataSource.data( results );
+                        accountGird.refresh();
+                        $(".loader").css("display", "none");
+                    },
+
+                    error: function (error) {
+                        alert(error);
+                    }
+                })
+            }
+            //   defineGridColumnEditor();
+        });
+
+
+
+
+
+    </script>
+
+
+<script type="text/javascript">
+    var voucherId = @Html.Raw(Json.Encode(Model.TransactionID));
+    function printPayrollVoucher(voucherId) {
+        var divContents = $("#voucherPrintBody").html();
+        //console.log("$('#voucherPrintBody').html() ",divContents);
+        $('#voucherPrintBody').printThis({
+            //importCSS: false,
+            //loadCSS: "./Content/VoucherPrintStyle.css",
+            header: "<h1>KWT Voucher "+voucherId+" Details</h1>",
+            footer:'<div style="text-align: right; padding-right:90px;">' +
+                   '<div class="pull-right" style="width: 230px;"><i>المحاسب</i></div>'
+                  +'<div class="pull-right" style="width: 286px; text-align: center;"><i>المدقق</i></div>'
+                  +'<div class="pull-left" style="width: 230px; text-align: center;"><i>الملحق المالي</i></div>'
+            //+'<div class="pull-right" style="width: 100px;"><i>رئيس المكتب</i></div></div>'
+            // debug: true,
+        });
+    }
+        function showPayrollVoucher() {
+            $('#voucherPrint').modal('show');
+            $('#printVoucher, #printVoucher1').click(function() {
+                printPayrollVoucher(voucherId);
+            });
+        }
+</script>
+}

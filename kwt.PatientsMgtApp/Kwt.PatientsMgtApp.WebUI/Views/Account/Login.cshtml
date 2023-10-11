@@ -45,6 +45,9 @@
             <p>
                 <input type="submit" value="Log in" class="btn btn-default" />
             </p>
+            <p>
+                @Html.ActionLink("Forgot your password?", "ForgotPassword")
+            </p>
     }
 </div>
 @*<div id="modal-overlay" style="display: block;"></div>*@
@@ -79,8 +82,8 @@
 @*<p>
         @Html.ActionLink("Register as a new user", "Register")
     </p>*@
-@* Enable this once you have account confirmation enabled for password reset functionality
-    <p>
+ @*Enable this once you have account confirmation enabled for password reset functionality*@
+    @*<p>
         @Html.ActionLink("Forgot your password?", "ForgotPassword")
     </p>*@
 @section Scripts {

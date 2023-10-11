@@ -108,7 +108,14 @@ namespace Kwt.PatientsMgtApp.DataAccess.SQL
             }
 
             var newEntry = dbContext.Set<T>().Add(TObject);
-            dbContext.SaveChanges();
+            try{
+                dbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+               var error= ((System.Data.Entity.Validation.DbEntityValidationException)ex).EntityValidationErrors;
+           }
+            
             return newEntry;
         }
 

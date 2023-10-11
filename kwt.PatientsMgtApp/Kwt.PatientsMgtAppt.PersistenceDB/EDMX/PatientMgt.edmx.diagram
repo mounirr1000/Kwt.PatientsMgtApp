@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="c8119d4fbc3d4cc8bc43d2c222053c26" Name="Diagram1" ZoomLevel="100">
+      <Diagram DiagramId="c8119d4fbc3d4cc8bc43d2c222053c26" Name="Diagram1" ZoomLevel="64">
         <EntityTypeShape EntityType="PatientsMgtModel.Agency" Width="1.5" PointX="3.75" PointY="5.375" IsExpanded="true" />
         <EntityTypeShape EntityType="PatientsMgtModel.Bank" Width="1.5" PointX="0.75" PointY="9.75" IsExpanded="true" />
         <EntityTypeShape EntityType="PatientsMgtModel.Beneficiary" Width="1.5" PointX="9" PointY="5" IsExpanded="true" />
@@ -56,7 +56,95 @@
         <EntityTypeShape EntityType="PatientsMgtModel.PaymentHistory" Width="1.5" PointX="13.5" PointY="18.125" />
         <AssociationConnector Association="PatientsMgtModel.FK_PaymentsHistory_Payments" />
         <EntityTypeShape EntityType="PatientsMgtModel.BookType" Width="1.5" PointX="14.375" PointY="3.75" />
-      </Diagram>
+        <EntityTypeShape EntityType="PatientsMgtModel.Account" Width="1.5" PointX="16.375" PointY="32.5" />
+        <EntityTypeShape EntityType="PatientsMgtModel.CheckPayroll" Width="1.5" PointX="20.875" PointY="18.625" />
+        <EntityTypeShape EntityType="PatientsMgtModel.DepartmentEmployee" Width="1.5" PointX="18.625" PointY="27.75" />
+        <EntityTypeShape EntityType="PatientsMgtModel.DepartmentManager" Width="1.5" PointX="18.625" PointY="24.75" />
+        <EntityTypeShape EntityType="PatientsMgtModel.Department" Width="1.5" PointX="16.375" PointY="40" />
+        <EntityTypeShape EntityType="PatientsMgtModel.Payee" Width="1.5" PointX="16.375" PointY="35.375" />
+        <EntityTypeShape EntityType="PatientsMgtModel.PayeesType" Width="1.5" PointX="14.125" PointY="36.375" />
+        <EntityTypeShape EntityType="PatientsMgtModel.PayrollMethod" Width="1.5" PointX="16.375" PointY="18.75" />
+        <EntityTypeShape EntityType="PatientsMgtModel.Payroll" Width="1.5" PointX="18.625" PointY="13.875" />
+        <EntityTypeShape EntityType="PatientsMgtModel.PayrollStatu" Width="1.5" PointX="16.375" PointY="7.375" />
+        <EntityTypeShape EntityType="PatientsMgtModel.PayrollType" Width="1.5" PointX="16.375" PointY="30.125" />
+        <EntityTypeShape EntityType="PatientsMgtModel.WirePayroll" Width="1.5" PointX="20.875" PointY="16.125" />
+        <AssociationConnector Association="PatientsMgtModel.FK__Payrolls__Accoun__5BAD9CC8" />
+        <AssociationConnector Association="PatientsMgtModel.FK__Payrolls__Agency__59C55456" />
+        <AssociationConnector Association="PatientsMgtModel.FK__CheckPayr__Payro__6166761E" />
+        <AssociationConnector Association="PatientsMgtModel.FK__Departmen__Depar__123EB7A3" />
+        <AssociationConnector Association="PatientsMgtModel.FK__Departmen__Depar__0E6E26BF" />
+        <AssociationConnector Association="PatientsMgtModel.FK__Payees__PayeeTyp__2B0A656D" />
+        <AssociationConnector Association="PatientsMgtModel.FK__Payrolls__PayeeI__57DD0BE4" />
+        <AssociationConnector Association="PatientsMgtModel.FK__Payrolls__PayeeT__58D1301D" />
+        <AssociationConnector Association="PatientsMgtModel.FK__Payrolls__Payrol__55009F39" />
+        <AssociationConnector Association="PatientsMgtModel.FK__Payrolls__Payrol__55F4C372" />
+        <AssociationConnector Association="PatientsMgtModel.FK__Payrolls__Payrol__56E8E7AB" />
+        <AssociationConnector Association="PatientsMgtModel.FK__WirePayro__Payro__5E8A0973" />
+        <EntityTypeShape EntityType="PatientsMgtModel.Employee" Width="1.5" PointX="16.375" PointY="22.5" />
+        <AssociationConnector Association="PatientsMgtModel.FK__Departmen__Emplo__6442E2C9" />
+        <AssociationConnector Association="PatientsMgtModel.FK__Departmen__Emplo__634EBE90" />
+        <AssociationConnector Association="PatientsMgtModel.FK__Payrolls__Employ__671F4F74" />
+        <EntityTypeShape EntityType="PatientsMgtModel.Bonus" Width="1.5" PointX="21.625" PointY="28.75" />
+        <EntityTypeShape EntityType="PatientsMgtModel.BonuseType" Width="1.5" PointX="19.375" PointY="49.25" />
+        <EntityTypeShape EntityType="PatientsMgtModel.EmployeeInsurance" Width="1.5" PointX="21.625" PointY="24.75" />
+        <EntityTypeShape EntityType="PatientsMgtModel.InsuranceOption" Width="1.5" PointX="19.375" PointY="11.125" />
+        <EntityTypeShape EntityType="PatientsMgtModel.InsuranceType" Width="1.5" PointX="19.375" PointY="8.5" />
+        <EntityTypeShape EntityType="PatientsMgtModel.Overtime" Width="1.5" PointX="18.625" PointY="36.875" />
+        <EntityTypeShape EntityType="PatientsMgtModel.SalaryDeduction" Width="1.5" PointX="18.625" PointY="45.125" />
+        <AssociationConnector Association="PatientsMgtModel.FK__Bonuses__BonusTy__7A3223E8" />
+        <AssociationConnector Association="PatientsMgtModel.FK__Bonuses__Employe__793DFFAF" />
+        <AssociationConnector Association="PatientsMgtModel.FK__EmployeeI__Emplo__03BB8E22" />
+        <AssociationConnector Association="PatientsMgtModel.FK__EmployeeI__Insur__04AFB25B" />
+        <AssociationConnector Association="PatientsMgtModel.FK__EmployeeI__Insur__05A3D694" />
+        <AssociationConnector Association="PatientsMgtModel.FK__Overtimes__Emplo__74794A92" />
+        <AssociationConnector Association="PatientsMgtModel.FK__SalaryDed__Emplo__7D0E9093" />
+        <EntityTypeShape EntityType="PatientsMgtModel.TaxCategory" Width="1.5" PointX="16.375" PointY="0.875" />
+        <EntityTypeShape EntityType="PatientsMgtModel.AccountType" Width="1.5" PointX="21.375" PointY="33" />
+        <EntityTypeShape EntityType="PatientsMgtModel.AgenciesAccount" Width="1.5" PointX="16.375" PointY="3.75" />
+        <EntityTypeShape EntityType="PatientsMgtModel.EmployeeAccountType" Width="1.5" PointX="23.625" PointY="19" />
+        <AssociationConnector Association="PatientsMgtModel.FK__EmployeeA__Agenc__19AACF41" />
+        <AssociationConnector Association="PatientsMgtModel.FK__EmployeeA__Bonus__1B9317B3" />
+        <AssociationConnector Association="PatientsMgtModel.FK__EmployeeA__Insur__1D7B6025" />
+        <AssociationConnector Association="PatientsMgtModel.FK__EmployeeA__Overt__1C873BEC" />
+        <AssociationConnector Association="PatientsMgtModel.FK__EmployeeA__Salar__1A9EF37A" />
+        <AssociationConnector Association="PatientsMgtModel.FK__EmployeeA__Emplo__18B6AB08" />
+        <EntityTypeShape EntityType="PatientsMgtModel.PayrollAccount" Width="1.5" PointX="0.75" PointY="18" />
+        <AssociationConnector Association="PatientsMgtModel.FK__Bonuses__PayAcco__336AA144" />
+        <AssociationConnector Association="PatientsMgtModel.FK__EmployeeI__PayAc__345EC57D" />
+        <AssociationConnector Association="PatientsMgtModel.FK__Overtimes__PayAc__3552E9B6" />
+        <EntityTypeShape EntityType="PatientsMgtModel.SalaryIncrement" Width="1.5" PointX="20.875" PointY="41.25" />
+        <EntityTypeShape EntityType="PatientsMgtModel.Title" Width="1.5" PointX="18.625" PointY="41" />
+        <AssociationConnector Association="PatientsMgtModel.FK__Titles__Employee__65370702" />
+        <AssociationConnector Association="PatientsMgtModel.FK__SalaryInc__Title__2F9A1060" />
+        <EntityTypeShape EntityType="PatientsMgtModel.SocialStatus" Width="1.5" PointX="14.125" PointY="28.625" />
+        <AssociationConnector Association="PatientsMgtModel.FK__Employees__Socia__382F5661" />
+        <EntityTypeShape EntityType="PatientsMgtModel.TitleType" Width="1.5" PointX="18.375" PointY="0.875" />
+        <AssociationConnector Association="PatientsMgtModel.FK__Titles__TitleTyp__3B0BC30C" />
+        <AssociationConnector Association="PatientsMgtModel.FK__Accounts__Payrol__52E34C9D" />
+        <AssociationConnector Association="PatientsMgtModel.FK__Accounts__Payrol__53D770D6" />
+        <EntityTypeShape EntityType="PatientsMgtModel.Salary" Width="1.5" PointX="21.625" PointY="10.5" />
+        <AssociationConnector Association="PatientsMgtModel.FK__Salaries__Employ__662B2B3B" />
+        <AssociationConnector Association="PatientsMgtModel.FK__Salaries__PayAcc__32767D0B" />
+        <AssociationConnector Association="PatientsMgtModel.FK__Salaries__TaxCat__0C50D423" />
+        <EntityTypeShape EntityType="PatientsMgtModel.DiscountType" Width="1.5" PointX="18.375" PointY="3.875" />
+        <AssociationConnector Association="PatientsMgtModel.FK__Accounts__Discou__1699586C" />
+        <EntityTypeShape EntityType="PatientsMgtModel.BudgetTransaction" Width="1.5" PointX="26.875" PointY="20.75" />
+        <EntityTypeShape EntityType="PatientsMgtModel.DepositAccount" Width="1.5" PointX="24.625" PointY="24.75" />
+        <EntityTypeShape EntityType="PatientsMgtModel.DepositDepartment" Width="1.5" PointX="22.375" PointY="36.375" />
+        <EntityTypeShape EntityType="PatientsMgtModel.DepositType" Width="1.5" PointX="22.375" PointY="38.75" />
+        <AssociationConnector Association="PatientsMgtModel.FK__DepositAc__Agenc__2AA05119" />
+        <AssociationConnector Association="PatientsMgtModel.FK__BudgetTra__Depos__30592A6F" />
+        <AssociationConnector Association="PatientsMgtModel.FK__BudgetTra__Payro__2F650636" />
+        <AssociationConnector Association="PatientsMgtModel.FK__DepositAc__Accou__2C88998B" />
+        <AssociationConnector Association="PatientsMgtModel.FK__DepositAc__Depos__28B808A7" />
+        <AssociationConnector Association="PatientsMgtModel.FK__DepositAc__Depos__29AC2CE0" />
+        <AssociationConnector Association="PatientsMgtModel.FK__DepositAc__Payee__2B947552" />
+        <EntityTypeShape EntityType="PatientsMgtModel.PatientExtensionHistory" Width="1.5" PointX="10.5" PointY="19.125" />
+        <EntityTypeShape EntityType="PatientsMgtModel.PatientExtension" Width="1.5" PointX="8.25" PointY="19.25" />
+        <AssociationConnector Association="PatientsMgtModel.FK__PatientEx__Exten__7132C993" />
+        <AssociationConnector Association="PatientsMgtModel.FK__PatientEx__Patie__703EA55A" />
+        <AssociationConnector Association="PatientsMgtModel.FK__PatientEx__Patie__6D6238AF" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

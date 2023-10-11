@@ -1,0 +1,261 @@
+﻿@model Kwt.PatientsMgtApp.Core.Models.PayrollModel
+@{
+    ViewBag.Title = "New Payroll";
+}
+
+<h2>New Payroll</h2>
+
+@using (Html.BeginForm("NewPayroll", "Payment", FormMethod.Post, new { @class = ".k-form" }))
+{
+    <div class="mt-3">
+        <p>
+            <a href="@Url.Action("Payrolls")" class="k-button"><i class="fa fa-arrow-left" style="color: lightblue"></i> Payroll List</a>
+            <button type="submit" class="k-button"><i class="fa fa-save" style="color: blueviolet"></i> Save</button>
+        </p>
+    </div>
+
+
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        @Html.ValidationSummary(false, "", new { @class = "k-error-colored ml-3" })
+        <div id="newPayroll" style="visibility:hidden">
+            <button data-target="#payrollDetails" data-toggle="collapse"><i></i> Payroll Details</button>
+            <fieldset id="payrollDetails" class="collapse show">
+                <legend></legend>
+                <ul class="fieldlist row">
+                    <li class="editor-field col-md-4">
+                        @Html.LabelFor(model => model.PayeeName, new { @class = "" })
+                        @Html.TextBoxFor(model => model.PayeeName, new { @class = "k-textbox", style = "width: 100%;"})
+                        <div>
+                            @Html.ValidationMessageFor(model => model.PayeeName, "", new { @class = "k-error-colored" })
+                        </div>
+                    </li>
+
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.Agency, new { @class = "" })
+                        @Html.DropDownListFor(model => model.AgencyID, new List<SelectListItem>(Model.Agencies.Select(a => new SelectListItem()
+                           {
+                               Text = a.AgencyName,
+                               Value = a.AgencyID.ToString()
+                           }).ToList()), "Select Agency...", new { style = "width:100%" })
+                        <div>
+                            @Html.ValidationMessageFor(model => model.Agency, "", new { @class = "k-error-colored" })
+                        </div>
+                    </li>
+
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.PayrollMethodId, new { @class = "" })
+                        @foreach (var method in Model.PayrollModethodList)
+                        {
+                            @Html.Label(method.PayrollMethodName, new { style = "display:inline; margin: 0 15px; padding:0" })
+                            @Html.RadioButtonFor(m => m.PayrollMethodId, method.PayrollMethodId,new { @class= "" })
+                        }
+                        
+                        @*@Html.DropDownListFor(model => model.PayrollMethodId, new List<SelectListItem>(Model.PayrollModethodList.Select(a => new SelectListItem()
+                           {
+                               Text = a.PayrollMethodName,
+                               Value = a.PayrollMethodId.ToString()
+                           }).ToList()), "Select Payroll Method...", new { style = "width:100%" })
+                        <div>
+                            @Html.ValidationMessageFor(model => model.Agency, "", new { @class = "k-error-colored" })
+                        </div>*@
+                    </li>
+
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.PaymentDueDate, htmlAttributes: new { @class = "" })
+                        @Html.EditorFor(model => model.PaymentDueDate, new { @class = "", style = "width: 100%;", title = "Text to show" })
+                        <div>
+                            @Html.ValidationMessageFor(model => model.PaymentDueDate, "", new { @class = "k-error-colored" })
+                        </div>
+                    </li>
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "" })
+                        @Html.EditorFor(model => model.StartDate, new { @class = "", style = "width: 100%;", title = "Text to show" })
+                        <div>
+                            @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "k-error-colored" })
+                        </div>
+                    </li>
+                    <li class="col-md-4">
+                        @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "" })
+                        @Html.EditorFor(model => model.EndDate, new { @class = "", style = "width: 100%;", title = "Text to show" })
+                        <div>
+                            @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "k-error-colored" })
+                        </div>
+                    </li>
+                </ul>
+            </fieldset>
+            <button data-target="#payrollPayee" data-toggle="collapse"><i></i> Payroll Payee</button>
+            <fieldset id="payrollPayee" class="collapse show">
+                <legend></legend>
+                <ul class="fieldlist row">
+                    <li class="col-md-8">
+                        @Html.LabelFor(model => model.PayeeID, new { @class = "" })
+                        @Html.DropDownListFor(model => model.PayeeID, new List<SelectListItem>(Model.PayeeList.Select(a => new SelectListItem()
+                           {
+                               Text = a.PayeeName,
+                               Value = a.PayeeID.ToString()
+                           }).ToList()), "Select Payee...", new { style = "width:100%" })                       
+                    </li>
+
+
+                    <li class="editor-field col-md-4">
+                        @Html.LabelFor(model => model.Payee.PayeeBankName, new { @class = "" })
+                        @Html.TextBoxFor(model => model.Payee.PayeeBankName, new { @class = "k-textbox edit", style = "width: 100%;" })
+                       
+                    </li>
+                    <li class="editor-field col-md-4">
+                        @Html.LabelFor(model => model.Payee.PayeeBankAccount, new { @class = "" })
+                        @Html.TextBoxFor(model => model.Payee.PayeeBankAccount, new { @class = "k-textbox edit", style = "width: 100%;" })
+                       
+                    </li>
+                    <li class="editor-field col-md-4">
+                        @Html.LabelFor(model => model.Payee.PayeeBankRoutingNumber, new { @class = "" })
+                        @Html.TextBoxFor(model => model.Payee.PayeeBankRoutingNumber, new { @class = "k-textbox edit", style = "width: 100%;"})
+                        
+                    </li>
+                    <li class="editor-field col-md-4">
+                        @Html.LabelFor(model => model.Payee.PayeeStreetAddress, new { @class = "" })
+                        @Html.TextBoxFor(model => model.Payee.PayeeStreetAddress, new { @class = "k-textbox edit", style = "width: 100%;" })
+                        <div>
+                            @Html.ValidationMessageFor(model => model.Payee.PayeeStreetAddress, "", new { @class = "k-error-colored" })
+                        </div>
+                    </li>
+                    <li class="editor-field col-md-4">
+                        @Html.LabelFor(model => model.Payee.PayeeCity, new { @class = "" })
+                        @Html.TextBoxFor(model => model.Payee.PayeeCity, new { @class = "k-textbox edit", style = "width: 100%;" })
+                        <div>
+                            @Html.ValidationMessageFor(model => model.Payee.PayeeCity, "", new { @class = "k-error-colored" })
+                        </div>
+                    </li>
+                    <li class="editor-field col-md-4">
+                        @Html.LabelFor(model => model.Payee.PayeeState, new { @class = "" })
+                        @Html.TextBoxFor(model => model.Payee.PayeeState, new { @class = "k-textbox edit", style = "width: 100%;" })
+                        <div>
+                            @Html.ValidationMessageFor(model => model.Payee.PayeeState, "", new { @class = "k-error-colored" })
+                        </div>
+                    </li>
+                    <li class="editor-field col-md-4">
+                        @Html.LabelFor(model => model.Payee.PayeeZipcode, new { @class = "" })
+                        @Html.TextBoxFor(model => model.Payee.PayeeZipcode, new { @class = "k-textbox edit", style = "width: 100%;" })
+                        <div>
+                            @Html.ValidationMessageFor(model => model.Payee.PayeeZipcode, "", new { @class = "k-error-colored" })
+                        </div>
+                    </li>
+                    <li class="editor-field col-md-4">
+                        @Html.LabelFor(model => model.Payee.PayeeEmail, new { @class = "" })
+                        @Html.TextBoxFor(model => model.Payee.PayeeEmail, new { @class = "k-textbox edit", style = "width: 100%;" })
+                        <div>
+                            @Html.ValidationMessageFor(model => model.Payee.PayeeEmail, "", new { @class = "k-error-colored" })
+                        </div>
+                    </li>
+                    <li class="editor-field col-md-4">
+                        @Html.LabelFor(model => model.Payee.PayeePhone, new { @class = "" })
+                        @Html.TextBoxFor(model => model.Payee.PayeePhone, new { @class = "k-textbox edit", style = "width: 100%;" })
+                        <div>
+                            @Html.ValidationMessageFor(model => model.Payee.PayeePhone, "", new { @class = "k-error-colored" })
+                        </div>
+                    </li>
+                </ul>
+            </fieldset>
+            <button data-target="#payrollAccount" data-toggle="collapse"><i></i> Payroll Account</button>
+            <fieldset id="payrollAccount" class="collapse show">
+                <legend></legend>
+                <ul class="fieldlist row" id="payrollAccountEditor">
+                    <li style="display:block" class="col-md-10">
+                        <a href="#" id="addAnotherAccount" class="k-button"><i class="fa fa-plus-circle" style="color: lightblue"></i> Add More</a>
+                    </li>                   
+                    @foreach (var account in Model.Accounts)
+                    {
+                        Html.RenderPartial("_NewPayrollAccountEntryEditor", account);
+                    }
+                   
+                        
+                </ul>
+                
+                
+            </fieldset>
+
+
+
+
+        </div>
+        <div class="mt-3">
+            <p>
+                <a href="@Url.Action("Payrolls")" class="k-button"><i class="fa fa-arrow-left" style="color: lightblue"></i> Back to List</a>
+                <button type="submit" class="k-button"><i class="fa fa-save" style="color: blueviolet"></i> Save</button>
+            </p>
+        </div>
+
+    </div>
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+
+
+        $("#PaymentDueDate, #StartDate, #EndDate").kendoDatePicker({
+
+        });
+        $('#PayrollMethodId[value="2"]').attr('checked',true);
+        $.validator.setDefaults({ ignore: '' });
+        $(document).ready(function () {
+
+            $("#AgencyID, #PayeeID").kendoDropDownList();
+            
+            var object =   @Html.Raw(Json.Encode(Model));
+            var payeeList = @Html.Raw(Json.Encode(Model.PayeeList));
+
+            //console.log(object);
+            //console.log(payeeList);
+            $("#newPayroll").css("visibility", "visible");
+            $('#newPayroll button').addClass('btn btn-block mb-2 text-uppercase text-white bg-info');
+            $('#newPayroll button i').addClass('fa fa-angle-double-down pull-left');
+            $('#newPayroll button').click(function (e) {
+                e.preventDefault();
+                var $this = this;
+                var caret = $($this).find('i');
+                if ($(caret).hasClass('fa-angle-double-down'))
+                    $(caret).removeClass('fa-angle-double-down').addClass("fa-angle-double-up");
+                else
+                    $(caret).removeClass('fa-angle-double-up').addClass("fa-angle-double-down");
+            });
+
+            // if there is a validation error, collapsed fields should be opened
+
+            $("#addAnotherAccount").click(function (e) {
+
+                e.preventDefault();
+                $.get('/Payment/AccountEntryRow', function (template) {
+                    $("#payrollAccountEditor").append(template);
+                });
+            });
+            $("#PayeeID").change(function(){
+                var selected =$(this).val();
+                var filterdPayee = payeeList.filter(function(payee) {
+                    return payee.PayeeID == selected;
+                });
+                $("#Payee_PayeeBankAccount").val(filterdPayee[0].PayeeBankAccount);
+                $("#Payee_PayeeBankName").val(filterdPayee[0].PayeeBankName);
+                $("#Payee_PayeeBankRoutingNumber").val(filterdPayee[0].PayeeBankRoutingNumber);
+                $("#Payee_PayeeCity").val(filterdPayee[0].PayeeCity);
+                $("#Payee_PayeeEmail").val(filterdPayee[0].PayeeEmail);
+                $("#Payee_PayeeName").val(filterdPayee[0].PayeeName);
+                $("#Payee_PayeePhone").val(filterdPayee[0].PayeePhone);
+                $("#Payee_PayeeState").val(filterdPayee[0].PayeeState);
+                $("#Payee_PayeeStreetAddress").val(filterdPayee[0].PayeeStreetAddress);
+                $("#Payee_PayeeTypeID").val(filterdPayee[0].PayeeTypeID);
+                $("#Payee_PayeeZipcode").val(filterdPayee[0].PayeeZipcode);
+                //$("#Payee_PayeeBankAccount").val(filterdPayee.PayeeBankAccount);
+                
+               // console.log(filterdPayee[0]);
+            });
+            $(".loader").css("display", "none");
+        });
+    </script>
+
+
+}
